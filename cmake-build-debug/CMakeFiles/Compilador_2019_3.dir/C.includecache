@@ -9,4 +9,14 @@
 /home/caveira/Documents/GitProjects/Compilador-2019.3/main.c
 stdio.h
 -
+string.h
+-
+stdlib.h
+-
+stdbool.h
+-
+token.h
+/home/caveira/Documents/GitProjects/Compilador-2019.3/token.h
+
+/home/caveira/Documents/GitProjects/Compilador-2019.3/token.h
 

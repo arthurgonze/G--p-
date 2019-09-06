@@ -81,6 +81,9 @@
 		<Unit filename="/home/caveira/Documents/GitProjects/Compilador-2019.3/main.c">
 			<Option target="Compilador_2019_3"/>
 		</Unit>
+		<Unit filename="/home/caveira/Documents/GitProjects/Compilador-2019.3/token.h">
+			<Option target="Compilador_2019_3"/>
+		</Unit>
 		<Unit filename="/home/caveira/Documents/GitProjects/Compilador-2019.3/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
