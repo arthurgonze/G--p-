@@ -1,3 +1,0 @@
-/home/caveira/Documents/GitProjects/Compilador-2019.3/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/caveira/Documents/GitProjects/Compilador-2019.3/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/caveira/Documents/GitProjects/Compilador-2019.3/cmake-build-debug/CMakeFiles/Compilador_2019_3.dir

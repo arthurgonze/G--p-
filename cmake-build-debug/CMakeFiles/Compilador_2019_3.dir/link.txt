@@ -1,1 +1,0 @@
-/usr/bin/cc -g   CMakeFiles/Compilador_2019_3.dir/main.c.o  -o Compilador_2019_3 
