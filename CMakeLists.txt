@@ -3,4 +3,4 @@ project(Compilador_2019_3 C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(Compilador_2019_3 main.c token.h)
+add_executable(Compilador_2019_3 main.c token.h lexical/analyzer.c lexical/analyzer.h token.c)

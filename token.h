@@ -40,7 +40,7 @@
 // ;
 #define SEMICOLON 17
 // EOF
-#define EOF 18
+#define ENDOFFILE 18
 // WHILE
 #define WHILE 19
 // FOR
@@ -121,4 +121,7 @@
 #define NUMINT 57
 // NUMFLOAT
 #define NUMFLOAT 58
+
+char* idToTokenName(int id);
+
 #endif //COMPILADOR_2019_3_TOKEN_H
