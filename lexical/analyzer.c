@@ -31,10 +31,16 @@ void goToState(int state) {
     currentState = state;
 }
 
-int RestartAndReturnToken(int token) {
+int foundTokenAndRestart(int token) {
     goToState(0);
     return token;
 }
+
+int foundTokenAndGetNextInput(int token) {
+    getNextChar();
+    return foundTokenAndRestart(token);
+}
+
 void init() {
     getNextChar();
 }
@@ -139,11 +145,9 @@ int getNextToken() {
                 }
                 break;
             case 2:
-                getNextCharAndGoTo(0);
-                return LE;
+                return foundTokenAndGetNextInput(LE);
             case 3:
-                goToState(0);
-                return LT;
+                return foundTokenAndRestart(LT);
             case 4:
                 switch (currentInput) {
                     case '=':
@@ -165,17 +169,13 @@ int getNextToken() {
                 }
                 break;
             case 6:
-                getNextCharAndGoTo(0);
-                return EQ;
+                return foundTokenAndGetNextInput(EQ);
             case 7:
-                goToState(0);
-                return ASSIGN;
+                return foundTokenAndRestart(ASSIGN);
             case 8:
-                getNextCharAndGoTo(0);
-                return GE;
+                return foundTokenAndGetNextInput(GE);
             case 9:
-                goToState(0);
-                return GT;
+                return foundTokenAndRestart(GT);
             case 10:
                 switch (currentInput) {
                     case '=':
@@ -187,11 +187,9 @@ int getNextToken() {
                 }
                 break;
             case 11:
-                getNextCharAndGoTo(0);
-                return NE;
+                return foundTokenAndGetNextInput(NE);
             case 12:
-                goToState(0);
-                return NOT;
+                return foundTokenAndRestart(NOT);
             case 13:
                 //TODO implementar a leitura do lexema
                 if (isLetter(currentInput) || isDigit(currentInput))
@@ -252,11 +250,9 @@ int getNextToken() {
                 }
                 break;
             case 23:
-                goToState(0);
-                return NUMFLOAT;
+                return foundTokenAndRestart(NUMFLOAT);
             case 24:
-                goToState(0);
-                return NUMINT;
+                return foundTokenAndRestart(NUMINT);
             case 25:
                 if (isDigit(currentInput))
                     getNextCharAndGoTo(26);
@@ -276,35 +272,25 @@ int getNextToken() {
                     goToState(23);
                 break;
             case 27:
-                goToState(0);
-                return PLUS;
+                return foundTokenAndRestart(PLUS);
             case 28:
-                goToState(0);
-                return RPARENT;
+                return foundTokenAndRestart(RPARENT);
             case 29:
-                goToState(0);
-                return MINUS;
+                return foundTokenAndRestart(MINUS);
             case 30:
-                goToState(0);
-                return LPARENT;
+                return foundTokenAndRestart(LPARENT);
             case 31:
-                goToState(0);
-                return LBRACE;
+                return foundTokenAndRestart(LBRACE);
             case 32:
-                goToState(0);
-                return RBRACE;
+                return foundTokenAndRestart(RBRACE);
             case 33:
-                goToState(0);
-                return LBRACKET;
+                return foundTokenAndRestart(LBRACKET);
             case 34:
-                goToState(0);
-                return RBRACKET;
+                return foundTokenAndRestart(RBRACKET);
             case 35:
-                goToState(0);
-                return COLON;
+                return foundTokenAndRestart(COLON);
             case 36:
-                goToState(0);
-                return SEMICOLON;
+                return foundTokenAndRestart(SEMICOLON);
             case 37:
                 switch (currentInput) {
                     case '"':
@@ -332,11 +318,9 @@ int getNextToken() {
                 }
                 break;
             case 39:
-                getNextCharAndGoTo(0);
-                return STAR; //TODO alterar o automato para mudar o label
+                return foundTokenAndGetNextInput(STAR); //TODO alterar o automato para mudar o label
             case 40:
-                goToState(0);
-                return LITERAL;
+                return foundTokenAndRestart(LITERAL);
             case 41:
                 getNextCharAndGoTo(37);
                 break;
@@ -360,14 +344,11 @@ int getNextToken() {
                     goToState(45);
                 break;
             case 44:
-                goToState(0);
-                return OR;
+                return foundTokenAndRestart(OR);
             case 45:
-                goToState(0);
-                return PIPE;
+                return foundTokenAndRestart(PIPE);
             case 53:
-                goToState(0);
-                return DOT;
+                return foundTokenAndRestart(DOT);
             case 55:
                 if (isDigit(currentInput))
                     getNextCharAndGoTo(55);
