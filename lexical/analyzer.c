@@ -6,6 +6,8 @@
 #include "../token.h"
 #include "stdbool.h"
 #include "stdio.h"
+#include "string.h"
+#include "stdlib.h"
 
 #define INITIAL_STATE 0;
 
@@ -13,16 +15,29 @@ int currentState = INITIAL_STATE;
 char currentInput;
 int currentLine = 1;
 
+char currentLexem[20]; //TODO refatorar isso para gerar uma struct de saida
+int currentLength = 0;
+
 int count = 0;
 //char* input = "< <= == >= > = != ! asda 10.03 10/";
-char *input = "'a' | || \"cacacaraio\"/";
+char *input = "if 2 == 3 {teste = saida + 1} else 20";
 
-char getNextChar() {
-    currentInput = input[count++];
+void getNextChar() {
+    currentLexem[currentLength++] = (currentInput = input[count++]);
+
+}
+
+void cleanLexem() {
+    for(int i = 0; i < 20; i++) {
+        currentLexem[i] = '\0';
+    }
+
+    currentLexem[0] = currentInput;
+    currentLength = 1;
 }
 
 void getNextCharAndGoTo(int state) {
-    currentInput = getNextChar();
+    getNextChar();
     currentState = state;
 }
 
@@ -32,6 +47,11 @@ void goToState(int state) {
 }
 
 int foundTokenAndRestart(int token) {
+    currentLexem[currentLength-1] = '\0';
+    printf("%s\t\t\t->\t", currentLexem);
+
+    cleanLexem();
+
     goToState(0);
     return token;
 }
@@ -70,6 +90,7 @@ int getNextToken() {
 
                 if (isspace(currentInput)) {
                     getNextCharAndGoTo(0);
+                    cleanLexem();
                 } else if (isLetter(currentInput)) {
                     getNextCharAndGoTo(13);
                 } else if (isDigit(currentInput))
@@ -129,6 +150,15 @@ int getNextToken() {
                             break;
                         case '|':
                             getNextCharAndGoTo(43);
+                            break;
+                        case '&':
+                            getNextCharAndGoTo(46);
+                            break;
+                        case '/':
+                            getNextCharAndGoTo(49);
+                            break;
+                        case ENDOFFILE:
+                            goToState(54);
                             break;
                         default:
                             return -1;
@@ -204,10 +234,11 @@ int getNextToken() {
                     goToState(53);
                 break;
             case 15:
-                goToState(0);
+
                 //TODO verificar para ver se é palavra reservada
                 //TODO adicionar
-                return ID;
+                return foundTokenAndRestart(ID);
+                break;
             case 17:
                 goToState(0);
                 fail("Unexpected end of file");
@@ -347,8 +378,58 @@ int getNextToken() {
                 return foundTokenAndRestart(OR);
             case 45:
                 return foundTokenAndRestart(PIPE);
+            case 46:
+                if (currentInput == '&')
+                    getNextCharAndGoTo(47);
+                else
+                    goToState(48);
+                break;
+            case 47:
+                return foundTokenAndRestart(AND);
+            case 48:
+                return foundTokenAndRestart(ADDRESS);
+            case 49:
+                switch (currentInput) {
+                    case '*':
+                        getNextCharAndGoTo(51);
+                        break;
+                    default:
+                        goToState(50);
+                        break;
+                }
+                break;
+            case 50:
+                return foundTokenAndRestart(SLASH);
+            case 51:
+                switch (currentInput) {
+                    case '*':
+                        getNextCharAndGoTo(52);
+                        break;
+                    case ENDOFFILE:
+                        goToState(17);
+                        break;
+                    default:
+                        getNextCharAndGoTo(51);
+                        break;
+                }
+                break;
+            case 52:
+                switch (currentInput) {
+                    case '/':
+                        getNextCharAndGoTo(0);
+                        break;
+                    case ENDOFFILE:
+                        goToState(17);
+                        break;
+                    default:
+                        getNextCharAndGoTo(51);
+                        break;
+                }
+                break;
             case 53:
                 return foundTokenAndRestart(DOT);
+            case 54:
+                return foundTokenAndRestart(ENDOFFILE);
             case 55:
                 if (isDigit(currentInput))
                     getNextCharAndGoTo(55);

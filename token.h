@@ -40,7 +40,7 @@
 // ;
 #define SEMICOLON 17
 // EOF
-#define ENDOFFILE 18
+#define ENDOFFILE 0
 // WHILE
 #define WHILE 19
 // FOR
@@ -74,7 +74,7 @@
 // FALSE
 #define FALSE 34
 // &
-#define ADRESS 35
+#define ADDRESS 35
 // *
 #define STAR 36
 // .

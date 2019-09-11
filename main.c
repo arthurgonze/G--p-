@@ -35,8 +35,11 @@ int main()
     init();
 
     int c = 0;
-    while((c = getNextToken()) != -1)
+    do {
+        c = getNextToken();
         printf("%s\n", idToTokenName(c));
+    }
+    while(c != ENDOFFILE);
 
     return 0;
 }

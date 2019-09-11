@@ -40,7 +40,7 @@ char* idToTokenName(int id) {
         case LITERAL : return  "LITERAL";
         case TRUE : return  "TRUE";
         case FALSE : return  "FALSE";
-        case ADRESS : return  "ADRESS";
+        case ADDRESS : return  "ADDRESS";
         case STAR : return  "STAR";
         case DOT : return  "DOT";
         case DO : return  "DO";
