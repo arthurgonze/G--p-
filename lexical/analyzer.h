@@ -5,6 +5,10 @@
 #ifndef COMPILADOR_2019_3_ANALYZER_H
 #define COMPILADOR_2019_3_ANALYZER_H
 
-int getNextToken();
-void init();
+int lexical_analyzer_next_token();
+
+void lexical_analyzer_init();
+
+void lexical_analyzer_dispose();
+
 #endif //COMPILADOR_2019_3_ANALYZER_H

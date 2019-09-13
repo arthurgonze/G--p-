@@ -32,14 +32,16 @@ int main()
 {
 
     printf("%d\n", INT);
-    init();
+    lexical_analyzer_init();
 
     int c = 0;
     do {
-        c = getNextToken();
+        c = lexical_analyzer_next_token();
         printf("%s\n", idToTokenName(c));
     }
     while(c != ENDOFFILE);
+
+    lexical_analyzer_dispose();
 
     return 0;
 }

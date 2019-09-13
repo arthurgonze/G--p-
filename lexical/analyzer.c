@@ -9,156 +9,170 @@
 #include "string.h"
 #include "stdlib.h"
 
-#define INITIAL_STATE 0;
+#define BUFFER_SIZE 32
+#define INITIAL_STATE 0
 
 int currentState = INITIAL_STATE;
 char currentInput;
 int currentLine = 1;
 
-char currentLexem[20]; //TODO refatorar isso para gerar uma struct de saida
-int currentLength = 0;
+char *lexemeBuffer = NULL; //TODO refatorar isso para gerar uma struct de saida
+int lexemeLength = 0;
+int lexemeBufferSize = 0;
 
 int count = 0;
 //char* input = "< <= == >= > = != ! asda 10.03 10/";
-char *input = "if 2 == 3 {teste = saida + 1} else 20";
+char *input = "while(true) {float k=11*5; 13225656866186628868268568658.5208929978928898e144688817878/5565684070.458078878759895859859336982>att q}";
 
-void getNextChar() {
-    currentLexem[currentLength++] = (currentInput = input[count++]);
+void get_next_char() {
 
-}
-
-void cleanLexem() {
-    for(int i = 0; i < 20; i++) {
-        currentLexem[i] = '\0';
+    if (lexemeLength == lexemeBufferSize) {
+        lexemeBufferSize += BUFFER_SIZE;
+        lexemeBuffer = (char *) realloc(lexemeBuffer, lexemeBufferSize);
     }
 
-    currentLexem[0] = currentInput;
-    currentLength = 1;
+    lexemeBuffer[lexemeLength++] = (currentInput = input[count++]);
 }
 
-void getNextCharAndGoTo(int state) {
-    getNextChar();
+void clear_lexeme() {
+
+    memset(lexemeBuffer, 0, lexemeBufferSize);
+
+    lexemeBuffer[0] = currentInput;
+    lexemeLength = 1;
+}
+
+void get_next_char_and_go_to(int state) {
+    get_next_char();
     currentState = state;
 }
 
-
-void goToState(int state) {
+void go_to_state(int state) {
     currentState = state;
 }
 
-int foundTokenAndRestart(int token) {
-    currentLexem[currentLength-1] = '\0';
-    printf("%s\t\t\t->\t", currentLexem);
+int found_token_and_restart(int token) {
+    lexemeBuffer[lexemeLength - 1] = '\0';
+    printf("%s\t\t\t->\t", lexemeBuffer);
 
-    cleanLexem();
+    clear_lexeme();
 
-    goToState(0);
+    go_to_state(0);
     return token;
 }
 
-int foundTokenAndGetNextInput(int token) {
-    getNextChar();
-    return foundTokenAndRestart(token);
+int found_token_and_get_next_input(int token) {
+    get_next_char();
+    return found_token_and_restart(token);
 }
 
-void init() {
-    getNextChar();
+void lexical_analyzer_init() {
+    get_next_char();
 }
 
-bool isLetter(char c) {
+bool is_letter(char c) {
     return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
 }
 
-bool isDigit(char c) {
+bool is_digit(char c) {
     return c >= '0' && c <= '9';
 }
 
 void fail(char *reason) {
     //TODO jogar os erros para uma pilha
-    printf("Lexicon Error: [Line %d] %s", currentLine, reason);
+    printf("--Lexicon Error: [Line %d] %s--\n", currentLine, reason);
+    clear_lexeme();
 }
 
-int getNextToken() {
+void lexical_analyzer_dispose() {
 
-    while (1) {
+    free(lexemeBuffer);
+}
+
+int lexical_analyzer_next_token() {
+
+    while (true) {
 
         switch (currentState) {
 
-            case 0:
+            case INITIAL_STATE:
                 if (currentInput == '\n')
                     currentLine++;
 
                 if (isspace(currentInput)) {
-                    getNextCharAndGoTo(0);
-                    cleanLexem();
-                } else if (isLetter(currentInput)) {
-                    getNextCharAndGoTo(13);
-                } else if (isDigit(currentInput))
-                    getNextCharAndGoTo(19);
+                    get_next_char_and_go_to(INITIAL_STATE);
+                    clear_lexeme();
+                } else if (is_letter(currentInput)) {
+                    get_next_char_and_go_to(13);
+                } else if (is_digit(currentInput))
+                    get_next_char_and_go_to(19);
                 else
                     switch (currentInput) {
                         case '<':
-                            getNextCharAndGoTo(1);
+                            get_next_char_and_go_to(1);
                             break;
                         case '=':
-                            getNextCharAndGoTo(4);
+                            get_next_char_and_go_to(4);
                             break;
                         case '>':
-                            getNextCharAndGoTo(5);
+                            get_next_char_and_go_to(5);
                             break;
                         case '!':
-                            getNextCharAndGoTo(10);
+                            get_next_char_and_go_to(10);
                             break;
                         case '.':
-                            getNextCharAndGoTo(14);
+                            get_next_char_and_go_to(14);
                             break;
                         case '+':
-                            getNextCharAndGoTo(27);
+                            get_next_char_and_go_to(27);
                             break;
                         case ')':
-                            getNextCharAndGoTo(28);
+                            get_next_char_and_go_to(28);
                             break;
                         case '-':
-                            getNextCharAndGoTo(29);
+                            get_next_char_and_go_to(29);
                             break;
                         case '(':
-                            getNextCharAndGoTo(30);
+                            get_next_char_and_go_to(30);
                             break;
                         case '{':
-                            getNextCharAndGoTo(31);
+                            get_next_char_and_go_to(31);
                             break;
                         case '}':
-                            getNextCharAndGoTo(32);
+                            get_next_char_and_go_to(32);
                             break;
                         case '[':
-                            getNextCharAndGoTo(33);
+                            get_next_char_and_go_to(33);
                             break;
                         case ']':
-                            getNextCharAndGoTo(34);
+                            get_next_char_and_go_to(34);
                             break;
                         case ',':
-                            getNextCharAndGoTo(35);
+                            get_next_char_and_go_to(35);
                             break;
                         case ';':
-                            getNextCharAndGoTo(36);
+                            get_next_char_and_go_to(36);
                             break;
                         case '"':
-                            getNextCharAndGoTo(37);
+                            get_next_char_and_go_to(37);
                             break;
                         case '\'':
-                            getNextCharAndGoTo(38);
+                            get_next_char_and_go_to(38);
+                            break;
+                        case '*':
+                            get_next_char_and_go_to(39);
                             break;
                         case '|':
-                            getNextCharAndGoTo(43);
+                            get_next_char_and_go_to(43);
                             break;
                         case '&':
-                            getNextCharAndGoTo(46);
+                            get_next_char_and_go_to(46);
                             break;
                         case '/':
-                            getNextCharAndGoTo(49);
+                            get_next_char_and_go_to(49);
                             break;
                         case ENDOFFILE:
-                            goToState(54);
+                            go_to_state(54);
                             break;
                         default:
                             return -1;
@@ -167,283 +181,282 @@ int getNextToken() {
             case 1:
                 switch (currentInput) {
                     case '=':
-                        goToState(2);
+                        go_to_state(2);
                         break;
                     default:
-                        goToState(3);
+                        go_to_state(3);
                         break;
                 }
                 break;
             case 2:
-                return foundTokenAndGetNextInput(LE);
+                return found_token_and_get_next_input(LE);
             case 3:
-                return foundTokenAndRestart(LT);
+                return found_token_and_restart(LT);
             case 4:
                 switch (currentInput) {
                     case '=':
-                        getNextCharAndGoTo(6);
+                        get_next_char_and_go_to(6);
                         break;
                     default:
-                        goToState(7);
+                        go_to_state(7);
                         break;
                 }
                 break;
             case 5:
                 switch (currentInput) {
                     case '=':
-                        getNextCharAndGoTo(8);
+                        get_next_char_and_go_to(8);
                         break;
                     default:
-                        goToState(9);
+                        go_to_state(9);
                         break;
                 }
                 break;
             case 6:
-                return foundTokenAndGetNextInput(EQ);
+                return found_token_and_get_next_input(EQ);
             case 7:
-                return foundTokenAndRestart(ASSIGN);
+                return found_token_and_restart(ASSIGN);
             case 8:
-                return foundTokenAndGetNextInput(GE);
+                return found_token_and_get_next_input(GE);
             case 9:
-                return foundTokenAndRestart(GT);
+                return found_token_and_restart(GT);
             case 10:
                 switch (currentInput) {
                     case '=':
-                        getNextCharAndGoTo(11);
+                        get_next_char_and_go_to(11);
                         break;
                     default:
-                        goToState(12);
+                        go_to_state(12);
                         break;
                 }
                 break;
             case 11:
-                return foundTokenAndGetNextInput(NE);
+                return found_token_and_get_next_input(NE);
             case 12:
-                return foundTokenAndRestart(NOT);
+                return found_token_and_restart(NOT);
             case 13:
                 //TODO implementar a leitura do lexema
-                if (isLetter(currentInput) || isDigit(currentInput))
-                    getNextCharAndGoTo(13);
+                if (is_letter(currentInput) || is_digit(currentInput))
+                    get_next_char_and_go_to(13);
                 else
-                    goToState(15);
+                    go_to_state(15);
                 break;
             case 14:
-                if (isDigit(currentInput))
-                    getNextCharAndGoTo(55);
+                if (is_digit(currentInput))
+                    get_next_char_and_go_to(55);
                 else
-                    goToState(53);
+                    go_to_state(53);
                 break;
             case 15:
 
                 //TODO verificar para ver se é palavra reservada
                 //TODO adicionar
-                return foundTokenAndRestart(ID);
-                break;
+                return found_token_and_restart(ID);
             case 17:
-                goToState(0);
+                go_to_state(INITIAL_STATE);
                 fail("Unexpected end of file");
                 break;
             case 18:
-                goToState(0);
+                go_to_state(INITIAL_STATE);
                 fail("Unexpected character");
                 break;
             case 19:
-                if (isDigit(currentInput))
-                    getNextCharAndGoTo(19);
+                if (is_digit(currentInput))
+                    get_next_char_and_go_to(19);
                 else if (currentInput == '.')
-                    getNextCharAndGoTo(25);
+                    get_next_char_and_go_to(25);
                 else if (currentInput == 'e' || currentInput == 'E')
-                    getNextCharAndGoTo(20);
-                else if (isLetter(currentInput))
-                    getNextCharAndGoTo(18);
+                    get_next_char_and_go_to(20);
+                else if (is_letter(currentInput))
+                    get_next_char_and_go_to(18);
                 else
-                    goToState(24);
+                    go_to_state(24);
                 break;
             case 20:
-                if (isDigit(currentInput)) //TODO consertar automato nesse estado
-                    getNextCharAndGoTo(22);
+                if (is_digit(currentInput)) //TODO consertar automato nesse estado
+                    get_next_char_and_go_to(22);
                 else if (currentInput == '+' || currentInput == '-')
-                    getNextCharAndGoTo(21);
+                    get_next_char_and_go_to(21);
                 else
-                    getNextCharAndGoTo(18);
+                    get_next_char_and_go_to(18);
                 break;
             case 21:
-                if (isDigit(currentInput))
-                    getNextCharAndGoTo(22);
+                if (is_digit(currentInput))
+                    get_next_char_and_go_to(22);
                 else
-                    getNextCharAndGoTo(18);
+                    get_next_char_and_go_to(18);
                 break;
             case 22:
-                if (isDigit(currentInput))
-                    getNextCharAndGoTo(22);
+                if (is_digit(currentInput))
+                    get_next_char_and_go_to(22);
                 else {
-                    goToState(23);
+                    go_to_state(23);
                 }
                 break;
             case 23:
-                return foundTokenAndRestart(NUMFLOAT);
+                return found_token_and_restart(NUMFLOAT);
             case 24:
-                return foundTokenAndRestart(NUMINT);
+                return found_token_and_restart(NUMINT);
             case 25:
-                if (isDigit(currentInput))
-                    getNextCharAndGoTo(26);
-                else if (isLetter(currentInput))
-                    getNextCharAndGoTo(18);
+                if (is_digit(currentInput))
+                    get_next_char_and_go_to(26);
+                else if (is_letter(currentInput))
+                    get_next_char_and_go_to(18);
                 else
-                    goToState(23);
+                    go_to_state(23);
                 break;
             case 26:
-                if (isDigit(currentInput))
-                    getNextCharAndGoTo(26);
+                if (is_digit(currentInput))
+                    get_next_char_and_go_to(26);
                 else if (currentInput == 'E' || currentInput == 'e')
-                    getNextCharAndGoTo(20);
-                else if (isLetter(currentInput))
-                    getNextCharAndGoTo(18);
+                    get_next_char_and_go_to(20);
+                else if (is_letter(currentInput))
+                    get_next_char_and_go_to(18);
                 else
-                    goToState(23);
+                    go_to_state(23);
                 break;
             case 27:
-                return foundTokenAndRestart(PLUS);
+                return found_token_and_restart(PLUS);
             case 28:
-                return foundTokenAndRestart(RPARENT);
+                return found_token_and_restart(RPARENT);
             case 29:
-                return foundTokenAndRestart(MINUS);
+                return found_token_and_restart(MINUS);
             case 30:
-                return foundTokenAndRestart(LPARENT);
+                return found_token_and_restart(LPARENT);
             case 31:
-                return foundTokenAndRestart(LBRACE);
+                return found_token_and_restart(LBRACE);
             case 32:
-                return foundTokenAndRestart(RBRACE);
+                return found_token_and_restart(RBRACE);
             case 33:
-                return foundTokenAndRestart(LBRACKET);
+                return found_token_and_restart(LBRACKET);
             case 34:
-                return foundTokenAndRestart(RBRACKET);
+                return found_token_and_restart(RBRACKET);
             case 35:
-                return foundTokenAndRestart(COLON);
+                return found_token_and_restart(COLON);
             case 36:
-                return foundTokenAndRestart(SEMICOLON);
+                return found_token_and_restart(SEMICOLON);
             case 37:
                 switch (currentInput) {
                     case '"':
-                        getNextCharAndGoTo(40);
+                        get_next_char_and_go_to(40);
                         break;
                     case '\\':
-                        getNextCharAndGoTo(41);
+                        get_next_char_and_go_to(41);
                         break;
                     case ENDOFFILE:
-                        getNextCharAndGoTo(17);
+                        get_next_char_and_go_to(17);
                         break;
                     default:
-                        getNextCharAndGoTo(37);
+                        get_next_char_and_go_to(37);
                         break;
                 }
                 break;
             case 38:
                 switch (currentInput) {
                     case '\\':
-                        getNextCharAndGoTo(99);
+                        get_next_char_and_go_to(99);
                         break;
                     default:
-                        getNextCharAndGoTo(42);
+                        get_next_char_and_go_to(42);
                         break;
                 }
                 break;
             case 39:
-                return foundTokenAndGetNextInput(STAR); //TODO alterar o automato para mudar o label
+                return found_token_and_restart(STAR); //TODO alterar o automato para mudar o label
             case 40:
-                return foundTokenAndRestart(LITERAL);
+                return found_token_and_restart(LITERAL);
             case 41:
-                getNextCharAndGoTo(37);
+                get_next_char_and_go_to(37);
                 break;
             case 42:
                 switch (currentInput) {
                     case '\'':
-                        getNextCharAndGoTo(40);
+                        get_next_char_and_go_to(40);
                         break;
                     case ENDOFFILE:
-                        getNextCharAndGoTo(17);
+                        get_next_char_and_go_to(17);
                         break;
                     default:
-                        getNextCharAndGoTo(18);
+                        get_next_char_and_go_to(18);
                         break;
                 }
                 break;
             case 43:
                 if (currentInput == '|')
-                    getNextCharAndGoTo(44);
+                    get_next_char_and_go_to(44);
                 else
-                    goToState(45);
+                    go_to_state(45);
                 break;
             case 44:
-                return foundTokenAndRestart(OR);
+                return found_token_and_restart(OR);
             case 45:
-                return foundTokenAndRestart(PIPE);
+                return found_token_and_restart(PIPE);
             case 46:
                 if (currentInput == '&')
-                    getNextCharAndGoTo(47);
+                    get_next_char_and_go_to(47);
                 else
-                    goToState(48);
+                    go_to_state(48);
                 break;
             case 47:
-                return foundTokenAndRestart(AND);
+                return found_token_and_restart(AND);
             case 48:
-                return foundTokenAndRestart(ADDRESS);
+                return found_token_and_restart(ADDRESS);
             case 49:
                 switch (currentInput) {
                     case '*':
-                        getNextCharAndGoTo(51);
+                        get_next_char_and_go_to(51);
                         break;
                     default:
-                        goToState(50);
+                        go_to_state(50);
                         break;
                 }
                 break;
             case 50:
-                return foundTokenAndRestart(SLASH);
+                return found_token_and_restart(SLASH);
             case 51:
                 switch (currentInput) {
                     case '*':
-                        getNextCharAndGoTo(52);
+                        get_next_char_and_go_to(52);
                         break;
                     case ENDOFFILE:
-                        goToState(17);
+                        go_to_state(17);
                         break;
                     default:
-                        getNextCharAndGoTo(51);
+                        get_next_char_and_go_to(51);
                         break;
                 }
                 break;
             case 52:
                 switch (currentInput) {
                     case '/':
-                        getNextCharAndGoTo(0);
+                        get_next_char_and_go_to(INITIAL_STATE);
                         break;
                     case ENDOFFILE:
-                        goToState(17);
+                        go_to_state(17);
                         break;
                     default:
-                        getNextCharAndGoTo(51);
+                        get_next_char_and_go_to(51);
                         break;
                 }
                 break;
             case 53:
-                return foundTokenAndRestart(DOT);
+                return found_token_and_restart(DOT);
             case 54:
-                return foundTokenAndRestart(ENDOFFILE);
+                return found_token_and_restart(ENDOFFILE);
             case 55:
-                if (isDigit(currentInput))
-                    getNextCharAndGoTo(55);
+                if (is_digit(currentInput))
+                    get_next_char_and_go_to(55);
                 else if (currentInput == 'e' ||
                          currentInput == 'E') //TODO consertar o automato para inserir esse estado
-                    getNextCharAndGoTo(20);
-                else if (isLetter(currentInput)) {
-                    getNextCharAndGoTo(18);
+                    get_next_char_and_go_to(20);
+                else if (is_letter(currentInput)) {
+                    get_next_char_and_go_to(18);
                 } else
                     //TODO Retornar o valor do número
-                    goToState(23);
+                    go_to_state(23);
                 break;
             case 99:
-                getNextCharAndGoTo(38);
+                get_next_char_and_go_to(38);
                 break;
         }
 
