@@ -5,6 +5,7 @@
 
 #include "token.h" // token definitions
 #include "lexical/analyzer.h"
+#include "lexical/error.h"
 
 #define TAM 20
 
@@ -43,5 +44,9 @@ int main()
 
     lexical_analyzer_dispose();
 
+    error_stack *errorStackPointer;
+    while ((errorStackPointer = error_pop()) != NULL) {
+        printf("[ERR] line %d -> %s\n", errorStackPointer->lineNumber, errorStackPointer->message);
+    }
     return 0;
 }

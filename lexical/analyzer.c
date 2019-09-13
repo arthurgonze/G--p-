@@ -3,11 +3,13 @@
 //
 
 #include "ctype.h"
-#include "../token.h"
 #include "stdbool.h"
 #include "stdio.h"
 #include "string.h"
 #include "stdlib.h"
+
+#include "../token.h"
+#include "error.h"
 
 #define BUFFER_SIZE 32
 #define INITIAL_STATE 0
@@ -22,7 +24,7 @@ int lexemeBufferSize = 0;
 
 int count = 0;
 //char* input = "< <= == >= > = != ! asda 10.03 10/";
-char *input = "while(true) {float k=11*5; 13225656866186628868268568658.5208929978928898e144688817878/5565684070.458078878759895859859336982>att q}";
+char *input = "while(true) {float k=11a2*5; 1a3225656866186628868268568658.5208929978928898e144688817878/5565684070.458078878759895859859336982>att q}";
 
 void get_next_char() {
 
@@ -79,8 +81,7 @@ bool is_digit(char c) {
 }
 
 void fail(char *reason) {
-    //TODO jogar os erros para uma pilha
-    printf("--Lexicon Error: [Line %d] %s--\n", currentLine, reason);
+    error_push(currentLine, reason);
     clear_lexeme();
 }
 
@@ -235,7 +236,6 @@ int lexical_analyzer_next_token() {
             case 12:
                 return found_token_and_restart(NOT);
             case 13:
-                //TODO implementar a leitura do lexema
                 if (is_letter(currentInput) || is_digit(currentInput))
                     get_next_char_and_go_to(13);
                 else
@@ -268,7 +268,7 @@ int lexical_analyzer_next_token() {
                 else if (currentInput == 'e' || currentInput == 'E')
                     get_next_char_and_go_to(20);
                 else if (is_letter(currentInput))
-                    get_next_char_and_go_to(18);
+                    go_to_state(18);
                 else
                     go_to_state(24);
                 break;
@@ -278,13 +278,13 @@ int lexical_analyzer_next_token() {
                 else if (currentInput == '+' || currentInput == '-')
                     get_next_char_and_go_to(21);
                 else
-                    get_next_char_and_go_to(18);
+                    go_to_state(18);
                 break;
             case 21:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(22);
                 else
-                    get_next_char_and_go_to(18);
+                    go_to_state(18);
                 break;
             case 22:
                 if (is_digit(currentInput))
@@ -301,7 +301,7 @@ int lexical_analyzer_next_token() {
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(26);
                 else if (is_letter(currentInput))
-                    get_next_char_and_go_to(18);
+                    go_to_state(18);
                 else
                     go_to_state(23);
                 break;
@@ -311,7 +311,7 @@ int lexical_analyzer_next_token() {
                 else if (currentInput == 'E' || currentInput == 'e')
                     get_next_char_and_go_to(20);
                 else if (is_letter(currentInput))
-                    get_next_char_and_go_to(18);
+                    go_to_state(18);
                 else
                     go_to_state(23);
                 break;
@@ -344,7 +344,7 @@ int lexical_analyzer_next_token() {
                         get_next_char_and_go_to(41);
                         break;
                     case ENDOFFILE:
-                        get_next_char_and_go_to(17);
+                        go_to_state(17);
                         break;
                     default:
                         get_next_char_and_go_to(37);
@@ -374,10 +374,10 @@ int lexical_analyzer_next_token() {
                         get_next_char_and_go_to(40);
                         break;
                     case ENDOFFILE:
-                        get_next_char_and_go_to(17);
+                        go_to_state(17);
                         break;
                     default:
-                        get_next_char_and_go_to(18);
+                        go_to_state(18);
                         break;
                 }
                 break;
@@ -450,7 +450,7 @@ int lexical_analyzer_next_token() {
                          currentInput == 'E') //TODO consertar o automato para inserir esse estado
                     get_next_char_and_go_to(20);
                 else if (is_letter(currentInput)) {
-                    get_next_char_and_go_to(18);
+                    go_to_state(18);
                 } else
                     //TODO Retornar o valor do número
                     go_to_state(23);
