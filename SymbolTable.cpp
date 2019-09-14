@@ -5,13 +5,13 @@
 
 #include "SymbolTable.h"
 
-
+template <typename HashedObj>
 bool SymbolTable::contains(const HashedObj &x)const
 {
     auto &whichList = theLists[myhash(x)];
     return find(begin(whichList), end(whichList), x) != end(whichList);
 }
-
+template <typename HashedObj>
 bool SymbolTable::insert(const HashedObj &x)
 {
     auto &whichList = theLists[myhash(x)];
@@ -24,7 +24,7 @@ bool SymbolTable::insert(const HashedObj &x)
     return true;
 }
 
-
+template <typename HashedObj>
 size_t SymbolTable::myhash(const HashedObj &x)const
 {
     static hash<HashedObj> hf;
