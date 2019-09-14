@@ -123,6 +123,33 @@ Compilador_2019_3/fast:
 	$(MAKE) -f CMakeFiles/Compilador_2019_3.dir/build.make CMakeFiles/Compilador_2019_3.dir/build
 .PHONY : Compilador_2019_3/fast
 
+SymbolTable.o: SymbolTable.cpp.o
+
+.PHONY : SymbolTable.o
+
+# target to build an object file
+SymbolTable.cpp.o:
+	$(MAKE) -f CMakeFiles/Compilador_2019_3.dir/build.make CMakeFiles/Compilador_2019_3.dir/SymbolTable.cpp.o
+.PHONY : SymbolTable.cpp.o
+
+SymbolTable.i: SymbolTable.cpp.i
+
+.PHONY : SymbolTable.i
+
+# target to preprocess a source file
+SymbolTable.cpp.i:
+	$(MAKE) -f CMakeFiles/Compilador_2019_3.dir/build.make CMakeFiles/Compilador_2019_3.dir/SymbolTable.cpp.i
+.PHONY : SymbolTable.cpp.i
+
+SymbolTable.s: SymbolTable.cpp.s
+
+.PHONY : SymbolTable.s
+
+# target to generate assembly for a file
+SymbolTable.cpp.s:
+	$(MAKE) -f CMakeFiles/Compilador_2019_3.dir/build.make CMakeFiles/Compilador_2019_3.dir/SymbolTable.cpp.s
+.PHONY : SymbolTable.cpp.s
+
 main.o: main.c.o
 
 .PHONY : main.o
@@ -159,6 +186,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... Compilador_2019_3"
+	@echo "... SymbolTable.o"
+	@echo "... SymbolTable.i"
+	@echo "... SymbolTable.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

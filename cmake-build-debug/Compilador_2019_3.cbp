@@ -44,6 +44,9 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="/usr/include/c++/5"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
+					<Add directory="/usr/include/c++/5/backward"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
@@ -64,6 +67,9 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="/usr/include/c++/5"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
+					<Add directory="/usr/include/c++/5/backward"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
@@ -78,6 +84,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/caveira/Documents/GitProjects/Compilador-2019.3/SymbolTable.cpp">
+			<Option target="Compilador_2019_3"/>
+		</Unit>
+		<Unit filename="/home/caveira/Documents/GitProjects/Compilador-2019.3/SymbolTable.h">
+			<Option target="Compilador_2019_3"/>
+		</Unit>
 		<Unit filename="/home/caveira/Documents/GitProjects/Compilador-2019.3/main.c">
 			<Option target="Compilador_2019_3"/>
 		</Unit>
