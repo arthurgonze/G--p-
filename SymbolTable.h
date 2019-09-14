@@ -6,8 +6,12 @@
 #define COMPILADOR_2019_3_SYMBOLTABLE_H
 
 #include <cstdlib>
+#include <vector>
 #include <list>
 #include <string>
+#include <algorithm>
+
+using namespace std;
 
 template <typename HashedObj>
 class SymbolTable{

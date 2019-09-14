@@ -2,12 +2,9 @@
 // Created by caveira on 9/13/19.
 //
 
+
 #include "SymbolTable.h"
 
-explicit  SymbolTable::SymbolTable(int size = 101)
-{
-
-}
 
 bool SymbolTable::contains(const HashedObj &x)const
 {

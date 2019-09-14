@@ -6,8 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/caveira/Documents/GitProjects/Compilador-2019.3/IO.c
-
 /home/caveira/Documents/GitProjects/Compilador-2019.3/main.c
 stdio.h
 -
