@@ -14,7 +14,7 @@
 using namespace std;
 
 template <typename HashedObj>
-class SymbolTable{
+     class SymbolTable{
 public:
     explicit  SymbolTable(int size = 101);
 

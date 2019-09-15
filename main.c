@@ -9,14 +9,11 @@
 #include <fcntl.h>
 #include <zconf.h>
 
-/// IO FUNCTIONS
-#define BUFSIZE 4096
-#define PERMS 0666 /*RW for owner, group, others */
-#undef getchar
-#undef getc
 
-int getchar(void);
-int getc(FILE *stream);
+/// IO FUNCTIONS
+
+#define PERMS 0666 /*RW for owner, group, others */
+
 void error(char *, ...);
 // END IO FUNCTIONS
 
@@ -26,6 +23,7 @@ void error(char *, ...);
  * @return
  */
 int main(int argc, char *argv[]) {
+
     int f1, f2;
     char ch;
 
@@ -68,58 +66,25 @@ int main(int argc, char *argv[]) {
             printf("[ERR] line %d -> %s\n", errorStackPointer->lineNumber, errorStackPointer->message);
         }
     }
-        return 0;
-    }
+    return 0;
+}
 
 
 /// IO FUNCTIONS
-/**
- * getchar: simple buffere version
- * @return
- */
-    int getchar(void) {
-        static char buf[BUFSIZE];
-        static char *bufp = buf;
-        static int n = 0;
-        /* Buffer is empty */
-        if (n == 0) {
-            n = read(0, buf, sizeof(buf));
-            bufp = buf;
-        }
-
-        return (--n >= 0) ? (unsigned char) *bufp++ : EOF;
-    }
-
-/**
- * getc: simple buffered version
- * @return
- */
-    int getc(FILE *stream) {
-        static char buf[BUFSIZE];
-        static char *bufp = buf;
-        static int n = 0;
-        /* Buffer is empty */
-        if (n == 0) {
-            n = read(stream, buf, sizeof(buf));
-            bufp = buf;
-        }
-
-        return (--n >= 0) ? (unsigned char) *bufp++ : EOF;
-    }
 
 /**
  * error: print an error message and die
  * @param fmt
  * @param ...
  */
-    void error(char *fmt, ...) {
-        va_list args;
+void error(char *fmt, ...) {
+    va_list args;
 
-        va_start(args, fmt);
-        fprintf(stderr, "error: ");
-        vprintf(fmt, args);
-        fprintf(stderr, "\n");
-        va_end(args);
-        exit(1);
-    }
+    va_start(args, fmt);
+    fprintf(stderr, "error: ");
+    vprintf(fmt, args);
+    fprintf(stderr, "\n");
+    va_end(args);
+    exit(1);
+}
 /// END OF IO FUNCTIONS
