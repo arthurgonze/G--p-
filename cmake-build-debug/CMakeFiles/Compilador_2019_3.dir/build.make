@@ -57,28 +57,28 @@ include CMakeFiles/Compilador_2019_3.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/Compilador_2019_3.dir/flags.make
 
-CMakeFiles/Compilador_2019_3.dir/main.c.o: CMakeFiles/Compilador_2019_3.dir/flags.make
-CMakeFiles/Compilador_2019_3.dir/main.c.o: ../main.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/caveira/Documents/GitProjects/Compilador-2019.3/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/Compilador_2019_3.dir/main.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/Compilador_2019_3.dir/main.c.o   -c /home/caveira/Documents/GitProjects/Compilador-2019.3/main.c
+CMakeFiles/Compilador_2019_3.dir/main.cpp.o: CMakeFiles/Compilador_2019_3.dir/flags.make
+CMakeFiles/Compilador_2019_3.dir/main.cpp.o: ../main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/caveira/Documents/GitProjects/Compilador-2019.3/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Compilador_2019_3.dir/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/Compilador_2019_3.dir/main.cpp.o -c /home/caveira/Documents/GitProjects/Compilador-2019.3/main.cpp
 
-CMakeFiles/Compilador_2019_3.dir/main.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/Compilador_2019_3.dir/main.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/caveira/Documents/GitProjects/Compilador-2019.3/main.c > CMakeFiles/Compilador_2019_3.dir/main.c.i
+CMakeFiles/Compilador_2019_3.dir/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Compilador_2019_3.dir/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/caveira/Documents/GitProjects/Compilador-2019.3/main.cpp > CMakeFiles/Compilador_2019_3.dir/main.cpp.i
 
-CMakeFiles/Compilador_2019_3.dir/main.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/Compilador_2019_3.dir/main.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/caveira/Documents/GitProjects/Compilador-2019.3/main.c -o CMakeFiles/Compilador_2019_3.dir/main.c.s
+CMakeFiles/Compilador_2019_3.dir/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Compilador_2019_3.dir/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/caveira/Documents/GitProjects/Compilador-2019.3/main.cpp -o CMakeFiles/Compilador_2019_3.dir/main.cpp.s
 
-CMakeFiles/Compilador_2019_3.dir/main.c.o.requires:
+CMakeFiles/Compilador_2019_3.dir/main.cpp.o.requires:
 
-.PHONY : CMakeFiles/Compilador_2019_3.dir/main.c.o.requires
+.PHONY : CMakeFiles/Compilador_2019_3.dir/main.cpp.o.requires
 
-CMakeFiles/Compilador_2019_3.dir/main.c.o.provides: CMakeFiles/Compilador_2019_3.dir/main.c.o.requires
-	$(MAKE) -f CMakeFiles/Compilador_2019_3.dir/build.make CMakeFiles/Compilador_2019_3.dir/main.c.o.provides.build
-.PHONY : CMakeFiles/Compilador_2019_3.dir/main.c.o.provides
+CMakeFiles/Compilador_2019_3.dir/main.cpp.o.provides: CMakeFiles/Compilador_2019_3.dir/main.cpp.o.requires
+	$(MAKE) -f CMakeFiles/Compilador_2019_3.dir/build.make CMakeFiles/Compilador_2019_3.dir/main.cpp.o.provides.build
+.PHONY : CMakeFiles/Compilador_2019_3.dir/main.cpp.o.provides
 
-CMakeFiles/Compilador_2019_3.dir/main.c.o.provides.build: CMakeFiles/Compilador_2019_3.dir/main.c.o
+CMakeFiles/Compilador_2019_3.dir/main.cpp.o.provides.build: CMakeFiles/Compilador_2019_3.dir/main.cpp.o
 
 
 CMakeFiles/Compilador_2019_3.dir/SymbolTable.cpp.o: CMakeFiles/Compilador_2019_3.dir/flags.make
@@ -107,13 +107,13 @@ CMakeFiles/Compilador_2019_3.dir/SymbolTable.cpp.o.provides.build: CMakeFiles/Co
 
 # Object files for target Compilador_2019_3
 Compilador_2019_3_OBJECTS = \
-"CMakeFiles/Compilador_2019_3.dir/main.c.o" \
+"CMakeFiles/Compilador_2019_3.dir/main.cpp.o" \
 "CMakeFiles/Compilador_2019_3.dir/SymbolTable.cpp.o"
 
 # External object files for target Compilador_2019_3
 Compilador_2019_3_EXTERNAL_OBJECTS =
 
-Compilador_2019_3: CMakeFiles/Compilador_2019_3.dir/main.c.o
+Compilador_2019_3: CMakeFiles/Compilador_2019_3.dir/main.cpp.o
 Compilador_2019_3: CMakeFiles/Compilador_2019_3.dir/SymbolTable.cpp.o
 Compilador_2019_3: CMakeFiles/Compilador_2019_3.dir/build.make
 Compilador_2019_3: CMakeFiles/Compilador_2019_3.dir/link.txt
@@ -125,7 +125,7 @@ CMakeFiles/Compilador_2019_3.dir/build: Compilador_2019_3
 
 .PHONY : CMakeFiles/Compilador_2019_3.dir/build
 
-CMakeFiles/Compilador_2019_3.dir/requires: CMakeFiles/Compilador_2019_3.dir/main.c.o.requires
+CMakeFiles/Compilador_2019_3.dir/requires: CMakeFiles/Compilador_2019_3.dir/main.cpp.o.requires
 CMakeFiles/Compilador_2019_3.dir/requires: CMakeFiles/Compilador_2019_3.dir/SymbolTable.cpp.o.requires
 
 .PHONY : CMakeFiles/Compilador_2019_3.dir/requires

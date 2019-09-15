@@ -90,7 +90,7 @@
 		<Unit filename="/home/caveira/Documents/GitProjects/Compilador-2019.3/SymbolTable.h">
 			<Option target="Compilador_2019_3"/>
 		</Unit>
-		<Unit filename="/home/caveira/Documents/GitProjects/Compilador-2019.3/main.c">
+		<Unit filename="/home/caveira/Documents/GitProjects/Compilador-2019.3/main.cpp">
 			<Option target="Compilador_2019_3"/>
 		</Unit>
 		<Unit filename="/home/caveira/Documents/GitProjects/Compilador-2019.3/token.h">

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <zconf.h>
+#include "SymbolTable.h"
 
 /// IO FUNCTIONS
 #define BUFSIZE 4096
@@ -12,6 +13,7 @@
 int getchar(void);
 int getc(FILE *stream);
 void error(char *, ...);
+
 // END IO FUNCTIONS
 
 /// MAIN
@@ -21,43 +23,53 @@ void error(char *, ...);
  */
 int main(int argc, char *argv[])
 {
-    int f1, f2;
-    char ch;
+    struct SymbolTable symbolTable;
 
-    if (argc==1)
-    {
-        while ((ch = getchar())!=EOF)
-        {
-            printf("%c", ch);
-        }
-    }
-    else
-    {
-        if (argc!=3)
-        {
-            error("Usage: cp from to \n");
-        }
-        else if (argc==3)
-        {
+    symbolTable.insert("ID","test1");
+    symbolTable.insert("NUMFLOAT","2.0");
 
-            if ((f1 = open(argv[1], O_RDONLY, 0))==-1)
-            {
-                error("cp: can't open %s \n", argv[1]);
-            }
+//    symbolTable.contains("test1");
+//    symbolTable.contains("2.0");
+//    symbolTable.contains("You Think I'm fat, huh? Fat men got a gun bitch! Yeah, fat fools packin' bitch! You think I ain't for real?");
 
-            if ((f2 = creat(argv[2], PERMS))==-1)
-            {
-                error("cp: can't creat %s, mode %03o \n", argv[2], PERMS);
-            }
+    return 0;
 
-            while ((ch = getc(f1))!=EOF)
-            {
-                printf("%c", ch);
-            }
-
-        }
-        return 0;
-    }
+//    int f1, f2;
+//    char ch;
+//
+//    if (argc==1)
+//    {
+//        while ((ch = getchar())!=EOF)
+//        {
+//            printf("%c", ch);
+//        }
+//    }
+//    else
+//    {
+//        if (argc!=3)
+//        {
+//            error("Usage: cp from to \n");
+//        }
+//        else if (argc==3)
+//        {
+//
+//            if ((f1 = open(argv[1], O_RDONLY, 0))==-1)
+//            {
+//                error("cp: can't open %s \n", argv[1]);
+//            }
+//
+//            if ((f2 = creat(argv[2], PERMS))==-1)
+//            {
+//                error("cp: can't creat %s, mode %03o \n", argv[2], PERMS);
+//            }
+//
+//            while ((ch = getc(f1))!=EOF)
+//            {
+//                printf("%c", ch);
+//            }
+//
+//        }
+//    }
 }
 
 
@@ -93,7 +105,7 @@ int getc(FILE *stream)
     /* Buffer is empty */
     if (n==0)
     {
-        n = read(stream, buf, sizeof(buf));
+        n = read(reinterpret_cast<ssize_t>(stream), buf, sizeof(buf));
         bufp = buf;
     }
 

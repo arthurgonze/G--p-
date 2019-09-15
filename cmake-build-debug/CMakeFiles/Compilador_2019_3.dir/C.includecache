@@ -6,6 +6,20 @@
 
 #IncludeRegexTransform: 
 
+/home/caveira/Documents/GitProjects/Compilador-2019.3/SymbolTable.h
+cstdlib
+/home/caveira/Documents/GitProjects/Compilador-2019.3/cstdlib
+vector
+-
+list
+-
+string
+-
+algorithm
+-
+tic.h
+-
+
 /home/caveira/Documents/GitProjects/Compilador-2019.3/main.c
 stdio.h
 -
@@ -15,4 +29,6 @@ fcntl.h
 -
 zconf.h
 -
+SymbolTable.h
+/home/caveira/Documents/GitProjects/Compilador-2019.3/SymbolTable.h
 
