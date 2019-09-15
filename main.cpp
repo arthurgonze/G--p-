@@ -19,10 +19,17 @@ void error(char *, ...);
  */
 int main(int argc, char *argv[])
 {
-    struct SymbolTable symbolTable;
-
-    symbolTable.insert("ID","test1");
-    symbolTable.insert("NUMFLOAT","2.0");
+    char *name = new char[M];
+    char *classtype = new char[M];
+    SymbolTable table;
+    name[0] = 't';
+    name[1] = 'e';
+    name[2] = 's';
+    name[3] = 't';
+    classtype[0] = 'I';
+    classtype[1] = 'D';
+    table.cInsert(name,classtype);
+    printf("%d", table.cSearch(name,classtype));
 
 
     return 0;

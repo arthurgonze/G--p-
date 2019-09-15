@@ -1,56 +1,74 @@
 #include "SymbolTable.h"
 
-SymbolTable::SymbolTable(int size)
-{
-    tableSize = size;
-    vector<list<newToken>>* theLists = new vector<list<newToken>>(); // The array of lists
-}
-
-/**
- * Verify if the table contains an item
- * @param x
- * @return
- */
-bool SymbolTable::contains(const newToken &x)const
-{
-    auto &whichList = theLists[hash(x.tokenName)];
-    return find(begin(whichList), end(whichList), x) != end(whichList);
-}
-
-/**
- * Add an item to the table
- * @param x
- * @return
- */
-bool SymbolTable::insert(const char* tokenName, const char* lexeme)
-{
-    newToken x;
-    x.tokenName = const_cast<char *>(tokenName);
-    x.attributeValue = const_cast<char *>(lexeme);
-
-    if(contains(x)) // search item, no duplicates allowed
-    {
-        return false;
+// Hashing position is calculated using sum of all character ascii values
+// Then performing Modulo operation to go to any bucket from 0 to CHAIN_LENGTH
+int SymbolTable::cHash(char* name){
+    int idx = 0;
+    for(int i = 0; name[i]; ++i){
+        idx = idx + name[i];
     }
-    theLists[hash(x.tokenName)].push_back(x)// add item
-
-    return true;
+    return (idx % CHAIN_LENGTH);
 }
 
-/**
- * A hash routine for string objects
- * @param x
- * @return
- */
-size_t SymbolTable::hash(const string tokenName)const
-{
-    unsigned  int hashVal = 0;
 
-    for(char ch : tokenName)
-    {
-        hashVal = 37 * hashVal + ch;
+// If there is no element in the chain then new element is added in front,
+// otherwise through hashing if we reach a chain or, bucket that contains an
+// element then we insert the new element at the beginning of the chain and
+// the rest of the elements is lniked to the end of new node.
+void SymbolTable::cInsert(char* name, char* classtype){
+    int pos = cHash(name);
+
+    if( block[pos] == NULL ){
+        block[pos] = new symbol_info();
+        block[pos]->name = name;
+        block[pos]->classtype = classtype;
+        block[pos]->next = NULL;
+    }
+    else{
+        symbol_info* newNode = new symbol_info();
+        newNode->name = name;
+        newNode->classtype = classtype;
+
+        // pointer swap
+        symbol_info* nextNode = block[pos];
+        block[pos] = newNode;
+        newNode->next = nextNode;
+    }
+}
+
+// Go to certain chain through hashing since we know others will not contain the searched value.
+// Next in that chain do a linear search on all element to see if it is there.
+bool SymbolTable::cSearch(char* name, char* classtype){
+    // Implement
+    int pos = cHash(name);
+
+    symbol_info* temp = block[pos];
+
+    while( temp != NULL ){
+        if( !strcmp( temp->name, name ) && !strcmp( temp->classtype, classtype ) ){
+            return true;
+        }
+        temp = temp->next;
     }
 
-    return hashVal % tableSize;
+    return false;
+}
+
+// Print the symbol table chain wise.
+void SymbolTable::showSymbolTable(){
+    // Implement
+    for(int i = 0; i < CHAIN_LENGTH; ++i){
+        printf("%d:", i);
+
+        // Do not modify the head
+        symbol_info* temp = block[i];
+
+        while( temp != NULL ){
+            printf("->[%s|%s]", temp->name, temp->classtype);
+            temp = temp->next;
+        }
+
+        printf("\n");
+    }
 }
 
