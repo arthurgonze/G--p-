@@ -1,7 +1,3 @@
-//
-// Created by caveira on 9/13/19.
-//
-
 #ifndef COMPILADOR_2019_3_SYMBOLTABLE_H
 #define COMPILADOR_2019_3_SYMBOLTABLE_H
 
@@ -12,21 +8,26 @@
 #include <algorithm>
 
 using namespace std;
+struct newToken
+{
+    char *tokenName; // ID, NUM, LITERAL , ETC
+    char *attributeValue; // POINTER TO SYMBOL TABLE IF NEEDED
+    bool operator==(const newToken &rhs) const { return tokenName==rhs.tokenName; }
+    bool operator!=(const newToken &rhs) const { return !(*this==rhs); }
+};
 
-template <typename HashedObj>
-     class SymbolTable{
+class SymbolTable
+{
 public:
-    explicit  SymbolTable(int size = 101);
+    explicit SymbolTable(int size = 101);
 
-    bool contains(const HashedObj &x)const;
-    bool insert(const HashedObj &x);
+    bool contains(const newToken &x) const;
+    bool insert(const char* tokenName, const char* lexeme);
 
 private:
-    vector<list<HashedObj>> theLists; // The array of lists
-    int currentSize;
-
-    size_t myhash(const HashedObj &x)const;
-    unsigned int hash(const string &key, int tableSize);
+    vector<list<newToken>>* theLists; // The array of lists
+    int tableSize;
+    size_t hash(const string tokenName) const;
 };
 
 #endif //COMPILADOR_2019_3_SYMBOLTABLE_H

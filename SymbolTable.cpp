@@ -1,51 +1,56 @@
-//
-// Created by caveira on 9/13/19.
-//
-
-
 #include "SymbolTable.h"
 
-template <typename HashedObj>
-bool SymbolTable<HashedObj>::contains(const HashedObj &x)const
+SymbolTable::SymbolTable(int size)
 {
-    auto &whichList = theLists[myhash(x)];
+    tableSize = size;
+    vector<list<newToken>>* theLists = new vector<list<newToken>>(); // The array of lists
+}
+
+/**
+ * Verify if the table contains an item
+ * @param x
+ * @return
+ */
+bool SymbolTable::contains(const newToken &x)const
+{
+    auto &whichList = theLists[hash(x.tokenName)];
     return find(begin(whichList), end(whichList), x) != end(whichList);
 }
-template <typename HashedObj>
-bool SymbolTable<HashedObj>::insert(const HashedObj &x)
+
+/**
+ * Add an item to the table
+ * @param x
+ * @return
+ */
+bool SymbolTable::insert(const char* tokenName, const char* lexeme)
 {
-    auto &whichList = theLists[myhash(x)];
-    if(find(begin(whichList), end(whichList), x) != end(whichList))
+    newToken x;
+    x.tokenName = const_cast<char *>(tokenName);
+    x.attributeValue = const_cast<char *>(lexeme);
+
+    if(contains(x)) // search item, no duplicates allowed
     {
         return false;
     }
-    whichList.push_back(x);
+    theLists[hash(x.tokenName)].push_back(x)// add item
 
     return true;
 }
 
-template <typename HashedObj>
-size_t SymbolTable<HashedObj>::myhash(const HashedObj &x)const
-{
-    static ::hash<HashedObj> hf;
-    return hf(x) % theLists.size();
-}
-
 /**
  * A hash routine for string objects
- * @param key
- * @param tableSize
+ * @param x
  * @return
  */
-template <typename HashedObj>
-unsigned int SymbolTable<HashedObj>::hash(const string &key, int tableSize)
+size_t SymbolTable::hash(const string tokenName)const
 {
     unsigned  int hashVal = 0;
 
-    for(char ch : key)
+    for(char ch : tokenName)
     {
         hashVal = 37 * hashVal + ch;
     }
 
     return hashVal % tableSize;
 }
+
