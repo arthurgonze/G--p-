@@ -1,6 +1,9 @@
 //
 // Created by souzajbr on 14/09/2019.
 //
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifndef COMPILADOR_2019_3_IO_H
 #define COMPILADOR_2019_3_IO_H
@@ -9,7 +12,11 @@
 
 #define BUFSIZE 4096
 
-int io_get_next_char_from_stdin(void);
-int io_get_next_char_from_file(FILE *stream);
+bool io_init_with_stdin();
+bool io_init_with_file(char* path);
+int io_get_next_char();
 
 #endif //COMPILADOR_2019_3_IO_H
+#ifdef __cplusplus
+}
+#endif

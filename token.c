@@ -3,7 +3,7 @@
 //
 #include "token.h"
 
-char* idToTokenName(int id) {
+char* token_id_to_name(int id) {
 
     switch(id) {
         case LT : return  "LT";
@@ -64,6 +64,6 @@ char* idToTokenName(int id) {
         case STRUCT : return  "STRUCT";
         case NUMINT : return  "NUMINT";
         case NUMFLOAT : return  "NUMFLOAT";
-
+        default: return "UNKNOWN";
     }
 }

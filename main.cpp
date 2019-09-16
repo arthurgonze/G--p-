@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <zconf.h>
 #include "SymbolTable.h"
-#pragma pack(1)
+#include "lexical/io.h"
+#include "lexical/analyzer.h"
+#include "token.h"
 /// IO FUNCTIONS
 
 #define PERMS 0666 /*RW for owner, group, others */
@@ -16,44 +18,45 @@ void error(char *, ...);
  * cp: copy f1 to f2
  * @return
  */
+
+const char *get_filename_ext(const char *filename) {
+    const char *dot = strrchr(filename, '.');
+    if(!dot || dot == filename) return "";
+    return dot + 1;
+}
+
+struct symbol_info
+{
+    int token;
+    int pos;
+    struct symbol_info *next;
+} *block[CHAIN_LENGTH];
+
 int main(int argc, char *argv[])
 {
-    SymbolTable table;
+
+    if(argc == 1) io_init_with_stdin(); else io_init_with_file(argv[1]);
+
+    lexical_analyzer_init();
+
+    int token = 0;
+//    while((token = lexical_analyzer_next_token()) <= ENDOFFILE) {
+//        printf("%s\t\t\t", token_id_to_name(token));
+//    }
+
 //    char *name = new char[M];
 //    char *classtype = new char[M];
+//    SymbolTable table;
 //    name[0] = 't';
 //    name[1] = 'e';
 //    name[2] = 's';
 //    name[3] = 't';
 //    classtype[0] = 'I';
 //    classtype[1] = 'D';
-//    table.cInsert(name, classtype);
-//    table.cInsert(name, classtype);
+//    table.cInsert(name,classtype);
+//    printf("%d", table.cSearch(name,classtype));
 
 
-
-    for (int j = 0; j < CHAIN_LENGTH*100; j++)
-    {
-        char *buffer = (char *) malloc(CHAIN_LENGTH + 1);
-        char *buffer2 = (char *) malloc(CHAIN_LENGTH + 1);
-
-        if (buffer==NULL)
-            exit(1);
-        if (buffer2==NULL)
-            exit(2);
-        for (int i = 0; i < 2; i++)
-        {
-            buffer2[i] = rand()%26 + 'A';
-        }
-
-        for (int i = 0; i < 5; i++)
-        {
-            buffer[i] = rand()%26 + 'a';
-        }
-        table.cInsert(buffer, buffer2);
-    }
-
-    table.showSymbolTable();
     return 0;
 
 //    int f1, f2;

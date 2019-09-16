@@ -31,6 +31,8 @@ public:
     bool cSearch(char *name, char *classtype);
     void showSymbolTable();
 private:
+    char* lexemeArray;
+
     int cHash(char *name);
     symbol_info **block = reinterpret_cast<symbol_info **>(new symbol_info[CHAIN_LENGTH]);// ponteiro para ponteiro de symbol_infos
 
