@@ -26,6 +26,8 @@ public:
     bool cSearch(char *name, char *classtype);
     void showSymbolTable();
 private:
+    char* lexemeArray;
+
     int cHash(char *name);
 };
 

@@ -1,7 +1,9 @@
 //
 // Created by arthur on 9/5/19.
 //
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 #ifndef COMPILADOR_2019_3_TOKEN_H
 #define COMPILADOR_2019_3_TOKEN_H
 /// TOKEN NAMES
@@ -122,6 +124,9 @@
 // NUMFLOAT
 #define NUMFLOAT 58
 
-char* idToTokenName(int id);
+char *token_id_to_name(int id);
 
 #endif //COMPILADOR_2019_3_TOKEN_H
+#ifdef __cplusplus
+}
+#endif
