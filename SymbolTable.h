@@ -2,13 +2,13 @@
 #define COMPILADOR_2019_3_SYMBOLTABLE_H
 
 #include<bits/stdc++.h>
-
+#pragma pack(1)
 using namespace std;
 
 // It has been seen if chain length is < 50 then some space is underutilized,
 // Theoretically seen if > 50, prime number is taken then chain takes moderate space.
 // So thats why 53 is used.
-#define CHAIN_LENGTH 53
+#define CHAIN_LENGTH 101
 #define M 128
 
 class SymbolTable
@@ -19,7 +19,12 @@ class SymbolTable
         char *name;
         char *classtype;
         struct symbol_info *next;
-    } *block[CHAIN_LENGTH];
+    };
+
+    struct node
+    {
+        struct node *next;
+    };
 
 public:
     void cInsert(char *name, char *classtype);
@@ -27,6 +32,10 @@ public:
     void showSymbolTable();
 private:
     int cHash(char *name);
+    symbol_info **block = reinterpret_cast<symbol_info **>(new symbol_info[CHAIN_LENGTH]);// ponteiro para ponteiro de symbol_infos
+
+    symbol_info *blockptr = reinterpret_cast<symbol_info *>(new symbol_info[CHAIN_LENGTH*CHAIN_LENGTH]);//ponteiro para objeto symbol_info
+//    symbol_info *block[CHAIN_LENGTH]; // array of array of symbols
 };
 
 #endif //COMPILADOR_2019_3_SYMBOLTABLE_H

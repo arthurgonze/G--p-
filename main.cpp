@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
 #include <zconf.h>
 #include "SymbolTable.h"
-
+#pragma pack(1)
 /// IO FUNCTIONS
 
 #define PERMS 0666 /*RW for owner, group, others */
@@ -19,19 +18,42 @@ void error(char *, ...);
  */
 int main(int argc, char *argv[])
 {
-    char *name = new char[M];
-    char *classtype = new char[M];
     SymbolTable table;
-    name[0] = 't';
-    name[1] = 'e';
-    name[2] = 's';
-    name[3] = 't';
-    classtype[0] = 'I';
-    classtype[1] = 'D';
-    table.cInsert(name,classtype);
-    printf("%d", table.cSearch(name,classtype));
+//    char *name = new char[M];
+//    char *classtype = new char[M];
+//    name[0] = 't';
+//    name[1] = 'e';
+//    name[2] = 's';
+//    name[3] = 't';
+//    classtype[0] = 'I';
+//    classtype[1] = 'D';
+//    table.cInsert(name, classtype);
+//    table.cInsert(name, classtype);
 
 
+
+    for (int j = 0; j < CHAIN_LENGTH*100; j++)
+    {
+        char *buffer = (char *) malloc(CHAIN_LENGTH + 1);
+        char *buffer2 = (char *) malloc(CHAIN_LENGTH + 1);
+
+        if (buffer==NULL)
+            exit(1);
+        if (buffer2==NULL)
+            exit(2);
+        for (int i = 0; i < 2; i++)
+        {
+            buffer2[i] = rand()%26 + 'A';
+        }
+
+        for (int i = 0; i < 5; i++)
+        {
+            buffer[i] = rand()%26 + 'a';
+        }
+        table.cInsert(buffer, buffer2);
+    }
+
+    table.showSymbolTable();
     return 0;
 
 //    int f1, f2;
@@ -80,7 +102,8 @@ int main(int argc, char *argv[])
  * @param fmt
  * @param ...
  */
-void error(char *fmt, ...) {
+void error(char *fmt, ...)
+{
     va_list args;
 
     va_start(args, fmt);
