@@ -10,6 +10,7 @@
 
 #include "../token.h"
 #include "error.h"
+#include "io.h"
 
 #define BUFFER_SIZE 32
 #define INITIAL_STATE 0
@@ -24,7 +25,6 @@ int lexemeBufferSize = 0;
 
 int count = 0;
 //char* input = "< <= == >= > = != ! asda 10.03 10/";
-char *input = "while(true) {float k=11a2*5; 1a3225656866186628868268568658.5208929978928898e144688817878/5565684070.458078878759895859859336982>att q}";
 
 void get_next_char() {
 
@@ -33,7 +33,7 @@ void get_next_char() {
         lexemeBuffer = (char *) realloc(lexemeBuffer, lexemeBufferSize);
     }
 
-    lexemeBuffer[lexemeLength++] = (currentInput = input[count++]);
+    lexemeBuffer[lexemeLength++] = (currentInput = io_get_next_char());
 }
 
 void clear_lexeme() {
@@ -69,7 +69,9 @@ int found_token_and_get_next_input(int token) {
 }
 
 void lexical_analyzer_init() {
+
     get_next_char();
+
 }
 
 bool is_letter(char c) {
