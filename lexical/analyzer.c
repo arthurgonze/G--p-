@@ -16,7 +16,7 @@
 #define INITIAL_STATE 0
 
 int currentState = INITIAL_STATE;
-char currentInput;
+int currentInput;
 int currentLine = 1;
 
 char *lexemeBuffer = NULL; //TODO refatorar isso para gerar uma struct de saida
@@ -174,6 +174,7 @@ int lexical_analyzer_next_token() {
                         case '/':
                             get_next_char_and_go_to(49);
                             break;
+                        case -1:
                         case ENDOFFILE:
                             go_to_state(54);
                             break;

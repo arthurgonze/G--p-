@@ -5,6 +5,7 @@
 #include "SymbolTable.h"
 #include "lexical/io.h"
 #include "lexical/analyzer.h"
+#include "lexical/error.h"
 #include "token.h"
 /// IO FUNCTIONS
 
@@ -22,28 +23,37 @@ void error(char *, ...);
 
 const char *get_filename_ext(const char *filename) {
     const char *dot = strrchr(filename, '.');
-    if(!dot || dot == filename) return "";
+    if (!dot || dot == filename) return "";
     return dot + 1;
 }
 
-struct symbol_info
-{
+struct symbol_info {
     int token;
     int pos;
     struct symbol_info *next;
 } *block[CHAIN_LENGTH];
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 
-    if(argc == 1) io_init_with_stdin(); else io_init_with_file(argv[1]);
+    if(argc == 1) io_init_with_stdin();
+
+    else
+        if (!io_init_with_file(argv[1]))
+            return 1;
 
     lexical_analyzer_init();
 
     int token = 0;
-//    while((token = lexical_analyzer_next_token()) <= ENDOFFILE) {
-//        printf("%s\t\t\t", token_id_to_name(token));
-//    }
+    do  {
+        token = lexical_analyzer_next_token();
+        printf("%s\n", token_id_to_name(token));
+
+    } while(token != ENDOFFILE);
+
+    error_stack* error_info;
+    while((error_info = error_pop()) != NULL) {
+        error("[LEXICAL ERROR] Line %d: %s", error_info->lineNumber, error_info->message);
+    }
 
 //    char *name = new char[M];
 //    char *classtype = new char[M];
@@ -111,9 +121,8 @@ void error(char *fmt, ...) {
 
     va_start(args, fmt);
     fprintf(stderr, "error: ");
-    vprintf(fmt, args);
+    vfprintf(stderr, fmt, args);
     fprintf(stderr, "\n");
     va_end(args);
-    exit(1);
 }
 /// END OF IO FUNCTIONS
