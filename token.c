@@ -13,7 +13,7 @@ char* token_id_to_name(int id) {
         case GT : return  "GT";
         case GE : return  "GE";
         case IF : return  "IF";
-        case THEN : return  "THEN";
+        case BOOL : return  "BOOL";
         case ELSE : return  "ELSE";
         case ID : return  "ID";
         case INT : return  "INT";
