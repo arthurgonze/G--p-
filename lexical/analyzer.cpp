@@ -95,6 +95,11 @@ struct token_info found_token_and_check_for_reserved_word() {
     }
 }
 
+struct token_info found_literal_and_restart(int token) {
+    remove_last_char_from_lexeme();
+    literalsTable.cInsert(token, lexemeBuffer);
+    return found_token_and_restart(token);
+}
 
 void lexical_analyzer_init() {
 
@@ -210,7 +215,7 @@ struct token_info lexical_analyzer_next_token() {
                             go_to_state(54);
                             break;
                         default:
-                            return found_token_and_restart(-1); //TODO tratar isso
+                            get_next_char_and_go_to(18); //TODO tratar isso
                     }
                 break;
             case 1:
@@ -395,16 +400,14 @@ struct token_info lexical_analyzer_next_token() {
             case 39:
                 return found_token_and_restart(STAR); //TODO alterar o automato para mudar o label
             case 40:
-                remove_last_char_from_lexeme();
-                literalsTable.cInsert(LITERAL, lexemeBuffer);
-                return found_token_and_restart(LITERAL);
+                return found_literal_and_restart(LITERAL);
             case 41:
                 get_next_char_and_go_to(37);
                 break;
             case 42:
                 switch (currentInput) {
                     case '\'':
-                        get_next_char_and_go_to(40);
+                        get_next_char_and_go_to(98); //TODO atualizar o automato
                         break;
                     case ENDOFFILE:
                         go_to_state(17);
@@ -488,6 +491,8 @@ struct token_info lexical_analyzer_next_token() {
                     //TODO Retornar o valor do número
                     go_to_state(23);
                 break;
+            case 98:
+                return found_literal_and_restart(LITERALCHAR);
             case 99:
                 get_next_char_and_go_to(38);
                 break;

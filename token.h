@@ -123,7 +123,8 @@ extern "C" {
 #define NUMINT 57
 // NUMFLOAT
 #define NUMFLOAT 58
-
+// LITERAL CHAR
+#define LITERALCHAR 59
 char *token_id_to_name(int id);
 
 #endif //COMPILADOR_2019_3_TOKEN_H
