@@ -22,7 +22,7 @@ int currentInput;
 int currentLine = 1;
 int currentColumn = 0;
 
-char *lexemeBuffer = NULL; //TODO refatorar isso para gerar uma struct de saida
+char *lexemeBuffer = NULL;
 int lexemeLength = 0;
 int lexemeBufferSize = 0;
 
@@ -202,6 +202,10 @@ void fail(char *reason) {
     clear_lexeme();
 }
 
+void handle_next_line() {
+    currentLine++;
+    currentColumn = 1;
+}
 /**
  * Terminates the analyzer instance
  */
@@ -221,11 +225,8 @@ struct token_info lexical_analyzer_next_token() {
         switch (currentState) {
 
             case INITIAL_STATE:
-                if (currentInput == '\n') {
-                    currentLine++;
-                    currentColumn = 1;
-                }
-
+                if (currentInput == '\n')
+                    handle_next_line();
                 if (isspace(currentInput)) {
                     get_next_char_and_go_to(INITIAL_STATE);
                     clear_lexeme();
@@ -298,12 +299,15 @@ struct token_info lexical_analyzer_next_token() {
                         case '/':
                             get_next_char_and_go_to(49);
                             break;
+                        case ':':
+                            get_next_char_and_go_to(97);
+                            break;
                         case EOF:
                         case ENDOFFILE:
                             go_to_state(54);
                             break;
                         default:
-                            get_next_char_and_go_to(18); //TODO tratar isso
+                            get_next_char_and_go_to(18);
                     }
                 break;
             case 1:
@@ -471,6 +475,8 @@ struct token_info lexical_analyzer_next_token() {
                     case ENDOFFILE:
                         go_to_state(17);
                         break;
+                    case '\n':
+                        handle_next_line();
                     default:
                         get_next_char_and_go_to(37);
                         break;
@@ -548,6 +554,8 @@ struct token_info lexical_analyzer_next_token() {
                     case ENDOFFILE:
                         go_to_state(17);
                         break;
+                    case '\n':
+                        handle_next_line();
                     default:
                         get_next_char_and_go_to(51);
                         break;
@@ -583,6 +591,8 @@ struct token_info lexical_analyzer_next_token() {
                     //TODO Retornar o valor do número
                     go_to_state(23);
                 break;
+            case 97:
+                return found_token_and_restart(COLON);
             case 98:
                 return found_literal_and_restart(LITERALCHAR); //found LITERAL
             case 99:

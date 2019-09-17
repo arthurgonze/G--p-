@@ -1,0 +1,7 @@
+/*
+    This should return a lexical error (Unexpected char)
+*/
+int main() {
+    char c = 'aa';
+    char* c2 = "Testing"
+}

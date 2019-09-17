@@ -1,0 +1,10 @@
+//*
+    This file has show lexical error
+*/
+
+int i = 12.3e-10; /*This will not throw lexical errors, since its lexically correct*/
+
+/*This will*/
+char* a = "arawar""
+
+int j = 32679723259;
