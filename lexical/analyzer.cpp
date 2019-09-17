@@ -401,7 +401,7 @@ struct token_info lexical_analyzer_next_token() {
                     go_to_state(24);
                 break;
             case 20:
-                if (is_digit(currentInput)) //TODO consertar automato nesse estado
+                if (is_digit(currentInput))
                     get_next_char_and_go_to(22);
                 else if (currentInput == '+' || currentInput == '-')
                     get_next_char_and_go_to(21);
@@ -493,7 +493,7 @@ struct token_info lexical_analyzer_next_token() {
                 }
                 break;
             case 39:
-                return found_token_and_restart(STAR); //found STAR //TODO alterar o automato para mudar o label
+                return found_token_and_restart(STAR); //found STAR
             case 40:
                 return found_literal_and_restart(LITERAL); //found LITERAL
             case 41:
@@ -502,7 +502,7 @@ struct token_info lexical_analyzer_next_token() {
             case 42:
                 switch (currentInput) {
                     case '\'':
-                        get_next_char_and_go_to(98); //TODO atualizar o automato
+                        get_next_char_and_go_to(98);
                         break;
                     case EOF:
                     case ENDOFFILE:
@@ -582,13 +582,11 @@ struct token_info lexical_analyzer_next_token() {
             case 55:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(55);
-                else if (currentInput == 'e' ||
-                         currentInput == 'E') //TODO consertar o automato para inserir esse estado
+                else if (currentInput == 'e' || currentInput == 'E')
                     get_next_char_and_go_to(20);
                 else if (is_letter(currentInput)) {
                     go_to_state(18);
                 } else
-                    //TODO Retornar o valor do número
                     go_to_state(23);
                 break;
             case 97:
