@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
 #include <zconf.h>
 #include "SymbolTable.h"
 #include "lexical/io.h"
@@ -12,7 +11,6 @@
 #define PERMS 0666 /*RW for owner, group, others */
 
 void error(char *, ...);
-
 // END IO FUNCTIONS
 
 /// MAIN
@@ -20,38 +18,30 @@ void error(char *, ...);
  * cp: copy f1 to f2
  * @return
  */
-
 const char *get_filename_ext(const char *filename) {
     const char *dot = strrchr(filename, '.');
     if (!dot || dot == filename) return "";
     return dot + 1;
 }
 
-struct symbol_info {
-    int token;
-    int pos;
-    struct symbol_info *next;
-} *block[CHAIN_LENGTH];
-
 int main(int argc, char *argv[]) {
 
-    if(argc == 1) io_init_with_stdin();
+    if (argc == 1) io_init_with_stdin();
 
-    else
-        if (!io_init_with_file(argv[1]))
-            return 1;
+    else if (!io_init_with_file(argv[1]))
+        return 1;
 
     lexical_analyzer_init();
 
     int token = 0;
-    do  {
+    do {
         token = lexical_analyzer_next_token();
         printf("%s\n", token_id_to_name(token));
 
-    } while(token != ENDOFFILE);
+    } while (token != ENDOFFILE);
 
-    error_stack* error_info;
-    while((error_info = error_pop()) != NULL) {
+    error_stack *error_info;
+    while ((error_info = error_pop()) != NULL) {
         error("[LEXICAL ERROR] Line %d: %s", error_info->lineNumber, error_info->message);
     }
 
@@ -69,48 +59,10 @@ int main(int argc, char *argv[]) {
 
 
     return 0;
-
-//    int f1, f2;
-//    char ch;
-//
-//    if (argc==1)
-//    {
-//        while ((ch = getchar())!=EOF)
-//        {
-//            printf("%c", ch);
-//        }
-//    }
-//    else
-//    {
-//        if (argc!=3)
-//        {
-//            error("Usage: cp from to \n");
-//        }
-//        else if (argc==3)
-//        {
-//
-//            if ((f1 = open(argv[1], O_RDONLY, 0))==-1)
-//            {
-//                error("cp: can't open %s \n", argv[1]);
-//            }
-//
-//            if ((f2 = creat(argv[2], PERMS))==-1)
-//            {
-//                error("cp: can't creat %s, mode %03o \n", argv[2], PERMS);
-//            }
-//
-//            while ((ch = getc(f1))!=EOF)
-//            {
-//                printf("%c", ch);
-//            }
-//
-//        }
-//    }
 }
 
 
 /// IO FUNCTIONS
-
 /**
  * error: print an error message and die
  * @param fmt
