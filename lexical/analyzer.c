@@ -16,7 +16,7 @@
 #define INITIAL_STATE 0
 
 int currentState = INITIAL_STATE;
-char currentInput;
+int currentInput;
 int currentLine = 1;
 
 char *lexemeBuffer = NULL; //TODO refatorar isso para gerar uma struct de saida
@@ -26,11 +26,9 @@ int lexemeBufferSize = 0;
 int count = 0;
 //char* input = "< <= == >= > = != ! asda 10.03 10/";
 
-void get_next_char()
-{
+void get_next_char() {
 
-    if (lexemeLength==lexemeBufferSize)
-    {
+    if (lexemeLength == lexemeBufferSize) {
         lexemeBufferSize += BUFFER_SIZE;
         lexemeBuffer = (char *) realloc(lexemeBuffer, lexemeBufferSize);
     }
@@ -38,8 +36,7 @@ void get_next_char()
     lexemeBuffer[lexemeLength++] = (currentInput = io_get_next_char());
 }
 
-void clear_lexeme()
-{
+void clear_lexeme() {
 
     memset(lexemeBuffer, 0, lexemeBufferSize);
 
@@ -47,19 +44,16 @@ void clear_lexeme()
     lexemeLength = 1;
 }
 
-void get_next_char_and_go_to(int state)
-{
+void get_next_char_and_go_to(int state) {
     get_next_char();
     currentState = state;
 }
 
-void go_to_state(int state)
-{
+void go_to_state(int state) {
     currentState = state;
 }
 
-int found_token_and_restart(int token)
-{
+int found_token_and_restart(int token) {
     lexemeBuffer[lexemeLength - 1] = '\0';
     printf("%s\t\t\t->\t", lexemeBuffer);
 
@@ -69,159 +63,181 @@ int found_token_and_restart(int token)
     return token;
 }
 
-int found_token_and_get_next_input(int token)
-{
+int found_token_and_get_next_input(int token) {
     get_next_char();
     return found_token_and_restart(token);
 }
 
-void lexical_analyzer_init()
-{
+void lexical_analyzer_init() {
 
     get_next_char();
 
 }
 
-bool is_letter(char c)
-{
+bool is_letter(char c) {
     return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z';
 }
 
-bool is_digit(char c)
-{
+bool is_digit(char c) {
     return c >= '0' && c <= '9';
 }
 
-void fail(char *reason)
-{
+void fail(char *reason) {
     error_push(currentLine, reason);
     clear_lexeme();
 }
 
-void lexical_analyzer_dispose()
-{
+void lexical_analyzer_dispose() {
 
     free(lexemeBuffer);
 }
 
-int lexical_analyzer_next_token()
-{
+int lexical_analyzer_next_token() {
 
-    while (true)
-    {
+    while (true) {
 
-        switch (currentState)
-        {
+        switch (currentState) {
 
             case INITIAL_STATE:
-                if (currentInput=='\n')
+                if (currentInput == '\n')
                     currentLine++;
 
-                if (isspace(currentInput))
-                {
+                if (isspace(currentInput)) {
                     get_next_char_and_go_to(INITIAL_STATE);
                     clear_lexeme();
-                }
-                else if (is_letter(currentInput))
-                {
+                } else if (is_letter(currentInput)) {
                     get_next_char_and_go_to(13);
-                }
-                else if (is_digit(currentInput))
+                } else if (is_digit(currentInput))
                     get_next_char_and_go_to(19);
                 else
-                    switch (currentInput)
-                    {
-                        case '<':get_next_char_and_go_to(1);
+                    switch (currentInput) {
+                        case '<':
+                            get_next_char_and_go_to(1);
                             break;
-                        case '=':get_next_char_and_go_to(4);
+                        case '=':
+                            get_next_char_and_go_to(4);
                             break;
-                        case '>':get_next_char_and_go_to(5);
+                        case '>':
+                            get_next_char_and_go_to(5);
                             break;
-                        case '!':get_next_char_and_go_to(10);
+                        case '!':
+                            get_next_char_and_go_to(10);
                             break;
-                        case '.':get_next_char_and_go_to(14);
+                        case '.':
+                            get_next_char_and_go_to(14);
                             break;
-                        case '+':get_next_char_and_go_to(27);
+                        case '+':
+                            get_next_char_and_go_to(27);
                             break;
-                        case ')':get_next_char_and_go_to(28);
+                        case ')':
+                            get_next_char_and_go_to(28);
                             break;
-                        case '-':get_next_char_and_go_to(29);
+                        case '-':
+                            get_next_char_and_go_to(29);
                             break;
-                        case '(':get_next_char_and_go_to(30);
+                        case '(':
+                            get_next_char_and_go_to(30);
                             break;
-                        case '{':get_next_char_and_go_to(31);
+                        case '{':
+                            get_next_char_and_go_to(31);
                             break;
-                        case '}':get_next_char_and_go_to(32);
+                        case '}':
+                            get_next_char_and_go_to(32);
                             break;
-                        case '[':get_next_char_and_go_to(33);
+                        case '[':
+                            get_next_char_and_go_to(33);
                             break;
-                        case ']':get_next_char_and_go_to(34);
+                        case ']':
+                            get_next_char_and_go_to(34);
                             break;
-                        case ',':get_next_char_and_go_to(35);
+                        case ',':
+                            get_next_char_and_go_to(35);
                             break;
-                        case ';':get_next_char_and_go_to(36);
+                        case ';':
+                            get_next_char_and_go_to(36);
                             break;
-                        case '"':get_next_char_and_go_to(37);
+                        case '"':
+                            get_next_char_and_go_to(37);
                             break;
-                        case '\'':get_next_char_and_go_to(38);
+                        case '\'':
+                            get_next_char_and_go_to(38);
                             break;
-                        case '*':get_next_char_and_go_to(39);
+                        case '*':
+                            get_next_char_and_go_to(39);
                             break;
-                        case '|':get_next_char_and_go_to(43);
+                        case '|':
+                            get_next_char_and_go_to(43);
                             break;
-                        case '&':get_next_char_and_go_to(46);
+                        case '&':
+                            get_next_char_and_go_to(46);
                             break;
-                        case '/':get_next_char_and_go_to(49);
+                        case '/':
+                            get_next_char_and_go_to(49);
                             break;
-                        case ENDOFFILE:go_to_state(54);
+                        case -1:
+                        case ENDOFFILE:
+                            go_to_state(54);
                             break;
-                        default:return -1;
+                        default:
+                            return -1;
                     }
                 break;
             case 1:
-                switch (currentInput)
-                {
-                    case '=':go_to_state(2);
+                switch (currentInput) {
+                    case '=':
+                        go_to_state(2);
                         break;
-                    default:go_to_state(3);
+                    default:
+                        go_to_state(3);
                         break;
                 }
                 break;
-            case 2:return found_token_and_get_next_input(LE);
-            case 3:return found_token_and_restart(LT);
+            case 2:
+                return found_token_and_get_next_input(LE);
+            case 3:
+                return found_token_and_restart(LT);
             case 4:
-                switch (currentInput)
-                {
-                    case '=':get_next_char_and_go_to(6);
+                switch (currentInput) {
+                    case '=':
+                        get_next_char_and_go_to(6);
                         break;
-                    default:go_to_state(7);
+                    default:
+                        go_to_state(7);
                         break;
                 }
                 break;
             case 5:
-                switch (currentInput)
-                {
-                    case '=':get_next_char_and_go_to(8);
+                switch (currentInput) {
+                    case '=':
+                        get_next_char_and_go_to(8);
                         break;
-                    default:go_to_state(9);
+                    default:
+                        go_to_state(9);
                         break;
                 }
                 break;
-            case 6:return found_token_and_get_next_input(EQ);
-            case 7:return found_token_and_restart(ASSIGN);
-            case 8:return found_token_and_get_next_input(GE);
-            case 9:return found_token_and_restart(GT);
+            case 6:
+                return found_token_and_get_next_input(EQ);
+            case 7:
+                return found_token_and_restart(ASSIGN);
+            case 8:
+                return found_token_and_get_next_input(GE);
+            case 9:
+                return found_token_and_restart(GT);
             case 10:
-                switch (currentInput)
-                {
-                    case '=':get_next_char_and_go_to(11);
+                switch (currentInput) {
+                    case '=':
+                        get_next_char_and_go_to(11);
                         break;
-                    default:go_to_state(12);
+                    default:
+                        go_to_state(12);
                         break;
                 }
                 break;
-            case 11:return found_token_and_get_next_input(NE);
-            case 12:return found_token_and_restart(NOT);
+            case 11:
+                return found_token_and_get_next_input(NE);
+            case 12:
+                return found_token_and_restart(NOT);
             case 13:
                 if (is_letter(currentInput) || is_digit(currentInput))
                     get_next_char_and_go_to(13);
@@ -239,18 +255,20 @@ int lexical_analyzer_next_token()
                 //TODO verificar para ver se é palavra reservada
                 //TODO adicionar
                 return found_token_and_restart(ID);
-            case 17:go_to_state(INITIAL_STATE);
+            case 17:
+                go_to_state(INITIAL_STATE);
                 fail("Unexpected end of file");
                 break;
-            case 18:go_to_state(INITIAL_STATE);
+            case 18:
+                go_to_state(INITIAL_STATE);
                 fail("Unexpected character");
                 break;
             case 19:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(19);
-                else if (currentInput=='.')
+                else if (currentInput == '.')
                     get_next_char_and_go_to(25);
-                else if (currentInput=='e' || currentInput=='E')
+                else if (currentInput == 'e' || currentInput == 'E')
                     get_next_char_and_go_to(20);
                 else if (is_letter(currentInput))
                     go_to_state(18);
@@ -260,7 +278,7 @@ int lexical_analyzer_next_token()
             case 20:
                 if (is_digit(currentInput)) //TODO consertar automato nesse estado
                     get_next_char_and_go_to(22);
-                else if (currentInput=='+' || currentInput=='-')
+                else if (currentInput == '+' || currentInput == '-')
                     get_next_char_and_go_to(21);
                 else
                     go_to_state(18);
@@ -274,13 +292,14 @@ int lexical_analyzer_next_token()
             case 22:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(22);
-                else
-                {
+                else {
                     go_to_state(23);
                 }
                 break;
-            case 23:return found_token_and_restart(NUMFLOAT);
-            case 24:return found_token_and_restart(NUMINT);
+            case 23:
+                return found_token_and_restart(NUMFLOAT);
+            case 24:
+                return found_token_and_restart(NUMINT);
             case 25:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(26);
@@ -292,125 +311,155 @@ int lexical_analyzer_next_token()
             case 26:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(26);
-                else if (currentInput=='E' || currentInput=='e')
+                else if (currentInput == 'E' || currentInput == 'e')
                     get_next_char_and_go_to(20);
                 else if (is_letter(currentInput))
                     go_to_state(18);
                 else
                     go_to_state(23);
                 break;
-            case 27:return found_token_and_restart(PLUS);
-            case 28:return found_token_and_restart(RPARENT);
-            case 29:return found_token_and_restart(MINUS);
-            case 30:return found_token_and_restart(LPARENT);
-            case 31:return found_token_and_restart(LBRACE);
-            case 32:return found_token_and_restart(RBRACE);
-            case 33:return found_token_and_restart(LBRACKET);
-            case 34:return found_token_and_restart(RBRACKET);
-            case 35:return found_token_and_restart(COLON);
-            case 36:return found_token_and_restart(SEMICOLON);
+            case 27:
+                return found_token_and_restart(PLUS);
+            case 28:
+                return found_token_and_restart(RPARENT);
+            case 29:
+                return found_token_and_restart(MINUS);
+            case 30:
+                return found_token_and_restart(LPARENT);
+            case 31:
+                return found_token_and_restart(LBRACE);
+            case 32:
+                return found_token_and_restart(RBRACE);
+            case 33:
+                return found_token_and_restart(LBRACKET);
+            case 34:
+                return found_token_and_restart(RBRACKET);
+            case 35:
+                return found_token_and_restart(COLON);
+            case 36:
+                return found_token_and_restart(SEMICOLON);
             case 37:
-                switch (currentInput)
-                {
-                    case '"':get_next_char_and_go_to(40);
+                switch (currentInput) {
+                    case '"':
+                        get_next_char_and_go_to(40);
                         break;
-                    case '\\':get_next_char_and_go_to(41);
+                    case '\\':
+                        get_next_char_and_go_to(41);
                         break;
-                    case ENDOFFILE:go_to_state(17);
+                    case ENDOFFILE:
+                        go_to_state(17);
                         break;
-                    default:get_next_char_and_go_to(37);
+                    default:
+                        get_next_char_and_go_to(37);
                         break;
                 }
                 break;
             case 38:
-                switch (currentInput)
-                {
-                    case '\\':get_next_char_and_go_to(99);
+                switch (currentInput) {
+                    case '\\':
+                        get_next_char_and_go_to(99);
                         break;
-                    default:get_next_char_and_go_to(42);
+                    default:
+                        get_next_char_and_go_to(42);
                         break;
                 }
                 break;
-            case 39:return found_token_and_restart(STAR); //TODO alterar o automato para mudar o label
-            case 40:return found_token_and_restart(LITERAL);
-            case 41:get_next_char_and_go_to(37);
+            case 39:
+                return found_token_and_restart(STAR); //TODO alterar o automato para mudar o label
+            case 40:
+                return found_token_and_restart(LITERAL);
+            case 41:
+                get_next_char_and_go_to(37);
                 break;
             case 42:
-                switch (currentInput)
-                {
-                    case '\'':get_next_char_and_go_to(40);
+                switch (currentInput) {
+                    case '\'':
+                        get_next_char_and_go_to(40);
                         break;
-                    case ENDOFFILE:go_to_state(17);
+                    case ENDOFFILE:
+                        go_to_state(17);
                         break;
-                    default:go_to_state(18);
+                    default:
+                        go_to_state(18);
                         break;
                 }
                 break;
             case 43:
-                if (currentInput=='|')
+                if (currentInput == '|')
                     get_next_char_and_go_to(44);
                 else
                     go_to_state(45);
                 break;
-            case 44:return found_token_and_restart(OR);
-            case 45:return found_token_and_restart(PIPE);
+            case 44:
+                return found_token_and_restart(OR);
+            case 45:
+                return found_token_and_restart(PIPE);
             case 46:
-                if (currentInput=='&')
+                if (currentInput == '&')
                     get_next_char_and_go_to(47);
                 else
                     go_to_state(48);
                 break;
-            case 47:return found_token_and_restart(AND);
-            case 48:return found_token_and_restart(ADDRESS);
+            case 47:
+                return found_token_and_restart(AND);
+            case 48:
+                return found_token_and_restart(ADDRESS);
             case 49:
-                switch (currentInput)
-                {
-                    case '*':get_next_char_and_go_to(51);
+                switch (currentInput) {
+                    case '*':
+                        get_next_char_and_go_to(51);
                         break;
-                    default:go_to_state(50);
+                    default:
+                        go_to_state(50);
                         break;
                 }
                 break;
-            case 50:return found_token_and_restart(SLASH);
+            case 50:
+                return found_token_and_restart(SLASH);
             case 51:
-                switch (currentInput)
-                {
-                    case '*':get_next_char_and_go_to(52);
+                switch (currentInput) {
+                    case '*':
+                        get_next_char_and_go_to(52);
                         break;
-                    case ENDOFFILE:go_to_state(17);
+                    case ENDOFFILE:
+                        go_to_state(17);
                         break;
-                    default:get_next_char_and_go_to(51);
+                    default:
+                        get_next_char_and_go_to(51);
                         break;
                 }
                 break;
             case 52:
-                switch (currentInput)
-                {
-                    case '/':get_next_char_and_go_to(INITIAL_STATE);
+                switch (currentInput) {
+                    case '/':
+                        get_next_char_and_go_to(INITIAL_STATE);
                         break;
-                    case ENDOFFILE:go_to_state(17);
+                    case ENDOFFILE:
+                        go_to_state(17);
                         break;
-                    default:get_next_char_and_go_to(51);
+                    default:
+                        get_next_char_and_go_to(51);
                         break;
                 }
                 break;
-            case 53:return found_token_and_restart(DOT);
-            case 54:return found_token_and_restart(ENDOFFILE);
+            case 53:
+                return found_token_and_restart(DOT);
+            case 54:
+                return found_token_and_restart(ENDOFFILE);
             case 55:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(55);
-                else if (currentInput=='e' ||
-                    currentInput=='E') //TODO consertar o automato para inserir esse estado
+                else if (currentInput == 'e' ||
+                         currentInput == 'E') //TODO consertar o automato para inserir esse estado
                     get_next_char_and_go_to(20);
-                else if (is_letter(currentInput))
-                {
+                else if (is_letter(currentInput)) {
                     go_to_state(18);
-                }
-                else
+                } else
                     //TODO Retornar o valor do número
                     go_to_state(23);
                 break;
-            case 99:get_next_char_and_go_to(38);
+            case 99:
+                get_next_char_and_go_to(38);
                 break;
         }
 
