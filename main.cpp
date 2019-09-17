@@ -12,29 +12,17 @@
 #define RETURN_CODE_FILE_ERROR 1
 #define RETURN_CODE_LEXICAL_ERROR 2
 
-void error(char *, ...);
-// END IO FUNCTIONS
-
-/// MAIN
-/**
- * cp: copy f1 to f2
- * @return
- */
-const char *get_filename_ext(const char *filename) {
-    const char *dot = strrchr(filename, '.');
-    if (!dot || dot == filename) return "";
-    return dot;
-}
-
+void send_error_to_stderr(char *fmt, ...);
 
 void print_symbol_table(struct SymbolTable symbolTable, bool showHeader, bool showToken, bool showLexeme,
                         bool showInternalCode, char *tableName) {
     struct symbol_info **block = symbolTable.block;
-    int cont = 0;
 
     printf("\nTABELA DE SÍMBOLOS: %s\n", tableName);
     printf("-------------------------------------------\n");
 
+    //Check if column names headers needs to be printed
+    //If necessary, print selected;
     if (showHeader) {
         if (showToken)
             printf("TOKEN\t\t");
@@ -47,10 +35,10 @@ void print_symbol_table(struct SymbolTable symbolTable, bool showHeader, bool sh
 
         printf("\n-------------------------------------------\n");
     }
-    for (int i = 0; i < TABLE_SIZE; ++i) {
+    for (int i = 0; i < TABLE_SIZE; ++i) { //Get all the entries
 
         symbol_info *temp = block[i];
-        if (temp == NULL)
+        if (temp == NULL) //If its null, nothing to be done
             continue;
 
         while (temp != NULL) {
@@ -67,10 +55,9 @@ void print_symbol_table(struct SymbolTable symbolTable, bool showHeader, bool sh
 
             printf("\n");
             temp = temp->next;
-            cont++;
+
         }
 
-        cont = 0;
     }
 
     printf("\n");
@@ -114,7 +101,7 @@ int main(int argc, char *argv[]) {
 
         //Check if the lexeme must be printed
         isLexemeNeeded = false;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             if (tokenWithLexeme[i] == token.token)
                 isLexemeNeeded = true;
         }
@@ -135,11 +122,12 @@ int main(int argc, char *argv[]) {
     print_symbol_table(get_identifiers_table(), false, false, true, false, "IDENTIFICADORES");
     print_symbol_table(get_literals_table(), false, false, true, false, "LITERAIS");
 
+    //Print error stack to stderr
     error_stack *error_info;
     while ((error_info = error_pop()) != NULL) {
         returnCode = RETURN_CODE_LEXICAL_ERROR;
-        error("[LEXICAL ERROR] Line %d: %s at column %d", error_info->lineNumber, error_info->message,
-              error_info->columnNumber);
+        send_error_to_stderr("[LEXICAL ERROR] Line %d: %s at column %d", error_info->lineNumber, error_info->message,
+                             error_info->columnNumber);
     }
 
     return returnCode;
@@ -151,7 +139,7 @@ int main(int argc, char *argv[]) {
  * @param fmt
  * @param ...
  */
-void error(char *fmt, ...) {
+void send_error_to_stderr(char *fmt, ...) {
     va_list args;
 
     va_start(args, fmt);

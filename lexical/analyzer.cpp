@@ -20,7 +20,7 @@
 int currentState = INITIAL_STATE;
 int currentInput;
 int currentLine = 1;
-int currentColumn = 1;
+int currentColumn = 0;
 
 char *lexemeBuffer = NULL; //TODO refatorar isso para gerar uma struct de saida
 int lexemeLength = 0;
@@ -43,6 +43,10 @@ struct SymbolTable get_reserved_words_table() {
     return reservedWordsUsedTable;
 }
 
+/**
+ * Set the currentInput to the next char in input stream,
+ * updating the lexeme buffer with the new one and handling the column count
+ */
 void get_next_char() {
 
     if (lexemeLength == lexemeBufferSize) {
@@ -54,6 +58,9 @@ void get_next_char() {
     currentColumn++;
 }
 
+/**
+ * Clear the dirty entries from lexeme buffer
+ */
 void clear_lexeme() {
 
     memset(lexemeBuffer, 0, lexemeBufferSize);
@@ -62,19 +69,35 @@ void clear_lexeme() {
     lexemeLength = 1;
 }
 
+/**
+ * Get next input and set automaton state
+ * @param state target automaton state
+ */
 void get_next_char_and_go_to(int state) {
     get_next_char();
     currentState = state;
 }
 
+/**
+ * Set automaton state keeping the current input
+ * @param state target automaton state
+ */
 void go_to_state(int state) {
     currentState = state;
 }
 
+/**
+ * Remove last char from buffer (usually it belongs to the next token lexeme)
+ */
 void remove_last_char_from_lexeme() {
     lexemeBuffer[lexemeLength - 1] = '\0';
 }
 
+/**
+ * Handles a found token and restart automaton to get next
+ * @param token
+ * @return found token and lexeme
+ */
 struct token_info found_token_and_restart(int token) {
     remove_last_char_from_lexeme();
 
@@ -82,7 +105,7 @@ struct token_info found_token_and_restart(int token) {
 
     info.token = token;
 
-    info.lexeme = (char *) malloc(strlen(lexemeBuffer) + 1);
+    info.lexeme = (char *) malloc(strlen(lexemeBuffer) + 1); //Save the buffer
     strcpy(info.lexeme, lexemeBuffer);
 
     clear_lexeme();
@@ -91,11 +114,20 @@ struct token_info found_token_and_restart(int token) {
     return info;
 }
 
+/**
+ * Handles a found token, but get next input before it
+ * @param token
+ * @return found token
+ */
 struct token_info found_token_and_get_next_input(int token) {
     get_next_char();
     return found_token_and_restart(token);
 }
 
+/**
+ * Handles a found token, but it determines the token type, if it is a reserved word
+ * @return found token
+ */
 struct token_info found_token_and_check_for_reserved_word() {
     remove_last_char_from_lexeme();
 
@@ -111,12 +143,21 @@ struct token_info found_token_and_check_for_reserved_word() {
     }
 }
 
+/**
+ * Handles a literal found token, with the correct add in symbol table.
+ * @param token
+ * @return found token
+ */
 struct token_info found_literal_and_restart(int token) {
-    remove_last_char_from_lexeme();
+    remove_last_char_from_lexeme(); //remove the char from next token
     literalsTable.cInsert(token, lexemeBuffer);
     return found_token_and_restart(token);
 }
 
+/**
+ * [MANDATORY] Initialize the analyzer module, create the symtable for reserved words and
+ * prepare the input
+ */
 void lexical_analyzer_init() {
 
     reservedWordsTable.cInsert(IF, "if");
@@ -152,16 +193,27 @@ bool is_digit(char c) {
     return c >= '0' && c <= '9';
 }
 
+/**
+ * Handles the fail state
+ * @param reason
+ */
 void fail(char *reason) {
-    error_push(currentLine, currentColumn, reason);
+    error_push(currentLine, currentColumn-1, reason);
     clear_lexeme();
 }
 
+/**
+ * Terminates the analyzer instance
+ */
 void lexical_analyzer_dispose() {
     free(lexemeBuffer);
 }
 
-
+/**
+ * Search the input for the next token. At end of input stream, it must return
+ * ENDOFFILE token.
+ * @return found token
+ */
 struct token_info lexical_analyzer_next_token() {
 
     while (true) {
@@ -265,9 +317,9 @@ struct token_info lexical_analyzer_next_token() {
                 }
                 break;
             case 2:
-                return found_token_and_get_next_input(LE);
+                return found_token_and_get_next_input(LE); //found LE
             case 3:
-                return found_token_and_restart(LT);
+                return found_token_and_restart(LT); //found LT
             case 4:
                 switch (currentInput) {
                     case '=':
@@ -289,13 +341,13 @@ struct token_info lexical_analyzer_next_token() {
                 }
                 break;
             case 6:
-                return found_token_and_get_next_input(EQ);
+                return found_token_and_get_next_input(EQ); //found EQ
             case 7:
-                return found_token_and_restart(ASSIGN);
+                return found_token_and_restart(ASSIGN); //found assign
             case 8:
-                return found_token_and_get_next_input(GE);
+                return found_token_and_get_next_input(GE); //found GE
             case 9:
-                return found_token_and_restart(GT);
+                return found_token_and_restart(GT); //found GT
             case 10:
                 switch (currentInput) {
                     case '=':
@@ -307,9 +359,9 @@ struct token_info lexical_analyzer_next_token() {
                 }
                 break;
             case 11:
-                return found_token_and_get_next_input(NE);
+                return found_token_and_get_next_input(NE); //found NE
             case 12:
-                return found_token_and_restart(NOT);
+                return found_token_and_restart(NOT); //found NOT
             case 13:
                 if (is_letter(currentInput) || is_digit(currentInput))
                     get_next_char_and_go_to(13);
@@ -324,11 +376,11 @@ struct token_info lexical_analyzer_next_token() {
                 break;
             case 15:
                 return found_token_and_check_for_reserved_word();
-            case 17:
+            case 17: //Unexpected EOF fail state
                 fail("Unexpected end of file");
                 go_to_state(54);
                 break;
-            case 18:
+            case 18: //Unexpected char fail state
                 go_to_state(INITIAL_STATE);
                 fail("Unexpected character");
                 break;
@@ -366,9 +418,9 @@ struct token_info lexical_analyzer_next_token() {
                 }
                 break;
             case 23:
-                return found_token_and_restart(NUMFLOAT);
+                return found_token_and_restart(NUMFLOAT); //found NUMFLOAT
             case 24:
-                return found_token_and_restart(NUMINT);
+                return found_token_and_restart(NUMINT); //found NUMINT
             case 25:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(26);
@@ -388,25 +440,25 @@ struct token_info lexical_analyzer_next_token() {
                     go_to_state(23);
                 break;
             case 27:
-                return found_token_and_restart(PLUS);
+                return found_token_and_restart(PLUS); //found PLUS
             case 28:
-                return found_token_and_restart(RPARENT);
+                return found_token_and_restart(RPARENT); //found RPARENT
             case 29:
-                return found_token_and_restart(MINUS);
+                return found_token_and_restart(MINUS); //found MINUS
             case 30:
-                return found_token_and_restart(LPARENT);
+                return found_token_and_restart(LPARENT); //found LPARENT
             case 31:
-                return found_token_and_restart(LBRACE);
+                return found_token_and_restart(LBRACE); //found LBREACE
             case 32:
-                return found_token_and_restart(RBRACE);
+                return found_token_and_restart(RBRACE); //found RBRACE
             case 33:
-                return found_token_and_restart(LBRACKET);
+                return found_token_and_restart(LBRACKET); //found LBRACKET
             case 34:
-                return found_token_and_restart(RBRACKET);
+                return found_token_and_restart(RBRACKET); //found RBRACKET
             case 35:
-                return found_token_and_restart(COLON);
+                return found_token_and_restart(COLON); //found COLON
             case 36:
-                return found_token_and_restart(SEMICOLON);
+                return found_token_and_restart(SEMICOLON); //found SEMICOLON
             case 37:
                 switch (currentInput) {
                     case '"':
@@ -435,9 +487,9 @@ struct token_info lexical_analyzer_next_token() {
                 }
                 break;
             case 39:
-                return found_token_and_restart(STAR); //TODO alterar o automato para mudar o label
+                return found_token_and_restart(STAR); //found STAR //TODO alterar o automato para mudar o label
             case 40:
-                return found_literal_and_restart(LITERAL);
+                return found_literal_and_restart(LITERAL); //found LITERAL
             case 41:
                 get_next_char_and_go_to(37);
                 break;
@@ -516,9 +568,9 @@ struct token_info lexical_analyzer_next_token() {
                 }
                 break;
             case 53:
-                return found_token_and_restart(DOT);
+                return found_token_and_restart(DOT); //found DOT
             case 54:
-                return found_token_and_restart(ENDOFFILE);
+                return found_token_and_restart(ENDOFFILE); //found EOF
             case 55:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(55);
@@ -532,7 +584,7 @@ struct token_info lexical_analyzer_next_token() {
                     go_to_state(23);
                 break;
             case 98:
-                return found_literal_and_restart(LITERALCHAR);
+                return found_literal_and_restart(LITERALCHAR); //found LITERAL
             case 99:
                 get_next_char_and_go_to(38);
                 break;

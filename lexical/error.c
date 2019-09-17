@@ -7,6 +7,12 @@
 
 error_stack *errors_head = NULL;
 
+/**
+ * Add error to the stack
+ * @param lineNumber
+ * @param columnNumber
+ * @param message
+ */
 void error_push(int lineNumber, int columnNumber, char *message) {
 
     error_stack *newError = malloc(sizeof(error_stack));
@@ -19,6 +25,10 @@ void error_push(int lineNumber, int columnNumber, char *message) {
     errors_head = newError;
 }
 
+/**
+ * Get error from stack
+ * @return
+ */
 error_stack *error_pop() {
 
 

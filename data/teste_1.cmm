@@ -7,4 +7,6 @@ if ( i >= j) {
 	i = j
 }
 
-printf("asd 
+printf("asd");
+
+'aa'

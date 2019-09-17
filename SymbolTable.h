@@ -25,7 +25,6 @@ class SymbolTable
 public:
     void cInsert(int token, char *lexeme);
     int cSearch(char *lexeme);
-    void showSymbolTable();
     symbol_info **block = reinterpret_cast<symbol_info **>(new symbol_info[TABLE_SIZE]); // Table
     char *lexemeArray = new char[LEXEME_ARRAY_SIZE]; // An array of to allocate lexem in continuous memory
     SymbolTable();

@@ -93,30 +93,3 @@ int SymbolTable::cSearch(char *lexeme)
     return -1;
 }
 
-// Print the symbol table chain wise.
-void SymbolTable::showSymbolTable()
-{
-    int cont = 0;
-    // Implement
-    for (int i = 0; i < TABLE_SIZE; ++i)
-    {
-        // Do not modify the head
-        symbol_info *temp = block[i];
-        if(temp == NULL)
-            continue;
-
-        printf("%d:", i);
-
-
-        while (temp!=NULL)
-        {
-            printf("->[%d|%s]", temp->token, lexemeArray + temp->pos);
-            temp = temp->next;
-            cont++;
-        }
-        //printf("->%d", cont);
-        printf("\n");
-        cont = 0;
-    }
-}
-
