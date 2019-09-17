@@ -8,7 +8,6 @@
 #include "token.h"
 /// IO FUNCTIONS
 
-#define PERMS 0666 /*RW for owner, group, others */
 
 void error(char *, ...);
 // END IO FUNCTIONS
@@ -33,29 +32,19 @@ int main(int argc, char *argv[]) {
 
     lexical_analyzer_init();
 
-    int token = 0;
+    struct token_info token;
     do {
         token = lexical_analyzer_next_token();
-        printf("%s\n", token_id_to_name(token));
+        printf("%s.%s\n", token_id_to_name(token.token), token.lexeme);
 
-    } while (token != ENDOFFILE);
+    } while (token.token != ENDOFFILE);
+
+    lexical_analyzer_dispose();
 
     error_stack *error_info;
     while ((error_info = error_pop()) != NULL) {
         error("[LEXICAL ERROR] Line %d: %s", error_info->lineNumber, error_info->message);
     }
-
-//    char *name = new char[M];
-//    char *classtype = new char[M];
-//    SymbolTable table;
-//    name[0] = 't';
-//    name[1] = 'e';
-//    name[2] = 's';
-//    name[3] = 't';
-//    classtype[0] = 'I';
-//    classtype[1] = 'D';
-//    table.cInsert(name,classtype);
-//    printf("%d", table.cSearch(name,classtype));
 
 
     return 0;
