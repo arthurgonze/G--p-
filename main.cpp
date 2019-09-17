@@ -23,25 +23,45 @@ const char *get_filename_ext(const char *filename) {
     return dot + 1;
 }
 
-void showSymbolTable(struct SymbolTable symbolTable, bool showToken, bool showLexeme)
+void print_symbol_table(struct SymbolTable symbolTable, bool showHeader, bool showToken, bool showLexeme, bool showInternalCode, char* tableName)
 {
     struct symbol_info** block = symbolTable.block;
     int cont = 0;
-    // Implement
+
+    printf("\nTABELA DE SÍMBOLOS: %s\n", tableName);
+    printf("-------------------------------------------\n");
+
+    if(showHeader) {
+        if (showToken)
+            printf("TOKEN\t\t");
+
+        if (showLexeme)
+            printf("LEXEMA\t\t");
+
+        if (showInternalCode)
+            printf("CÓDIGO");
+
+        printf("\n-------------------------------------------\n");
+    }
     for (int i = 0; i < TABLE_SIZE; ++i)
     {
-        // Do not modify the head
+
         symbol_info *temp = block[i];
         if(temp == NULL)
             continue;
 
         while (temp!=NULL)
         {
+
+            //Verify flags to print only requested columns
             if(showToken)
-                printf("%s ", token_id_to_name(temp->token));
+                printf("%s\t\t", token_id_to_name(temp->token));
 
             if(showLexeme)
-                printf("%s", symbolTable.lexemeArray + temp->pos);
+                printf("%s\t\t", symbolTable.lexemeArray + temp->pos);
+
+            if(showInternalCode)
+                printf("%d", temp->token);
 
             printf("\n");
             temp = temp->next;
@@ -50,22 +70,40 @@ void showSymbolTable(struct SymbolTable symbolTable, bool showToken, bool showLe
 
         cont = 0;
     }
-}
 
+    printf("\n");
+}
 
 int main(int argc, char *argv[]) {
 
-    if (argc == 1) io_init_with_stdin();
+    int tokenWithLexeme[5] = {ID, LITERAL, LITERALCHAR, NUMFLOAT, NUMINT}; //Define tokens that's needed to print the lexeme
+    bool isLexemeNeeded = false; //Flag to print lexeme
 
+    //Open the correct input (stdin or file)
+    if (argc == 1) io_init_with_stdin();
     else if (!io_init_with_file(argv[1]))
         return 1;
 
     lexical_analyzer_init();
 
+    //Print every token found on input
     struct token_info token;
     do {
+
         token = lexical_analyzer_next_token();
-        printf("%s.%s\n", token_id_to_name(token.token), token.lexeme);
+        printf("%s",  token_id_to_name(token.token));
+
+        //Check if the lexeme must be printed
+        isLexemeNeeded = false;
+        for(int i = 0; i < 4; i++) {
+            if(tokenWithLexeme[i] == token.token)
+                isLexemeNeeded = true;
+        }
+
+        if(isLexemeNeeded)
+            printf(".%s",  token.lexeme);
+
+        printf("\n");
 
     } while (token.token != ENDOFFILE);
 
@@ -73,27 +111,15 @@ int main(int argc, char *argv[]) {
 
     lexical_analyzer_dispose();
 
-    printf("========================\n");
-    printf("LITERAIS\n");
-    showSymbolTable(get_literals_table(), false, true);
-    printf("========================\n");
+    //Print the symbol tables for reserved words, identifiers and literals
+    print_symbol_table(get_reserved_words_table(), true, true, false, true, "PALAVRAS RESERVADASs");
+    print_symbol_table(get_identifiers_table(), false, false, true, false, "IDENTIFICADORES");
+    print_symbol_table(get_identifiers_table(), false, false, true, false, "LITERAIS");
 
-    printf("\n");
-
-    printf("========================\n");
-    printf("IDENTIFICADORES\n");
-    showSymbolTable(get_identifiers_table(), false, true);
-    printf("========================\n");
-
-    printf("========================\n");
-    printf("PALAVRAS RESERVADAS\n");
-    showSymbolTable(get_reserved_words_table(), true, false);
-    printf("========================\n");
     error_stack *error_info;
     while ((error_info = error_pop()) != NULL) {
         error("[LEXICAL ERROR] Line %d: %s", error_info->lineNumber, error_info->message);
     }
-
 
     return 0;
 }
