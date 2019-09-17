@@ -29,7 +29,6 @@ struct SymbolTable reservedWordsTable;
 struct SymbolTable literalsTable;
 struct SymbolTable identifiersTable;
 
-
 void get_next_char() {
 
     if (lexemeLength == lexemeBufferSize) {
@@ -97,11 +96,29 @@ struct token_info found_token_and_check_for_reserved_word() {
 
 
 void lexical_analyzer_init() {
-
     reservedWordsTable.cInsert(IF, "if");
+    reservedWordsTable.cInsert(ELSE, "else");
+    reservedWordsTable.cInsert(TRY, "try");
+    reservedWordsTable.cInsert(CATCH, "catch");
+    reservedWordsTable.cInsert(INT, "int");
+    reservedWordsTable.cInsert(FLOAT, "float");
+    reservedWordsTable.cInsert(BOOL, "bool");
+    reservedWordsTable.cInsert(RETURN, "return");
+    reservedWordsTable.cInsert(WHILE, "while");
+    reservedWordsTable.cInsert(BREAK, "break");
+    reservedWordsTable.cInsert(SWITCH, "switch");
+    reservedWordsTable.cInsert(PRINT, "print");
+    reservedWordsTable.cInsert(READLN, "readln");
+    reservedWordsTable.cInsert(CASE, "case");
+    reservedWordsTable.cInsert(THROW, "throw");
+    reservedWordsTable.cInsert(TRUE, "true");
+    reservedWordsTable.cInsert(FALSE, "false");
+    reservedWordsTable.cInsert(CHAR, "char");
+    reservedWordsTable.cInsert(TYPEDEF, "typedef");
+    reservedWordsTable.cInsert(STRUCT, "struct");
+    reservedWordsTable.showSymbolTable();
 
     get_next_char();
-
 }
 
 bool is_letter(char c) {

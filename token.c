@@ -13,7 +13,7 @@ char* token_id_to_name(int id) {
         case GT : return  "GT";
         case GE : return  "GE";
         case IF : return  "IF";
-        case THEN : return  "THEN";
+        case BOOL : return  "BOOL";
         case ELSE : return  "ELSE";
         case ID : return  "ID";
         case INT : return  "INT";
@@ -25,7 +25,6 @@ char* token_id_to_name(int id) {
         case SEMICOLON : return  "SEMICOLON";
         case ENDOFFILE : return  "ENDOFFILE";
         case WHILE : return  "WHILE";
-        case FOR : return  "FOR";
         case LBRACKET : return  "LBRACKET";
         case RBRACKET : return  "RBRACKET";
         case SWITCH : return  "SWITCH";
@@ -43,7 +42,6 @@ char* token_id_to_name(int id) {
         case ADDRESS : return  "ADDRESS";
         case STAR : return  "STAR";
         case DOT : return  "DOT";
-        case DO : return  "DO";
         case LBRACE : return  "LBRACE";
         case RBRACE : return  "RBRACE";
         case NOT : return  "NOT";

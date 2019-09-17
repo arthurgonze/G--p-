@@ -45,8 +45,6 @@ int main(int argc, char *argv[]) {
     while ((error_info = error_pop()) != NULL) {
         error("[LEXICAL ERROR] Line %d: %s", error_info->lineNumber, error_info->message);
     }
-
-
     return 0;
 }
 
