@@ -7,7 +7,7 @@ using namespace std;
 // It has been seen if chain length is < 50 then some space is underutilized,
 // Theoretically seen if > 50, prime number is taken then chain takes moderate space.
 // So thats why 53 is used.
-#define TABLE_SIZE 101
+#define TABLE_SIZE 128
 #define LEXEME_ARRAY_SIZE 4096
 
 // Two columns of the symbol table with name and class type.

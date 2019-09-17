@@ -3,12 +3,20 @@
 // Then performing Modulo operation to go to any bucket from 0 to TABLE_SIZE
 int SymbolTable::cHash(char *name)
 {
-    int idx = 0;
-    for (int i = 0; name[i]; ++i)
-    {
-        idx = idx + name[i];
-    }
-    return (idx%TABLE_SIZE);
+    unsigned long hash = 5381;
+    int c;
+
+    while (c = *name++)
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+    return (hash%TABLE_SIZE);
+
+//    int idx = 0;
+//    for (int i = 0; name[i]; ++i)
+//    {
+//        idx += name[i];
+//    }
+//    return (idx%TABLE_SIZE);
 }
 
 SymbolTable::SymbolTable() {

@@ -1,11 +1,10 @@
-//
-// Created by arthur on 9/5/19.
-//
 #ifdef __cplusplus
 extern "C" {
 #endif
 #ifndef COMPILADOR_2019_3_TOKEN_H
 #define COMPILADOR_2019_3_TOKEN_H
+// TODO alterar automato -FOR -THEN(subtituido p/ BOOL) -DO
+
 /// TOKEN NAMES
 // <
 #define LT 1
@@ -45,8 +44,6 @@ extern "C" {
 #define ENDOFFILE 0
 // WHILE
 #define WHILE 19
-// FOR
-#define FOR 20
 // [
 #define LBRACKET 21
 // ]
@@ -81,8 +78,6 @@ extern "C" {
 #define STAR 36
 // .
 #define DOT 37
-// DO
-#define DO 38
 // {
 #define LBRACE 39
 // }
