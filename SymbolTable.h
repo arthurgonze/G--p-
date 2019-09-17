@@ -4,7 +4,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-#define TABLE_SIZE 101 // An arbitrary prime number
+#define TABLE_SIZE 101 // An arbitrary prime number that showed good performance
 #define LEXEME_ARRAY_SIZE 4096 // A memory block size
 
 // Two columns of the symbol table with token ID and lexeme position in the lexeme array

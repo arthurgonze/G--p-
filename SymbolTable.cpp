@@ -1,19 +1,23 @@
 #include "SymbolTable.h"
 
 /**
- *
- * @param name
+ * Polynomial Rolling Hash Function
+ * p-> It is reasonable to make p a prime number roughly equal to the number of characters in the input alphabet
+ * m-> m should be a large number, since the probability of two random strings colliding is about 1/m
+ * Precomputing the powers of p might give a performance boost.
+ * @param name is the lexeme to be hashed
  * @return
  */
-int SymbolTable::cHash(string const& name)
+int SymbolTable::cHash(string const &name)
 {
-    const int p = 31;
-    const int m = 1e9 + 9;
+    const int p = 179; // prime number near ASC2 character table size
+    const int m = 1e9 + 9; // This is a large number, but still small enough so that we can perform multiplication of two values using 64 bit integers.
     long long hash_value = 0;
     long long p_pow = 1;
-    for (char c : name) {
-        hash_value = (hash_value + (c - 'a' + 1) * p_pow) % m;
-        p_pow = (p_pow * p) % m;
+    for (char c : name)
+    {
+        hash_value = (hash_value + (c - 'a' + 1)*p_pow)%m;
+        p_pow = (p_pow*p)%m;
     }
     return hash_value%TABLE_SIZE;
 }
@@ -21,11 +25,11 @@ int SymbolTable::cHash(string const& name)
 /**
  * Constructor
  */
-SymbolTable::SymbolTable() {
+SymbolTable::SymbolTable()
+{
     headIndex = 0; // A variable to store the first free position in this array
     lexemeArraySize = 0; // Actual size of the lexeme array
 }
-
 
 /**
  * If there is no element in the chain then new element is added in front,
@@ -91,7 +95,7 @@ int SymbolTable::cSearch(char *lexeme)
 
     while (temp!=NULL)
     {
-        if (strcmp(lexemeArray+temp->pos, lexeme)==0)
+        if (strcmp(lexemeArray + temp->pos, lexeme)==0)
         {
             return temp->token;
         }
