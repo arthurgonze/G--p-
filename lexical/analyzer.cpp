@@ -492,6 +492,7 @@ struct token_info lexical_analyzer_next_token() {
                     case '*':
                         get_next_char_and_go_to(52);
                         break;
+                    case EOF:
                     case ENDOFFILE:
                         go_to_state(17);
                         break;
@@ -505,6 +506,7 @@ struct token_info lexical_analyzer_next_token() {
                     case '/':
                         get_next_char_and_go_to(INITIAL_STATE);
                         break;
+                    case EOF:
                     case ENDOFFILE:
                         go_to_state(17);
                         break;
