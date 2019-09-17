@@ -1,0 +1,32 @@
+/*
+    Testing reserved words
+*/
+
+int i = 0;
+float j = 10.2e-2;
+
+if ( i >= j) {
+	j = i
+} else {
+	i = j
+}
+
+switch(&test.y) {
+    case 1:
+        k = 30;
+        break;
+    case 2:
+        try {
+        l = 120.33e-1;
+        } catch {
+            return 'c';
+        }
+        braek; /*Mispelled reserved word*/
+}
+
+typedef struct test {
+    int x;
+    int y;
+}
+
+printf("asd");

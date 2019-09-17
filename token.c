@@ -62,6 +62,7 @@ char* token_id_to_name(int id) {
         case STRUCT : return  "STRUCT";
         case NUMINT : return  "NUMINT";
         case NUMFLOAT : return  "NUMFLOAT";
+        case LITERALCHAR: return "LITERALCHAR";
         default: return "UNKNOWN";
     }
 }

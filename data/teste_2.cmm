@@ -1,0 +1,12 @@
+/* Test file 2 */
+
+
+char myFunction() {
+    int i = 30;
+    return 'a';
+}
+
+if (1.02e-10 >= 0.102) {
+    int i = 1230.3e-10;
+    char* myLiteral = "Here is my literal";
+}

@@ -3,7 +3,6 @@ extern "C" {
 #endif
 #ifndef COMPILADOR_2019_3_TOKEN_H
 #define COMPILADOR_2019_3_TOKEN_H
-// TODO alterar automato -FOR -THEN(subtituido p/ BOOL) -DO
 
 /// TOKEN NAMES
 // <
@@ -118,7 +117,8 @@ extern "C" {
 #define NUMINT 57
 // NUMFLOAT
 #define NUMFLOAT 58
-
+// LITERAL CHAR
+#define LITERALCHAR 59
 char *token_id_to_name(int id);
 
 #endif //COMPILADOR_2019_3_TOKEN_H

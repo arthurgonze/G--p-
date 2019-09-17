@@ -10,23 +10,30 @@
 #include "io.h"
 
 int fd = -1;
+
 /**
- * getc: simple buffered version
+ * Prepare IO from file
+ * @param path
  * @return
  */
-
-
-
 bool io_init_with_file(char *path) {
     fd = open(path, O_RDONLY);
     return fd > 0;
 }
 
+/**
+ * Prepare IO from stdin
+ * @return
+ */
 bool io_init_with_stdin() {
     fd = 0;
     return true;
 }
 
+/**
+ * Returns the next char from buffer
+ * @return
+ */
 int io_get_next_char() {
     static char buf[BUFSIZE];
     static char *bufp = buf;
