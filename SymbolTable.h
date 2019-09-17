@@ -4,13 +4,10 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-// It has been seen if chain length is < 50 then some space is underutilized,
-// Theoretically seen if > 50, prime number is taken then chain takes moderate space.
-// So thats why 53 is used.
-#define TABLE_SIZE 128
-#define LEXEME_ARRAY_SIZE 4096
+#define TABLE_SIZE 101 // An arbitrary prime number
+#define LEXEME_ARRAY_SIZE 4096 // A memory block size
 
-// Two columns of the symbol table with name and class type.
+// Two columns of the symbol table with token ID and lexeme position in the lexeme array
 struct symbol_info
 {
     int token; //token id
@@ -20,22 +17,16 @@ struct symbol_info
 
 class SymbolTable
 {
-
-
 public:
     void cInsert(int token, char *lexeme);
     int cSearch(char *lexeme);
     symbol_info **block = reinterpret_cast<symbol_info **>(new symbol_info[TABLE_SIZE]); // Table
-    char *lexemeArray = new char[LEXEME_ARRAY_SIZE]; // An array of to allocate lexem in continuous memory
-    SymbolTable();
+    char *lexemeArray = new char[LEXEME_ARRAY_SIZE]; // An array to allocate lexeme in continuous memory
+    SymbolTable(); // Constructor
 private:
-
-
-    int headIndex = 0; // A variable to store the first free position in this array
+    int headIndex = 0; // A variable to store the first free position in the lexeme array
     int lexemeArraySize = 0; // Actual size of the lexeme array
-
-    int cHash(char *name);
-
+    int cHash(char *name); // Hash Function
 };
 
 #endif //COMPILADOR_2019_3_SYMBOLTABLE_H
