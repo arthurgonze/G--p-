@@ -596,7 +596,7 @@ struct token_info lexical_analyzer_next_token() {
             case 98:
                 return found_literal_and_restart(LITERALCHAR); //found LITERAL
             case 99:
-                get_next_char_and_go_to(38);
+                get_next_char_and_go_to(42);
                 break;
         }
 

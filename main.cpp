@@ -6,7 +6,6 @@
 #include "lexical/analyzer.h"
 #include "lexical/error.h"
 #include "token.h"
-/// IO FUNCTIONS
 
 #define RETURN_CODE_OK 0
 #define RETURN_CODE_FILE_ERROR 1
