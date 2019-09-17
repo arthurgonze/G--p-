@@ -8,7 +8,7 @@
  * @param name is the lexeme to be hashed
  * @return
  */
-int SymbolTable::cHash(string const &name)
+long long SymbolTable::cHash(string const &name)
 {
     const int p = 179; // prime number near ASC2 character table size
     const int m = 1e9 + 9; // This is a large number, but still small enough so that we can perform multiplication of two values using 64 bit integers.

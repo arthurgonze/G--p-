@@ -26,7 +26,7 @@ public:
 private:
     int headIndex = 0; // A variable to store the first free position in the lexeme array
     int lexemeArraySize = 0; // Actual size of the lexeme array
-    int cHash(string const& name); // Hash Function
+    long long cHash(string const& name); // Hash Function
 };
 
 #endif //COMPILADOR_2019_3_SYMBOLTABLE_H
