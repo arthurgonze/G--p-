@@ -11,6 +11,8 @@
 #include "../token.h"
 #include "error.h"
 #include "io.h"
+#include "../SymbolTable.h"
+#include "analyzer.h"
 
 #define BUFFER_SIZE 32
 #define INITIAL_STATE 0
@@ -23,8 +25,10 @@ char *lexemeBuffer = NULL; //TODO refatorar isso para gerar uma struct de saida
 int lexemeLength = 0;
 int lexemeBufferSize = 0;
 
-int count = 0;
-//char* input = "< <= == >= > = != ! asda 10.03 10/";
+struct SymbolTable reservedWordsTable;
+struct SymbolTable literalsTable;
+struct SymbolTable identifiersTable;
+
 
 void get_next_char() {
 
@@ -40,7 +44,7 @@ void clear_lexeme() {
 
     memset(lexemeBuffer, 0, lexemeBufferSize);
 
-    lexemeBuffer[0] = currentInput;
+    lexemeBuffer[0] = (char) currentInput;
     lexemeLength = 1;
 }
 
@@ -53,22 +57,48 @@ void go_to_state(int state) {
     currentState = state;
 }
 
-int found_token_and_restart(int token) {
+void remove_last_char_from_lexeme() {
     lexemeBuffer[lexemeLength - 1] = '\0';
-    printf("%s\t\t\t->\t", lexemeBuffer);
+}
+
+struct token_info found_token_and_restart(int token) {
+    remove_last_char_from_lexeme();
+
+    struct token_info info;
+
+    info.token = token;
+
+    info.lexeme = (char *) malloc(strlen(lexemeBuffer) + 1);
+    strcpy(info.lexeme, lexemeBuffer);
 
     clear_lexeme();
 
     go_to_state(0);
-    return token;
+    return info;
 }
 
-int found_token_and_get_next_input(int token) {
+struct token_info found_token_and_get_next_input(int token) {
     get_next_char();
     return found_token_and_restart(token);
 }
 
+struct token_info found_token_and_check_for_reserved_word() {
+    remove_last_char_from_lexeme();
+
+    int token = reservedWordsTable.cSearch(lexemeBuffer);
+
+    if(token >= 0)
+        return found_token_and_restart(token);
+    else {
+        identifiersTable.cInsert(ID, lexemeBuffer);
+        return found_token_and_restart(ID);
+    }
+}
+
+
 void lexical_analyzer_init() {
+
+    reservedWordsTable.cInsert(IF, "if");
 
     get_next_char();
 
@@ -88,11 +118,12 @@ void fail(char *reason) {
 }
 
 void lexical_analyzer_dispose() {
-
+    literalsTable.showSymbolTable();
     free(lexemeBuffer);
 }
 
-int lexical_analyzer_next_token() {
+
+struct token_info lexical_analyzer_next_token() {
 
     while (true) {
 
@@ -179,7 +210,7 @@ int lexical_analyzer_next_token() {
                             go_to_state(54);
                             break;
                         default:
-                            return -1;
+                            return found_token_and_restart(-1); //TODO tratar isso
                     }
                 break;
             case 1:
@@ -251,10 +282,7 @@ int lexical_analyzer_next_token() {
                     go_to_state(53);
                 break;
             case 15:
-
-                //TODO verificar para ver se é palavra reservada
-                //TODO adicionar
-                return found_token_and_restart(ID);
+                return found_token_and_check_for_reserved_word();
             case 17:
                 go_to_state(INITIAL_STATE);
                 fail("Unexpected end of file");
@@ -367,6 +395,8 @@ int lexical_analyzer_next_token() {
             case 39:
                 return found_token_and_restart(STAR); //TODO alterar o automato para mudar o label
             case 40:
+                remove_last_char_from_lexeme();
+                literalsTable.cInsert(LITERAL, lexemeBuffer);
                 return found_token_and_restart(LITERAL);
             case 41:
                 get_next_char_and_go_to(37);
