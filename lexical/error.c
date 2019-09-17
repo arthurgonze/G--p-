@@ -13,6 +13,17 @@ error_stack *errors_head = NULL;
  * @param columnNumber
  * @param message
  */
+
+error_stack* aux_error_push(error_stack* actual, error_stack* insert) {
+
+    if(actual != NULL) {
+        actual->next = aux_error_push(actual->next, insert);
+        return actual;
+    }
+
+
+    return insert;
+}
 void error_push(int lineNumber, int columnNumber, char *message) {
 
     error_stack *newError = malloc(sizeof(error_stack));
@@ -21,8 +32,8 @@ void error_push(int lineNumber, int columnNumber, char *message) {
     newError->columnNumber = columnNumber;
     newError->message = message;
 
-    newError->next = errors_head;
-    errors_head = newError;
+    newError->next = NULL;
+    errors_head = aux_error_push(errors_head, newError);
 }
 
 /**
