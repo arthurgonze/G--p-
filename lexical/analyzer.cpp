@@ -325,8 +325,8 @@ struct token_info lexical_analyzer_next_token() {
             case 15:
                 return found_token_and_check_for_reserved_word();
             case 17:
-                go_to_state(INITIAL_STATE);
                 fail("Unexpected end of file");
+                go_to_state(54);
                 break;
             case 18:
                 go_to_state(INITIAL_STATE);

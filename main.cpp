@@ -11,6 +11,7 @@
 #define RETURN_CODE_OK 0
 #define RETURN_CODE_FILE_ERROR 1
 #define RETURN_CODE_LEXICAL_ERROR 2
+
 void error(char *, ...);
 // END IO FUNCTIONS
 
@@ -22,18 +23,19 @@ void error(char *, ...);
 const char *get_filename_ext(const char *filename) {
     const char *dot = strrchr(filename, '.');
     if (!dot || dot == filename) return "";
-    return dot + 1;
+    return dot;
 }
 
-void print_symbol_table(struct SymbolTable symbolTable, bool showHeader, bool showToken, bool showLexeme, bool showInternalCode, char* tableName)
-{
-    struct symbol_info** block = symbolTable.block;
+
+void print_symbol_table(struct SymbolTable symbolTable, bool showHeader, bool showToken, bool showLexeme,
+                        bool showInternalCode, char *tableName) {
+    struct symbol_info **block = symbolTable.block;
     int cont = 0;
 
     printf("\nTABELA DE SÍMBOLOS: %s\n", tableName);
     printf("-------------------------------------------\n");
 
-    if(showHeader) {
+    if (showHeader) {
         if (showToken)
             printf("TOKEN\t\t");
 
@@ -45,24 +47,22 @@ void print_symbol_table(struct SymbolTable symbolTable, bool showHeader, bool sh
 
         printf("\n-------------------------------------------\n");
     }
-    for (int i = 0; i < TABLE_SIZE; ++i)
-    {
+    for (int i = 0; i < TABLE_SIZE; ++i) {
 
         symbol_info *temp = block[i];
-        if(temp == NULL)
+        if (temp == NULL)
             continue;
 
-        while (temp!=NULL)
-        {
+        while (temp != NULL) {
 
             //Verify flags to print only requested columns
-            if(showToken)
+            if (showToken)
                 printf("%s\t\t", token_id_to_name(temp->token));
 
-            if(showLexeme)
+            if (showLexeme)
                 printf("%s\t\t", symbolTable.lexemeArray + temp->pos);
 
-            if(showInternalCode)
+            if (showInternalCode)
                 printf("%d", temp->token);
 
             printf("\n");
@@ -80,13 +80,28 @@ int main(int argc, char *argv[]) {
 
     int returnCode = RETURN_CODE_OK; //Process exit return code
 
-    int tokenWithLexeme[5] = {ID, LITERAL, LITERALCHAR, NUMFLOAT, NUMINT}; //Define tokens that's needed to print the lexeme
+    int tokenWithLexeme[5] = {ID, LITERAL, LITERALCHAR, NUMFLOAT,
+                              NUMINT}; //Define tokens that's needed to print the lexeme
     bool isLexemeNeeded; //Flag to print lexeme
 
     //Checks the first argument and open the correct input (stdin or file)
     if (argc == 1) io_init_with_stdin();
-    else if (!io_init_with_file(argv[1]))
-        return RETURN_CODE_FILE_ERROR;
+    else {
+
+        char *fileName = argv[1];
+        size_t argumentSize = strlen(argv[1]);
+        const char *dot = strrchr(argv[1], '.');
+        if (!dot || dot == argv[1]) { //Check for dot in fileName, but ignore if its on start (hidden file)
+
+            fileName = (char *) malloc(argumentSize + 5); // Adds 5 chars do add the extension (.cmm (4) + \0 (1))
+            strcpy(fileName, argv[1]); //Copy the file
+            strcpy(fileName + argumentSize, ".cmm"); //Add the extension
+
+        }
+
+        if (!io_init_with_file(fileName))
+            return RETURN_CODE_FILE_ERROR;
+    }
 
     lexical_analyzer_init();
 
@@ -95,17 +110,17 @@ int main(int argc, char *argv[]) {
     do {
 
         token = lexical_analyzer_next_token();
-        printf("%s",  token_id_to_name(token.token));
+        printf("%s", token_id_to_name(token.token));
 
         //Check if the lexeme must be printed
         isLexemeNeeded = false;
-        for(int i = 0; i < 4; i++) {
-            if(tokenWithLexeme[i] == token.token)
+        for (int i = 0; i < 4; i++) {
+            if (tokenWithLexeme[i] == token.token)
                 isLexemeNeeded = true;
         }
 
-        if(isLexemeNeeded)
-            printf(".%s",  token.lexeme);
+        if (isLexemeNeeded)
+            printf(".%s", token.lexeme);
 
         printf("\n");
 
@@ -123,14 +138,14 @@ int main(int argc, char *argv[]) {
     error_stack *error_info;
     while ((error_info = error_pop()) != NULL) {
         returnCode = RETURN_CODE_LEXICAL_ERROR;
-        error("[LEXICAL ERROR] Line %d: %s at column %d", error_info->lineNumber, error_info->message, error_info->columnNumber);
+        error("[LEXICAL ERROR] Line %d: %s at column %d", error_info->lineNumber, error_info->message,
+              error_info->columnNumber);
     }
 
     return returnCode;
 }
 
 
-/// IO FUNCTIONS
 /**
  * error: print an error message and die
  * @param fmt
@@ -145,4 +160,3 @@ void error(char *fmt, ...) {
     fprintf(stderr, "\n");
     va_end(args);
 }
-/// END OF IO FUNCTIONS
