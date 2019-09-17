@@ -1,1 +1,10 @@
-"teste" "meu" "zovo" asd if
+int i = 0;
+float j = 10.2e-2;
+
+if ( i >= j) {
+	j = i
+} else {
+	i = j
+}
+
+printf("asd 

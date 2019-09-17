@@ -20,6 +20,7 @@
 int currentState = INITIAL_STATE;
 int currentInput;
 int currentLine = 1;
+int currentColumn = 1;
 
 char *lexemeBuffer = NULL; //TODO refatorar isso para gerar uma struct de saida
 int lexemeLength = 0;
@@ -50,6 +51,7 @@ void get_next_char() {
     }
 
     lexemeBuffer[lexemeLength++] = (currentInput = io_get_next_char());
+    currentColumn++;
 }
 
 void clear_lexeme() {
@@ -151,7 +153,7 @@ bool is_digit(char c) {
 }
 
 void fail(char *reason) {
-    error_push(currentLine, reason);
+    error_push(currentLine, currentColumn, reason);
     clear_lexeme();
 }
 
@@ -167,8 +169,10 @@ struct token_info lexical_analyzer_next_token() {
         switch (currentState) {
 
             case INITIAL_STATE:
-                if (currentInput == '\n')
+                if (currentInput == '\n') {
                     currentLine++;
+                    currentColumn = 1;
+                }
 
                 if (isspace(currentInput)) {
                     get_next_char_and_go_to(INITIAL_STATE);
@@ -242,7 +246,7 @@ struct token_info lexical_analyzer_next_token() {
                         case '/':
                             get_next_char_and_go_to(49);
                             break;
-                        case -1:
+                        case EOF:
                         case ENDOFFILE:
                             go_to_state(54);
                             break;
@@ -411,6 +415,7 @@ struct token_info lexical_analyzer_next_token() {
                     case '\\':
                         get_next_char_and_go_to(41);
                         break;
+                    case EOF:
                     case ENDOFFILE:
                         go_to_state(17);
                         break;
@@ -441,6 +446,7 @@ struct token_info lexical_analyzer_next_token() {
                     case '\'':
                         get_next_char_and_go_to(98); //TODO atualizar o automato
                         break;
+                    case EOF:
                     case ENDOFFILE:
                         go_to_state(17);
                         break;

@@ -8,7 +8,9 @@
 #include "token.h"
 /// IO FUNCTIONS
 
-
+#define RETURN_CODE_OK 0
+#define RETURN_CODE_FILE_ERROR 1
+#define RETURN_CODE_LEXICAL_ERROR 2
 void error(char *, ...);
 // END IO FUNCTIONS
 
@@ -76,13 +78,15 @@ void print_symbol_table(struct SymbolTable symbolTable, bool showHeader, bool sh
 
 int main(int argc, char *argv[]) {
 
-    int tokenWithLexeme[5] = {ID, LITERAL, LITERALCHAR, NUMFLOAT, NUMINT}; //Define tokens that's needed to print the lexeme
-    bool isLexemeNeeded = false; //Flag to print lexeme
+    int returnCode = RETURN_CODE_OK; //Process exit return code
 
-    //Open the correct input (stdin or file)
+    int tokenWithLexeme[5] = {ID, LITERAL, LITERALCHAR, NUMFLOAT, NUMINT}; //Define tokens that's needed to print the lexeme
+    bool isLexemeNeeded; //Flag to print lexeme
+
+    //Checks the first argument and open the correct input (stdin or file)
     if (argc == 1) io_init_with_stdin();
     else if (!io_init_with_file(argv[1]))
-        return 1;
+        return RETURN_CODE_FILE_ERROR;
 
     lexical_analyzer_init();
 
@@ -112,16 +116,17 @@ int main(int argc, char *argv[]) {
     lexical_analyzer_dispose();
 
     //Print the symbol tables for reserved words, identifiers and literals
-    print_symbol_table(get_reserved_words_table(), true, true, false, true, "PALAVRAS RESERVADASs");
+    print_symbol_table(get_reserved_words_table(), true, true, false, true, "PALAVRAS RESERVADAS");
     print_symbol_table(get_identifiers_table(), false, false, true, false, "IDENTIFICADORES");
-    print_symbol_table(get_identifiers_table(), false, false, true, false, "LITERAIS");
+    print_symbol_table(get_literals_table(), false, false, true, false, "LITERAIS");
 
     error_stack *error_info;
     while ((error_info = error_pop()) != NULL) {
-        error("[LEXICAL ERROR] Line %d: %s", error_info->lineNumber, error_info->message);
+        returnCode = RETURN_CODE_LEXICAL_ERROR;
+        error("[LEXICAL ERROR] Line %d: %s at column %d", error_info->lineNumber, error_info->message, error_info->columnNumber);
     }
 
-    return 0;
+    return returnCode;
 }
 
 

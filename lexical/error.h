@@ -11,12 +11,13 @@ extern "C" {
 struct _error_stack {
     struct _error_stack *next;
     int lineNumber;
+    int columnNumber;
     char *message;
 };
 
 typedef struct _error_stack error_stack;
 
-void error_push(int lineNumber, char *message);
+void error_push(int lineNumber, int columnNumber, char *message);
 
 error_stack *error_pop();
 

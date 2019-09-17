@@ -7,11 +7,12 @@
 
 error_stack *errors_head = NULL;
 
-void error_push(int lineNumber, char *message) {
+void error_push(int lineNumber, int columnNumber, char *message) {
 
     error_stack *newError = malloc(sizeof(error_stack));
 
     newError->lineNumber = lineNumber;
+    newError->columnNumber = columnNumber;
     newError->message = message;
 
     newError->next = errors_head;
