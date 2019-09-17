@@ -5,15 +5,17 @@
  * @param name
  * @return
  */
-int SymbolTable::cHash(char *name)
+int SymbolTable::cHash(string const& name)
 {
-    unsigned long hash = 5381;
-    int c;
-
-    while (c = *name++)
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-
-    return (hash%TABLE_SIZE);
+    const int p = 31;
+    const int m = 1e9 + 9;
+    long long hash_value = 0;
+    long long p_pow = 1;
+    for (char c : name) {
+        hash_value = (hash_value + (c - 'a' + 1) * p_pow) % m;
+        p_pow = (p_pow * p) % m;
+    }
+    return hash_value%TABLE_SIZE;
 }
 
 /**
