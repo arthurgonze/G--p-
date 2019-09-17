@@ -21,8 +21,8 @@ extern "C" {
 #define GE 6
 // IF
 #define IF 7
-// THEN
-#define THEN 8
+// BOOL
+#define BOOL 8
 // ELSE
 #define ELSE 9
 // ID
