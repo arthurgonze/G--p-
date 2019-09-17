@@ -23,6 +23,36 @@ const char *get_filename_ext(const char *filename) {
     return dot + 1;
 }
 
+void showSymbolTable(struct SymbolTable symbolTable, bool showToken, bool showLexeme)
+{
+    struct symbol_info** block = symbolTable.block;
+    int cont = 0;
+    // Implement
+    for (int i = 0; i < TABLE_SIZE; ++i)
+    {
+        // Do not modify the head
+        symbol_info *temp = block[i];
+        if(temp == NULL)
+            continue;
+
+        while (temp!=NULL)
+        {
+            if(showToken)
+                printf("%s ", token_id_to_name(temp->token));
+
+            if(showLexeme)
+                printf("%s", symbolTable.lexemeArray + temp->pos);
+
+            printf("\n");
+            temp = temp->next;
+            cont++;
+        }
+
+        cont = 0;
+    }
+}
+
+
 int main(int argc, char *argv[]) {
 
     if (argc == 1) io_init_with_stdin();
@@ -39,8 +69,26 @@ int main(int argc, char *argv[]) {
 
     } while (token.token != ENDOFFILE);
 
+    printf("\n");
+
     lexical_analyzer_dispose();
 
+    printf("========================\n");
+    printf("LITERAIS\n");
+    showSymbolTable(get_literals_table(), false, true);
+    printf("========================\n");
+
+    printf("\n");
+
+    printf("========================\n");
+    printf("IDENTIFICADORES\n");
+    showSymbolTable(get_identifiers_table(), false, true);
+    printf("========================\n");
+
+    printf("========================\n");
+    printf("PALAVRAS RESERVADAS\n");
+    showSymbolTable(get_reserved_words_table(), true, false);
+    printf("========================\n");
     error_stack *error_info;
     while ((error_info = error_pop()) != NULL) {
         error("[LEXICAL ERROR] Line %d: %s", error_info->lineNumber, error_info->message);

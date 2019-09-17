@@ -28,7 +28,19 @@ int lexemeBufferSize = 0;
 struct SymbolTable reservedWordsTable;
 struct SymbolTable literalsTable;
 struct SymbolTable identifiersTable;
+struct SymbolTable reservedWordsUsedTable;
 
+struct SymbolTable get_literals_table() {
+    return literalsTable;
+}
+
+struct SymbolTable get_identifiers_table() {
+    return identifiersTable;
+}
+
+struct SymbolTable get_reserved_words_table() {
+    return reservedWordsUsedTable;
+}
 
 void get_next_char() {
 
@@ -87,8 +99,10 @@ struct token_info found_token_and_check_for_reserved_word() {
 
     int token = reservedWordsTable.cSearch(lexemeBuffer);
 
-    if(token >= 0)
+    if(token >= 0) {
+        reservedWordsUsedTable.cInsert(token, lexemeBuffer);
         return found_token_and_restart(token);
+    }
     else {
         identifiersTable.cInsert(ID, lexemeBuffer);
         return found_token_and_restart(ID);
@@ -123,7 +137,6 @@ void fail(char *reason) {
 }
 
 void lexical_analyzer_dispose() {
-    literalsTable.showSymbolTable();
     free(lexemeBuffer);
 }
 
