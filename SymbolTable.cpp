@@ -12,7 +12,7 @@ long long SymbolTable::cHash(string const &name)
 {
     const int p = 179; // prime number near ASC2 character table size
     const int m = 1e9 + 9; // This is a large number, but still small enough so that we can perform multiplication of two values using 64 bit integers.
-    long long hash_value = 0;
+    unsigned long hash_value = 0;
     long long p_pow = 1;
     for (char c : name)
     {
