@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <zconf.h>
 #include "SymbolTable.h"
 #include "lexical/io.h"
 #include "lexical/analyzer.h"
@@ -66,10 +65,6 @@ int main(int argc, char *argv[]) {
 
     int returnCode = RETURN_CODE_OK; //Process exit return code
 
-    int tokenWithLexeme[5] = {ID, LITERAL, LITERALCHAR, NUMFLOAT,
-                              NUMINT}; //Define tokens that's needed to print the lexeme
-    bool isLexemeNeeded; //Flag to print lexeme
-
     //Checks the first argument and open the correct input (stdin or file)
     if (argc == 1) io_init_with_stdin();
     else {
@@ -98,15 +93,15 @@ int main(int argc, char *argv[]) {
         token = lexical_analyzer_next_token();
         printf("%s", token_id_to_name(token.token));
 
-        //Check if the lexeme must be printed
-        isLexemeNeeded = false;
-        for (int i = 0; i < 5; i++) {
-            if (tokenWithLexeme[i] == token.token)
-                isLexemeNeeded = true;
-        }
 
-        if (isLexemeNeeded)
-            printf(".%s", token.lexeme);
+        switch (token.token) {
+            case ID:
+            case NUMINT:
+            case NUMFLOAT:
+            case LITERAL:
+            case LITERALCHAR:
+                printf(".%s", token.lexeme);
+        }
 
         printf("\n");
 
