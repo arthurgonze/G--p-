@@ -9,7 +9,7 @@
 
 #include "io.h"
 
-int fd = -1;
+FILE *fd;
 
 /**
  * Prepare IO from file
@@ -17,8 +17,9 @@ int fd = -1;
  * @return
  */
 bool io_init_with_file(char *path) {
-    fd = open(path, O_RDONLY);
-    return fd > 0;
+    //fd = open(path, O_RDONLY);
+    fd = fopen(path,"r");
+    return fd != NULL;
 }
 
 /**
@@ -26,7 +27,7 @@ bool io_init_with_file(char *path) {
  * @return
  */
 bool io_init_with_stdin() {
-    fd = 0;
+    fd = stdin;
     return true;
 }
 
@@ -37,10 +38,10 @@ bool io_init_with_stdin() {
 int io_get_next_char() {
     static char buf[BUFSIZE];
     static char *bufp = buf;
-    static int n = 0;
+    static size_t n = 0;
     /* Buffer is empty */
     if (n == 0) {
-        n = read(fd, buf, BUFSIZE);
+        n = fread(buf, 1, BUFSIZE,fd);
         bufp = buf;
     }
 
