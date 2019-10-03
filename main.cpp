@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "SymbolTable.h"
-#include "lexical/io.h"
 #include "lexical/analyzer.h"
 #include "lexical/error.h"
 #include "token.h"
@@ -65,9 +64,10 @@ int main(int argc, char *argv[]) {
 
     int returnCode = RETURN_CODE_OK; //Process exit return code
 
+
     //Checks the first argument and open the correct input (stdin or file)
-    if (argc == 1) io_init_with_stdin();
-    else {
+    FILE* input = stdin;
+    if (argc != 1) { //If it has arguments, open the file
 
         char *fileName = argv[1];
         size_t argumentSize = strlen(argv[1]);
@@ -80,11 +80,12 @@ int main(int argc, char *argv[]) {
 
         }
 
-        if (!io_init_with_file(fileName))
+        input = fopen(fileName, "r");
+        if (!input)
             return RETURN_CODE_FILE_ERROR;
     }
 
-    lexical_analyzer_init();
+    lexical_analyzer_init(input);
 
     //Print every token found on input
     struct token_info token;
