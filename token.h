@@ -3,7 +3,6 @@ extern "C" {
 #endif
 #ifndef COMPILADOR_2019_3_TOKEN_H
 #define COMPILADOR_2019_3_TOKEN_H
-
 /// TOKEN NAMES
 // <
 #define LT 1
