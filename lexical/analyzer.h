@@ -23,7 +23,7 @@ struct SymbolTable get_identifiers_table();
 
 struct token_info lexical_analyzer_next_token();
 
-void lexical_analyzer_init();
+void lexical_analyzer_init(FILE* fp);
 
 void lexical_analyzer_dispose();
 
