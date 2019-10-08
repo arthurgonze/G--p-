@@ -10,10 +10,10 @@
 
 #include "../token.h"
 #include "error.h"
-#include "io.h"
 #include "../SymbolTable.h"
 #include "analyzer.h"
 
+#define IO_BUFFER_SIZE 4096
 #define BUFFER_SIZE 32
 #define INITIAL_STATE 0
 
@@ -30,6 +30,8 @@ struct SymbolTable reservedWordsTable;
 struct SymbolTable literalsTable;
 struct SymbolTable identifiersTable;
 struct SymbolTable reservedWordsUsedTable;
+
+FILE* filePointer;
 
 struct SymbolTable get_literals_table() {
     return literalsTable;
@@ -54,7 +56,19 @@ void get_next_char() {
         lexemeBuffer = (char *) realloc(lexemeBuffer, lexemeBufferSize);
     }
 
-    lexemeBuffer[lexemeLength++] = (currentInput = io_get_next_char());
+    static char buf[IO_BUFFER_SIZE];
+    static char *bufp = buf;
+    static int n = 0;
+    /* Buffer is empty */
+    if (n == 0) {
+        ;
+        n = fgets(buf, IO_BUFFER_SIZE, filePointer) != NULL ? strlen(buf) : 0;
+        bufp = buf;
+    }
+
+    char next_input = (--n >= 0) ? *bufp++ : EOF;
+
+    lexemeBuffer[lexemeLength++] = (currentInput = next_input);
     currentColumn++;
 }
 
@@ -158,7 +172,9 @@ struct token_info found_literal_and_restart(int token) {
  * [MANDATORY] Initialize the analyzer module, create the symtable for reserved words and
  * prepare the input
  */
-void lexical_analyzer_init() {
+void lexical_analyzer_init(FILE* fp) {
+
+    filePointer = fp;
 
     reservedWordsTable.cInsert(IF, "if");
     reservedWordsTable.cInsert(ELSE, "else");

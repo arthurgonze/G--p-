@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <zconf.h>
 #include "SymbolTable.h"
-#include "lexical/io.h"
 #include "lexical/analyzer.h"
 #include "lexical/error.h"
 #include "token.h"
@@ -66,13 +64,10 @@ int main(int argc, char *argv[]) {
 
     int returnCode = RETURN_CODE_OK; //Process exit return code
 
-    int tokenWithLexeme[5] = {ID, LITERAL, LITERALCHAR, NUMFLOAT,
-                              NUMINT}; //Define tokens that's needed to print the lexeme
-    bool isLexemeNeeded; //Flag to print lexeme
 
     //Checks the first argument and open the correct input (stdin or file)
-    if (argc == 1) io_init_with_stdin();
-    else {
+    FILE* input = stdin;
+    if (argc != 1) { //If it has arguments, open the file
 
         char *fileName = argv[1];
         size_t argumentSize = strlen(argv[1]);
@@ -85,11 +80,12 @@ int main(int argc, char *argv[]) {
 
         }
 
-        if (!io_init_with_file(fileName))
+        input = fopen(fileName, "r");
+        if (!input)
             return RETURN_CODE_FILE_ERROR;
     }
 
-    lexical_analyzer_init();
+    lexical_analyzer_init(input);
 
     //Print every token found on input
     struct token_info token;
@@ -98,15 +94,15 @@ int main(int argc, char *argv[]) {
         token = lexical_analyzer_next_token();
         printf("%s", token_id_to_name(token.token));
 
-        //Check if the lexeme must be printed
-        isLexemeNeeded = false;
-        for (int i = 0; i < 5; i++) {
-            if (tokenWithLexeme[i] == token.token)
-                isLexemeNeeded = true;
-        }
 
-        if (isLexemeNeeded)
-            printf(".%s", token.lexeme);
+        switch (token.token) {
+            case ID:
+            case NUMINT:
+            case NUMFLOAT:
+            case LITERAL:
+            case LITERALCHAR:
+                printf(".%s", token.lexeme);
+        }
 
         printf("\n");
 
