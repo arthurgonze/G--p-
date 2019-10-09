@@ -8,7 +8,7 @@
  * @param name is the lexeme to be hashed
  * @return
  */
-long long SymbolTable::cHash(string const &name)
+unsigned long SymbolTable::cHash(string const &name)
 {
     const int p = 173; // prime number near ASC2 character table size
     const int m = 1e9 + 9; // This is a large number, but still small enough so that we can perform multiplication of two values using 64 bit integers.
@@ -41,7 +41,7 @@ SymbolTable::SymbolTable()
  */
 void SymbolTable::cInsert(int token, char const *lexeme)
 {
-    int pos = cHash(lexeme);
+    unsigned long pos = cHash(lexeme);
 
     if (block[pos]==NULL)
     {
@@ -62,7 +62,7 @@ void SymbolTable::cInsert(int token, char const *lexeme)
     }
     else
     {
-        symbol_info *newNode = new symbol_info();
+        auto *newNode = new symbol_info();
         newNode->token = token;
         newNode->pos = headIndex;
 
@@ -90,7 +90,7 @@ void SymbolTable::cInsert(int token, char const *lexeme)
  */
 int SymbolTable::cSearch(char *lexeme)
 {
-    int pos = cHash(lexeme);
+    unsigned long pos = cHash(lexeme);
     symbol_info *temp = block[pos];
 
     while (temp!=NULL)
@@ -104,3 +104,46 @@ int SymbolTable::cSearch(char *lexeme)
     return -1;
 }
 
+SymbolTable::~SymbolTable() = default;
+
+void LiteralsTable::cInsert(char const *lexeme) {
+
+    unsigned long pos = cHash(lexeme);
+
+    if (block[pos] == NULL) {
+        block[pos] = new symbol_info();
+        block[pos]->pos = headIndex;
+
+        int lexemeSize = strlen(lexeme);
+        if (lexemeSize + headIndex >= lexemeArraySize) // Check if the string will exceed the array free space
+        {
+            lexemeArraySize += LEXEME_ARRAY_SIZE;
+            lexemeArray = (char *) realloc(lexemeArray, lexemeArraySize);
+        }
+        strcpy(lexemeArray + headIndex, lexeme);
+        headIndex += lexemeSize + 1; // +1 cause of \0
+        block[pos]->next = NULL;
+    }
+}
+
+void IdentifiersTable::cInsert(char const *lexeme) {
+
+    unsigned long pos = cHash(lexeme);
+
+    if (block[pos]==NULL)
+    {
+        block[pos] = new symbol_info();
+        block[pos]->pos = headIndex;
+
+        int lexemeSize = strlen(lexeme);
+        if (lexemeSize + headIndex >= lexemeArraySize) // Check if the string will exceed the array free space
+        {
+            lexemeArraySize += LEXEME_ARRAY_SIZE;
+            lexemeArray = (char *) realloc(lexemeArray, lexemeArraySize);
+        }
+        strcpy(lexemeArray + headIndex, lexeme);
+        headIndex += lexemeSize + 1; // +1 cause of \0
+        block[pos]->next = NULL;
+    }
+
+}

@@ -15,11 +15,11 @@ struct token_info {
     char *lexeme;
 };
 
-struct SymbolTable get_literals_table();
+SymbolTable  get_literals_table();
 
-struct SymbolTable get_reserved_words_table();
+SymbolTable  get_reserved_words_table();
 
-struct SymbolTable get_identifiers_table();
+SymbolTable  get_identifiers_table();
 
 struct token_info lexical_analyzer_next_token();
 
