@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "SymbolTable.h"
 #include "lexical/analyzer.h"
 #include "lexical/error.h"
@@ -11,7 +9,7 @@
 
 void send_error_to_stderr(char const*fmt, ...);
 
-void print_symbol_table(struct SymbolTable symbolTable, bool showHeader, bool showToken, bool showLexeme,
+void print_symbol_table(SymbolTable symbolTable, bool showHeader, bool showToken, bool showLexeme,
                         bool showInternalCode, char const *tableName) {
     struct symbol_info **block = symbolTable.block;
 

@@ -2,6 +2,7 @@
 #define COMPILADOR_2019_3_SYMBOLTABLE_H
 
 #include<bits/stdc++.h>
+
 using namespace std;
 
 #define TABLE_SIZE 101 // An arbitrary prime number that showed good performance
@@ -20,13 +21,34 @@ class SymbolTable
 public:
     void cInsert(int token, char const *lexeme);
     int cSearch(char *lexeme);
-    symbol_info **block = reinterpret_cast<symbol_info **>(new symbol_info[TABLE_SIZE]); // Table
+    symbol_info **block = new symbol_info *[TABLE_SIZE]; // Table
     char *lexemeArray = new char[LEXEME_ARRAY_SIZE]; // An array to allocate lexeme in continuous memory
     SymbolTable(); // Constructor
-private:
+    virtual ~SymbolTable();
+
+protected:
     int headIndex = 0; // A variable to store the first free position in the lexeme array
     int lexemeArraySize = 0; // Actual size of the lexeme array
-    long long cHash(string const& name); // Hash Function
+    static unsigned long cHash(string const& name); // Hash Function
 };
+
+
+//Extend Symbol Table to create the Reserved words table, Literals table and Identifiers table
+
+class ReservedWordsTable : public SymbolTable {
+
+};
+
+class LiteralsTable : public SymbolTable {
+    public:
+       void cInsert(char const *lexeme);
+
+};
+class IdentifiersTable : public SymbolTable {
+    public:
+        void cInsert(char const *lexeme);
+
+};
+
 
 #endif //COMPILADOR_2019_3_SYMBOLTABLE_H
