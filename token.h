@@ -3,8 +3,9 @@ extern "C" {
 #endif
 #ifndef COMPILADOR_2019_3_TOKEN_H
 #define COMPILADOR_2019_3_TOKEN_H
-
 /// TOKEN NAMES
+// EOF
+#define ENDOFFILE 0
 // <
 #define LT 1
 // <=
@@ -39,87 +40,85 @@ extern "C" {
 #define ASSIGN 16
 // ;
 #define SEMICOLON 17
-// EOF
-#define ENDOFFILE 0
 // WHILE
-#define WHILE 19
+#define WHILE 18
 // [
-#define LBRACKET 21
+#define LBRACKET 19
 // ]
-#define RBRACKET 22
+#define RBRACKET 20
 // SWITCH
-#define SWITCH 23
+#define SWITCH 21
 // BREAK
-#define BREAK 24
+#define BREAK 22
 // RETURN
-#define RETURN 25
+#define RETURN 23
 // PRINT
-#define PRINT 26
+#define PRINT 24
 // READLN
-#define READLN 27
+#define READLN 25
 // THROW
-#define THROW 28
+#define THROW 26
 // TRY
-#define TRY 29
+#define TRY 27
 // CATCH
-#define CATCH 30
+#define CATCH 28
 // CASE
-#define CASE 31
+#define CASE 29
 // LITERAL
-#define LITERAL 32
+#define LITERAL 30
 // TRUE
-#define TRUE 33
+#define TRUE 31
 // FALSE
-#define FALSE 34
+#define FALSE 32
 // &
-#define ADDRESS 35
+#define ADDRESS 33
 // *
-#define STAR 36
+#define STAR 34
 // .
-#define DOT 37
+#define DOT 35
 // {
-#define LBRACE 39
+#define LBRACE 36
 // }
-#define RBRACE 40
+#define RBRACE 37
 // !
-#define NOT 41
+#define NOT 38
 // CHAR
-#define CHAR 42
+#define CHAR 39
 // "
-#define QUOTE 43
+#define QUOTE 40
 // '
-#define SIMPLEQUOTE 44
+#define SIMPLEQUOTE 41
 // '\'
-#define BACKSLASH 45
+#define BACKSLASH 42
 // :
-#define COLON 46
+#define COLON 43
 // +
-#define PLUS 47
+#define PLUS 44
 // -
-#define MINUS 48
+#define MINUS 45
 // |
-#define PIPE 49
+#define PIPE 46
 // /
-#define SLASH 50
+#define SLASH 47
 // %
-#define PERCENT 51
+#define PERCENT 48
 // &&
-#define AND 52
+#define AND 49
 // ||
-#define OR 53
+#define OR 50
 // ->
-#define POINTER 54
+#define POINTER 51
 // typedef
-#define TYPEDEF 55
+#define TYPEDEF 52
 // struct
-#define STRUCT 56
+#define STRUCT 53
 // NUMINT
-#define NUMINT 57
+#define NUMINT 54
 // NUMFLOAT
-#define NUMFLOAT 58
+#define NUMFLOAT 55
 // LITERAL CHAR
-#define LITERALCHAR 59
-char *token_id_to_name(int id);
+#define LITERALCHAR 56
+char const *token_id_to_name(int id);
 
 #endif //COMPILADOR_2019_3_TOKEN_H
 #ifdef __cplusplus

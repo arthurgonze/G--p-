@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "SymbolTable.h"
 #include "lexical/analyzer.h"
 #include "lexical/error.h"
@@ -9,10 +7,10 @@
 #define RETURN_CODE_FILE_ERROR 1
 #define RETURN_CODE_LEXICAL_ERROR 2
 
-void send_error_to_stderr(char *fmt, ...);
+void send_error_to_stderr(char const*fmt, ...);
 
-void print_symbol_table(struct SymbolTable symbolTable, bool showHeader, bool showToken, bool showLexeme,
-                        bool showInternalCode, char *tableName) {
+void print_symbol_table(SymbolTable symbolTable, bool showHeader, bool showToken, bool showLexeme,
+                        bool showInternalCode, char const *tableName) {
     struct symbol_info **block = symbolTable.block;
 
     printf("\nTABELA DE SÍMBOLOS: %s\n", tableName);
@@ -134,7 +132,7 @@ int main(int argc, char *argv[]) {
  * @param fmt
  * @param ...
  */
-void send_error_to_stderr(char *fmt, ...) {
+void send_error_to_stderr(char const *fmt, ...) {
     va_list args;
 
     va_start(args, fmt);

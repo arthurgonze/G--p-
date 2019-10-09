@@ -26,22 +26,22 @@ char *lexemeBuffer = NULL;
 int lexemeLength = 0;
 int lexemeBufferSize = 0;
 
-struct SymbolTable reservedWordsTable;
-struct SymbolTable literalsTable;
-struct SymbolTable identifiersTable;
-struct SymbolTable reservedWordsUsedTable;
+ReservedWordsTable  reservedWordsTable;
+LiteralsTable  literalsTable;
+IdentifiersTable  identifiersTable;
+ReservedWordsTable  reservedWordsUsedTable;
 
 FILE* filePointer;
 
-struct SymbolTable get_literals_table() {
+SymbolTable get_literals_table() {
     return literalsTable;
 }
 
-struct SymbolTable get_identifiers_table() {
+SymbolTable get_identifiers_table() {
     return identifiersTable;
 }
 
-struct SymbolTable get_reserved_words_table() {
+SymbolTable get_reserved_words_table() {
     return reservedWordsUsedTable;
 }
 
@@ -152,7 +152,7 @@ struct token_info found_token_and_check_for_reserved_word() {
         return found_token_and_restart(token);
     }
     else {
-        identifiersTable.cInsert(ID, lexemeBuffer);
+        identifiersTable.cInsert(lexemeBuffer);
         return found_token_and_restart(ID);
     }
 }
@@ -164,7 +164,7 @@ struct token_info found_token_and_check_for_reserved_word() {
  */
 struct token_info found_literal_and_restart(int token) {
     remove_last_char_from_lexeme(); //remove the char from next token
-    literalsTable.cInsert(token, lexemeBuffer);
+    literalsTable.cInsert(lexemeBuffer);
     return found_token_and_restart(token);
 }
 
@@ -213,7 +213,7 @@ bool is_digit(char c) {
  * Handles the fail state
  * @param reason
  */
-void fail(char *reason) {
+void fail(char  const *reason) {
     error_push(currentLine, currentColumn-1, reason);
     clear_lexeme();
 }

@@ -12,12 +12,12 @@ struct _error_stack {
     struct _error_stack *next;
     int lineNumber;
     int columnNumber;
-    char *message;
+    char const *message;
 };
 
 typedef struct _error_stack error_stack;
 
-void error_push(int lineNumber, int columnNumber, char *message);
+void error_push(int lineNumber, int columnNumber, char const *message);
 
 error_stack *error_pop();
 
