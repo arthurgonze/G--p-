@@ -24,7 +24,7 @@ error_stack* aux_error_push(error_stack* actual, error_stack* insert) {
 
     return insert;
 }
-void error_push(int lineNumber, int columnNumber, char *message) {
+void error_push(int lineNumber, int columnNumber, char  const*message) {
 
     error_stack *newError = malloc(sizeof(error_stack));
 
