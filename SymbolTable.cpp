@@ -39,7 +39,7 @@ SymbolTable::SymbolTable()
  * @param token
  * @param lexeme
  */
-void SymbolTable::cInsert(int token, char *lexeme)
+void SymbolTable::cInsert(int token, char const *lexeme)
 {
     int pos = cHash(lexeme);
 

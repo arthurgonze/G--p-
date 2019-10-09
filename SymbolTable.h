@@ -18,7 +18,7 @@ struct symbol_info
 class SymbolTable
 {
 public:
-    void cInsert(int token, char *lexeme);
+    void cInsert(int token, char const *lexeme);
     int cSearch(char *lexeme);
     symbol_info **block = reinterpret_cast<symbol_info **>(new symbol_info[TABLE_SIZE]); // Table
     char *lexemeArray = new char[LEXEME_ARRAY_SIZE]; // An array to allocate lexeme in continuous memory

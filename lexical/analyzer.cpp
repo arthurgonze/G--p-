@@ -213,7 +213,7 @@ bool is_digit(char c) {
  * Handles the fail state
  * @param reason
  */
-void fail(char *reason) {
+void fail(char  const *reason) {
     error_push(currentLine, currentColumn-1, reason);
     clear_lexeme();
 }
