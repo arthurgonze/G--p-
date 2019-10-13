@@ -26,6 +26,15 @@ char *lexemeBuffer = NULL;
 int lexemeLength = 0;
 int lexemeBufferSize = 0;
 
+char const * tokens [] = {"ENDOFILE","LT","LE","EQ","NE","GT","GE","IF","BOOL","ELSE","ID",
+                          "INT","FLOAT","COMMA","LPARENT","RPARENT","ASSIGN","SEMICOLON",
+                          "WHILE","LBRACKET","RBRACKET","SWITCH","BREAK","RETURN","PRINT",
+                          "READLN","THROW","TRY","CATCH","CASE","LITERAL","TRUE","FALSE",
+                          "ADDRESS","STAR","DOT","LBRACE","RBRACE","NOT","CHAR","QUOTE",
+                          "SIMPLEQUOTE","BACKSLASH","COLON","PLUS","MINUS","PIPE","SLASH",
+                          "PERCENT","AND","OR","POINTER","TYPEDEF","STRUCT","NUMINT",
+                          "NUMFLOAT","LITERALCHAR"};
+
 ReservedWordsTable  reservedWordsTable;
 LiteralsTable  literalsTable;
 IdentifiersTable  identifiersTable;
@@ -615,4 +624,17 @@ struct token_info lexical_analyzer_next_token() {
         }
 
     }
+}
+
+
+/**
+ * Convert token numerical IDs to a textual represent
+ * @param id Kind of token
+ * @return Textual value of token
+ */
+
+
+char const* token_id_to_name(int id) {
+
+    return tokens[id];
 }
