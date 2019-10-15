@@ -1,0 +1,9 @@
+#ifndef COMPILADOR_2019_3_AST_H
+#define COMPILADOR_2019_3_AST_H
+
+class AST
+{
+
+};
+
+#endif //COMPILADOR_2019_3_AST_H
