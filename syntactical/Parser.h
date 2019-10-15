@@ -2,197 +2,142 @@
 #define COMPILADOR_2019_3_PARSER_H
 
 #include <cstdio>
+#include "../token.h"
+#include "../lexical/analyzer.h"
 
 class Parser
 {
-    // PlaceHolders para tokens e funcoes de IO e no lugar de chamar a funcao de erro esta so imprimindo a chamada
-    // da funcao
-    enum token
+    token_info tok;
+    inline void advance() { tok = lexical_analyzer_next_token(); }
+    inline void eat(int t)
     {
-        ENDOFILE, LT, LE, EQ, NE, GT, GE, IF, BOOL, ELSE, ID,
-        INT, FLOAT, COMMA, LPARENT, RPARENT, ASSIGN, SEMICOLON,
-        WHILE, LBRACKET, RBRACKET, SWITCH, BREAK, RETURN, PRINT,
-        READLN, THROW, TRY, CATCH, CASE, LITERAL, TRUE, FALSE,
-        ADDRESS, STAR, DOT, LBRACE, RBRACE, NOT, CHAR, QUOTE,
-        SIMPLEQUOTE, BACKSLASH, COLON, PLUS, MINUS, PIPE, SLASH,
-        PERCENT, AND, OR, POINTER, TYPEDEF, STRUCT, NUMINT,
-        NUMFLOAT, LITERALCHAR, PLACEHOLDER, PLACEHOLDER1, PLACEHOLDER2, PLACEHOLDER3, PLACEHOLDER4,
-        PLACEHOLDER5, PLACEHOLDER6, PLACEHOLDER7, PLACEHOLDER8, PLACEHOLDER9, PLACEHOLDER10
-    };
-    extern enum token getToken(void);
-    enum token tok;
-
-    inline void advance() { tok = getToken(); }
-    inline void eat(enum token t)
-    {
-        if (tok==t)
+        if (tok.token == t)
             advance();
         else
             printf("error();");
     }
 
-    int programFirstSet [];
-    int programFollowSet [];
+    static int programFollowSet [];
     void Program(void);
 
-    int programAUXFirstSet [];
-    int programAUXFollowSet [];
+    static int programAUXFollowSet [];
     void ProgramAUX(void);
 
-    int programListFirstSet [];
-    int programListFollowSet [];
+    static int programListFollowSet [];
     void ProgramList(void);
 
-    int typeDeclFirstSet [];
-    int typeDeclFollowSet [];
+    static int typeDeclFollowSet [];
     void TypeDecl(void);
 
-    int varDeclFirstSet [];
-    int varDeclFollowSet [];
+    static int varDeclFollowSet [];
     void VarDecl(void);
 
-    int idListFirstSet [];
-    int idListFollowSet [];
+    static int idListFollowSet [];
     void IdList(void);
 
-    int idListAUXFirstSet [];
-    int idListAUXFollowSet [];
+    static int idListAUXFollowSet [];
     void IdListAUX(void);
 
-    int idExprFirstSet [];
-    int idExprFollowSet [];
+    static int idExprFollowSet [];
     void IdExpr(void);
 
-    int pointerFirstSet [];
-    int pointerFollowSet [];
+    static int pointerFollowSet [];
     void Pointer(void);
 
-    int arrayFirstSet [];
-    int arrayFollowSet [];
+    static int arrayFollowSet [];
     void Array(void);
 
-    int formalListFirstSet [];
-    int formalListFollowSet [];
+    static int formalListFollowSet [];
     void FormalList(void);
 
-    int formalRestFirstSet [];
-    int formalRestFollowSet [];
+    static int formalRestFollowSet [];
     void FormalRest(void);
 
-    int typeFirstSet [];
-    int typeFollowSet [];
+    static int typeFollowSet [];
     void Type(void);
 
-    int stmtListFirstSet [];
-    int stmtListFollowSet [];
+    static int stmtListFollowSet [];
     void StmtList(void);
 
-    int stmtListAUXFirstSet [];
-    int stmtListAUXFollowSet [];
+    static int stmtListAUXFollowSet [];
     void StmtListAUX(void);
 
-    int stmtFirstSet [];
-    int stmtFollowSet [];
+    static int stmtFollowSet [];
     void Stmt(void);
 
-    int stmtAUXFirstSet [];
-    int stmtAUXFollowSet [];
+    static int stmtAUXFollowSet [];
     void StmtAUX(void);
 
-    int ifExprFirstSet [];
-    int ifExprFollowSet [];
+    static int ifExprFollowSet [];
     char IFExpr(void);
 
-    int caseBlockFirstSet [];
-    int caseBlockFollowSet [];
+    static int caseBlockFollowSet [];
     void CaseBlock(void);
 
-    int caseBlockAUXFirstSet [];
-    int caseBlockAUXFollowSet [];
+    static int caseBlockAUXFollowSet [];
     void CaseBlockAUX(void);
 
-    int exprListFirstSet [];
-    int exprListFollowSet [];
+    static int exprListFollowSet [];
     void ExprList(void);
 
-    int exprListTailFirstSet [];
-    int exprListTailFollowSet [];
+    static int exprListTailFollowSet [];
     void ExprListTail(void);
 
-    int exprListTailAUXFirstSet [];
-    int exprListTailAUXFollowSet [];
+    static int exprListTailAUXFollowSet [];
     void ExprListTailAUX(void);
 
-    int exprAssignFirstSet [];
-    int exprAssignFollowSet [];
+    static int exprAssignFollowSet [];
     void ExprAssign(void);
 
-    int exprAssignAUXFirstSet [];
-    int exprAssignAUXFollowSet [];
+    static int exprAssignAUXFollowSet [];
     void ExprAssignAUX(void);
 
-    int exprOrFirstSet [];
-    int exprOrFollowSet [];
+    static int exprOrFollowSet [];
     void ExprOr(void);
 
-    int exprOrAUXFirstSet [];
-    int exprOrAUXFollowSet [];
+    static int exprOrAUXFollowSet [];
     void ExprOrAUX(void);
 
-    int exprAndFirstSet [];
-    int exprAndFollowSet [];
+    static int exprAndFollowSet [];
     void ExprAnd(void);
 
-    int exprAndAUXFirstSet [];
-    int exprAndAUXFollowSet [];
+    static int exprAndAUXFollowSet [];
     void ExprAndAUX(void);
 
-    int exprEqualityFirstSet [];
-    int exprEqualityFollowSet [];
+    static int exprEqualityFollowSet [];
     void ExprEquality(void);
 
-    int exprEqualityAUXFirstSet [];
-    int exprEqualityAUXFollowSet [];
+    static int exprEqualityAUXFollowSet [];
     void ExprEqualityAUX(void);
 
-    int exprRelationalFirstSet [];
-    int exprRelationalFollowSet [];
+    static int exprRelationalFollowSet [];
     void ExprRelational(void);
 
-    int exprRelationalAUXFirstSet [];
-    int exprRelationalAUXFollowSet [];
+    static int exprRelationalAUXFollowSet [];
     void ExprRelationalAUX(void);
 
-    int exprAdditiveFirstSet [];
-    int exprAdditiveFollowSet [];
+    static int exprAdditiveFollowSet [];
     void ExprAdditive(void);
 
-    int exprAdditiveAUXFirstSet [];
-    int exprAdditiveAUXFollowSet [];
+    static int exprAdditiveAUXFollowSet [];
     void ExprAdditiveAUX(void);
 
-    int exprMultiplicativeFirstSet [];
-    int exprMultiplicativeFollowSet [];
+    static int exprMultiplicativeFollowSet [];
     void ExprMultiplicative(void);
 
-    int exprMultiplicativeAUXFirstSet [];
-    int exprMultiplicativeAUXFollowSet [];
+    static int exprMultiplicativeAUXFollowSet [];
     void ExprMultiplicativeAUX(void);
 
-    int exprUnaryFirstSet [];
-    int exprUnaryFollowSet [];
+    static int exprUnaryFollowSet [];
     void ExprUnary(void);
 
-    int primaryFirstSet [];
-    int primaryFollowSet [];
+    static int primaryFollowSet [];
     void Primary(void);
 
-    int postFixExprFirstSet [];
-    int postFixExprFollowSet [];
+    static int postFixExprFollowSet [];
     void PostFixExpr(void);
 
-    int postFixExprAUXFirstSet [];
-    int postFixExprAUXFollowSet [];
+    static int postFixExprAUXFollowSet [];
     void PostFixExprAUX(void);
 };
 

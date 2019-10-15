@@ -1,10 +1,9 @@
 #include "Parser.h"
 
-int Parser::programFirstSet[] = {INT, FLOAT, BOOL, ID, CHAR, TYPEDEF};
 int Parser::programFollowSet[] = {-1};
 void Parser::Program(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case INT:
         case FLOAT:
@@ -18,17 +17,16 @@ void Parser::Program(void)
         case TYPEDEF:TypeDecl();
             Program();
             break;
-        case ENDOFILE:eat(ENDOFILE);
+        case ENDOFFILE:eat(ENDOFFILE);
             break;
         default: printf("error();");
     }
 }
 
-int Parser::programAUXFirstSet[] = {LPARENT, LBRACE, COMMA};
 int Parser::programAUXFollowSet[] = {-1};
 void Parser::ProgramAUX(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
 
         case LPARENT:eat(LPARENT);
@@ -48,11 +46,10 @@ void Parser::ProgramAUX(void)
     }
 }
 
-int Parser::programListFirstSet[] = {INT, FLOAT, BOOL, ID, CHAR, TYPEDEF};
 int Parser::programListFollowSet[] = {-1};
 void Parser::ProgramList(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case INT:
         case FLOAT:
@@ -66,11 +63,10 @@ void Parser::ProgramList(void)
     }
 }
 
-int Parser::typeDeclFirstSet[] = {TYPEDEF};
 int Parser::typeDeclFollowSet[] = {INT, FLOAT, BOOL, ID, CHAR, TYPEDEF};
 void Parser::TypeDecl(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case TYPEDEF:eat(TYPEDEF);
             eat(STRUCT);
@@ -88,11 +84,10 @@ void Parser::TypeDecl(void)
     }
 }
 
-int Parser::varDeclFirstSet[] = {INT, FLOAT, BOOL, ID, CHAR};
 int Parser::varDeclFollowSet[] = {IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACKET, TRY, NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT, RBRACKET};
 void Parser::VarDecl(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case INT:
         case FLOAT:
@@ -107,11 +102,10 @@ void Parser::VarDecl(void)
     }
 }
 
-int Parser::idListFirstSet[] = {LPARENT, STAR};
 int Parser::idListFollowSet[] = {SEMICOLON, RPARENT};
 void Parser::IdList(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case LPARENT:
         case STAR:IdExpr();
@@ -121,11 +115,10 @@ void Parser::IdList(void)
     }
 }
 
-int Parser::idListAUXFirstSet[] = {COMMA};
 int Parser::idListAUXFollowSet[] = {SEMICOLON, RPARENT};
 void Parser::IdListAUX(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case COMMA:eat(COMMA);
             IdExpr();
@@ -135,11 +128,10 @@ void Parser::IdListAUX(void)
     }
 }
 
-int Parser::idExprFirstSet[] = {LPARENT, STAR};
 int Parser::idExprFollowSet[] = {COMMA, SEMICOLON, RPARENT};
 void Parser::IdExpr(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case STAR:Pointer();
             eat(ID);
@@ -153,11 +145,10 @@ void Parser::IdExpr(void)
     }
 }
 
-int Parser::pointerFirstSet[] = {STAR};
 int Parser::pointerFollowSet[] = {RPARENT, ID, LBRACE, COMMA};
 void Parser::Pointer(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case STAR:eat(STAR);
             break;
@@ -166,11 +157,10 @@ void Parser::Pointer(void)
     }
 }
 
-int Parser::arrayFirstSet[] = {LBRACE};
 int Parser::arrayFollowSet[] = {SEMICOLON, COMMA, RPARENT};
 void Parser::Array(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case LBRACE:eat(LBRACE);
             eat(NUMINT);
@@ -181,11 +171,10 @@ void Parser::Array(void)
     }
 }
 
-int Parser::formalListFirstSet[] = {INT, FLOAT, BOOL, ID, CHAR};
 int Parser::formalListFollowSet[] = {RPARENT};
 void Parser::FormalList(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case INT:
         case FLOAT:
@@ -202,11 +191,10 @@ void Parser::FormalList(void)
     }
 }
 
-int Parser::formalRestFirstSet[] = {COMMA};
 int Parser::formalRestFollowSet[] = {RPARENT};
 void Parser::FormalRest(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case COMMA:eat(COMMA);
             Type();
@@ -220,11 +208,10 @@ void Parser::FormalRest(void)
     }
 }
 
-int Parser::typeFirstSet[] = {INT, FLOAT, BOOL, ID, CHAR};
 int Parser::typeFollowSet[] = {LPARENT, STAR, ID};
 void Parser::Type(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case INT:eat(INT);
             break;
@@ -240,13 +227,10 @@ void Parser::Type(void)
     }
 }
 
-int Parser::stmtListFirstSet[] = {IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACE, TRY,
-                                  NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMFLOAT, NUMINT, LITERAL,
-                                  LITERALCHAR, TRUE, FALSE, LPARENT};
 int Parser::stmtListFollowSet[] = {RBRACKET, CASE};
 void Parser::StmtList(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case IF:
         case WHILE:
@@ -277,13 +261,10 @@ void Parser::StmtList(void)
     }
 }
 
-int Parser::stmtListAUXFirstSet[] = {IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACE, TRY,
-                                     NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMFLOAT, NUMINT, LITERAL,
-                                     LITERALCHAR, TRUE, FALSE, LPARENT};
 int Parser::stmtListAUXFollowSet[] = {RBRACKET, CASE};
 void Parser::StmtListAUX(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case IF:
         case WHILE:
@@ -314,13 +295,11 @@ void Parser::StmtListAUX(void)
     }
 }
 
-int Parser::stmtFirstSet[] = {IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACKET, TRY,
-                              NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, TRUE, FALSE, LPARENT};
 int Parser::stmtFollowSet[] = {ELSE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACKET, TRY, NOT, PLUS, MINUS, STAR, ADDRESS,
                                ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT, CATCH, RBRACKET, CASE};
 void Parser::Stmt(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case WHILE:
         case SWITCH:
@@ -355,13 +334,11 @@ void Parser::Stmt(void)
     }
 }
 
-int Parser::stmtAUXFirstSet[] = {WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACKET, TRY,
-                                 NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT};
 int Parser::stmtAUXFollowSet[] = {ELSE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACKET, TRY, NOT, PLUS, MINUS, STAR, ADDRESS,
                                   ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT, CATCH, RBRACKET, CASE};
 void Parser::StmtAUX(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case WHILE:eat(WHILE);
             eat(LPARENT);
@@ -436,13 +413,11 @@ void Parser::StmtAUX(void)
     }
 }
 
-int Parser::ifExprFirstSet[] = {IF, ELSE, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACKET, TRY, NOT,
-                                PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT};
 int Parser::ifExprFollowSet[] = {ELSE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACKET, TRY, NOT, PLUS, MINUS, STAR, ADDRESS,
                                  ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT, CATCH, RBRACKET, CASE};
 char Parser::IFExpr(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case IF:eat(IF);
             eat(LPARENT);
@@ -453,18 +428,37 @@ char Parser::IFExpr(void)
         case ELSE:eat(ELSE);
             IFExpr();
             break;
-        case PLACEHOLDER2:StmtAUX();
+        case WHILE:
+        case SWITCH:
+        case PRINT:
+        case READLN:
+        case RETURN:
+        case THROW:
+        case LBRACKET:
+        case TRY:
+        case NOT:
+        case PLUS:
+        case MINUS:
+        case STAR:
+        case ADDRESS:
+        case ID:
+        case NUMINT:
+        case NUMFLOAT:
+        case LITERAL:
+        case CHAR:
+        case TRUE:
+        case FALSE:
+        case LPARENT:StmtAUX();
             IFExpr();
             break;
         default: printf("error();");
     }
 }
 
-int Parser::caseBlockFirstSet[] = {CASE};
 int Parser::caseBlockFollowSet[] = {RBRACKET};
 void Parser::CaseBlock(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case CASE:eat(CASE);
             eat(NUMINT);
@@ -475,12 +469,10 @@ void Parser::CaseBlock(void)
     }
 }
 
-int Parser::caseBlockAUXFirstSet[] = {CASE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACKET, TRY, NOT,
-                                      PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT};
 int Parser::caseBlockAUXFollowSet[] = {RBRACKET};
 void Parser::CaseBlockAUX(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case IF:
         case WHILE:
@@ -514,11 +506,10 @@ void Parser::CaseBlockAUX(void)
     }
 }
 
-int Parser::exprListFirstSet[] = {NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, TRUE, FALSE, LPARENT};
 int Parser::exprListFollowSet[] = {RPARENT};
 void Parser::ExprList(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case NOT:
         case PLUS:
@@ -539,11 +530,10 @@ void Parser::ExprList(void)
     }
 }
 
-int Parser::exprListTailFirstSet[] = {NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT};
 int Parser::exprListTailFollowSet[] = {RPARENT};
 void Parser::ExprListTail(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case NOT:
         case PLUS:
@@ -564,11 +554,10 @@ void Parser::ExprListTail(void)
     }
 }
 
-int Parser::exprListTailAUXFirstSet[] = {COMMA};
 int Parser::exprListTailAUXFollowSet[] = {RPARENT};
 void Parser::ExprListTailAUX(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case COMMA:eat(COMMA);
             ExprListTail();
@@ -578,11 +567,10 @@ void Parser::ExprListTailAUX(void)
     }
 }
 
-int Parser::exprAssignFirstSet[] = {NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, TRUE, FALSE, LPARENT};
 int Parser::exprAssignFollowSet[] = {SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::ExprAssign(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case NOT:
         case PLUS:
@@ -603,11 +591,10 @@ void Parser::ExprAssign(void)
     }
 }
 
-int Parser::exprAssignAUXFirstSet[] = {EQ};
 int Parser::exprAssignAUXFollowSet[] = {SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::ExprAssignAUX(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case EQ:
         case ASSIGN:eat(ASSIGN);
@@ -617,11 +604,10 @@ void Parser::ExprAssignAUX(void)
     }
 }
 
-int Parser::exprOrFirstSet[] = {NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, TRUE, FALSE, LPARENT};
 int Parser::exprOrFollowSet[] = {EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::ExprOr(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case NOT:
         case PLUS:
@@ -642,11 +628,10 @@ void Parser::ExprOr(void)
     }
 }
 
-int Parser::exprOrAUXFirstSet[] = {OR};
 int Parser::exprOrAUXFollowSet[] = {EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::ExprOrAUX(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case OR:eat(OR);
             ExprAnd();
@@ -655,11 +640,10 @@ void Parser::ExprOrAUX(void)
     }
 }
 
-int Parser::exprAndFirstSet[] = {NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT};
 int Parser::exprAndFollowSet[] = {OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::ExprAnd(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case NOT:
         case PLUS:
@@ -680,11 +664,10 @@ void Parser::ExprAnd(void)
     }
 }
 
-int Parser::exprAndAUXFirstSet[] = {AND};
 int Parser::exprAndAUXFollowSet[] = {OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::ExprAndAUX(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case AND:eat(AND);
             ExprEquality();
@@ -693,11 +676,10 @@ void Parser::ExprAndAUX(void)
     }
 }
 
-int Parser::exprEqualityFirstSet[] = {NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, TRUE, FALSE, LPARENT};
 int Parser::exprEqualityFollowSet[] = {AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::ExprEquality(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case NOT:
         case PLUS:
@@ -718,11 +700,10 @@ void Parser::ExprEquality(void)
     }
 }
 
-int Parser::exprEqualityAUXFirstSet[] = {EQ, NE};
 int Parser::exprEqualityAUXFollowSet[] = {AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::ExprEqualityAUX(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case EQ:eat(EQ);
             ExprRelational();
@@ -734,11 +715,10 @@ void Parser::ExprEqualityAUX(void)
     }
 }
 
-int Parser::exprRelationalFirstSet[] = {NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, TRUE, FALSE, LPARENT};
 int Parser::exprRelationalFollowSet[] = {EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::ExprRelational(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case NOT:
         case PLUS:
@@ -759,11 +739,10 @@ void Parser::ExprRelational(void)
     }
 }
 
-int Parser::exprRelationalAUXFirstSet[] = {LT, GT, LE, GE};
 int Parser::exprRelationalAUXFollowSet[] = {EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::ExprRelationalAUX(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case LT:eat(LT);
             ExprAdditive();
@@ -781,11 +760,10 @@ void Parser::ExprRelationalAUX(void)
     }
 }
 
-int Parser::exprAdditiveFirstSet[] = {NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, TRUE, FALSE, LPARENT};
 int Parser::exprAdditiveFollowSet[] = {LT, GT, LE, GE, EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::ExprAdditive(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case NOT:
         case PLUS:
@@ -806,11 +784,10 @@ void Parser::ExprAdditive(void)
     }
 }
 
-int Parser::exprAdditiveAUXFirstSet[] = {PIPE, PLUS, MINUS};
 int Parser::exprAdditiveAUXFollowSet[] = {LT, GT, LE, GE, EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::ExprAdditiveAUX(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case PIPE:eat(PIPE);
             ExprMultiplicative();
@@ -825,12 +802,11 @@ void Parser::ExprAdditiveAUX(void)
     }
 }
 
-int Parser::exprMultiplicativeFirstSet[] = {NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, TRUE, FALSE, LPARENT};
 int Parser::exprMultiplicativeFollowSet[] = {PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ, NE, AND, OR, EQ, SEMICOLON,
                                              COMMA, RPARENT, RBRACE};
 void Parser::ExprMultiplicative(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case NOT:
         case PLUS:
@@ -851,12 +827,11 @@ void Parser::ExprMultiplicative(void)
     }
 }
 
-int Parser::exprMultiplicativeAUXFirstSet[] = {ADDRESS, STAR, SLASH};
 int Parser::exprMultiplicativeAUXFollowSet[] = {PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ, NE, AND, OR,
                                                 EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::ExprMultiplicativeAUX(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case ADDRESS:eat(ADDRESS);
             ExprUnary();
@@ -871,12 +846,11 @@ void Parser::ExprMultiplicativeAUX(void)
     }
 }
 
-int Parser::exprUnaryFirstSet[] = {NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, TRUE, FALSE, LPARENT};
 int Parser::exprUnaryFollowSet[] = {ADDRESS, STAR, SLASH, PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ, NE, AND, OR,
                                     EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::ExprUnary(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case NOT:eat(NOT);
             PostFixExpr();
@@ -906,12 +880,11 @@ void Parser::ExprUnary(void)
     }
 }
 
-int Parser::primaryFirstSet[] = {ID, NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, TRUE, FALSE, LPARENT};
 int Parser::primaryFollowSet[] = {DOT, POINTER, LBRACE, LPARENT, ADDRESS, STAR, SLASH, PIPE, PLUS, MINUS, LT, GT, LE, GE,
                                   EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::Primary(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case ID:eat(ID);
             break;
@@ -935,12 +908,11 @@ void Parser::Primary(void)
     }
 }
 
-int Parser::postFixExprFirstSet[] = {ID, NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, TRUE, FALSE, LPARENT};
 int Parser::postFixExprFollowSet[] = {ADDRESS, STAR, SLASH, PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ,
                                       NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::PostFixExpr(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case ID:
         case NUMINT:
@@ -956,12 +928,11 @@ void Parser::PostFixExpr(void)
     }
 }
 
-int Parser::postFixExprAUXFirstSet[] = {DOT, POINTER, LBRACE, LPARENT};
 int Parser::postFixExprAUXFollowSet[] = {ADDRESS, STAR, SLASH, PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ,
                                          NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
 void Parser::PostFixExprAUX(void)
 {
-    switch (tok)
+    switch (tok.token)
     {
         case DOT:eat(DOT);
             eat(ID);
