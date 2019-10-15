@@ -410,8 +410,8 @@ struct token_info lexical_analyzer_next_token() {
                 go_to_state(54);
                 break;
             case 18: //Unexpected char fail state
-                go_to_state(INITIAL_STATE);
                 fail("Unexpected character");
+                go_to_state(INITIAL_STATE);
                 break;
             case 19:
                 if (is_digit(currentInput))
@@ -421,7 +421,9 @@ struct token_info lexical_analyzer_next_token() {
                 else if (currentInput == 'e' || currentInput == 'E')
                     get_next_char_and_go_to(20);
                 else if (is_letter(currentInput))
-                    go_to_state(18);
+                    go_to_state(94);
+                else if (currentInput == ',')
+                    go_to_state(95);
                 else
                     go_to_state(24);
                 break;
@@ -431,13 +433,13 @@ struct token_info lexical_analyzer_next_token() {
                 else if (currentInput == '+' || currentInput == '-')
                     get_next_char_and_go_to(21);
                 else
-                    go_to_state(18);
+                    go_to_state(93);
                 break;
             case 21:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(22);
                 else
-                    go_to_state(18);
+                    go_to_state(92);
                 break;
             case 22:
                 if (is_digit(currentInput))
@@ -454,7 +456,7 @@ struct token_info lexical_analyzer_next_token() {
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(26);
                 else if (is_letter(currentInput))
-                    go_to_state(18);
+                    go_to_state(91);
                 else
                     go_to_state(23);
                 break;
@@ -464,7 +466,7 @@ struct token_info lexical_analyzer_next_token() {
                 else if (currentInput == 'E' || currentInput == 'e')
                     get_next_char_and_go_to(20);
                 else if (is_letter(currentInput))
-                    go_to_state(18);
+                    go_to_state(91);
                 else
                     go_to_state(23);
                 break;
@@ -534,7 +536,7 @@ struct token_info lexical_analyzer_next_token() {
                         go_to_state(17);
                         break;
                     default:
-                        go_to_state(18);
+                        go_to_state(96);
                         break;
                 }
                 break;
@@ -613,6 +615,30 @@ struct token_info lexical_analyzer_next_token() {
                     go_to_state(18);
                 } else
                     go_to_state(23);
+                break;
+            case 91: //Unexpected float number before the ID = fail state
+                fail("The ID can't start with float numbers");
+                go_to_state(INITIAL_STATE);
+                break;
+            case 92: //Unexpected char after the E or e = fail state
+                fail("Missing the power function value on the scientific notation");
+                go_to_state(INITIAL_STATE);
+                break;
+            case 93: //Unexpected char after the E or e = fail state
+                fail("Unexpected character after the scientific notation");
+                go_to_state(INITIAL_STATE);
+                break;
+            case 94: //Unexpected int number before the ID = fail state
+                fail("The ID can't start with int numbers");
+                go_to_state(INITIAL_STATE);
+                break;
+            case 95: //Number fail state : change ',' to '.'
+                fail("Missing . character. Maybe change ',' to '.' ");
+                go_to_state(INITIAL_STATE);
+                break;
+            case 96: //Missing ' character fail state
+                fail("Missing \' character");
+                go_to_state(INITIAL_STATE);
                 break;
             case 97:
                 return found_token_and_restart(COLON);
