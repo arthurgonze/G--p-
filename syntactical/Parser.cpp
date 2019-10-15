@@ -90,7 +90,7 @@ void Parser::TypeDecl(void)
     }
 }
 
-int Parser::varDeclFollowSet[] = {IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACKET, TRY, NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT, RBRACKET};
+int Parser::varDeclFollowSet[] = {IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACE, TRY, NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT, RBRACKET};
 void Parser::VarDecl(void)
 {
     switch (tok.token)
@@ -301,8 +301,8 @@ void Parser::StmtListAUX(void)
     }
 }
 
-int Parser::stmtFollowSet[] = {ELSE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACKET, TRY, NOT, PLUS, MINUS, STAR, ADDRESS,
-                               ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT, CATCH, RBRACKET, CASE};
+int Parser::stmtFollowSet[] = {ELSE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACE, TRY, NOT, PLUS, MINUS, STAR, ADDRESS,
+                               ID, NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, TRUE, FALSE, LPARENT, CATCH, RBRACKET, CASE};
 void Parser::Stmt(void)
 {
     switch (tok.token)
@@ -320,7 +320,7 @@ void Parser::Stmt(void)
         case READLN:
         case RETURN:
         case THROW:
-        case LBRACKET:
+        case LBRACE:
         case TRY:
         case NOT:
         case PLUS:
@@ -336,11 +336,11 @@ void Parser::Stmt(void)
         case FALSE:
         case LPARENT:StmtAUX();
             break;
-        default: printf("error(Stmt);");
+        default: printf("error(Stmt), Token error: %d \n", tok.token);
     }
 }
 
-int Parser::stmtAUXFollowSet[] = {ELSE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACKET, TRY, NOT, PLUS, MINUS, STAR, ADDRESS,
+int Parser::stmtAUXFollowSet[] = {ELSE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACE, TRY, NOT, PLUS, MINUS, STAR, ADDRESS,
                                   ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT, CATCH, RBRACKET, CASE};
 void Parser::StmtAUX(void)
 {
@@ -382,7 +382,7 @@ void Parser::StmtAUX(void)
         case THROW:eat(THROW);
             eat(SEMICOLON);
             break;
-        case LBRACKET:eat(LBRACKET);
+        case LBRACE:eat(LBRACE);
             StmtList();
             eat(RBRACKET);
             break;
@@ -419,7 +419,7 @@ void Parser::StmtAUX(void)
     }
 }
 
-int Parser::ifExprFollowSet[] = {ELSE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACKET, TRY, NOT, PLUS, MINUS, STAR, ADDRESS,
+int Parser::ifExprFollowSet[] = {ELSE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACE, TRY, NOT, PLUS, MINUS, STAR, ADDRESS,
                                  ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT, CATCH, RBRACKET, CASE};
 char Parser::IFExpr(void)
 {
@@ -440,7 +440,7 @@ char Parser::IFExpr(void)
         case READLN:
         case RETURN:
         case THROW:
-        case LBRACKET:
+        case LBRACE:
         case TRY:
         case NOT:
         case PLUS:
@@ -488,7 +488,7 @@ void Parser::CaseBlockAUX(void)
         case READLN:
         case RETURN:
         case THROW:
-        case LBRACKET:
+        case LBRACE:
         case TRY:
         case NOT:
         case PLUS:
