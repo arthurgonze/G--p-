@@ -2,7 +2,6 @@
 
 void Parser::StartParser()
 {
-    cout << "Parser start" << endl;
     advance();
     return Program();
 }
@@ -10,7 +9,6 @@ void Parser::StartParser()
 int Parser::programFollowSet[] = {-1};
 void Parser::Program(void)
 {
-    cout << "Program" << endl;
     switch (tok.token)
     {
         case INT:
@@ -27,7 +25,7 @@ void Parser::Program(void)
             break;
         case ENDOFFILE:eat(ENDOFFILE);
             break;
-        default: printf("error();");
+        default: printf("error(Program);");
     }
 }
 
@@ -50,7 +48,7 @@ void Parser::ProgramAUX(void)
         case LBRACE:Array();
             FormalRest();
             break;
-        default: printf("error();");
+        default: printf("error(ProgramAUX);");
     }
 }
 
@@ -67,7 +65,7 @@ void Parser::ProgramList(void)
         case TYPEDEF:Program();
             break;
             // TODO EPSILON
-        default: printf("error();");
+        default: printf("errorProgramList();");
     }
 }
 
@@ -88,7 +86,7 @@ void Parser::TypeDecl(void)
             eat(SEMICOLON);
             TypeDecl();
             break;
-        default: printf("error();");
+        default: printf("error(TypeDecl);");
     }
 }
 
@@ -106,7 +104,7 @@ void Parser::VarDecl(void)
             eat(SEMICOLON);
             VarDecl();
             break;
-        default: printf("error();");
+        default: printf("error(VarDecl);");
     }
 }
 
@@ -119,7 +117,7 @@ void Parser::IdList(void)
         case STAR:IdExpr();
             IdListAUX();
             break;
-        default: printf("error();");
+        default: printf("error(IdList);");
     }
 }
 
@@ -132,7 +130,7 @@ void Parser::IdListAUX(void)
             IdExpr();
             break;
             // TODO EPSILON
-        default: printf("error();");
+        default: printf("error(IdListAUX);");
     }
 }
 
@@ -149,7 +147,7 @@ void Parser::IdExpr(void)
             IdList();
             eat(RPARENT);
             break;
-        default: printf("error();");
+        default: printf("error(IdExpr);");
     }
 }
 
@@ -161,7 +159,7 @@ void Parser::Pointer(void)
         case STAR:eat(STAR);
             break;
             // TODO EPSILON
-        default: printf("error();");
+        default: printf("error(Pointer);");
     }
 }
 
@@ -175,7 +173,7 @@ void Parser::Array(void)
             eat(RBRACE);
             break;
             // TODO EPSILON
-        default: printf("error();");
+        default: printf("error(Array);");
     }
 }
 
@@ -195,7 +193,7 @@ void Parser::FormalList(void)
             FormalRest();
             break;
             // TODO EPSILON
-        default: printf("error();");
+        default: printf("error(FormalList);");
     }
 }
 
@@ -212,7 +210,7 @@ void Parser::FormalRest(void)
             FormalRest();
             break;
             // TODO EPSILON
-        default: printf("error();");
+        default: printf("error(FormalRest);");
     }
 }
 
@@ -231,7 +229,7 @@ void Parser::Type(void)
             break;
         case CHAR:eat(CHAR);
             break;
-        default: printf("error();");
+        default: printf("error(Type);");
     }
 }
 
@@ -265,7 +263,7 @@ void Parser::StmtList(void)
         case LPARENT:Stmt();
             StmtListAUX();
             break;
-        default: printf("error();");
+        default: printf("error(StmtList);");
     }
 }
 
@@ -299,7 +297,7 @@ void Parser::StmtListAUX(void)
         case LPARENT:StmtList();
             break;
             // TODO EPSILON
-        default: printf("error();");
+        default: printf("error(StmtListAux);");
     }
 }
 
@@ -309,6 +307,12 @@ void Parser::Stmt(void)
 {
     switch (tok.token)
     {
+        case IF:eat(IF);
+            eat(LPARENT);
+            ExprAssign();
+            eat(RPARENT);
+            IFExpr();
+            break;
         case WHILE:
         case SWITCH:
         case BREAK:
@@ -332,13 +336,7 @@ void Parser::Stmt(void)
         case FALSE:
         case LPARENT:StmtAUX();
             break;
-        case IF:eat(IF);
-            eat(LPARENT);
-            ExprAssign();
-            eat(RPARENT);
-            IFExpr();
-            break;
-        default: printf("error();");
+        default: printf("error(Stmt);");
     }
 }
 
@@ -417,7 +415,7 @@ void Parser::StmtAUX(void)
             eat(SEMICOLON);
             break;
 
-        default: printf("error();");
+        default: printf("error(StmtAUX);");
     }
 }
 
@@ -459,7 +457,7 @@ char Parser::IFExpr(void)
         case LPARENT:StmtAUX();
             IFExpr();
             break;
-        default: printf("error();");
+        default: printf("error(IFExpr);");
     }
 }
 
@@ -473,7 +471,7 @@ void Parser::CaseBlock(void)
             eat(COLON);
             CaseBlockAUX();
             break;
-        default: printf("error();");
+        default: printf("error(caseBlock);");
     }
 }
 
@@ -510,7 +508,7 @@ void Parser::CaseBlockAUX(void)
         case CASE:CaseBlock();
             break;
             // TODO EPSILON
-        default: printf("error();");
+        default: printf("error(caseBlockAUX);");
     }
 }
 
@@ -534,7 +532,7 @@ void Parser::ExprList(void)
         case LPARENT:ExprListTail();
             break;
             // TODO EPSILON
-        default: printf("error();");
+        default: printf("error(ExprList);");
     }
 }
 
@@ -558,7 +556,7 @@ void Parser::ExprListTail(void)
         case LPARENT:ExprAssign();
             ExprListTailAUX();
             break;
-        default: printf("error();");
+        default: printf("error(ExprListTail);");
     }
 }
 
@@ -571,7 +569,7 @@ void Parser::ExprListTailAUX(void)
             ExprListTail();
             break;
             // TODO EPSILON
-        default: printf("error();");
+        default: printf("error(ExprListTailAUX);");
     }
 }
 
@@ -595,7 +593,7 @@ void Parser::ExprAssign(void)
         case LPARENT:ExprOr();
             ExprAssignAUX();
             break;
-        default: printf("error();");
+        default: printf("error(ExprAssign);");
     }
 }
 
@@ -608,7 +606,7 @@ void Parser::ExprAssignAUX(void)
         case ASSIGN:eat(ASSIGN);
             ExprOr();
             break;
-        default: printf("error();");
+        default: printf("error(ExprAssignAUX);");
     }
 }
 
@@ -632,7 +630,7 @@ void Parser::ExprOr(void)
         case LPARENT:ExprAnd();
             ExprOrAUX();
             break;
-        default: printf("error();");
+        default: printf("error(ExprOr);");
     }
 }
 
@@ -644,7 +642,7 @@ void Parser::ExprOrAUX(void)
         case OR:eat(OR);
             ExprAnd();
             break;
-        default: printf("error();");
+        default: printf("error(ExprOrAUX);");
     }
 }
 
@@ -668,7 +666,7 @@ void Parser::ExprAnd(void)
         case LPARENT:ExprEquality();
             ExprAndAUX();
             break;
-        default: printf("error();");
+        default: printf("error(ExprAnd);");
     }
 }
 
@@ -680,7 +678,7 @@ void Parser::ExprAndAUX(void)
         case AND:eat(AND);
             ExprEquality();
             break;
-        default: printf("error();");
+        default: printf("error(ExprAndAUX);");
     }
 }
 
@@ -704,7 +702,7 @@ void Parser::ExprEquality(void)
         case LPARENT:ExprRelational();
             ExprEqualityAUX();
             break;
-        default: printf("error();");
+        default: printf("error(ExprEquality);");
     }
 }
 
@@ -719,7 +717,7 @@ void Parser::ExprEqualityAUX(void)
         case NE:eat(NE);
             ExprRelational();
             break;
-        default: printf("error();");
+        default: printf("error(ExprEqualityAUX);");
     }
 }
 
@@ -743,7 +741,7 @@ void Parser::ExprRelational(void)
         case LPARENT:ExprAdditive();
             ExprRelationalAUX();
             break;
-        default: printf("error();");
+        default: printf("error(ExprRelational);");
     }
 }
 
@@ -764,7 +762,7 @@ void Parser::ExprRelationalAUX(void)
         case GE:eat(GE);
             ExprAdditive();
             break;
-        default: printf("error();");
+        default: printf("error(ExprRelationalAUX);");
     }
 }
 
@@ -788,7 +786,7 @@ void Parser::ExprAdditive(void)
         case LPARENT:ExprMultiplicative();
             ExprAdditiveAUX();
             break;
-        default: printf("error();");
+        default: printf("error(ExprAdditive);");
     }
 }
 
@@ -806,7 +804,7 @@ void Parser::ExprAdditiveAUX(void)
         case MINUS:eat(MINUS);
             ExprMultiplicative();
             break;
-        default: printf("error();");
+        default: printf("error(ExprAdditiveAUX);");
     }
 }
 
@@ -831,7 +829,7 @@ void Parser::ExprMultiplicative(void)
         case LPARENT:ExprUnary();
             ExprMultiplicativeAUX();
             break;
-        default: printf("error();");
+        default: printf("error(ExprMultiplicative);");
     }
 }
 
@@ -850,7 +848,7 @@ void Parser::ExprMultiplicativeAUX(void)
         case SLASH:eat(SLASH);
             ExprUnary();
             break;
-        default: printf("error();");
+        default: printf("error(ExprMultiplicativeAUX);");
     }
 }
 
@@ -884,7 +882,7 @@ void Parser::ExprUnary(void)
         case FALSE:
         case LPARENT:PostFixExpr();
             break;
-        default: printf("error();");
+        default: printf("error(ExprUnary);");
     }
 }
 
@@ -912,7 +910,7 @@ void Parser::Primary(void)
             ExprAssign();
             eat(RPARENT);
             break;
-        default: printf("error();");
+        default: printf("error(Primary);");
     }
 }
 
@@ -932,7 +930,7 @@ void Parser::PostFixExpr(void)
         case LPARENT:Primary();
             PostFixExprAUX();
             break;
-        default: printf("error();");
+        default: printf("error(PostFixExpr);");
     }
 }
 
@@ -962,6 +960,6 @@ void Parser::PostFixExprAUX(void)
             break;
 
             // TODO EPSILON
-        default: printf("error();");
+        default: printf("error(PostFixExprAUX);");
     }
 }
