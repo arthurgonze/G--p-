@@ -1,9 +1,16 @@
-/*
 #include "Parser.h"
+
+void Parser::StartParser()
+{
+    cout << "Parser start" << endl;
+    advance();
+    return Program();
+}
 
 int Parser::programFollowSet[] = {-1};
 void Parser::Program(void)
 {
+    cout << "Program" << endl;
     switch (tok.token)
     {
         case INT:
@@ -957,4 +964,4 @@ void Parser::PostFixExprAUX(void)
             // TODO EPSILON
         default: printf("error();");
     }
-}*/
+}

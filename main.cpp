@@ -2,15 +2,17 @@
 #include "lexical/analyzer.h"
 #include "lexical/error.h"
 #include "token.h"
+#include "syntactical/Parser.h"
 
 #define RETURN_CODE_OK 0
 #define RETURN_CODE_FILE_ERROR 1
 #define RETURN_CODE_LEXICAL_ERROR 2
 
-void send_error_to_stderr(char const*fmt, ...);
+void send_error_to_stderr(char const *fmt, ...);
 
 void print_symbol_table(SymbolTable symbolTable, bool showHeader, bool showToken, bool showLexeme,
-                        bool showInternalCode, char const *tableName) {
+                        bool showInternalCode, char const *tableName)
+{
     struct symbol_info **block = symbolTable.block;
 
     printf("\nTABELA DE SÍMBOLOS: %s\n", tableName);
@@ -18,7 +20,8 @@ void print_symbol_table(SymbolTable symbolTable, bool showHeader, bool showToken
 
     //Check if column names headers needs to be printed
     //If necessary, print selected;
-    if (showHeader) {
+    if (showHeader)
+    {
         if (showToken)
             printf("TOKEN\t\t");
 
@@ -30,13 +33,15 @@ void print_symbol_table(SymbolTable symbolTable, bool showHeader, bool showToken
 
         printf("\n-------------------------------------------\n");
     }
-    for (int i = 0; i < TABLE_SIZE; ++i) { //Get all the entries
+    for (int i = 0; i < TABLE_SIZE; ++i)
+    { //Get all the entries
 
         symbol_info *temp = block[i];
-        if (temp == NULL) //If its null, nothing to be done
+        if (temp==NULL) //If its null, nothing to be done
             continue;
 
-        while (temp != NULL) {
+        while (temp!=NULL)
+        {
 
             //Verify flags to print only requested columns
             if (showToken)
@@ -58,19 +63,21 @@ void print_symbol_table(SymbolTable symbolTable, bool showHeader, bool showToken
     printf("\n");
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
     int returnCode = RETURN_CODE_OK; //Process exit return code
 
-
     //Checks the first argument and open the correct input (stdin or file)
-    FILE* input = stdin;
-    if (argc != 1) { //If it has arguments, open the file
+    FILE *input = stdin;
+    if (argc!=1)
+    { //If it has arguments, open the file
 
         char *fileName = argv[1];
         size_t argumentSize = strlen(argv[1]);
         const char *dot = strrchr(argv[1], '.');
-        if (!dot || dot == argv[1]) { //Check for dot in fileName, but ignore if its on start (hidden file)
+        if (!dot || dot==argv[1])
+        { //Check for dot in fileName, but ignore if its on start (hidden file)
 
             fileName = (char *) malloc(argumentSize + 5); // Adds 5 chars do add the extension (.cmm (4) + \0 (1))
             strcpy(fileName, argv[1]); //Copy the file
@@ -85,26 +92,30 @@ int main(int argc, char *argv[]) {
 
     lexical_analyzer_init(input);
 
+    Parser *parser = new Parser();
+    parser->StartParser();
+
     //Print every token found on input
     struct token_info token;
-    do {
+    do
+    {
 
         token = lexical_analyzer_next_token();
         printf("%s", token_id_to_name(token.token));
 
-
-        switch (token.token) {
+        switch (token.token)
+        {
             case ID:
             case NUMINT:
             case NUMFLOAT:
             case LITERAL:
-            case LITERALCHAR:
-                printf(".%s", token.lexeme);
+            case LITERALCHAR:printf(".%s", token.lexeme);
         }
 
         printf("\n");
 
-    } while (token.token != ENDOFFILE);
+    }
+    while (token.token!=ENDOFFILE);
 
     printf("\n");
 
@@ -117,22 +128,22 @@ int main(int argc, char *argv[]) {
 
     //Print error stack to stderr
     error_stack *error_info;
-    while ((error_info = error_pop()) != NULL) {
+    while ((error_info = error_pop())!=NULL)
+    {
         returnCode = RETURN_CODE_LEXICAL_ERROR;
         send_error_to_stderr("[LEXICAL ERROR] Line %d: %s at column %d", error_info->lineNumber, error_info->message,
                              error_info->columnNumber);
     }
-
     return returnCode;
 }
-
 
 /**
  * error: print an error message and die
  * @param fmt
  * @param ...
  */
-void send_error_to_stderr(char const *fmt, ...) {
+void send_error_to_stderr(char const *fmt, ...)
+{
     va_list args;
 
     va_start(args, fmt);

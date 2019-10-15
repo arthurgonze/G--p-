@@ -207,7 +207,6 @@ void lexical_analyzer_init(FILE* fp) {
     reservedWordsTable.cInsert(STRUCT, "struct");
 
     get_next_char();
-
 }
 
 bool is_letter(char c) {
@@ -652,14 +651,11 @@ struct token_info lexical_analyzer_next_token() {
     }
 }
 
-
 /**
  * Convert token numerical IDs to a textual represent
  * @param id Kind of token
  * @return Textual value of token
  */
-
-
 char const* token_id_to_name(int id) {
 
     return tokens[id];

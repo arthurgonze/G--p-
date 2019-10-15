@@ -1,4 +1,3 @@
-/*
 #ifndef COMPILADOR_2019_3_PARSER_H
 #define COMPILADOR_2019_3_PARSER_H
 
@@ -140,7 +139,8 @@ class Parser
 
     static int postFixExprAUXFollowSet [];
     void PostFixExprAUX(void);
+public:
+    void StartParser();
 };
 
 #endif //COMPILADOR_2019_3_PARSER_H
-*/
