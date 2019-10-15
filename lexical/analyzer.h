@@ -27,6 +27,8 @@ void lexical_analyzer_init(FILE* fp);
 
 void lexical_analyzer_dispose();
 
+char const* token_id_to_name(int id);
+
 #endif //COMPILADOR_2019_3_ANALYZER_H
 //#ifdef __cplusplus
 //}

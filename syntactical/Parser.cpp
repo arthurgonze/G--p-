@@ -1,3 +1,4 @@
+/*
 #include "Parser.h"
 
 int Parser::programFollowSet[] = {-1};
@@ -956,4 +957,4 @@ void Parser::PostFixExprAUX(void)
             // TODO EPSILON
         default: printf("error();");
     }
-}
+}*/
