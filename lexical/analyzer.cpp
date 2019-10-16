@@ -9,7 +9,6 @@
 #include "stdlib.h"
 
 #include "../token.h"
-#include "error.h"
 #include "../SymbolTable.h"
 #include "analyzer.h"
 
@@ -223,7 +222,7 @@ bool is_digit(char c) {
  * @param reason
  */
 void fail(char  const *reason) {
-    error_push(currentLine, currentColumn-1, reason);
+	fprintf(stderr, "[LEXICAL ERROR] %s at %d:%d\n", reason, currentLine, currentColumn - 1);
     clear_lexeme();
 }
 
