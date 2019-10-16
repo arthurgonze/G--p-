@@ -22,7 +22,7 @@ void Parser::eat(int t)
     }
     else
     {
-        printf("error(eat), Token error: Esperado: %s, Processado: %s \n",token_id_to_name(tok.token), token_id_to_name(t));
+        printf("error(eat), Token error: Esperado: %s, Processado: %s \n", token_id_to_name(t), token_id_to_name(tok.token));
     }
 
 }
@@ -284,7 +284,7 @@ void Parser::StmtList(void)
         case LPARENT:Stmt();
             StmtListAUX();
             break;
-        default: printf("error(StmtList), Token error: %s \n",token_id_to_name(tok.token));
+        // Epsilon default: printf("error(StmtList), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
