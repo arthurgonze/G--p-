@@ -6,6 +6,27 @@ void Parser::StartParser()
     return Program();
 }
 
+void Parser::eat(int t)
+{
+    if (tok.token==t)
+    {
+        if (t==ID || t==NUMINT || t==NUMFLOAT)
+        {
+            fprintf(stdout, "MATCH - %s.%s\n", token_id_to_name(t), tok.lexeme);
+        }
+        else
+        {
+            fprintf(stdout, "MATCH - %s\n", token_id_to_name(t));
+        }
+        advance();
+    }
+    else
+    {
+        printf("error(eat), Token error: Esperado: %s, Processado: %s \n",token_id_to_name(tok.token), token_id_to_name(t));
+    }
+
+}
+
 int Parser::programFollowSet[] = {-1};
 void Parser::Program(void)
 {
@@ -25,7 +46,7 @@ void Parser::Program(void)
             break;
         case ENDOFFILE:eat(ENDOFFILE);
             break;
-        default: printf("error(Program);");
+        default: printf("error(Program), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -34,21 +55,20 @@ void Parser::ProgramAUX(void)
 {
     switch (tok.token)
     {
-
         case LPARENT:eat(LPARENT);
             FormalList();
             eat(RPARENT);
-            eat(LBRACKET);
+            eat(LBRACE);
             VarDecl();
             StmtList();
-            eat(RBRACKET);
+            eat(RBRACE);
             ProgramList();
             break;
         case COMMA:
         case LBRACE:Array();
             FormalRest();
             break;
-        default: printf("error(ProgramAUX);");
+        default: printf("error(ProgramAUX), Token error: %s \n",token_id_to_name(tok.token) );
     }
 }
 
@@ -65,7 +85,7 @@ void Parser::ProgramList(void)
         case TYPEDEF:Program();
             break;
             // TODO EPSILON
-        default: printf("errorProgramList();");
+            // Epsilon default: printf("errorProgramList(), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -86,7 +106,7 @@ void Parser::TypeDecl(void)
             eat(SEMICOLON);
             TypeDecl();
             break;
-        default: printf("error(TypeDecl);");
+        default: printf("error(TypeDecl), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -104,7 +124,8 @@ void Parser::VarDecl(void)
             eat(SEMICOLON);
             VarDecl();
             break;
-        default: printf("error(VarDecl);");
+            // TODO EPSILON
+            // Epsilon default: printf("error(VarDecl), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -117,7 +138,7 @@ void Parser::IdList(void)
         case STAR:IdExpr();
             IdListAUX();
             break;
-        default: printf("error(IdList);");
+        default: printf("error(IdList), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -130,7 +151,7 @@ void Parser::IdListAUX(void)
             IdExpr();
             break;
             // TODO EPSILON
-        default: printf("error(IdListAUX);");
+            // Epsilon default: printf("error(IdListAUX), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -147,7 +168,7 @@ void Parser::IdExpr(void)
             IdList();
             eat(RPARENT);
             break;
-        default: printf("error(IdExpr);");
+        default: printf("error(IdExpr), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -159,7 +180,7 @@ void Parser::Pointer(void)
         case STAR:eat(STAR);
             break;
             // TODO EPSILON
-        default: printf("error(Pointer);");
+        // Epsilon default: printf("error(Pointer), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -173,7 +194,7 @@ void Parser::Array(void)
             eat(RBRACE);
             break;
             // TODO EPSILON
-        default: printf("error(Array);");
+            // Epsilon default: printf("error(Array), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -193,7 +214,7 @@ void Parser::FormalList(void)
             FormalRest();
             break;
             // TODO EPSILON
-        default: printf("error(FormalList);");
+            // Epsilon default: printf("error(FormalList), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -210,7 +231,7 @@ void Parser::FormalRest(void)
             FormalRest();
             break;
             // TODO EPSILON
-        default: printf("error(FormalRest);");
+            // Epsilon default: printf("error(FormalRest), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -229,7 +250,7 @@ void Parser::Type(void)
             break;
         case CHAR:eat(CHAR);
             break;
-        default: printf("error(Type);");
+        default: printf("error(Type), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -263,7 +284,7 @@ void Parser::StmtList(void)
         case LPARENT:Stmt();
             StmtListAUX();
             break;
-        default: printf("error(StmtList);");
+        default: printf("error(StmtList), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -297,7 +318,7 @@ void Parser::StmtListAUX(void)
         case LPARENT:StmtList();
             break;
             // TODO EPSILON
-        default: printf("error(StmtListAux);");
+            // Epsilon default: printf("error(StmtListAux), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -336,7 +357,7 @@ void Parser::Stmt(void)
         case FALSE:
         case LPARENT:StmtAUX();
             break;
-        default: printf("error(Stmt), Token error: %d \n", tok.token);
+        default: printf("error(Stmt), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -396,7 +417,7 @@ void Parser::StmtAUX(void)
             Stmt();
             eat(CATCH);
             eat(LPARENT);
-            // TODO IDK
+            // TODO 3pontos
             eat(RPARENT);
             Stmt();
             break;
@@ -415,7 +436,7 @@ void Parser::StmtAUX(void)
             eat(SEMICOLON);
             break;
 
-        default: printf("error(StmtAUX);");
+        default: printf("error(StmtAUX), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -457,7 +478,7 @@ char Parser::IFExpr(void)
         case LPARENT:StmtAUX();
             IFExpr();
             break;
-        default: printf("error(IFExpr);");
+        default: printf("error(IFExpr), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -471,7 +492,7 @@ void Parser::CaseBlock(void)
             eat(COLON);
             CaseBlockAUX();
             break;
-        default: printf("error(caseBlock);");
+        default: printf("error(caseBlock), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -508,7 +529,7 @@ void Parser::CaseBlockAUX(void)
         case CASE:CaseBlock();
             break;
             // TODO EPSILON
-        default: printf("error(caseBlockAUX);");
+            // Epsilon default: printf("error(caseBlockAUX), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -532,7 +553,7 @@ void Parser::ExprList(void)
         case LPARENT:ExprListTail();
             break;
             // TODO EPSILON
-        default: printf("error(ExprList);");
+            // Epsilon default: printf("error(ExprList), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -556,7 +577,7 @@ void Parser::ExprListTail(void)
         case LPARENT:ExprAssign();
             ExprListTailAUX();
             break;
-        default: printf("error(ExprListTail);");
+        default: printf("error(ExprListTail), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -569,7 +590,7 @@ void Parser::ExprListTailAUX(void)
             ExprListTail();
             break;
             // TODO EPSILON
-        default: printf("error(ExprListTailAUX);");
+            // Epsilon default: printf("error(ExprListTailAUX), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -593,7 +614,7 @@ void Parser::ExprAssign(void)
         case LPARENT:ExprOr();
             ExprAssignAUX();
             break;
-        default: printf("error(ExprAssign);");
+        default: printf("error(ExprAssign), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -606,7 +627,7 @@ void Parser::ExprAssignAUX(void)
         case ASSIGN:eat(ASSIGN);
             ExprOr();
             break;
-        default: printf("error(ExprAssignAUX);");
+            // Epsilon default: printf("error(ExprAssignAUX), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -630,7 +651,7 @@ void Parser::ExprOr(void)
         case LPARENT:ExprAnd();
             ExprOrAUX();
             break;
-        default: printf("error(ExprOr);");
+        default: printf("error(ExprOr), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -642,7 +663,7 @@ void Parser::ExprOrAUX(void)
         case OR:eat(OR);
             ExprAnd();
             break;
-        default: printf("error(ExprOrAUX);");
+            // Epsilon default: printf("error(ExprOrAUX), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -666,7 +687,7 @@ void Parser::ExprAnd(void)
         case LPARENT:ExprEquality();
             ExprAndAUX();
             break;
-        default: printf("error(ExprAnd);");
+        default: printf("error(ExprAnd), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -678,7 +699,7 @@ void Parser::ExprAndAUX(void)
         case AND:eat(AND);
             ExprEquality();
             break;
-        default: printf("error(ExprAndAUX);");
+            // Epsilon default: printf("error(ExprAndAUX), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -702,7 +723,7 @@ void Parser::ExprEquality(void)
         case LPARENT:ExprRelational();
             ExprEqualityAUX();
             break;
-        default: printf("error(ExprEquality);");
+        default: printf("error(ExprEquality), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -717,7 +738,7 @@ void Parser::ExprEqualityAUX(void)
         case NE:eat(NE);
             ExprRelational();
             break;
-        default: printf("error(ExprEqualityAUX);");
+            // Epsilon default: printf("error(ExprEqualityAUX), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -741,7 +762,7 @@ void Parser::ExprRelational(void)
         case LPARENT:ExprAdditive();
             ExprRelationalAUX();
             break;
-        default: printf("error(ExprRelational);");
+        default: printf("error(ExprRelational), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -762,7 +783,7 @@ void Parser::ExprRelationalAUX(void)
         case GE:eat(GE);
             ExprAdditive();
             break;
-        default: printf("error(ExprRelationalAUX);");
+            // Epsilon default: printf("error(ExprRelationalAUX), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -786,7 +807,7 @@ void Parser::ExprAdditive(void)
         case LPARENT:ExprMultiplicative();
             ExprAdditiveAUX();
             break;
-        default: printf("error(ExprAdditive);");
+        default: printf("error(ExprAdditive), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -804,7 +825,7 @@ void Parser::ExprAdditiveAUX(void)
         case MINUS:eat(MINUS);
             ExprMultiplicative();
             break;
-        default: printf("error(ExprAdditiveAUX);");
+            // Epsilon default: printf("error(ExprAdditiveAUX), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -829,7 +850,7 @@ void Parser::ExprMultiplicative(void)
         case LPARENT:ExprUnary();
             ExprMultiplicativeAUX();
             break;
-        default: printf("error(ExprMultiplicative);");
+        default: printf("error(ExprMultiplicative), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -848,7 +869,7 @@ void Parser::ExprMultiplicativeAUX(void)
         case SLASH:eat(SLASH);
             ExprUnary();
             break;
-        default: printf("error(ExprMultiplicativeAUX);");
+            // Epsilon default: printf("error(ExprMultiplicativeAUX), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -882,7 +903,7 @@ void Parser::ExprUnary(void)
         case FALSE:
         case LPARENT:PostFixExpr();
             break;
-        default: printf("error(ExprUnary);");
+        default: printf("error(ExprUnary), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -910,7 +931,7 @@ void Parser::Primary(void)
             ExprAssign();
             eat(RPARENT);
             break;
-        default: printf("error(Primary);");
+        default: printf("error(Primary), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -930,7 +951,7 @@ void Parser::PostFixExpr(void)
         case LPARENT:Primary();
             PostFixExprAUX();
             break;
-        default: printf("error(PostFixExpr);");
+        default: printf("error(PostFixExpr), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
@@ -960,6 +981,6 @@ void Parser::PostFixExprAUX(void)
             break;
 
             // TODO EPSILON
-        default: printf("error(PostFixExprAUX);");
+            // Epsilon default: printf("error(PostFixExprAUX), Token error: %s \n",token_id_to_name(tok.token));
     }
 }

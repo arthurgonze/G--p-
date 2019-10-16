@@ -9,13 +9,7 @@ class Parser
 {
     token_info tok;
     inline void advance() { tok = lexical_analyzer_next_token(); }
-    inline void eat(int t)
-    {
-        if (tok.token == t)
-            advance();
-        else
-            printf("error();");
-    }
+    void eat(int t);
 
     static int programFollowSet [];
     void Program(void);
