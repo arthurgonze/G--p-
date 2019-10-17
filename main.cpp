@@ -1,7 +1,6 @@
 #include "SymbolTable.h"
 #include "lexical/analyzer.h"
 #include "token.h"
-#include "main.h"
 
 #define RETURN_CODE_OK 0
 #define RETURN_CODE_FILE_ERROR 1

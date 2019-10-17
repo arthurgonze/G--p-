@@ -108,7 +108,9 @@ int SymbolTable::cSearch(char *lexeme)
     return -1;
 }
 
-SymbolTable::~SymbolTable() = default;
+SymbolTable::~SymbolTable() {
+
+}
 //
 //void LiteralsTable::cInsert(char const *lexeme) {
 //
@@ -163,4 +165,9 @@ void LiteralsTable::cInsert(char const* lexeme)
 void IdentifiersTable::cInsert(char const* lexeme)
 {
 	SymbolTable::cInsert(10, lexeme);
+}
+
+symbol_info::~symbol_info()
+{
+	delete next;
 }

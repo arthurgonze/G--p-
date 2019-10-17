@@ -235,6 +235,7 @@ void handle_next_line() {
  */
 void lexical_analyzer_dispose() {
     free(lexemeBuffer);
+
 }
 
 /**

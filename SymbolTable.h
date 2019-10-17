@@ -14,6 +14,8 @@ struct symbol_info
     int token; //token id
     int pos; // lexem position in the lexemeArray
     struct symbol_info *next; // pointer to the next symbol
+
+	~symbol_info();
 };
 
 class SymbolTable
