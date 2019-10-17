@@ -24,6 +24,7 @@ public:
 	symbol_info** block; // Table
     char *lexemeArray = new char[LEXEME_ARRAY_SIZE]; // An array to allocate lexeme in continuous memory
     SymbolTable(); // Constructor
+	symbol_info* auxInsert(symbol_info* root, int token, char const* lexeme);
     virtual ~SymbolTable();
 
 protected:
