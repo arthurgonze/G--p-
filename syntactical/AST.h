@@ -1,686 +1,469 @@
 #ifndef COMPILADOR_2019_3_AST_H
 #define COMPILADOR_2019_3_AST_H
 
-// Foward Declarations
-class Node;
-
-// implements node
-class StatementNode;
-class TypeNode;
+// Forward Declarations
+class AST;
+class IdNode;
+class ProgramNode;
+class TypeDeclNode;
 class VarDeclNode;
 class IdListNode;
-class VarStmtNode;
-class VarFuncListNode;
-class CaseBlockNode;
-class FunctionDeclNode;
-class ClassListNode;
-class TypeListNode;
-class ProgramNode;
+// class IdExprNode;
 class PointerNode;
-class FormalListNode;
-
-// implements statementNode
-class ExpNode;
-class IfNode;
-class WhileNode;
-class SwitchNode;
+class ArrayNode;
+class FormaListNode;
+// class FormalRestNode;
+class TypeNode;
+class StmtListNode;
+class StmtNode;
+class IfExprNode;
+class CaseBlockNode;
+class ExprListNode;
+class ExprAssignNode;
+class ExprOrNode;
+class ExprAndNode;
+class ExprEqualityNode;
+class ExprRelationalNode;
+class ExprAdditiveNode;
+class ExprMultiplicativeNode;
+class ExprUnaryNode;
+class PrimaryNode;
+class PostFixExprNode;// TODO segmentar igual Stmt
 class BreakNode;
 class PrintNode;
-class ReadNode;
+class ReadlnNode;
 class ReturnNode;
 class ThrowNode;
-class TryNode;
-class StatementListNode;
+class TryCatchNode;
+class WhileNode;
+class SwitchNode;
 
-// implements expNode
-class ExpListNode;
-class IdentifierNode;
-class IntegerNode;
-class RealNode;
-class LiteralNode;
-class CharacterNode;
-class AssignNode;
-class PrimaryNode;
-class FunctionCallNode;
-class PointerValueExpNode;
-class AddressValueNode;
-class PointerValueNode;
-class ArrayAccessNode;
-class ArrayDeclNode;
-class NewNode;
-class RelationalOpNode;
-class AdditionOpNode;
-class MultiplicationOpNode;
-class BooleanOpNode;
-class BitwiseOpNode;
-class TrueNode;
-class FalseNode;
-class ThisNode;
-class NotNode;
-class SignNode;
-
-/// Base abstract node class.
-class Node {
+class AST
+{
 public:
-    virtual ~Node() = default;
-    // TODO virtual void accept(Visitor *visitor) = 0;
+    virtual ~AST();
 };
 
-// Inherits from class Node. Abstract statement node class.
-class StatementNode : public Node {
-public:
-    virtual ~StatementNode() = default;
-    // TODO virtual void accept(Visitor *visitor) = 0;
-};
-
-// Inherits from class Node. Can be an INT, FLOAT, BOOL, ID or CHAR. If it's an ID the lexeme will be different of nullptr.
-class TypeNode : public Node {
+class IdNode : public AST
+{
 private:
     int token;
-    const char *lexeme;
+    char *lex;
 public:
-    TypeNode(int token, const char *lexeme);
-    ~TypeNode() override { delete this->lexeme; };
-    int get_token() const { return token; }
-    const char *get_lexeme() { return lexeme; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    IdNode(int token, char *lex);
+    virtual ~IdNode();
+    inline int getToken() { return token; }
+    inline char *getLex() { return lex; }
 };
 
-// Inherits from class Node. Represents a variable declaration.
-class VarDeclNode : public Node {
+class ProgramNode : public AST
+{
+private:
+    TypeDeclNode *typeDecl;
+    VarDeclNode *varDecl;
+public:
+    ProgramNode(TypeDeclNode *typeDecl, VarDeclNode *varDecl);
+    virtual ~ProgramNode();
+
+    inline TypeDeclNode *getTypeDecl() { return typeDecl; }
+    inline VarDeclNode *getVarDecl() { return varDecl; }
+};
+
+class TypeDeclNode : public AST
+{
+private:
+    VarDeclNode *varDecl;
+    IdNode *id;
+    TypeDeclNode *next;
+public:
+    TypeDeclNode(VarDeclNode *varDecl, IdNode *id, TypeDeclNode *next);
+    virtual ~TypeDeclNode();
+};
+
+class VarDeclNode : public AST
+{
 private:
     TypeNode *type;
-    IdListNode *id_list;
+    IdListNode *idList;
     VarDeclNode *next;
 public:
-    VarDeclNode(TypeNode *type, IdListNode *id_list, VarDeclNode *var_decl);
-    ~VarDeclNode() override;
-    TypeNode *get_type() { return type; }
-    IdListNode *get_id_list() const { return id_list; }
-    VarDeclNode *get_next() const { return next; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    VarDeclNode(TypeNode *type, IdListNode *idlist, VarDeclNode *varDecl);
+    virtual ~VarDeclNode();
+    inline TypeNode *getType() { return type; }
+    inline IdListNode *getIdList() { return idList; }
+    inline VarDeclNode *getVarDecl() { return next; }
 };
 
-// Inherits from class Node. Represents an identifier in an identifier list.
-class IdListNode : public Node {
+class IdListNode : public AST
+{
 private:
     PointerNode *pointer;
-    IdentifierNode *id;
-    ArrayDeclNode *array;
+    IdNode *id;
+    ArrayNode *array;
     IdListNode *next;
 public:
-    IdListNode(PointerNode *pointer, IdentifierNode *id, ArrayDeclNode *array, IdListNode *id_list);
-    ~IdListNode() override;
-    PointerNode *get_pointer() { return pointer; }
-    IdentifierNode *get_id() { return id; }
-    ArrayDeclNode *get_array() { return array; }
-    IdListNode *get_next() { return next; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    IdListNode(PointerNode *pointer, IdNode *id, ArrayNode *array, IdListNode *idList);
+    virtual ~IdListNode();
+    inline PointerNode *getPointer() { return pointer; }
+    inline IdNode *getId() { return id; }
+    inline ArrayNode *getArray() { return array; }
+    inline IdListNode *getIdList() { return next; }
 };
 
-// Inherits from class Node. Because of it's constructors it will either have a VarDeclNode or a StatementListNode. It can be an item in a chained list.
-class VarStmtNode : public Node {
-private:
-    VarDeclNode *decl = nullptr;
-    StatementListNode *stmt_list = nullptr;
-    VarStmtNode *next = nullptr;
+class PointerNode : public AST
+{
 public:
-    VarStmtNode(VarDeclNode *decl, VarStmtNode *next);
-    VarStmtNode(StatementListNode *stmt_list, VarStmtNode *next);
-    ~VarStmtNode() override;
-    VarDeclNode *get_decl() { return decl; }
-    StatementListNode *getStmt_list() { return stmt_list; }
-    VarStmtNode *get_next() { return next; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    virtual ~PointerNode();
 };
 
-// Inherits from class Node. Because of it's constructors it will either have a VarDeclNode or a FunctionDeclNode. It can be an item in a chained list.
-class VarFuncListNode : public Node {
+class ArrayNode : public AST
+{
 private:
-    VarDeclNode *decl = nullptr;
-    FunctionDeclNode *func_list = nullptr;
-    VarFuncListNode *next = nullptr;
+    IdNode *index;
 public:
-    VarFuncListNode(VarDeclNode *decl, VarFuncListNode *next);
-    VarFuncListNode(FunctionDeclNode *func_list, VarFuncListNode *next);
-    ~VarFuncListNode() override;
-    VarDeclNode *get_decl() { return decl; }
-    FunctionDeclNode *getFunc_list() { return func_list; }
-    VarFuncListNode *get_next() { return next; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    ArrayNode(IdNode *integer);
+    virtual ~ArrayNode();
+    inline IdNode *getIndex() { return index; }
 };
 
-// Inherits from class Node. Represents a case block inside a switch structure. It can be an item in a chained list of case blocks.
-class CaseBlockNode : public Node {
-private:
-    IntegerNode *num;
-    StatementListNode *statement_list;
-    CaseBlockNode *case_block;
-public:
-    CaseBlockNode(IntegerNode *num, StatementListNode *statement_list, CaseBlockNode *case_block);
-    ~CaseBlockNode() override;
-    IntegerNode *get_num() { return num; }
-    StatementListNode *get_statement_list() { return statement_list; }
-    CaseBlockNode *get_case_block() { return case_block; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class Node. Represents a declaration of a function.
-class FunctionDeclNode : public Node {
+class FormaListNode : public AST
+{
 private:
     TypeNode *type;
     PointerNode *pointer;
-    IdentifierNode *id;
-    FormalListNode *formal_list;
-    VarStmtNode *var_stmt;
+    IdNode *id;
+    ArrayNode *array;
+    FormaListNode *next;
 public:
-    FunctionDeclNode(TypeNode *type, PointerNode *pointer, IdentifierNode *id, FormalListNode *formal_list,
-                     VarStmtNode *var_stmt);
-    ~FunctionDeclNode() override;
-    TypeNode *get_type() { return type; }
-    PointerNode *get_pointer() { return pointer; }
-    IdentifierNode *get_id() { return id; }
-    FormalListNode *get_formal_list() { return formal_list; }
-    VarStmtNode *getVar_stmt() { return var_stmt; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    FormaListNode(TypeNode *type, PointerNode *pointer, IdNode *id, ArrayNode *array, FormaListNode *formalList);
+    virtual ~FormaListNode();
+
+    inline TypeNode *getType() { return type; }
+    inline PointerNode *getPointer() { return pointer; }
+    inline IdNode *getId() { return id; }
+    inline ArrayNode *getArray() { return array; }
+    inline FormaListNode *getFormalList() { return next; }
 };
 
-// Inherits from class Node. Represents a class structure, it can be a item in a chained list.
-class ClassListNode : public Node {
+class TypeNode : public AST
+{
 private:
-    IdentifierNode *id;
-    VarFuncListNode *var_func;
-    IdentifierNode *parent_id;
-    ClassListNode *class_list;
+    IdNode *id;
 public:
-    ClassListNode(IdentifierNode *id, VarFuncListNode *var_func,
-                  IdentifierNode *parent_id, ClassListNode *class_list);
-    ~ClassListNode() override;
-    IdentifierNode *get_id() { return id; }
-    VarFuncListNode *get_var_func() { return var_func; }
-    IdentifierNode *get_parent_id() { return parent_id; }
-    ClassListNode *get_class_list() { return class_list; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    TypeNode(IdNode *id);
+    virtual ~TypeNode();
+    inline IdNode *getId() { return id; }
 };
 
-// Inherits from class Node. Represents a typedef struct structure. It can be an item in a chained list.
-class TypeListNode : public Node {
+class StmtListNode : public AST
+{
 private:
-    VarDeclNode *var_list;
-    IdentifierNode *id;
-    TypeListNode *next;
+    StmtNode *stmt;
+    StmtListNode *next;
 public:
-    TypeListNode(VarDeclNode *var_list, IdentifierNode *id, TypeListNode *next);
-    ~TypeListNode() override;
-    VarDeclNode *get_var_list() { return var_list; }
-    IdentifierNode *get_id() { return id; }
-    TypeListNode *get_next() { return next; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    StmtListNode(StmtNode *statement, StmtListNode *stmtList);
+    virtual ~StmtListNode();
+
+    inline StmtNode *getStmt() { return stmt; }
+    inline StmtListNode *getStmtList() { return next; }
 };
 
-// Inherits from class Node. Represents the main program being analyzed. This will be the root of the AST returned by the parser.
-class ProgramNode : public Node {
+class StmtNode : public AST
+{
 private:
-    ClassListNode *class_list;
-    TypeListNode *type_list;
-    VarFuncListNode *var_func_list;
+    AST *stmt;
+    StmtNode(StmtListNode *stmlist);
+    StmtNode(IfExprNode *aux);
+    StmtNode(WhileNode *aux);
+    StmtNode(ExprAssignNode *aux);
+    StmtNode(BreakNode *aux);
+    StmtNode(PrintNode *aux);
+    StmtNode(ReadlnNode *aux);
+    StmtNode(ReturnNode *aux);
+    StmtNode(ThrowNode *aux);
+    StmtNode(TryCatchNode *aux);
+    StmtNode(SwitchNode *aux);
 public:
-    ProgramNode(ClassListNode *class_list,
-                TypeListNode *type_list, VarFuncListNode *var_func_list);
-    ~ProgramNode() override;
-    ClassListNode *get_class_list() { return class_list; }
-    TypeListNode *get_type_list() { return type_list; }
-    VarFuncListNode *get_var_func_list() { return var_func_list; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    virtual ~StmtNode();
+
+    inline AST *getStmt() { return stmt; }
 };
 
-// Inherits from class Node. Represents a * before a identifier to indicate that it's a pointer.
-class PointerNode : public Node {
-public:
-    explicit PointerNode() = default;
-    ~PointerNode() override = default;
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class Node. Represents a parameter in a function. It can be a item in a chained list.
-class FormalListNode : public Node {
+class IfExprNode : public AST
+{
 private:
-    TypeNode *type;
-    PointerNode *pointer;
-    IdentifierNode *id;
-    ArrayDeclNode *array;
-    FormalListNode *next;
+    ExprAssignNode *exprAssign;
+    StmtNode *ifStmt;
+    StmtNode *elseStmt;
 public:
-    FormalListNode(TypeNode *type, PointerNode *pointer, IdentifierNode *id, ArrayDeclNode *array,
-                   FormalListNode *next);
-    ~FormalListNode() override;
-    TypeNode *get_type() { return type; }
-    PointerNode *get_pointer() { return pointer; }
-    IdentifierNode *get_id() { return id; }
-    ArrayDeclNode *get_array() { return array; }
-    FormalListNode *get_next() { return next; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    IfExprNode(ExprAssignNode *exprAssign, StmtNode *ifStmt, StmtNode *elseStmt);
+    virtual ~IfExprNode();
+
+    inline ExprAssignNode *getExprAssign() { return exprAssign; }
+    inline StmtNode *getIf() { return ifStmt; }
+    inline StmtNode *getElse() { return elseStmt; }
 };
 
-// Inherits from class StatementNode. Abstract expression node class.
-class ExpNode : public StatementNode {
-public:
-    virtual ~ExpNode() = default;
-    // TODO virtual void accept(Visitor *visitor) = 0;
-};
-
-// Inherits from class StatementNode. Represents an If/Else structure.
-class IfNode : public StatementNode {
-    ExpNode *exp;
-    StatementNode *if_stmt;
-    StatementNode *else_stmt;
-public:
-    IfNode(ExpNode *exp, StatementNode *if_stmt, StatementNode *else_stmt);
-    ~IfNode() override;
-    ExpNode *get_exp() { return exp; }
-    StatementNode *get_statement() { return if_stmt; }
-    StatementNode *get_second_statement() { return else_stmt; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class StatementNode. Represents a While structure.
-class WhileNode : public StatementNode {
+class CaseBlockNode : public AST
+{
 private:
-    ExpNode *exp;
-    StatementNode *statement;
+    IdNode *numInt; // TODO integer node?
+    StmtListNode *stmtList;
+    CaseBlockNode *next;
 public:
-    WhileNode(ExpNode *exp, StatementNode *statement);
-    ~WhileNode() override;
-    ExpNode *get_exp() { return exp; }
-    StatementNode *get_statement() { return statement; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    CaseBlockNode(IdNode *numInt, StmtListNode *stmtList, CaseBlockNode *caseBlock);
+    virtual ~CaseBlockNode();
+
+    inline IdNode *getNum() { return numInt; }
+    inline StmtListNode *getStmtList() { return stmtList; }
+    inline CaseBlockNode *getCaseBlock() { return next; }
 };
 
-// Inherits from class StatementNode. Represents a switch structure.
-class SwitchNode : public StatementNode {
+class ExprListNode : public AST
+{
 private:
-    ExpNode *exp;
-    CaseBlockNode *case_block;
+    ExprAssignNode *exprAssign;
+    ExprListNode *next;
 public:
-    SwitchNode(ExpNode *exp, CaseBlockNode *case_block);
-    ~SwitchNode() override;
-    ExpNode *get_exp() { return exp; }
-    CaseBlockNode *get_case_block() { return case_block; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    ExprListNode(ExprAssignNode *exprAssign, ExprListNode *exprList);
+    virtual ~ExprListNode();
+
+    inline ExprAssignNode *getExprAssign() { return exprAssign; }
+    inline ExprListNode *getExprList() { return next; }
 };
 
-// Inherits from class StatementNode. Represents a break statement.
-class BreakNode : public StatementNode {
-public:
-    BreakNode() = default;
-    ~BreakNode() override = default;
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class StatementNode. Represents a print statement.
-class PrintlnNode : public StatementNode {
+class ExprAssignNode : public AST
+{
 private:
-    ExpListNode *exp_list;
+    ExprOrNode *leftExpr;
+    ExprOrNode *rightExpr;
+    int *op;//operator
 public:
-    explicit PrintlnNode(ExpListNode *exp_list) { this->exp_list = exp_list; };
-    ~PrintlnNode() override { delete this->exp_list; };
-    ExpListNode *get_exp_list() { return exp_list; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    ExprAssignNode(int *op, ExprOrNode *leftExpr, ExprOrNode *rightExpr);
+    virtual ~ExprAssignNode();
+
+    inline ExprOrNode *getLeftExpr() { return leftExpr; }
+    inline ExprOrNode *getRightExpr() { return rightExpr; }
+    inline int *getOperator() { return op; }
 };
 
-// Inherits from class StatementNode. Represents a read statement.
-class ReadNode : public StatementNode {
+class ExprOrNode : public AST
+{
 private:
-    ExpNode *exp;
+    ExprAndNode *leftExpr;
+    ExprAndNode *rightExpr;
+    int *op;//operator
 public:
-    explicit ReadNode(ExpNode *exp) { this->exp = exp; };
-    ~ReadNode() override { delete this->exp; };
-    ExpNode *get_exp() { return exp; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    ExprOrNode(int *op, ExprAndNode *leftExpr, ExprAndNode *rightExpr);
+    virtual ~ExprAssignNode();
+
+    inline ExprAndNode *getLeftExpr() { return leftExpr; }
+    inline ExprAndNode *getRightExpr() { return rightExpr; }
+    inline int *getOperator() { return op; }
 };
 
-// Inherits from class StatementNode. Represents a return statement.
-class ReturnNode : public StatementNode {
+class ExprAndNode : public AST
+{
 private:
-    ExpNode *exp;
+    ExprEqualityNode *leftExpr;
+    ExprEqualityNode *rightExpr;
+    int *op;//operator
 public:
-    explicit ReturnNode(ExpNode *exp) { this->exp = exp; };
-    ~ReturnNode() override { delete this->exp; };
-    ExpNode *get_exp() { return exp; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    ExprAndNode(int *op, ExprEqualityNode *leftExpr, ExprEqualityNode *rightExpr);
+    virtual ~ExprAssignNode();
+
+    inline ExprEqualityNode *getLeftExpr() { return leftExpr; }
+    inline ExprEqualityNode *getRightExpr() { return rightExpr; }
+    inline int *getOperator() { return op; }
 };
 
-// Inherits from class StatementNode. Represents a throw statement.
-class ThrowNode : public StatementNode {
-public:
-    ThrowNode() = default;
-    ~ThrowNode() override = default;
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class StatementNode. Represents a try-catch structure.
-class TryNode : public StatementNode {
+class ExprEqualityNode : public AST
+{
 private:
-    StatementNode *try_stmt;
-    StatementNode *catch_stmt;
+    ExprRelationalNode *leftExpr;
+    ExprRelationalNode *rightExpr;
+    int *op;//operator
 public:
-    TryNode(StatementNode *try_stmt, StatementNode *catch_stmt);
-    ~TryNode() override;
-    StatementNode *get_try_stmt() { return try_stmt; }
-    StatementNode *get_catch_stmt() { return catch_stmt; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    ExprEqualityNode(int *op, ExprRelationalNode *leftExpr, ExprRelationalNode *rightExpr);
+    virtual ~ExprAssignNode();
+
+    inline ExprRelationalNode *getLeftExpr() { return leftExpr; }
+    inline ExprRelationalNode *getRightExpr() { return rightExpr; }
+    inline int *getOperator() { return op; }
 };
 
-// Inherits from class StatementNode. It is one item in a chained list of statements.
-class StatementListNode : public StatementNode {
+class ExprRelationalNode : public AST
+{
 private:
-    StatementNode *statement;
-    StatementListNode *statement_list;
+    ExprAdditiveNode *leftExpr;
+    ExprAdditiveNode *rightExpr;
+    int *op;//operator
 public:
-    StatementListNode(StatementNode *statement, StatementListNode *statement_list);
-    ~StatementListNode() override;
-    StatementNode *get_statement() { return statement; }
-    StatementListNode *get_statement_list() { return statement_list; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    ExprRelationalNode(int *op, ExprAdditiveNode *leftExpr, ExprAdditiveNode *rightExpr);
+    virtual ~ExprAssignNode();
+
+    inline ExprAdditiveNode *getLeftExpr() { return leftExpr; }
+    inline ExprAdditiveNode *getRightExpr() { return rightExpr; }
+    inline int *getOperator() { return op; }
 };
 
-// Inherits from class ExpNode. It is one item in a chained list of expressions.
-class ExpListNode : public ExpNode {
+class ExprAdditiveNode : public AST
+{
 private:
-    ExpNode *exp;
-    ExpListNode *exp_list;
+    ExprMultiplicativeNode *leftExpr;
+    ExprMultiplicativeNode *rightExpr;
+    int *op;//operator
 public:
-    ExpListNode(ExpNode *exp, ExpListNode *exp_list);
-    ~ExpListNode() override;
-    ExpNode *get_exp() { return exp; }
-    ExpListNode *get_exp_list() { return exp_list; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    ExprAdditiveNode(int *op, ExprMultiplicativeNode *leftExpr, ExprMultiplicativeNode *rightExpr);
+    virtual ~ExprAssignNode();
+
+    inline ExprMultiplicativeNode *getLeftExpr() { return leftExpr; }
+    inline ExprMultiplicativeNode *getRightExpr() { return rightExpr; }
+    inline int *getOperator() { return op; }
 };
 
-// Inherits from class ExpNode. Represents an identifier.
-class IdentifierNode : public ExpNode {
+class ExprMultiplicativeNode : public AST
+{
 private:
-    const char *lexeme;
+    ExprUnaryNode *leftExpr;
+    ExprUnaryNode *rightExpr;
+    int *op;//operator
 public:
-    explicit IdentifierNode(const char *lexeme) { this->lexeme = lexeme; };
-    ~IdentifierNode() override { this->lexeme = nullptr; };
-    const char *get_lexeme() { return lexeme; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    ExprMultiplicativeNode(int *op, ExprUnaryNode *leftExpr, ExprUnaryNode *rightExpr);
+    virtual ~ExprAssignNode();
+
+    inline ExprUnaryNode *getLeftExpr() { return leftExpr; }
+    inline ExprUnaryNode *getRightExpr() { return rightExpr; }
+    inline int *getOperator() { return op; }
 };
 
-// Inherits from class ExpNode. Represents an integer.
-class IntegerNode : public ExpNode {
+class ExprUnaryNode : public AST
+{
 private:
-    const char *lexeme;
+    PostFixExprNode *expr;
+    int *op;//operator
 public:
-    explicit IntegerNode(const char *lexeme) { this->lexeme = lexeme; };
-    ~IntegerNode() override { this->lexeme = nullptr; };
-    const char *get_lexeme() { return lexeme; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    ExprUnaryNode(int *op, ExprUnaryNode *expr);
+    virtual ~ExprAssignNode();
+
+    inline PostFixExprNode *getExpr() { return expr; }
+    inline int *getOperator() { return op; }
 };
 
-// Inherits from class ExpNode. Represents a real.
-class RealNode : public ExpNode {
+class PrimaryNode : public AST
+{
 private:
-    const char *lexeme;
+    IdNode *token;
+    ExprAssignNode *exprAssign;
 public:
-    explicit RealNode(const char *lexeme) { this->lexeme = lexeme; };
-    ~RealNode() override { this->lexeme = nullptr; };
-    const char *get_lexeme() { return lexeme; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    PrimaryNode(IdNode *token, ExprAssignNode *exprAssign);
+    virtual ~PrimaryNode();
+
+    inline IdNode *getToken() { return token; }
+    inline ExprAssignNode *getExpr() { return exprAssign; }
 };
 
-// Inherits from class ExpNode. Represents a literal.
-class LiteralNode : public ExpNode {
+class PostFixExprNode : public AST
+{
 private:
-    const char *lexeme;
+    PrimaryNode *primary;
+    IdNode *token;
+    ExprAssignNode *exprAssign;
+    ExprListNode *exprList;
+    PostFixExprNode *next;
 public:
-    explicit LiteralNode(const char *lexeme) { this->lexeme = lexeme; };
-    ~LiteralNode() override { this->lexeme = nullptr; };
-    const char *get_lexeme() { return lexeme; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    PostFixExprNode();
+    virtual ~PostFixExprNode();
+
+    inline PrimaryNode *getPrimary() { return primary; }
+    inline IdNode *getToken() { return token; }
+    inline ExprAssignNode *getExprAssign() { return exprAssign; }
+    inline ExprListNode *getExprList() { return exprList; }
+    inline PostFixExprNode *getPostFixExpr() { return next; }
+
 };
 
-// Inherits from class ExpNode. Represents a character.
-class CharacterNode : public ExpNode {
+class BreakNode : public AST
+{
 private:
-    const char *lexeme;
 public:
-    explicit CharacterNode(const char *lexeme) { this->lexeme = lexeme; };
-    ~CharacterNode() override { this->lexeme = nullptr; };
-    const char *get_lexeme() { return lexeme; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-// Inherits from class ExpNode. Represents an assignment expression.
-class AssignNode : public ExpNode {
+class PrintNode : public AST
+{
 private:
-    ExpNode *left_exp;
-    ExpNode *right_exp;
+    ExprListNode *exprList;
 public:
-    AssignNode(ExpNode *left_exp, ExpNode *right_exp);
-    ~AssignNode() override;
-    ExpNode *get_left_exp() { return left_exp; }
-    ExpNode *get_right_exp() { return right_exp; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    PrintNode(ExprListNode *exprList);
+    virtual ~PrintNode();
+
+    inline ExprListNode* getExprList(){ return exprList;}
 };
 
-// Inherits from class ExpNode. Represents a node from the Primary production. It can be an item in a chained list.
-class PrimaryNode : public ExpNode {
+class ReadlnNode : public AST
+{
 private:
-    ExpNode *exp;
-    ExpNode *next;
+    ExprAssignNode *exprAssign;
 public:
-    PrimaryNode(ExpNode *exp, ExpNode *next);
-    ~PrimaryNode() override;
-    ExpNode *get_exp() { return exp; }
-    ExpNode *get_next() { return next; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    ReadlnNode(ExprAssignNode *exprAssign);
+    virtual ~ReadlnNode();
+    inline ExprAssignNode* getExprAssign(){return exprAssign;}
 };
 
-// Inherits from class ExpNode. Represents the calling of a function. It can be a item in a chained list of expressions.
-class FunctionCallNode : public ExpNode {
+class returnNode : public AST
+{
 private:
-    ExpNode *exp;
-    ExpNode *next;
+    ExprAssignNode *exprAssign;
 public:
-    FunctionCallNode(ExpNode *exp, ExpNode *next);
-    ~FunctionCallNode() override;
-    ExpNode *get_exp() { return exp; }
-    ExpNode *get_next() { return next; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    returnNode(ExprAssignNode *exprAssign);
+    virtual ~returnNode();
+
+    inline ExprAssignNode* getExprAssign(){return exprAssign;}
 };
 
-// Inherits from class ExpNode. Represents an access to a field with . or ->. It can be an item in a chained list.
-class PointerValueExpNode : public ExpNode {
+class ThrowNode : public AST
+{
 private:
-    ExpNode *exp;
-    ExpNode *next;
 public:
-    PointerValueExpNode(ExpNode *exp, ExpNode *next);
-    ~PointerValueExpNode() override;
-    ExpNode *get_exp() { return exp; }
-    ExpNode *get_next() { return next; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-// Inherits from class ExpNode. Represents a & before a identifier to indicate that it is accessing the address.
-class AddressValueNode : public ExpNode {
+class TryCatchNode : public AST
+{
 private:
-    ExpNode *exp;
+    StmtNode *tryExpr;
+    StmtNode *catchExpr;
 public:
-    explicit AddressValueNode(ExpNode *exp) { this->exp = exp; }
-    ~AddressValueNode() override { delete this->exp; }
-    ExpNode *get_exp() const { return exp; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    TryCatchNode(StmtNode *tryExpr, StmtNode *catchExpr);
+    virtual ~TryCatchNode();
+
+    inline StmtNode* getTry(){return tryExpr;}
+    inline StmtNode* getCatch(){return catchExpr;}
 };
 
-// Inherits from class ExpNode. Represents an access to a pointer value.
-class PointerValueNode : public ExpNode {
+class WhileNode : public AST
+{
 private:
-    ExpNode *exp;
+    ExprAssignNode *exprAssign;
+    StmtNode *stmt;
 public:
-    explicit PointerValueNode(ExpNode *exp) { this->exp = exp; }
-    ~PointerValueNode() override { delete this->exp; }
-    ExpNode *get_exp() const { return exp; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    WhileNode(ExprAssignNode *exprAssgin, StmtNode *stmt);
+    virtual ~NoWhile();
+
+    inline ExprAssignNode* getExprAssign(){return exprAssign;}
+    inline StmtNode* getStmt(){return stmt;}
 };
 
-// Inherits from class ExpNode. Represents a access to a array.
-class ArrayAccessNode : public ExpNode {
+class SwitchNode : public AST
+{
 private:
-    ExpNode *exp;
-    ExpNode *index_exp;
+    ExprAssignNode *exprAssign;
+    CaseBlockNode *caseBlock;
 public:
-    ArrayAccessNode(ExpNode *exp, ExpNode *index_exp);
-    ~ArrayAccessNode() override;
-    ExpNode *get_exp() { return exp; }
-    ExpNode *get_index_exp() { return index_exp; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
+    SwitchNode(ExprAssignNode *exprAssign, CaseBlockNode *caseBlock);
+    virtual ~NoSwitch();
 
-// Inherits from class ExpNode. Represents a array declaration.
-class ArrayDeclNode : public ExpNode {
-private:
-    ExpNode *index_exp;
-public:
-    explicit ArrayDeclNode(ExpNode *index_exp) { this->index_exp = index_exp; }
-    ExpNode *get_index_exp() { return index_exp; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class ExpNode. Represents the creation of an instance with the new keyword.
-class NewNode : public ExpNode {
-private:
-    IdentifierNode *id;
-    ExpListNode *exp_list;
-public:
-    NewNode(IdentifierNode *id, ExpListNode *exp_list);
-    ~NewNode() override;
-    IdentifierNode *get_id() { return id; }
-    ExpListNode *get_exp_list() { return exp_list; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class ExpNode. Represents a relational operation (==, !=, <=, >=, <, >).
-class RelationalOpNode : public ExpNode {
-private:
-    int token_op;
-    ExpNode *left_exp;
-    ExpNode *right_exp;
-public:
-    RelationalOpNode(int token_op, ExpNode *left_exp, ExpNode *right_exp);
-    ~RelationalOpNode() override;
-    int get_op() { return token_op; }
-    ExpNode *get_left_exp() { return left_exp; }
-    ExpNode *get_right_exp() { return right_exp; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class ExpNode. Represents an addition operation (+, -).
-class AdditionOpNode : public ExpNode {
-private:
-    int token_op;
-    ExpNode *left_exp;
-    ExpNode *right_exp;
-public:
-    AdditionOpNode(int token_op, ExpNode *left_exp, ExpNode *right_exp);
-    ~AdditionOpNode() override;
-    int get_op() { return token_op; }
-    ExpNode *get_left_exp() { return left_exp; }
-    ExpNode *get_right_exp() { return right_exp; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class ExpNode. Represents a multiplication or division operation (*, /, %).
-class MultiplicationOpNode : public ExpNode {
-private:
-    int token_op;
-    ExpNode *left_exp;
-    ExpNode *right_exp;
-public:
-    MultiplicationOpNode(int token_op, ExpNode *left_exp, ExpNode *right_exp);
-    ~MultiplicationOpNode() override;
-    int get_op() { return token_op; }
-    ExpNode *get_left_exp() { return left_exp; }
-    ExpNode *get_right_exp() { return right_exp; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class ExpNode. Represents a boolean operation (&&, ||).
-class BooleanOpNode : public ExpNode {
-private:
-    int token_op;
-    ExpNode *left_exp;
-    ExpNode *right_exp;
-public:
-    BooleanOpNode(int token_op, ExpNode *left_exp, ExpNode *right_exp);
-    ~BooleanOpNode() override;
-    int get_op() { return token_op; }
-    ExpNode *get_left_exp() { return left_exp; }
-    ExpNode *get_right_exp() { return right_exp; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class ExpNode. Represents a bitwise operation (&, |).
-class BitwiseOpNode : public ExpNode {
-private:
-    int token_op;
-    ExpNode *left_exp;
-    ExpNode *right_exp;
-public:
-    BitwiseOpNode(int token_op, ExpNode *left_exp, ExpNode *right_exp);
-    ~BitwiseOpNode() override;
-    int get_op() { return token_op; }
-    ExpNode *get_left_exp() { return left_exp; }
-    ExpNode *get_parent_exp() { return right_exp; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class ExpNode. Represents a true expression.
-class TrueNode : public ExpNode {
-public:
-    TrueNode() = default;
-    ~TrueNode() override = default;
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class ExpNode. Represents a false expression.
-class FalseNode : public ExpNode {
-public:
-    FalseNode() = default;
-    ~FalseNode() override = default;
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class ExpNode. Represents a this expression.
-class ThisNode : public ExpNode {
-public:
-    ThisNode() = default;
-    ~ThisNode() override = default;
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class ExpNode. Represents a not expression.
-class NotNode : public ExpNode {
-private:
-    ExpNode *exp;
-public:
-    explicit NotNode(ExpNode *exp) { this->exp = exp; }
-    ~NotNode() override { delete this->exp; }
-    ExpNode *get_exp() const { return exp; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-// Inherits from class ExpNode. Represents a sign expression.
-class SignNode : public ExpNode {
-private:
-    ExpNode *exp;
-public:
-    explicit SignNode(ExpNode *exp) { this->exp = exp; }
-    ~SignNode() override { delete this->exp; }
-    ExpNode *get_exp() const { return exp; }
-    // TODO void accept(Visitor *visitor) override { visitor->visit(this); }
+    inline ExprAssignNode* getExprAssign(){return exprAssign;}
+    inline CaseBlockNode* getCaseBlock(){return caseBlock;}
 };
 
 #endif //COMPILADOR_2019_3_AST_H
