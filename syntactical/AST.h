@@ -2,468 +2,565 @@
 #define COMPILADOR_2019_3_AST_H
 
 // Forward Declarations
-class AST;
-class IdNode;
 class ProgramNode;
-class TypeDeclNode;
-class VarDeclNode;
-class IdListNode;
-// class IdExprNode;
-class PointerNode;
-class ArrayNode;
-class FormaListNode;
-// class FormalRestNode;
+class StmtRootNode
+class ExpRootNode;
+class VarListNode;
+class NameDeclNode;
+class FunctionListNode;
+class TypeListNode;
 class TypeNode;
+class PointerNode;
 class StmtListNode;
 class StmtNode;
-class IfExprNode;
-class CaseBlockNode;
-class ExprListNode;
-class ExprAssignNode;
-class ExprOrNode;
-class ExprAndNode;
-class ExprEqualityNode;
-class ExprRelationalNode;
-class ExprAdditiveNode;
-class ExprMultiplicativeNode;
-class ExprUnaryNode;
-class PrimaryNode;
-class PostFixExprNode;// TODO segmentar igual Stmt
-class BreakNode;
-class PrintNode;
-class ReadlnNode;
-class ReturnNode;
-class ThrowNode;
-class TryCatchNode;
+class IfNode;
 class WhileNode;
 class SwitchNode;
+class BreakNode;
+class PrintLnNode;
+class ReadNode;
+class ReturnNode;
+class CaseBlockNode;
+class ThrowNode;
+class ExpListNode;
+class TryNode;
+class ExpNode;
+class AssignNode;
+class NameExpNode;
+class PointerValueExpNode;
+class AdressValueNode;
+class PointerValueNode;
+class ArrayNode;
+class CallNode;
+class RelationalOPNode;
+class AdditionOPNode;
+class MultiplicationOPNode;
+class BooleanOPNode;
+class BitwiseOPNode;
+class TrueNode;
+class FalseNode;
+class NotNode;
+class SignNode;
 
-class AST
+class ASTNode
 {
+private:
 public:
-    virtual ~AST();
+    virtual ~ASTNode() = default;
 };
 
-class IdNode : public AST
+class StmtRootNode : public ASTNode
+{
+private:
+public:
+    virtual ~ASTNode() = default;
+};
+
+class ExpRootNode : public StmtRootNode
+{
+private:
+public:
+    virtual ~ASTNode() = default;
+};
+
+class TokenNode : public ASTNode
 {
 private:
     int token;
     char *lex;
 public:
-    IdNode(int token, char *lex);
-    virtual ~IdNode();
+    TokenNode(int token, char *lex);
+    virtual ~TokenNode();
     inline int getToken() { return token; }
     inline char *getLex() { return lex; }
 };
 
-class ProgramNode : public AST
+class ProgramNode : public ASTNode
 {
 private:
-    TypeDeclNode *typeDecl;
-    VarDeclNode *varDecl;
+    TypeListNode *typeList;
+    VarListNode *varList;
+    FunctionListNode *functionList;
 public:
-    ProgramNode(TypeDeclNode *typeDecl, VarDeclNode *varDecl);
+    ProgramNode(FunctionListNode *functionList, TypeListNode *typeList, VarListNode *varList);
     virtual ~ProgramNode();
 
-    inline TypeDeclNode *getTypeDecl() { return typeDecl; }
-    inline VarDeclNode *getVarDecl() { return varDecl; }
+    inline TypeListNode *getTypeList() { return typeList; }
+    inline VarListNode *getVarList() { return varList; }
 };
 
-class TypeDeclNode : public AST
+class VarListNode : public ASTNode
 {
 private:
-    VarDeclNode *varDecl;
-    IdNode *id;
-    TypeDeclNode *next;
+    NameDeclNode *nameDecl;
+    VarListNode *next;
 public:
-    TypeDeclNode(VarDeclNode *varDecl, IdNode *id, TypeDeclNode *next);
-    virtual ~TypeDeclNode();
+    VarListNode(NameDeclNode *nameDecl, VarListNode *varList);
+    virtual ~VarListNode();
+
+    inline NameDeclNode *getNameDecl() { return nameDecl; }
+    inline VarListNode *getVarList() { return next; }
 };
 
-class VarDeclNode : public AST
-{
-private:
-    TypeNode *type;
-    IdListNode *idList;
-    VarDeclNode *next;
-public:
-    VarDeclNode(TypeNode *type, IdListNode *idlist, VarDeclNode *varDecl);
-    virtual ~VarDeclNode();
-    inline TypeNode *getType() { return type; }
-    inline IdListNode *getIdList() { return idList; }
-    inline VarDeclNode *getVarDecl() { return next; }
-};
-
-class IdListNode : public AST
-{
-private:
-    PointerNode *pointer;
-    IdNode *id;
-    ArrayNode *array;
-    IdListNode *next;
-public:
-    IdListNode(PointerNode *pointer, IdNode *id, ArrayNode *array, IdListNode *idList);
-    virtual ~IdListNode();
-    inline PointerNode *getPointer() { return pointer; }
-    inline IdNode *getId() { return id; }
-    inline ArrayNode *getArray() { return array; }
-    inline IdListNode *getIdList() { return next; }
-};
-
-class PointerNode : public AST
-{
-public:
-    virtual ~PointerNode();
-};
-
-class ArrayNode : public AST
-{
-private:
-    IdNode *index;
-public:
-    ArrayNode(IdNode *integer);
-    virtual ~ArrayNode();
-    inline IdNode *getIndex() { return index; }
-};
-
-class FormaListNode : public AST
+class NameDeclNode : public ASTNode
 {
 private:
     TypeNode *type;
-    PointerNode *pointer;
-    IdNode *id;
-    ArrayNode *array;
-    FormaListNode *next;
+    TokenNode *id;
 public:
-    FormaListNode(TypeNode *type, PointerNode *pointer, IdNode *id, ArrayNode *array, FormaListNode *formalList);
-    virtual ~FormaListNode();
+    NameDeclNode(TypeNode *type, TokenNode *id);
+    virtual ~NameDeclNode();
 
     inline TypeNode *getType() { return type; }
-    inline PointerNode *getPointer() { return pointer; }
-    inline IdNode *getId() { return id; }
-    inline ArrayNode *getArray() { return array; }
-    inline FormaListNode *getFormalList() { return next; }
+    inline TokenNode *getVarList() { return id; }
 };
 
-class TypeNode : public AST
+class FunctionListNode : public ASTNode
 {
 private:
-    IdNode *id;
+    TypeNode *type;
+    TokenNode *id;
+    VarListNode *varList;
+    StmtListNode *stmtList;
+    FunctionListNode *next;
 public:
-    TypeNode(IdNode *id);
+    FunctionListNode(TypeNode *type, TokenNode *id, VarListNode *varList, StmtListNode *stmtList, FunctionListNode *functionList);
+    virtual ~FunctionListNode();
+
+    inline TypeNode *getType() { return type; }
+    inline TokenNode *getId() { return id; }
+    inline VarListNode *getVarList() { return varList; }
+    inline StmtListNode *getStmtList() { return stmtList; }
+    inline FunctionListNode *getFunctionList() { return next; }
+};
+
+class TypeListNode : public ASTNode
+{
+private:
+    VarListNode *varList;
+    TokenNode *id;
+    TypeListNode *next;
+public:
+    TypeListNode(VarListNode *varList, TokenNode *id, TypeListNode *typeList);
+    virtual ~TypeListNode();
+
+    inline VarListNode *getVarList() { return varList; }
+    inline TokenNode *getId() { return id; }
+    inline TypeListNode *getTypeList() { return next; }
+};
+
+class TypeNode : public ASTNode
+{
+private:
+    TokenNode *id;
+public:
+    TypeNode(TokenNode *id) { this->id = id; }
     virtual ~TypeNode();
-    inline IdNode *getId() { return id; }
+
+    inline TokenNode *getId() { return id; }
 };
 
-class StmtListNode : public AST
+class PointerNode : public ASTNode
+{
+private:
+    TypeNode *type;
+public:
+    PointerNode(TypeNode *type) { this->type = type; }
+    virtual ~PointerNode();
+
+    inline TypeNode *getType() { return type; }
+};
+
+class StmtListNode : public StmtRootNode
 {
 private:
     StmtNode *stmt;
     StmtListNode *next;
 public:
-    StmtListNode(StmtNode *statement, StmtListNode *stmtList);
+    StmtListNode(StmtNode *stmt, StmtListNode *stmtList);
     virtual ~StmtListNode();
 
-    inline StmtNode *getStmt() { return stmt; }
+    inline StmtNode *getStmtNode() { return stmt; }
     inline StmtListNode *getStmtList() { return next; }
 };
 
-class StmtNode : public AST
+class StmtNode : public StmtRootNode
 {
 private:
-    AST *stmt;
-    StmtNode(StmtListNode *stmlist);
-    StmtNode(IfExprNode *aux);
-    StmtNode(WhileNode *aux);
-    StmtNode(ExprAssignNode *aux);
-    StmtNode(BreakNode *aux);
-    StmtNode(PrintNode *aux);
-    StmtNode(ReadlnNode *aux);
-    StmtNode(ReturnNode *aux);
-    StmtNode(ThrowNode *aux);
-    StmtNode(TryCatchNode *aux);
-    StmtNode(SwitchNode *aux);
+    ASTNode *stmt;
 public:
+    StmtNode(IfNode *stmt);
+    StmtNode(WhileNode *stmt);
+    StmtNode(SwitchNode *stmt);
+    StmtNode(BreakNode *stmt);
+    StmtNode(PrintLnNode *stmt);
+    StmtNode(ReadNode *stmt);
+    StmtNode(ReturnNode *stmt);
+    StmtNode(ThrowNode *stmt);
+    StmtNode(StmtListNode *stmt);
+    StmtNode(CallNode *stmt);
+    StmtNode(TryNode *stmt);
+    StmtNode(ExpNode *stmt);
     virtual ~StmtNode();
 
-    inline AST *getStmt() { return stmt; }
+    inline ASTNode *getStmt() { return stmt; }
 };
 
-class IfExprNode : public AST
+class IfNode : public StmtRootNode
 {
 private:
-    ExprAssignNode *exprAssign;
+    ExpNode *exp;
     StmtNode *ifStmt;
     StmtNode *elseStmt;
 public:
-    IfExprNode(ExprAssignNode *exprAssign, StmtNode *ifStmt, StmtNode *elseStmt);
-    virtual ~IfExprNode();
+    IfNode(ExpNode *exp, StmtNode *ifStmt, StmtNode *elseStmt);
+    virtual ~IfNode();
 
-    inline ExprAssignNode *getExprAssign() { return exprAssign; }
+    inline ExpNode *getExp() { return exp; }
     inline StmtNode *getIf() { return ifStmt; }
     inline StmtNode *getElse() { return elseStmt; }
 };
 
-class CaseBlockNode : public AST
+class WhileNode : public StmtRootNode
 {
 private:
-    IdNode *numInt; // TODO integer node?
-    StmtListNode *stmtList;
+    ExpNode *exp;
+    StmtNode *stmt;
+public:
+    WhileNode(ExpNode *exp, StmtNode *stmt);
+    virtual ~WhileNode();
+
+    inline ExpNode *getExp() { return exp; }
+    inline StmtNode *getStmt() { return stmt; }
+};
+
+class SwitchNode : public StmtRootNode
+{
+private:
+    ExpNode *exp;
+    CaseBlockNode *caseBlock;
+public:
+    SwitchNode(ExpNode *exp, CaseBlockNode *caseBlock);
+    virtual ~SwitchNode();
+
+    inline ExpNode *getExp() { return exp; }
+    inline CaseBlockNode *getCaseBlock() { return caseBlock; }
+};
+
+class BreakNode : public StmtRootNode
+{
+private:
+public:
+    BreakNode() = default;
+    virtual ~BreakNode() = default;
+};
+
+class PrintLnNode : public StmtRootNode
+{
+private:
+    ExpListNode *expList;
+public:
+    PrintLnNode(ExpListNode *expList) { this->expList = expList; }
+    virtual ~PrintLnNode();
+
+    inline ExpListNode *getExpList() { return expList; }
+};
+
+class ReadNode : public StmtRootNode
+{
+private:
+    ExpNode *exp;
+public:
+    ReadNode(ExpNode *exp) { this->exp = exp; }
+    virtual ~ReadNode();
+
+    inline ExpNode *getExp() { return exp; }
+};
+
+class ReturnNode : public StmtRootNode
+{
+private:
+    ExpNode *exp;
+public:
+    ReturnNode(ExpNode *exp) { this->exp = exp; }
+    virtual ~ReturnNode();
+
+    inline ExpNode getExp() { return exp; }
+};
+
+class CaseBlockNode : public ASTNode
+{
+private:
+    TokenNode *num; // TODO NUMINT ?
+    StmtListNode *stmt;
     CaseBlockNode *next;
 public:
-    CaseBlockNode(IdNode *numInt, StmtListNode *stmtList, CaseBlockNode *caseBlock);
+    CaseBlockNode(TokenNode *num, StmtListNode *stmt, CaseBlockNode *next);
     virtual ~CaseBlockNode();
 
-    inline IdNode *getNum() { return numInt; }
-    inline StmtListNode *getStmtList() { return stmtList; }
+    inline TokenNode *getNum() { return num; }
+    inline StmtListNode *getStmtList() { return stmt; }
     inline CaseBlockNode *getCaseBlock() { return next; }
 };
 
-class ExprListNode : public AST
+class ThrowNode : public StmtRootNode
 {
 private:
-    ExprAssignNode *exprAssign;
-    ExprListNode *next;
 public:
-    ExprListNode(ExprAssignNode *exprAssign, ExprListNode *exprList);
-    virtual ~ExprListNode();
-
-    inline ExprAssignNode *getExprAssign() { return exprAssign; }
-    inline ExprListNode *getExprList() { return next; }
+    ThrowNode() = default;
+    ~ThrowNode() override = default;
 };
 
-class ExprAssignNode : public AST
+class ExpListNode : public ExpRootNode
 {
 private:
-    ExprOrNode *leftExpr;
-    ExprOrNode *rightExpr;
-    int *op;//operator
+    ExpNode *exp;
+    ExpListNode *next;
 public:
-    ExprAssignNode(int *op, ExprOrNode *leftExpr, ExprOrNode *rightExpr);
-    virtual ~ExprAssignNode();
+    ExpListNode(ExpNode *exp, ExpListNode *next);
+    virtual ~ExpListNode();
 
-    inline ExprOrNode *getLeftExpr() { return leftExpr; }
-    inline ExprOrNode *getRightExpr() { return rightExpr; }
-    inline int *getOperator() { return op; }
+    inline ExpNode *getExp() { return exp; }
+    inline ExpListNode *getExpList() { return next; }
 };
 
-class ExprOrNode : public AST
+class TryNode : public StmtRootNode
 {
 private:
-    ExprAndNode *leftExpr;
-    ExprAndNode *rightExpr;
-    int *op;//operator
+    StmtNode *tryStmt;
+    StmtNode *catchStmt;
 public:
-    ExprOrNode(int *op, ExprAndNode *leftExpr, ExprAndNode *rightExpr);
-    virtual ~ExprAssignNode();
+    TryNode(StmtNode *tryStmt, StmtNode *catchStmt);
+    virtual ~TryNode();
 
-    inline ExprAndNode *getLeftExpr() { return leftExpr; }
-    inline ExprAndNode *getRightExpr() { return rightExpr; }
-    inline int *getOperator() { return op; }
+    inline StmtNode *getTry() { return tryStmt; }
+    inline StmtNode *getCatch() { return catchStmt; }
 };
 
-class ExprAndNode : public AST
+class ExpNode : public ExpRootNode
 {
 private:
-    ExprEqualityNode *leftExpr;
-    ExprEqualityNode *rightExpr;
-    int *op;//operator
+    ASTNode *exp;
 public:
-    ExprAndNode(int *op, ExprEqualityNode *leftExpr, ExprEqualityNode *rightExpr);
-    virtual ~ExprAssignNode();
+    ExpNode(TokenNode *exp);
+    ExpNode(CallNode *exp);
+    ExpNode(NameExpNode *exp);
+    ExpNode(PointerValueExpNode *exp);
+    ExpNode(AdressValueNode *exp);
+    ExpNode(PointerValueNode *exp);
+    ExpNode(ArrayNode *exp);
+    ExpNode(AssignNode *exp);
+    ExpNode(RelationalOPNode *exp);
+    ExpNode(AdditionOPNode *exp);
+    ExpNode(MultiplicationOPNode *exp);
+    ExpNode(BooleanOPNode *exp);
+    ExpNode(BitwiseOPNode *exp);
+    ExpNode(NotNode *exp);
+    ExpNode(SignNode *exp);
+    ExpNode(TrueNode *exp);
+    ExpNode(FalseNode *exp);
+    virtual ~ExpNode();
 
-    inline ExprEqualityNode *getLeftExpr() { return leftExpr; }
-    inline ExprEqualityNode *getRightExpr() { return rightExpr; }
-    inline int *getOperator() { return op; }
+    inline ASTNode *getExp() { return exp; }
 };
 
-class ExprEqualityNode : public AST
+class AssignNode : public ExpRootNode
 {
 private:
-    ExprRelationalNode *leftExpr;
-    ExprRelationalNode *rightExpr;
-    int *op;//operator
+    ExpNode *exp1;
+    ExpNode *exp2;
 public:
-    ExprEqualityNode(int *op, ExprRelationalNode *leftExpr, ExprRelationalNode *rightExpr);
-    virtual ~ExprAssignNode();
+    AssignNode(ExpNode *exp1, ExpNode *exp2);
+    virtual ~AssignNode();
 
-    inline ExprRelationalNode *getLeftExpr() { return leftExpr; }
-    inline ExprRelationalNode *getRightExpr() { return rightExpr; }
-    inline int *getOperator() { return op; }
+    inline ExpNode *getExp1() { return exp1; };
+    inline ExpNode *getExp2() { return exp2; };
 };
 
-class ExprRelationalNode : public AST
+class NameExpNode : public ExpRootNode
 {
 private:
-    ExprAdditiveNode *leftExpr;
-    ExprAdditiveNode *rightExpr;
-    int *op;//operator
+    ExpNode *exp;
+    TokenNode *id;
 public:
-    ExprRelationalNode(int *op, ExprAdditiveNode *leftExpr, ExprAdditiveNode *rightExpr);
-    virtual ~ExprAssignNode();
+    NameExpNode(ExpNode *exp, TokenNode *id);
+    virtual ~NameExpNode();
 
-    inline ExprAdditiveNode *getLeftExpr() { return leftExpr; }
-    inline ExprAdditiveNode *getRightExpr() { return rightExpr; }
-    inline int *getOperator() { return op; }
+    inline ExpNode *getExp() { return exp; }
+    inline TokenNode *getId() { return id; }
 };
 
-class ExprAdditiveNode : public AST
+class PointerValueExpNode : public ExpRootNode
 {
 private:
-    ExprMultiplicativeNode *leftExpr;
-    ExprMultiplicativeNode *rightExpr;
-    int *op;//operator
+    ExpNode *exp;
+    TokenNode *id;
 public:
-    ExprAdditiveNode(int *op, ExprMultiplicativeNode *leftExpr, ExprMultiplicativeNode *rightExpr);
-    virtual ~ExprAssignNode();
+    PointerValueExpNode(ExpNode *exp, TokenNode *id);
+    virtual ~PointerValueExpNode();
 
-    inline ExprMultiplicativeNode *getLeftExpr() { return leftExpr; }
-    inline ExprMultiplicativeNode *getRightExpr() { return rightExpr; }
-    inline int *getOperator() { return op; }
+    inline ExpNode *getExp() { return exp; }
+    inline TokenNode *getId() { return id; }
 };
 
-class ExprMultiplicativeNode : public AST
+class AdressValueNode : public ExpRootNode
 {
 private:
-    ExprUnaryNode *leftExpr;
-    ExprUnaryNode *rightExpr;
-    int *op;//operator
+    ExpNode *exp;
 public:
-    ExprMultiplicativeNode(int *op, ExprUnaryNode *leftExpr, ExprUnaryNode *rightExpr);
-    virtual ~ExprAssignNode();
+    AdressValueNode(ExpNode *exp) { this->exp = exp; }
+    virtual ~AdressValueNode();
 
-    inline ExprUnaryNode *getLeftExpr() { return leftExpr; }
-    inline ExprUnaryNode *getRightExpr() { return rightExpr; }
-    inline int *getOperator() { return op; }
+    inline ExpNode *getExp() { return exp; }
 };
 
-class ExprUnaryNode : public AST
+class PointerValueNode : public ExpRootNode
 {
 private:
-    PostFixExprNode *expr;
-    int *op;//operator
+    ExpNode *exp;
 public:
-    ExprUnaryNode(int *op, ExprUnaryNode *expr);
-    virtual ~ExprAssignNode();
+    PointerValueNode(ExpNode *exp) { this->exp = exp; }
+    virtual ~PointerValueNode();
 
-    inline PostFixExprNode *getExpr() { return expr; }
-    inline int *getOperator() { return op; }
+    inline ExpNode *getExp() { return exp; }
 };
 
-class PrimaryNode : public AST
+class ArrayNode : public ExpRootNode
 {
 private:
-    IdNode *token;
-    ExprAssignNode *exprAssign;
+    TokenNode *numInt;
 public:
-    PrimaryNode(IdNode *token, ExprAssignNode *exprAssign);
-    virtual ~PrimaryNode();
+    ArrayNode(TokenNode *numInt) { this->numInt = numInt; }
+    virtual ~ArrayNode();
 
-    inline IdNode *getToken() { return token; }
-    inline ExprAssignNode *getExpr() { return exprAssign; }
+    inline TokenNode *getNumInt() { return numInt; }
 };
 
-class PostFixExprNode : public AST
+class CallNode : public ExpRootNode
 {
 private:
-    PrimaryNode *primary;
-    IdNode *token;
-    ExprAssignNode *exprAssign;
-    ExprListNode *exprList;
-    PostFixExprNode *next;
+    TokenNode *id;
+    ExpListNode *expList;
 public:
-    PostFixExprNode();
-    virtual ~PostFixExprNode();
+    CallNode(TokenNode *id, ExpListNode *expList);
+    virtual ~CallNode();
 
-    inline PrimaryNode *getPrimary() { return primary; }
-    inline IdNode *getToken() { return token; }
-    inline ExprAssignNode *getExprAssign() { return exprAssign; }
-    inline ExprListNode *getExprList() { return exprList; }
-    inline PostFixExprNode *getPostFixExpr() { return next; }
+    inline TokenNode *getId() { return id; }
+    inline ExpListNode *getExpList() { return expList; }
+};
+
+class RelationalOPNode : public ExpRootNode
+{
+private:
+    TokenNode *op;
+    ExpNode *exp1;
+    ExpNode *exp2;
+public:
+    RelationalOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2);
+    virtual ~RelationalOPNode();
+
+    inline TokenNode *getOp() { return op; }
+    inline ExpNode *getExp1() { return exp1; }
+    inline ExpNode *getExp2() { return exp2; }
+};
+
+class AdditionOPNode : public ExpRootNode
+{
+private:
+    TokenNode *op;
+    ExpNode *exp1;
+    ExpNode *exp2;
+public:
+    AdditionOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2);
+    virtual ~AdditionOPNode();
+
+    inline TokenNode *getOp() { return op; }
+    inline ExpNode *getExp1() { return exp1; }
+    inline ExpNode *getExp2() { return exp2; }
+};
+
+class MultiplicationOPNode : public ExpRootNode
+{
+private:
+    TokenNode *op;
+    ExpNode *exp1;
+    ExpNode *exp2;
+public:
+    MultiplicationOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2);
+    virtual ~MultiplicationOPNode();
+
+    inline TokenNode *getOp() { return op; }
+    inline ExpNode *getExp1() { return exp1; }
+    inline ExpNode *getExp2() { return exp2; }
+};
+
+class BooleanOPNode : public ExpRootNode
+{
+private:
+    TokenNode *op;
+    ExpNode *exp1;
+    ExpNode *exp2;
+public:
+    BooleanOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2);
+    virtual ~BooleanOPNode();
+
+    inline TokenNode *getOp() { return op; }
+    inline ExpNode *getExp1() { return exp1; }
+    inline ExpNode *getExp2() { return exp2; }
+};
+
+class BitwiseOPNode : public ExpRootNode
+{
+private:
+    TokenNode *op;
+    ExpNode *exp1;
+    ExpNode *exp2;
+public:
+    BitwiseOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2);
+    virtual ~BitwiseOPNode();
+
+    inline TokenNode *getOp() { return op; }
+    inline ExpNode *getExp1() { return exp1; }
+    inline ExpNode *getExp2() { return exp2; }
+};
+
+class TrueNode : public ExpRootNode
+{
+private:
+public:
+    TrueNode() = default;
+    virtual ~TrueNode() = default;
 
 };
 
-class BreakNode : public AST
+class FalseNode : public ExpRootNode
 {
 private:
 public:
+    FalseNode() = default;
+    virtual ~FalseNode() = default;
 };
 
-class PrintNode : public AST
+class NotNode : public ExpRootNode
 {
 private:
-    ExprListNode *exprList;
+    ExpNode *exp;
 public:
-    PrintNode(ExprListNode *exprList);
-    virtual ~PrintNode();
+    NotNode(ExpNode *exp) { this->exp = exp; }
+    virtual ~NotNode();
 
-    inline ExprListNode* getExprList(){ return exprList;}
+    inline ExpNode *getExp() { return exp; }
 };
 
-class ReadlnNode : public AST
+class SignNode : public ExpRootNode
 {
 private:
-    ExprAssignNode *exprAssign;
+    ExpNode *exp;
 public:
-    ReadlnNode(ExprAssignNode *exprAssign);
-    virtual ~ReadlnNode();
-    inline ExprAssignNode* getExprAssign(){return exprAssign;}
-};
+    SignNode(ExpNode *exp) { this->exp = exp; }
+    virtual ~SignNode();
 
-class returnNode : public AST
-{
-private:
-    ExprAssignNode *exprAssign;
-public:
-    returnNode(ExprAssignNode *exprAssign);
-    virtual ~returnNode();
-
-    inline ExprAssignNode* getExprAssign(){return exprAssign;}
-};
-
-class ThrowNode : public AST
-{
-private:
-public:
-};
-
-class TryCatchNode : public AST
-{
-private:
-    StmtNode *tryExpr;
-    StmtNode *catchExpr;
-public:
-    TryCatchNode(StmtNode *tryExpr, StmtNode *catchExpr);
-    virtual ~TryCatchNode();
-
-    inline StmtNode* getTry(){return tryExpr;}
-    inline StmtNode* getCatch(){return catchExpr;}
-};
-
-class WhileNode : public AST
-{
-private:
-    ExprAssignNode *exprAssign;
-    StmtNode *stmt;
-public:
-    WhileNode(ExprAssignNode *exprAssgin, StmtNode *stmt);
-    virtual ~NoWhile();
-
-    inline ExprAssignNode* getExprAssign(){return exprAssign;}
-    inline StmtNode* getStmt(){return stmt;}
-};
-
-class SwitchNode : public AST
-{
-private:
-    ExprAssignNode *exprAssign;
-    CaseBlockNode *caseBlock;
-public:
-    SwitchNode(ExprAssignNode *exprAssign, CaseBlockNode *caseBlock);
-    virtual ~NoSwitch();
-
-    inline ExprAssignNode* getExprAssign(){return exprAssign;}
-    inline CaseBlockNode* getCaseBlock(){return caseBlock;}
+    inline ExpNode *getExp() { return exp; }
 };
 
 #endif //COMPILADOR_2019_3_AST_H
