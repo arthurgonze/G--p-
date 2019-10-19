@@ -1,18 +1,24 @@
 #ifndef COMPILADOR_2019_3_AST_H
 #define COMPILADOR_2019_3_AST_H
 
-// Forward Declarations
+// Forward Declarations, 41 nodes
+// ABSTRACTS ROOTS
+class ASTNode;
+class StmtNode;
+class ExpNode;
+
+// TOKENS
+class TokenNode;
+
+// PDF NODES
 class ProgramNode;
-class StmtRootNode
-class ExpRootNode;
 class VarListNode;
 class NameDeclNode;
 class FunctionListNode;
 class TypeListNode;
-class TypeNode;
+class TypeNode;// TODO (id, size), (primitive, size), (pointer)
 class PointerNode;
 class StmtListNode;
-class StmtNode;
 class IfNode;
 class WhileNode;
 class SwitchNode;
@@ -24,13 +30,12 @@ class CaseBlockNode;
 class ThrowNode;
 class ExpListNode;
 class TryNode;
-class ExpNode;
 class AssignNode;
 class NameExpNode;
 class PointerValueExpNode;
 class AdressValueNode;
 class PointerValueNode;
-class ArrayNode;
+class ArrayNode; // TODO (exp, exp)
 class CallNode;
 class RelationalOPNode;
 class AdditionOPNode;
@@ -49,18 +54,18 @@ public:
     virtual ~ASTNode() = default;
 };
 
-class StmtRootNode : public ASTNode
+class StmtNode : public ASTNode
 {
 private:
 public:
-    virtual ~ASTNode() = default;
+    virtual ~StmtNode() = default;
 };
 
-class ExpRootNode : public StmtRootNode
+class ExpNode : public StmtNode
 {
 private:
 public:
-    virtual ~ASTNode() = default;
+    virtual ~ExpNode() = default;
 };
 
 class TokenNode : public ASTNode
@@ -70,7 +75,7 @@ private:
     char *lex;
 public:
     TokenNode(int token, char *lex);
-    virtual ~TokenNode();
+    ~TokenNode() override;
     inline int getToken() { return token; }
     inline char *getLex() { return lex; }
 };
@@ -78,12 +83,12 @@ public:
 class ProgramNode : public ASTNode
 {
 private:
+    FunctionListNode *functionList;
     TypeListNode *typeList;
     VarListNode *varList;
-    FunctionListNode *functionList;
 public:
     ProgramNode(FunctionListNode *functionList, TypeListNode *typeList, VarListNode *varList);
-    virtual ~ProgramNode();
+    ~ProgramNode() override;
 
     inline TypeListNode *getTypeList() { return typeList; }
     inline VarListNode *getVarList() { return varList; }
@@ -96,7 +101,7 @@ private:
     VarListNode *next;
 public:
     VarListNode(NameDeclNode *nameDecl, VarListNode *varList);
-    virtual ~VarListNode();
+    ~VarListNode() override;
 
     inline NameDeclNode *getNameDecl() { return nameDecl; }
     inline VarListNode *getVarList() { return next; }
@@ -109,7 +114,7 @@ private:
     TokenNode *id;
 public:
     NameDeclNode(TypeNode *type, TokenNode *id);
-    virtual ~NameDeclNode();
+    ~NameDeclNode() override;
 
     inline TypeNode *getType() { return type; }
     inline TokenNode *getVarList() { return id; }
@@ -122,10 +127,11 @@ private:
     TokenNode *id;
     VarListNode *varList;
     StmtListNode *stmtList;
+
     FunctionListNode *next;
 public:
     FunctionListNode(TypeNode *type, TokenNode *id, VarListNode *varList, StmtListNode *stmtList, FunctionListNode *functionList);
-    virtual ~FunctionListNode();
+    ~FunctionListNode() override;
 
     inline TypeNode *getType() { return type; }
     inline TokenNode *getId() { return id; }
@@ -142,7 +148,7 @@ private:
     TypeListNode *next;
 public:
     TypeListNode(VarListNode *varList, TokenNode *id, TypeListNode *typeList);
-    virtual ~TypeListNode();
+    ~TypeListNode() override;
 
     inline VarListNode *getVarList() { return varList; }
     inline TokenNode *getId() { return id; }
@@ -154,8 +160,11 @@ class TypeNode : public ASTNode
 private:
     TokenNode *id;
 public:
-    TypeNode(TokenNode *id) { this->id = id; }
-    virtual ~TypeNode();
+    explicit TypeNode(TokenNode *id) { this->id = id; }
+    // TODO (id, size)
+    // TODO (primitive, size)
+    // TODO (pointer)
+    ~TypeNode() override { delete this->id; }
 
     inline TokenNode *getId() { return id; }
 };
@@ -165,48 +174,26 @@ class PointerNode : public ASTNode
 private:
     TypeNode *type;
 public:
-    PointerNode(TypeNode *type) { this->type = type; }
-    virtual ~PointerNode();
+    explicit PointerNode(TypeNode *type) { this->type = type; }
+    ~PointerNode() override { delete this->type; }
 
     inline TypeNode *getType() { return type; }
 };
 
-class StmtListNode : public StmtRootNode
+class StmtListNode : public StmtNode
 {
 private:
     StmtNode *stmt;
     StmtListNode *next;
 public:
     StmtListNode(StmtNode *stmt, StmtListNode *stmtList);
-    virtual ~StmtListNode();
+    ~StmtListNode() override;
 
     inline StmtNode *getStmtNode() { return stmt; }
     inline StmtListNode *getStmtList() { return next; }
 };
 
-class StmtNode : public StmtRootNode
-{
-private:
-    ASTNode *stmt;
-public:
-    StmtNode(IfNode *stmt);
-    StmtNode(WhileNode *stmt);
-    StmtNode(SwitchNode *stmt);
-    StmtNode(BreakNode *stmt);
-    StmtNode(PrintLnNode *stmt);
-    StmtNode(ReadNode *stmt);
-    StmtNode(ReturnNode *stmt);
-    StmtNode(ThrowNode *stmt);
-    StmtNode(StmtListNode *stmt);
-    StmtNode(CallNode *stmt);
-    StmtNode(TryNode *stmt);
-    StmtNode(ExpNode *stmt);
-    virtual ~StmtNode();
-
-    inline ASTNode *getStmt() { return stmt; }
-};
-
-class IfNode : public StmtRootNode
+class IfNode : public StmtNode
 {
 private:
     ExpNode *exp;
@@ -214,96 +201,96 @@ private:
     StmtNode *elseStmt;
 public:
     IfNode(ExpNode *exp, StmtNode *ifStmt, StmtNode *elseStmt);
-    virtual ~IfNode();
+    ~IfNode() override;
 
     inline ExpNode *getExp() { return exp; }
     inline StmtNode *getIf() { return ifStmt; }
     inline StmtNode *getElse() { return elseStmt; }
 };
 
-class WhileNode : public StmtRootNode
+class WhileNode : public StmtNode
 {
 private:
     ExpNode *exp;
     StmtNode *stmt;
 public:
     WhileNode(ExpNode *exp, StmtNode *stmt);
-    virtual ~WhileNode();
+    ~WhileNode() override;
 
     inline ExpNode *getExp() { return exp; }
     inline StmtNode *getStmt() { return stmt; }
 };
 
-class SwitchNode : public StmtRootNode
+class SwitchNode : public StmtNode
 {
 private:
     ExpNode *exp;
     CaseBlockNode *caseBlock;
 public:
     SwitchNode(ExpNode *exp, CaseBlockNode *caseBlock);
-    virtual ~SwitchNode();
+    ~SwitchNode() override;
 
     inline ExpNode *getExp() { return exp; }
     inline CaseBlockNode *getCaseBlock() { return caseBlock; }
 };
 
-class BreakNode : public StmtRootNode
+class BreakNode : public StmtNode
 {
 private:
 public:
     BreakNode() = default;
-    virtual ~BreakNode() = default;
+    ~BreakNode() override = default;
 };
 
-class PrintLnNode : public StmtRootNode
+class PrintLnNode : public StmtNode
 {
 private:
     ExpListNode *expList;
 public:
-    PrintLnNode(ExpListNode *expList) { this->expList = expList; }
-    virtual ~PrintLnNode();
+    explicit PrintLnNode(ExpListNode *expList) { this->expList = expList; }
+    ~PrintLnNode() override { delete this->expList; }
 
     inline ExpListNode *getExpList() { return expList; }
 };
 
-class ReadNode : public StmtRootNode
+class ReadNode : public StmtNode
 {
 private:
     ExpNode *exp;
 public:
-    ReadNode(ExpNode *exp) { this->exp = exp; }
-    virtual ~ReadNode();
+    explicit ReadNode(ExpNode *exp) { this->exp = exp; }
+    ~ReadNode() override { delete this->exp; }
 
     inline ExpNode *getExp() { return exp; }
 };
 
-class ReturnNode : public StmtRootNode
+class ReturnNode : public StmtNode
 {
 private:
     ExpNode *exp;
 public:
-    ReturnNode(ExpNode *exp) { this->exp = exp; }
-    virtual ~ReturnNode();
+    explicit ReturnNode(ExpNode *exp) { this->exp = exp; }
+    ~ReturnNode() override { delete this->exp; }
 
-    inline ExpNode getExp() { return exp; }
+    inline ExpNode* getExp() { return exp; }
 };
 
 class CaseBlockNode : public ASTNode
 {
 private:
-    TokenNode *num; // TODO NUMINT ?
+    TokenNode *num;
     StmtListNode *stmt;
     CaseBlockNode *next;
 public:
     CaseBlockNode(TokenNode *num, StmtListNode *stmt, CaseBlockNode *next);
-    virtual ~CaseBlockNode();
+    ~CaseBlockNode() override;
 
     inline TokenNode *getNum() { return num; }
     inline StmtListNode *getStmtList() { return stmt; }
     inline CaseBlockNode *getCaseBlock() { return next; }
 };
 
-class ThrowNode : public StmtRootNode
+class ThrowNode : public StmtNode
 {
 private:
 public:
@@ -311,145 +298,119 @@ public:
     ~ThrowNode() override = default;
 };
 
-class ExpListNode : public ExpRootNode
+class ExpListNode : public ExpNode
 {
 private:
     ExpNode *exp;
     ExpListNode *next;
 public:
     ExpListNode(ExpNode *exp, ExpListNode *next);
-    virtual ~ExpListNode();
+    ~ExpListNode() override;
 
     inline ExpNode *getExp() { return exp; }
     inline ExpListNode *getExpList() { return next; }
 };
 
-class TryNode : public StmtRootNode
+class TryNode : public StmtNode
 {
 private:
     StmtNode *tryStmt;
     StmtNode *catchStmt;
 public:
     TryNode(StmtNode *tryStmt, StmtNode *catchStmt);
-    virtual ~TryNode();
+    ~TryNode() override;
 
     inline StmtNode *getTry() { return tryStmt; }
     inline StmtNode *getCatch() { return catchStmt; }
 };
 
-class ExpNode : public ExpRootNode
-{
-private:
-    ASTNode *exp;
-public:
-    ExpNode(TokenNode *exp);
-    ExpNode(CallNode *exp);
-    ExpNode(NameExpNode *exp);
-    ExpNode(PointerValueExpNode *exp);
-    ExpNode(AdressValueNode *exp);
-    ExpNode(PointerValueNode *exp);
-    ExpNode(ArrayNode *exp);
-    ExpNode(AssignNode *exp);
-    ExpNode(RelationalOPNode *exp);
-    ExpNode(AdditionOPNode *exp);
-    ExpNode(MultiplicationOPNode *exp);
-    ExpNode(BooleanOPNode *exp);
-    ExpNode(BitwiseOPNode *exp);
-    ExpNode(NotNode *exp);
-    ExpNode(SignNode *exp);
-    ExpNode(TrueNode *exp);
-    ExpNode(FalseNode *exp);
-    virtual ~ExpNode();
-
-    inline ASTNode *getExp() { return exp; }
-};
-
-class AssignNode : public ExpRootNode
+class AssignNode : public ExpNode
 {
 private:
     ExpNode *exp1;
     ExpNode *exp2;
 public:
     AssignNode(ExpNode *exp1, ExpNode *exp2);
-    virtual ~AssignNode();
+    ~AssignNode() override;
 
     inline ExpNode *getExp1() { return exp1; };
     inline ExpNode *getExp2() { return exp2; };
 };
 
-class NameExpNode : public ExpRootNode
+class NameExpNode : public ExpNode
 {
 private:
     ExpNode *exp;
     TokenNode *id;
 public:
     NameExpNode(ExpNode *exp, TokenNode *id);
-    virtual ~NameExpNode();
+    ~NameExpNode() override;
 
     inline ExpNode *getExp() { return exp; }
     inline TokenNode *getId() { return id; }
 };
 
-class PointerValueExpNode : public ExpRootNode
+class PointerValueExpNode : public ExpNode
 {
 private:
     ExpNode *exp;
     TokenNode *id;
 public:
     PointerValueExpNode(ExpNode *exp, TokenNode *id);
-    virtual ~PointerValueExpNode();
+    ~PointerValueExpNode() override;
 
     inline ExpNode *getExp() { return exp; }
     inline TokenNode *getId() { return id; }
 };
 
-class AdressValueNode : public ExpRootNode
+class AdressValueNode : public ExpNode
 {
 private:
     ExpNode *exp;
 public:
-    AdressValueNode(ExpNode *exp) { this->exp = exp; }
-    virtual ~AdressValueNode();
+    explicit AdressValueNode(ExpNode *exp) { this->exp = exp; }
+    ~AdressValueNode() override { delete this->exp; }
 
     inline ExpNode *getExp() { return exp; }
 };
 
-class PointerValueNode : public ExpRootNode
+class PointerValueNode : public ExpNode
 {
 private:
     ExpNode *exp;
 public:
-    PointerValueNode(ExpNode *exp) { this->exp = exp; }
-    virtual ~PointerValueNode();
+    explicit PointerValueNode(ExpNode *exp) { this->exp = exp; }
+    ~PointerValueNode() override { delete this->exp; }
 
     inline ExpNode *getExp() { return exp; }
 };
 
-class ArrayNode : public ExpRootNode
+class ArrayNode : public ExpNode
 {
 private:
     TokenNode *numInt;
 public:
-    ArrayNode(TokenNode *numInt) { this->numInt = numInt; }
-    virtual ~ArrayNode();
+    explicit ArrayNode(TokenNode *numInt) { this->numInt = numInt; }
+    // TODO (exp, exp)
+    ~ArrayNode() override { delete this->numInt; }
 
     inline TokenNode *getNumInt() { return numInt; }
 };
 
-class CallNode : public ExpRootNode
+class CallNode : public ExpNode
 {
 private:
     TokenNode *id;
     ExpListNode *expList;
 public:
     CallNode(TokenNode *id, ExpListNode *expList);
-    virtual ~CallNode();
+    ~CallNode() override;
 
     inline TokenNode *getId() { return id; }
     inline ExpListNode *getExpList() { return expList; }
 };
 
-class RelationalOPNode : public ExpRootNode
+class RelationalOPNode : public ExpNode
 {
 private:
     TokenNode *op;
@@ -457,14 +418,14 @@ private:
     ExpNode *exp2;
 public:
     RelationalOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2);
-    virtual ~RelationalOPNode();
+    ~RelationalOPNode() override;
 
     inline TokenNode *getOp() { return op; }
     inline ExpNode *getExp1() { return exp1; }
     inline ExpNode *getExp2() { return exp2; }
 };
 
-class AdditionOPNode : public ExpRootNode
+class AdditionOPNode : public ExpNode
 {
 private:
     TokenNode *op;
@@ -472,14 +433,14 @@ private:
     ExpNode *exp2;
 public:
     AdditionOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2);
-    virtual ~AdditionOPNode();
+    ~AdditionOPNode() override;
 
     inline TokenNode *getOp() { return op; }
     inline ExpNode *getExp1() { return exp1; }
     inline ExpNode *getExp2() { return exp2; }
 };
 
-class MultiplicationOPNode : public ExpRootNode
+class MultiplicationOPNode : public ExpNode
 {
 private:
     TokenNode *op;
@@ -487,14 +448,14 @@ private:
     ExpNode *exp2;
 public:
     MultiplicationOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2);
-    virtual ~MultiplicationOPNode();
+    ~MultiplicationOPNode() override;
 
     inline TokenNode *getOp() { return op; }
     inline ExpNode *getExp1() { return exp1; }
     inline ExpNode *getExp2() { return exp2; }
 };
 
-class BooleanOPNode : public ExpRootNode
+class BooleanOPNode : public ExpNode
 {
 private:
     TokenNode *op;
@@ -502,14 +463,14 @@ private:
     ExpNode *exp2;
 public:
     BooleanOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2);
-    virtual ~BooleanOPNode();
+    ~BooleanOPNode() override;
 
     inline TokenNode *getOp() { return op; }
     inline ExpNode *getExp1() { return exp1; }
     inline ExpNode *getExp2() { return exp2; }
 };
 
-class BitwiseOPNode : public ExpRootNode
+class BitwiseOPNode : public ExpNode
 {
 private:
     TokenNode *op;
@@ -517,48 +478,48 @@ private:
     ExpNode *exp2;
 public:
     BitwiseOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2);
-    virtual ~BitwiseOPNode();
+    ~BitwiseOPNode() override;
 
     inline TokenNode *getOp() { return op; }
     inline ExpNode *getExp1() { return exp1; }
     inline ExpNode *getExp2() { return exp2; }
 };
 
-class TrueNode : public ExpRootNode
+class TrueNode : public ExpNode
 {
 private:
 public:
     TrueNode() = default;
-    virtual ~TrueNode() = default;
+    ~TrueNode() override = default;
 
 };
 
-class FalseNode : public ExpRootNode
+class FalseNode : public ExpNode
 {
 private:
 public:
     FalseNode() = default;
-    virtual ~FalseNode() = default;
+    ~FalseNode() override = default;
 };
 
-class NotNode : public ExpRootNode
+class NotNode : public ExpNode
 {
 private:
     ExpNode *exp;
 public:
-    NotNode(ExpNode *exp) { this->exp = exp; }
-    virtual ~NotNode();
+    explicit NotNode(ExpNode *exp) { this->exp = exp; }
+    ~NotNode() override { delete this->exp; }
 
     inline ExpNode *getExp() { return exp; }
 };
 
-class SignNode : public ExpRootNode
+class SignNode : public ExpNode
 {
 private:
     ExpNode *exp;
 public:
-    SignNode(ExpNode *exp) { this->exp = exp; }
-    virtual ~SignNode();
+    explicit SignNode(ExpNode *exp) { this->exp = exp; }
+    ~SignNode() override { delete this->exp; }
 
     inline ExpNode *getExp() { return exp; }
 };
