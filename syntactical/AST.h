@@ -1,6 +1,8 @@
 #ifndef COMPILADOR_2019_3_AST_H
 #define COMPILADOR_2019_3_AST_H
 
+#include "Visitor.h"
+
 // Forward Declarations, 41 nodes
 // ABSTRACTS ROOTS
 class ASTNode;
@@ -52,6 +54,7 @@ class ASTNode
 private:
 public:
     virtual ~ASTNode() = default;
+    virtual void accept(Visitor *visitor) = 0;
 };
 
 class StmtNode : public ASTNode
@@ -59,6 +62,7 @@ class StmtNode : public ASTNode
 private:
 public:
     virtual ~StmtNode() = default;
+    virtual void accept(Visitor *visitor) = 0;
 };
 
 class ExpNode : public StmtNode
@@ -66,6 +70,7 @@ class ExpNode : public StmtNode
 private:
 public:
     virtual ~ExpNode() = default;
+    virtual void accept(Visitor *visitor) = 0;
 };
 
 class TokenNode : public ASTNode
@@ -78,6 +83,8 @@ public:
     ~TokenNode() override;
     inline int getToken() { return token; }
     inline char *getLex() { return lex; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class ProgramNode : public ASTNode
@@ -92,6 +99,8 @@ public:
 
     inline TypeListNode *getTypeList() { return typeList; }
     inline VarListNode *getVarList() { return varList; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class VarListNode : public ASTNode
@@ -105,6 +114,8 @@ public:
 
     inline NameDeclNode *getNameDecl() { return nameDecl; }
     inline VarListNode *getVarList() { return next; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class NameDeclNode : public ASTNode
@@ -118,6 +129,8 @@ public:
 
     inline TypeNode *getType() { return type; }
     inline TokenNode *getVarList() { return id; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class FunctionListNode : public ASTNode
@@ -138,6 +151,8 @@ public:
     inline VarListNode *getVarList() { return varList; }
     inline StmtListNode *getStmtList() { return stmtList; }
     inline FunctionListNode *getFunctionList() { return next; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class TypeListNode : public ASTNode
@@ -153,6 +168,8 @@ public:
     inline VarListNode *getVarList() { return varList; }
     inline TokenNode *getId() { return id; }
     inline TypeListNode *getTypeList() { return next; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class TypeNode : public ASTNode
@@ -167,6 +184,8 @@ public:
     ~TypeNode() override { delete this->id; }
 
     inline TokenNode *getId() { return id; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class PointerNode : public ASTNode
@@ -178,6 +197,8 @@ public:
     ~PointerNode() override { delete this->type; }
 
     inline TypeNode *getType() { return type; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class StmtListNode : public StmtNode
@@ -191,6 +212,8 @@ public:
 
     inline StmtNode *getStmtNode() { return stmt; }
     inline StmtListNode *getStmtList() { return next; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class IfNode : public StmtNode
@@ -206,6 +229,8 @@ public:
     inline ExpNode *getExp() { return exp; }
     inline StmtNode *getIf() { return ifStmt; }
     inline StmtNode *getElse() { return elseStmt; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class WhileNode : public StmtNode
@@ -219,6 +244,8 @@ public:
 
     inline ExpNode *getExp() { return exp; }
     inline StmtNode *getStmt() { return stmt; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class SwitchNode : public StmtNode
@@ -232,6 +259,8 @@ public:
 
     inline ExpNode *getExp() { return exp; }
     inline CaseBlockNode *getCaseBlock() { return caseBlock; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class BreakNode : public StmtNode
@@ -251,6 +280,8 @@ public:
     ~PrintLnNode() override { delete this->expList; }
 
     inline ExpListNode *getExpList() { return expList; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class ReadNode : public StmtNode
@@ -262,6 +293,8 @@ public:
     ~ReadNode() override { delete this->exp; }
 
     inline ExpNode *getExp() { return exp; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class ReturnNode : public StmtNode
@@ -272,7 +305,9 @@ public:
     explicit ReturnNode(ExpNode *exp) { this->exp = exp; }
     ~ReturnNode() override { delete this->exp; }
 
-    inline ExpNode* getExp() { return exp; }
+    inline ExpNode *getExp() { return exp; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class CaseBlockNode : public ASTNode
@@ -288,6 +323,8 @@ public:
     inline TokenNode *getNum() { return num; }
     inline StmtListNode *getStmtList() { return stmt; }
     inline CaseBlockNode *getCaseBlock() { return next; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class ThrowNode : public StmtNode
@@ -296,6 +333,8 @@ private:
 public:
     ThrowNode() = default;
     ~ThrowNode() override = default;
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class ExpListNode : public ExpNode
@@ -309,6 +348,8 @@ public:
 
     inline ExpNode *getExp() { return exp; }
     inline ExpListNode *getExpList() { return next; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class TryNode : public StmtNode
@@ -322,6 +363,8 @@ public:
 
     inline StmtNode *getTry() { return tryStmt; }
     inline StmtNode *getCatch() { return catchStmt; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class AssignNode : public ExpNode
@@ -335,6 +378,8 @@ public:
 
     inline ExpNode *getExp1() { return exp1; };
     inline ExpNode *getExp2() { return exp2; };
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class NameExpNode : public ExpNode
@@ -348,6 +393,8 @@ public:
 
     inline ExpNode *getExp() { return exp; }
     inline TokenNode *getId() { return id; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class PointerValueExpNode : public ExpNode
@@ -361,6 +408,8 @@ public:
 
     inline ExpNode *getExp() { return exp; }
     inline TokenNode *getId() { return id; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class AdressValueNode : public ExpNode
@@ -372,6 +421,8 @@ public:
     ~AdressValueNode() override { delete this->exp; }
 
     inline ExpNode *getExp() { return exp; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class PointerValueNode : public ExpNode
@@ -383,6 +434,8 @@ public:
     ~PointerValueNode() override { delete this->exp; }
 
     inline ExpNode *getExp() { return exp; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class ArrayNode : public ExpNode
@@ -395,6 +448,8 @@ public:
     ~ArrayNode() override { delete this->numInt; }
 
     inline TokenNode *getNumInt() { return numInt; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class CallNode : public ExpNode
@@ -408,6 +463,8 @@ public:
 
     inline TokenNode *getId() { return id; }
     inline ExpListNode *getExpList() { return expList; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class RelationalOPNode : public ExpNode
@@ -423,6 +480,8 @@ public:
     inline TokenNode *getOp() { return op; }
     inline ExpNode *getExp1() { return exp1; }
     inline ExpNode *getExp2() { return exp2; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class AdditionOPNode : public ExpNode
@@ -438,6 +497,8 @@ public:
     inline TokenNode *getOp() { return op; }
     inline ExpNode *getExp1() { return exp1; }
     inline ExpNode *getExp2() { return exp2; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class MultiplicationOPNode : public ExpNode
@@ -453,6 +514,8 @@ public:
     inline TokenNode *getOp() { return op; }
     inline ExpNode *getExp1() { return exp1; }
     inline ExpNode *getExp2() { return exp2; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class BooleanOPNode : public ExpNode
@@ -468,6 +531,8 @@ public:
     inline TokenNode *getOp() { return op; }
     inline ExpNode *getExp1() { return exp1; }
     inline ExpNode *getExp2() { return exp2; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class BitwiseOPNode : public ExpNode
@@ -483,6 +548,8 @@ public:
     inline TokenNode *getOp() { return op; }
     inline ExpNode *getExp1() { return exp1; }
     inline ExpNode *getExp2() { return exp2; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class TrueNode : public ExpNode
@@ -492,6 +559,7 @@ public:
     TrueNode() = default;
     ~TrueNode() override = default;
 
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class FalseNode : public ExpNode
@@ -500,6 +568,8 @@ private:
 public:
     FalseNode() = default;
     ~FalseNode() override = default;
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class NotNode : public ExpNode
@@ -511,6 +581,8 @@ public:
     ~NotNode() override { delete this->exp; }
 
     inline ExpNode *getExp() { return exp; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class SignNode : public ExpNode
@@ -522,6 +594,8 @@ public:
     ~SignNode() override { delete this->exp; }
 
     inline ExpNode *getExp() { return exp; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 #endif //COMPILADOR_2019_3_AST_H

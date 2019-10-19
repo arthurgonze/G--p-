@@ -4,200 +4,188 @@
 
 #include "Visitor.h"
 
-PrintAST::PrintAST() {
+PrintAST::PrintAST()
+{
     level = 0;
 }
 
-void PrintAST::visit(ProgramNode *node) {
+void PrintAST::visit(ProgramNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(ClassListNode *node) {
+void PrintAST::visit(VarListNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(VarDeclNode *node) {
+void PrintAST::visit(NameDeclNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(IdListNode *node) {
+void PrintAST::visit(TypeNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(TypeNode *node) {
+void PrintAST::visit(FunctionListNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(FunctionDeclNode *node) {
+void PrintAST::visit(TypeListNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(TypeListNode *node) {
+void PrintAST::visit(PointerNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(PointerNode *node) {
+void PrintAST::visit(StmtListNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(StatementListNode *node) {
+void PrintAST::visit(IfNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(VarStmtNode *node) {
+void PrintAST::visit(WhileNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(VarFuncListNode *node) {
+void PrintAST::visit(SwitchNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(IfNode *node) {
+void PrintAST::visit(BreakNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(WhileNode *node) {
+void PrintAST::visit(PrintLnNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(SwitchNode *node) {
+void PrintAST::visit(ReadNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(BreakNode *node) {
+void PrintAST::visit(ReturnNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(PrintlnNode *node) {
+void PrintAST::visit(CaseBlockNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(ReadNode *node) {
+void PrintAST::visit(ThrowNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(ReturnNode *node) {
+void PrintAST::visit(ExpListNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(CaseBlockNode *node) {
+void PrintAST::visit(TryNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(ThrowNode *node) {
+void PrintAST::visit(TokenNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(ExpListNode *node) {
+void PrintAST::visit(PointerValueNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(TryNode *node) {
+void PrintAST::visit(AssignNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(IdentifierNode *node) {
+void PrintAST::visit(NameExpNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(IntegerNode *node) {
+void PrintAST::visit(PointerValueExpNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(RealNode *node) {
+void PrintAST::visit(AdressValueNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(LiteralNode *node) {
+void PrintAST::visit(ArrayNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(CharacterNode *node) {
+void PrintAST::visit(CallNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(PrimaryNode *node) {
+void PrintAST::visit(RelationalOPNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(FunctionCallNode *node) {
+void PrintAST::visit(AdditionOPNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(FieldAccessNode *node) {
+void PrintAST::visit(MultiplicationOPNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(PointerAccessNode *node) {
+void PrintAST::visit(BooleanOPNode *node)
+{
     Visitor::visit(node);
 }
 
-void PrintAST::visit(AddressValueNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(PointerValueNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(ArrayAccessNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(ArrayDeclNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(AssignNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(RelationalOpNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(AdditionOpNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(MultiplicationOpNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(BooleanOpNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(BitwiseOpNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(NewNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(NotNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(SignNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(TrueNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(FalseNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(ThisNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(FormalListNode *node) {
+void PrintAST::visit(BitwiseOPNode *node)
+{
     Visitor::visit(node);
 }
 
 
+void PrintAST::visit(NotNode *node)
+{
+    Visitor::visit(node);
+}
+
+void PrintAST::visit(SignNode *node)
+{
+    Visitor::visit(node);
+}
+
+void PrintAST::visit(TrueNode *node)
+{
+    Visitor::visit(node);
+}
+
+void PrintAST::visit(FalseNode *node)
+{
+    Visitor::visit(node);
+}
