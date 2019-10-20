@@ -8,7 +8,46 @@
 #ifndef VISITOR_H_INCLUDED
 #define VISITOR_H_INCLUDED
 
-#include "AST.h"
+// AST NODES
+class ASTNode;
+class StmtNode;
+class ExpNode;
+class TokenNode;
+class ProgramNode;
+class VarListNode;
+class NameDeclNode;
+class FunctionListNode;
+class TypeListNode;
+class TypeNode;
+class PointerNode;
+class StmtListNode;
+class IfNode;
+class WhileNode;
+class SwitchNode;
+class BreakNode;
+class PrintLnNode;
+class ReadNode;
+class ReturnNode;
+class CaseBlockNode;
+class ThrowNode;
+class ExpListNode;
+class TryNode;
+class AssignNode;
+class NameExpNode;
+class PointerValueExpNode;
+class AdressValueNode;
+class PointerValueNode;
+class ArrayNode;
+class CallNode;
+class RelationalOPNode;
+class AdditionOPNode;
+class MultiplicationOPNode;
+class BooleanOPNode;
+class BitwiseOPNode;
+class TrueNode;
+class FalseNode;
+class NotNode;
+class SignNode;
 
 class Visitor
 {

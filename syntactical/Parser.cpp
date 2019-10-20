@@ -1,9 +1,9 @@
 #include "Parser.h"
 
-void Parser::StartParser()
+ProgramNode *Parser::StartParser()
 {
     advance();
-    return Program();
+    return Program(nullptr, nullptr, nullptr);
 }
 
 void Parser::eat(int t)
@@ -28,7 +28,7 @@ void Parser::eat(int t)
 }
 
 int Parser::programFollowSet[] = {-1};
-void Parser::Program(void)
+ProgramNode *Parser::Program(FunctionListNode *functionList, TypeListNode *typeList, VarListNode *varList)
 {
     switch (tok.token)
     {
@@ -36,26 +36,31 @@ void Parser::Program(void)
         case FLOAT:
         case BOOL:
         case ID:
-        case CHAR:Type();
+        case CHAR:
+            Type();
             Pointer();
             eat(ID);
             ProgramAUX();
             break;
-        case TYPEDEF:TypeDecl();
+        case TYPEDEF:
+            TypeDecl();
             Program();
             break;
-        case ENDOFFILE:eat(ENDOFFILE);
+        case ENDOFFILE:
+            eat(ENDOFFILE);
             break;
-        default: printf("error(Program), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(Program), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::programAUXFollowSet[] = {-1};
-void Parser::ProgramAUX(void)
+void Parser::ProgramAUX()
 {
     switch (tok.token)
     {
-        case LPARENT:eat(LPARENT);
+        case LPARENT:
+            eat(LPARENT);
             FormalList();
             eat(RPARENT);
             eat(LBRACE);
@@ -65,15 +70,17 @@ void Parser::ProgramAUX(void)
             ProgramList();
             break;
         case COMMA:
-        case LBRACE:Array();
+        case LBRACE:
+            Array();
             FormalRest();
             break;
-        default: printf("error(ProgramAUX), Token error: %s \n",token_id_to_name(tok.token) );
+        default:
+            printf("error(ProgramAUX), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::programListFollowSet[] = {-1};
-void Parser::ProgramList(void)
+void Parser::ProgramList()
 {
     switch (tok.token)
     {
@@ -82,7 +89,8 @@ void Parser::ProgramList(void)
         case BOOL:
         case ID:
         case CHAR:
-        case TYPEDEF:Program();
+        case TYPEDEF:
+            Program();
             break;
             // TODO EPSILON
             // Epsilon default: printf("errorProgramList(), Token error: %s \n",token_id_to_name(tok.token));
@@ -90,11 +98,12 @@ void Parser::ProgramList(void)
 }
 
 int Parser::typeDeclFollowSet[] = {INT, FLOAT, BOOL, ID, CHAR, TYPEDEF};
-void Parser::TypeDecl(void)
+TypeListNode *Parser::TypeDecl(VarListNode *varList, TokenNode *id, TypeListNode *typeList)
 {
     switch (tok.token)
     {
-        case TYPEDEF:eat(TYPEDEF);
+        case TYPEDEF:
+            eat(TYPEDEF);
             eat(STRUCT);
             eat(LBRACKET);
             Type();
@@ -106,12 +115,13 @@ void Parser::TypeDecl(void)
             eat(SEMICOLON);
             TypeDecl();
             break;
-        default: printf("error(TypeDecl), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(TypeDecl), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::varDeclFollowSet[] = {IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACE, TRY, NOT, PLUS, MINUS, STAR, ADDRESS, ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT, RBRACKET};
-void Parser::VarDecl(void)
+VarListNode *Parser::VarDecl()
 {
     switch (tok.token)
     {
@@ -119,7 +129,8 @@ void Parser::VarDecl(void)
         case FLOAT:
         case BOOL:
         case ID:
-        case CHAR:Type();
+        case CHAR:
+            Type();
             IdList();
             eat(SEMICOLON);
             VarDecl();
@@ -130,24 +141,27 @@ void Parser::VarDecl(void)
 }
 
 int Parser::idListFollowSet[] = {SEMICOLON, RPARENT};
-void Parser::IdList(void)
+void Parser::IdList()
 {
     switch (tok.token)
     {
         case LPARENT:
-        case STAR:IdExpr();
+        case STAR:
+            IdExpr();
             IdListAUX();
             break;
-        default: printf("error(IdList), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(IdList), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::idListAUXFollowSet[] = {SEMICOLON, RPARENT};
-void Parser::IdListAUX(void)
+void Parser::IdListAUX()
 {
     switch (tok.token)
     {
-        case COMMA:eat(COMMA);
+        case COMMA:
+            eat(COMMA);
             IdExpr();
             break;
             // TODO EPSILON
@@ -156,40 +170,45 @@ void Parser::IdListAUX(void)
 }
 
 int Parser::idExprFollowSet[] = {COMMA, SEMICOLON, RPARENT};
-void Parser::IdExpr(void)
+void Parser::IdExpr()
 {
     switch (tok.token)
     {
-        case STAR:Pointer();
+        case STAR:
+            Pointer();
             eat(ID);
             Array();
             break;
-        case LPARENT:eat(LPARENT);
+        case LPARENT:
+            eat(LPARENT);
             IdList();
             eat(RPARENT);
             break;
-        default: printf("error(IdExpr), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(IdExpr), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::pointerFollowSet[] = {RPARENT, ID, LBRACE, COMMA};
-void Parser::Pointer(void)
+PointerNode *Parser::Pointer()
 {
     switch (tok.token)
     {
-        case STAR:eat(STAR);
+        case STAR:
+            eat(STAR);
             break;
             // TODO EPSILON
-        // Epsilon default: printf("error(Pointer), Token error: %s \n",token_id_to_name(tok.token));
+            // Epsilon default: printf("error(Pointer), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
 int Parser::arrayFollowSet[] = {SEMICOLON, COMMA, RPARENT};
-void Parser::Array(void)
+ArrayNode *Parser::Array()
 {
     switch (tok.token)
     {
-        case LBRACE:eat(LBRACE);
+        case LBRACE:
+            eat(LBRACE);
             eat(NUMINT);
             eat(RBRACE);
             break;
@@ -199,7 +218,7 @@ void Parser::Array(void)
 }
 
 int Parser::formalListFollowSet[] = {RPARENT};
-void Parser::FormalList(void)
+void Parser::FormalList()
 {
     switch (tok.token)
     {
@@ -207,7 +226,8 @@ void Parser::FormalList(void)
         case FLOAT:
         case BOOL:
         case ID:
-        case CHAR:Type();
+        case CHAR:
+            Type();
             Pointer();
             eat(ID);
             Array();
@@ -219,11 +239,12 @@ void Parser::FormalList(void)
 }
 
 int Parser::formalRestFollowSet[] = {RPARENT};
-void Parser::FormalRest(void)
+void Parser::FormalRest()
 {
     switch (tok.token)
     {
-        case COMMA:eat(COMMA);
+        case COMMA:
+            eat(COMMA);
             Type();
             Pointer();
             eat(ID);
@@ -236,26 +257,32 @@ void Parser::FormalRest(void)
 }
 
 int Parser::typeFollowSet[] = {LPARENT, STAR, ID};
-void Parser::Type(void)
+TypeNode *Parser::Type()
 {
     switch (tok.token)
     {
-        case INT:eat(INT);
+        case INT:
+            eat(INT);
             break;
-        case FLOAT:eat(FLOAT);
+        case FLOAT:
+            eat(FLOAT);
             break;
-        case BOOL:eat(BOOL);
+        case BOOL:
+            eat(BOOL);
             break;
-        case ID:eat(ID);
+        case ID:
+            eat(ID);
             break;
-        case CHAR:eat(CHAR);
+        case CHAR:
+            eat(CHAR);
             break;
-        default: printf("error(Type), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(Type), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::stmtListFollowSet[] = {RBRACKET, CASE};
-void Parser::StmtList(void)
+StmtListNode *Parser::StmtList()
 {
     switch (tok.token)
     {
@@ -281,15 +308,16 @@ void Parser::StmtList(void)
         case LITERALCHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:Stmt();
+        case LPARENT:
+            Stmt();
             StmtListAUX();
             break;
-        // Epsilon default: printf("error(StmtList), Token error: %s \n",token_id_to_name(tok.token));
+            // Epsilon default: printf("error(StmtList), Token error: %s \n",token_id_to_name(tok.token));
     }
 }
 
 int Parser::stmtListAUXFollowSet[] = {RBRACKET, CASE};
-void Parser::StmtListAUX(void)
+StmtListNode *Parser::StmtListAUX()
 {
     switch (tok.token)
     {
@@ -315,7 +343,8 @@ void Parser::StmtListAUX(void)
         case LITERALCHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:StmtList();
+        case LPARENT:
+            StmtList();
             break;
             // TODO EPSILON
             // Epsilon default: printf("error(StmtListAux), Token error: %s \n",token_id_to_name(tok.token));
@@ -324,11 +353,12 @@ void Parser::StmtListAUX(void)
 
 int Parser::stmtFollowSet[] = {ELSE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACE, TRY, NOT, PLUS, MINUS, STAR, ADDRESS,
                                ID, NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, TRUE, FALSE, LPARENT, CATCH, RBRACKET, CASE};
-void Parser::Stmt(void)
+StmtNode *Parser::Stmt()
 {
     switch (tok.token)
     {
-        case IF:eat(IF);
+        case IF:
+            eat(IF);
             eat(LPARENT);
             ExprAssign();
             eat(RPARENT);
@@ -355,25 +385,29 @@ void Parser::Stmt(void)
         case LITERALCHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:StmtAUX();
+        case LPARENT:
+            StmtAUX();
             break;
-        default: printf("error(Stmt), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(Stmt), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::stmtAUXFollowSet[] = {ELSE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACE, TRY, NOT, PLUS, MINUS, STAR, ADDRESS,
                                   ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT, CATCH, RBRACKET, CASE};
-void Parser::StmtAUX(void)
+StmtNode *Parser::StmtAUX()
 {
     switch (tok.token)
     {
-        case WHILE:eat(WHILE);
+        case WHILE:
+            eat(WHILE);
             eat(LPARENT);
             ExprAssign();
             eat(RPARENT);
             Stmt();
             break;
-        case SWITCH:eat(SWITCH);
+        case SWITCH:
+            eat(SWITCH);
             eat(LPARENT);
             ExprAssign();
             eat(RPARENT);
@@ -381,39 +415,47 @@ void Parser::StmtAUX(void)
             CaseBlock();
             eat(RBRACKET);
             break;
-        case BREAK:eat(BREAK);
+        case BREAK:
+            eat(BREAK);
             eat(SEMICOLON);
             break;
-        case PRINT:eat(PRINT);
+        case PRINT:
+            eat(PRINT);
             eat(LPARENT);
             ExprList();
             eat(RPARENT);
             eat(SEMICOLON);
             break;
-        case READLN:eat(READLN);
+        case READLN:
+            eat(READLN);
             eat(LPARENT);
             ExprAssign();
             eat(RPARENT);
             eat(SEMICOLON);
             break;
-        case RETURN:eat(RETURN);
+        case RETURN:
+            eat(RETURN);
             ExprAssign();
             eat(SEMICOLON);
             break;
-        case THROW:eat(THROW);
+        case THROW:
+            eat(THROW);
             eat(SEMICOLON);
             break;
-        case LBRACE:eat(LBRACE);
+        case LBRACE:
+            eat(LBRACE);
             StmtList();
             eat(RBRACKET);
             break;
-        case ID:eat(ID);
+        case ID:
+            eat(ID);
             eat(LPARENT);
             ExprList();
             eat(RPARENT);
             eat(SEMICOLON);
             break;
-        case TRY:eat(TRY);
+        case TRY:
+            eat(TRY);
             Stmt();
             eat(CATCH);
             eat(LPARENT);
@@ -432,27 +474,31 @@ void Parser::StmtAUX(void)
         case LITERALCHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:ExprAssign();
+        case LPARENT:
+            ExprAssign();
             eat(SEMICOLON);
             break;
 
-        default: printf("error(StmtAUX), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(StmtAUX), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::ifExprFollowSet[] = {ELSE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACE, TRY, NOT, PLUS, MINUS, STAR, ADDRESS,
                                  ID, NUMINT, NUMFLOAT, LITERAL, CHAR, TRUE, FALSE, LPARENT, CATCH, RBRACKET, CASE};
-char Parser::IFExpr(void)
+StmtNode *Parser::IFExpr()
 {
     switch (tok.token)
     {
-        case IF:eat(IF);
+        case IF:
+            eat(IF);
             eat(LPARENT);
             ExprAssign();
             eat(RPARENT);
             IFExpr();
             break;
-        case ELSE:eat(ELSE);
+        case ELSE:
+            eat(ELSE);
             IFExpr();
             break;
         case WHILE:
@@ -475,29 +521,33 @@ char Parser::IFExpr(void)
         case CHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:StmtAUX();
+        case LPARENT:
+            StmtAUX();
             IFExpr();
             break;
-        default: printf("error(IFExpr), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(IFExpr), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::caseBlockFollowSet[] = {RBRACKET};
-void Parser::CaseBlock(void)
+CaseBlockNode *Parser::CaseBlock()
 {
     switch (tok.token)
     {
-        case CASE:eat(CASE);
+        case CASE:
+            eat(CASE);
             eat(NUMINT);
             eat(COLON);
             CaseBlockAUX();
             break;
-        default: printf("error(caseBlock), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(caseBlock), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::caseBlockAUXFollowSet[] = {RBRACKET};
-void Parser::CaseBlockAUX(void)
+CaseBlockNode *Parser::CaseBlockAUX(TokenNode *num)
 {
     switch (tok.token)
     {
@@ -523,10 +573,12 @@ void Parser::CaseBlockAUX(void)
         case CHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:StmtList();
+        case LPARENT:
+            StmtList();
             CaseBlock();
             break;
-        case CASE:CaseBlock();
+        case CASE:
+            CaseBlock();
             break;
             // TODO EPSILON
             // Epsilon default: printf("error(caseBlockAUX), Token error: %s \n",token_id_to_name(tok.token));
@@ -534,7 +586,7 @@ void Parser::CaseBlockAUX(void)
 }
 
 int Parser::exprListFollowSet[] = {RPARENT};
-void Parser::ExprList(void)
+ExpListNode *Parser::ExprList()
 {
     switch (tok.token)
     {
@@ -550,7 +602,8 @@ void Parser::ExprList(void)
         case LITERALCHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:ExprListTail();
+        case LPARENT:
+            ExprListTail();
             break;
             // TODO EPSILON
             // Epsilon default: printf("error(ExprList), Token error: %s \n",token_id_to_name(tok.token));
@@ -558,7 +611,7 @@ void Parser::ExprList(void)
 }
 
 int Parser::exprListTailFollowSet[] = {RPARENT};
-void Parser::ExprListTail(void)
+ExpListNode *Parser::ExprListTail()
 {
     switch (tok.token)
     {
@@ -574,19 +627,22 @@ void Parser::ExprListTail(void)
         case LITERALCHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:ExprAssign();
+        case LPARENT:
+            ExprAssign();
             ExprListTailAUX();
             break;
-        default: printf("error(ExprListTail), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(ExprListTail), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::exprListTailAUXFollowSet[] = {RPARENT};
-void Parser::ExprListTailAUX(void)
+ExpListNode *Parser::ExprListTailAUX()
 {
     switch (tok.token)
     {
-        case COMMA:eat(COMMA);
+        case COMMA:
+            eat(COMMA);
             ExprListTail();
             break;
             // TODO EPSILON
@@ -595,7 +651,7 @@ void Parser::ExprListTailAUX(void)
 }
 
 int Parser::exprAssignFollowSet[] = {SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::ExprAssign(void)
+ExpNode *Parser::ExprAssign()
 {
     switch (tok.token)
     {
@@ -611,20 +667,23 @@ void Parser::ExprAssign(void)
         case LITERALCHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:ExprOr();
+        case LPARENT:
+            ExprOr();
             ExprAssignAUX();
             break;
-        default: printf("error(ExprAssign), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(ExprAssign), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::exprAssignAUXFollowSet[] = {SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::ExprAssignAUX(void)
+ExpNode *Parser::ExprAssignAUX(ExpNode *expr)
 {
     switch (tok.token)
     {
         case EQ:
-        case ASSIGN:eat(ASSIGN);
+        case ASSIGN:
+            eat(ASSIGN);
             ExprOr();
             break;
             // Epsilon default: printf("error(ExprAssignAUX), Token error: %s \n",token_id_to_name(tok.token));
@@ -632,7 +691,7 @@ void Parser::ExprAssignAUX(void)
 }
 
 int Parser::exprOrFollowSet[] = {EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::ExprOr(void)
+ExpNode *Parser::ExprOr()
 {
     switch (tok.token)
     {
@@ -648,19 +707,22 @@ void Parser::ExprOr(void)
         case LITERALCHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:ExprAnd();
+        case LPARENT:
+            ExprAnd();
             ExprOrAUX();
             break;
-        default: printf("error(ExprOr), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(ExprOr), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::exprOrAUXFollowSet[] = {EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::ExprOrAUX(void)
+ExpNode *Parser::ExprOrAUX(ExpNode *expr)
 {
     switch (tok.token)
     {
-        case OR:eat(OR);
+        case OR:
+            eat(OR);
             ExprAnd();
             break;
             // Epsilon default: printf("error(ExprOrAUX), Token error: %s \n",token_id_to_name(tok.token));
@@ -668,7 +730,7 @@ void Parser::ExprOrAUX(void)
 }
 
 int Parser::exprAndFollowSet[] = {OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::ExprAnd(void)
+ExpNode *Parser::ExprAnd()
 {
     switch (tok.token)
     {
@@ -684,19 +746,22 @@ void Parser::ExprAnd(void)
         case LITERALCHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:ExprEquality();
+        case LPARENT:
+            ExprEquality();
             ExprAndAUX();
             break;
-        default: printf("error(ExprAnd), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(ExprAnd), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::exprAndAUXFollowSet[] = {OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::ExprAndAUX(void)
+ExpNode *Parser::ExprAndAUX(ExpNode *expr)
 {
     switch (tok.token)
     {
-        case AND:eat(AND);
+        case AND:
+            eat(AND);
             ExprEquality();
             break;
             // Epsilon default: printf("error(ExprAndAUX), Token error: %s \n",token_id_to_name(tok.token));
@@ -704,7 +769,7 @@ void Parser::ExprAndAUX(void)
 }
 
 int Parser::exprEqualityFollowSet[] = {AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::ExprEquality(void)
+ExpNode *Parser::ExprEquality()
 {
     switch (tok.token)
     {
@@ -720,22 +785,26 @@ void Parser::ExprEquality(void)
         case LITERALCHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:ExprRelational();
+        case LPARENT:
+            ExprRelational();
             ExprEqualityAUX();
             break;
-        default: printf("error(ExprEquality), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(ExprEquality), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::exprEqualityAUXFollowSet[] = {AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::ExprEqualityAUX(void)
+ExpNode *Parser::ExprEqualityAUX(ExpNode *expr)
 {
     switch (tok.token)
     {
-        case EQ:eat(EQ);
+        case EQ:
+            eat(EQ);
             ExprRelational();
             break;
-        case NE:eat(NE);
+        case NE:
+            eat(NE);
             ExprRelational();
             break;
             // Epsilon default: printf("error(ExprEqualityAUX), Token error: %s \n",token_id_to_name(tok.token));
@@ -743,7 +812,7 @@ void Parser::ExprEqualityAUX(void)
 }
 
 int Parser::exprRelationalFollowSet[] = {EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::ExprRelational(void)
+ExpNode *Parser::ExprRelational()
 {
     switch (tok.token)
     {
@@ -759,28 +828,34 @@ void Parser::ExprRelational(void)
         case LITERALCHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:ExprAdditive();
+        case LPARENT:
+            ExprAdditive();
             ExprRelationalAUX();
             break;
-        default: printf("error(ExprRelational), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(ExprRelational), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::exprRelationalAUXFollowSet[] = {EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::ExprRelationalAUX(void)
+ExpNode *Parser::ExprRelationalAUX(ExpNode *expr)
 {
     switch (tok.token)
     {
-        case LT:eat(LT);
+        case LT:
+            eat(LT);
             ExprAdditive();
             break;
-        case GT:eat(GT);
+        case GT:
+            eat(GT);
             ExprAdditive();
             break;
-        case LE:eat(LE);
+        case LE:
+            eat(LE);
             ExprAdditive();
             break;
-        case GE:eat(GE);
+        case GE:
+            eat(GE);
             ExprAdditive();
             break;
             // Epsilon default: printf("error(ExprRelationalAUX), Token error: %s \n",token_id_to_name(tok.token));
@@ -788,7 +863,7 @@ void Parser::ExprRelationalAUX(void)
 }
 
 int Parser::exprAdditiveFollowSet[] = {LT, GT, LE, GE, EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::ExprAdditive(void)
+ExpNode *Parser::ExprAdditive()
 {
     switch (tok.token)
     {
@@ -804,25 +879,30 @@ void Parser::ExprAdditive(void)
         case LITERALCHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:ExprMultiplicative();
+        case LPARENT:
+            ExprMultiplicative();
             ExprAdditiveAUX();
             break;
-        default: printf("error(ExprAdditive), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(ExprAdditive), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::exprAdditiveAUXFollowSet[] = {LT, GT, LE, GE, EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::ExprAdditiveAUX(void)
+ExpNode *Parser::ExprAdditiveAUX(ExpNode *expr)
 {
     switch (tok.token)
     {
-        case PIPE:eat(PIPE);
+        case PIPE:
+            eat(PIPE);
             ExprMultiplicative();
             break;
-        case PLUS:eat(PLUS);
+        case PLUS:
+            eat(PLUS);
             ExprMultiplicative();
             break;
-        case MINUS:eat(MINUS);
+        case MINUS:
+            eat(MINUS);
             ExprMultiplicative();
             break;
             // Epsilon default: printf("error(ExprAdditiveAUX), Token error: %s \n",token_id_to_name(tok.token));
@@ -831,7 +911,7 @@ void Parser::ExprAdditiveAUX(void)
 
 int Parser::exprMultiplicativeFollowSet[] = {PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ, NE, AND, OR, EQ, SEMICOLON,
                                              COMMA, RPARENT, RBRACE};
-void Parser::ExprMultiplicative(void)
+ExpNode *Parser::ExprMultiplicative()
 {
     switch (tok.token)
     {
@@ -847,26 +927,31 @@ void Parser::ExprMultiplicative(void)
         case LITERALCHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:ExprUnary();
+        case LPARENT:
+            ExprUnary();
             ExprMultiplicativeAUX();
             break;
-        default: printf("error(ExprMultiplicative), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(ExprMultiplicative), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::exprMultiplicativeAUXFollowSet[] = {PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ, NE, AND, OR,
                                                 EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::ExprMultiplicativeAUX(void)
+ExpNode *Parser::ExprMultiplicativeAUX(ExpNode *expr)
 {
     switch (tok.token)
     {
-        case ADDRESS:eat(ADDRESS);
+        case ADDRESS:
+            eat(ADDRESS);
             ExprUnary();
             break;
-        case STAR:eat(STAR);
+        case STAR:
+            eat(STAR);
             ExprUnary();
             break;
-        case SLASH:eat(SLASH);
+        case SLASH:
+            eat(SLASH);
             ExprUnary();
             break;
             // Epsilon default: printf("error(ExprMultiplicativeAUX), Token error: %s \n",token_id_to_name(tok.token));
@@ -875,23 +960,28 @@ void Parser::ExprMultiplicativeAUX(void)
 
 int Parser::exprUnaryFollowSet[] = {ADDRESS, STAR, SLASH, PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ, NE, AND, OR,
                                     EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::ExprUnary(void)
+ExpNode *Parser::ExprUnary()
 {
     switch (tok.token)
     {
-        case NOT:eat(NOT);
+        case NOT:
+            eat(NOT);
             PostFixExpr();
             break;
-        case PLUS:eat(PLUS);
+        case PLUS:
+            eat(PLUS);
             PostFixExpr();
             break;
-        case MINUS:eat(MINUS);
+        case MINUS:
+            eat(MINUS);
             PostFixExpr();
             break;
-        case STAR:eat(STAR);
+        case STAR:
+            eat(STAR);
             PostFixExpr();
             break;
-        case ADDRESS:eat(ADDRESS);
+        case ADDRESS:
+            eat(ADDRESS);
             PostFixExpr();
             break;
         case ID:
@@ -901,43 +991,54 @@ void Parser::ExprUnary(void)
         case LITERALCHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:PostFixExpr();
+        case LPARENT:
+            PostFixExpr();
             break;
-        default: printf("error(ExprUnary), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(ExprUnary), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::primaryFollowSet[] = {DOT, POINTER, LBRACE, LPARENT, ADDRESS, STAR, SLASH, PIPE, PLUS, MINUS, LT, GT, LE, GE,
                                   EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::Primary(void)
+ExpNode *Parser::Primary()
 {
     switch (tok.token)
     {
-        case ID:eat(ID);
+        case ID:
+            eat(ID);
             break;
-        case NUMINT:eat(NUMINT);
+        case NUMINT:
+            eat(NUMINT);
             break;
-        case NUMFLOAT:eat(NUMFLOAT);
+        case NUMFLOAT:
+            eat(NUMFLOAT);
             break;
-        case LITERAL:eat(LITERAL);
+        case LITERAL:
+            eat(LITERAL);
             break;
-        case LITERALCHAR:eat(LITERALCHAR);
+        case LITERALCHAR:
+            eat(LITERALCHAR);
             break;
-        case TRUE:eat(TRUE);
+        case TRUE:
+            eat(TRUE);
             break;
-        case FALSE:eat(FALSE);
+        case FALSE:
+            eat(FALSE);
             break;
-        case LPARENT:eat(LPARENT);
+        case LPARENT:
+            eat(LPARENT);
             ExprAssign();
             eat(RPARENT);
             break;
-        default: printf("error(Primary), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(Primary), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::postFixExprFollowSet[] = {ADDRESS, STAR, SLASH, PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ,
                                       NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::PostFixExpr(void)
+ExpNode *Parser::PostFixExpr()
 {
     switch (tok.token)
     {
@@ -948,33 +1049,39 @@ void Parser::PostFixExpr(void)
         case LITERALCHAR:
         case TRUE:
         case FALSE:
-        case LPARENT:Primary();
+        case LPARENT:
+            Primary();
             PostFixExprAUX();
             break;
-        default: printf("error(PostFixExpr), Token error: %s \n",token_id_to_name(tok.token));
+        default:
+            printf("error(PostFixExpr), Token error: %s \n", token_id_to_name(tok.token));
     }
 }
 
 int Parser::postFixExprAUXFollowSet[] = {ADDRESS, STAR, SLASH, PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ,
                                          NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE};
-void Parser::PostFixExprAUX(void)
+ExpNode *Parser::PostFixExprAUX()
 {
     switch (tok.token)
     {
-        case DOT:eat(DOT);
+        case DOT:
+            eat(DOT);
             eat(ID);
             PostFixExprAUX();
             break;
-        case POINTER:eat(POINTER);
+        case POINTER:
+            eat(POINTER);
             eat(ID);
             PostFixExprAUX();
             break;
-        case LBRACE:eat(LBRACE);
+        case LBRACE:
+            eat(LBRACE);
             ExprAssign();
             eat(RBRACE);
             PostFixExprAUX();
             break;
-        case LPARENT:eat(LPARENT);
+        case LPARENT:
+            eat(LPARENT);
             ExprList();
             eat(RPARENT);
             PostFixExprAUX();

@@ -3,7 +3,7 @@
 //
 
 #include "Visitor.h"
-
+#include "AST.h"
 PrintAST::PrintAST()
 {
     level = 0;

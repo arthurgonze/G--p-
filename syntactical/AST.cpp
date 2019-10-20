@@ -13,7 +13,7 @@ TokenNode::TokenNode(int token, char *lex)
 
 TokenNode::~TokenNode()
 {
-    delete this->token;
+    // TODO delete this->token;
     delete this->lex;
 }
 
