@@ -113,6 +113,9 @@ public:
 class PrintAST : public Visitor {
 private:
     unsigned int level;
+    void printAST(const char *node_name);
+    void up_level();
+    void down_level();
 
 public:
     PrintAST();

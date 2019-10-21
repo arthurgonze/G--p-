@@ -2,11 +2,31 @@
 // Created by jorao on 17/10/2019.
 //
 
+#include <iostream>
 #include "Visitor.h"
 
 PrintAST::PrintAST() {
     level = 0;
 }
+
+void PrintAST::printAST(const char *node_name) {
+    for (unsigned int i = 0; i < this->level; i++) std::cout << "\t";
+    std::cout << "->" << node_name << std::endl;
+}
+
+void PrintAST::up_level() {
+    this->level ++;
+
+}
+
+void PrintAST::down_level() {
+    this->level --;
+
+}
+
+/*
+ * PrintAST functions
+ */
 
 void PrintAST::visit(ProgramNode *node) {
     Visitor::visit(node);
@@ -199,5 +219,6 @@ void PrintAST::visit(ThisNode *node) {
 void PrintAST::visit(FormalListNode *node) {
     Visitor::visit(node);
 }
+
 
 
