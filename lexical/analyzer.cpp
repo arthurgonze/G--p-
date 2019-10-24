@@ -22,6 +22,7 @@ int currentLine = 1;
 int currentColumn = 0;
 
 char *lexemeBuffer = NULL;
+char* lastLexemeFound = NULL;
 int lexemeLength = 0;
 int lexemeBufferSize = 0;
 
@@ -120,20 +121,16 @@ void remove_last_char_from_lexeme() {
  * @param token
  * @return found token and lexeme
  */
-struct token_info found_token_and_restart(int token) {
+int found_token_and_restart(int token) {
     remove_last_char_from_lexeme();
 
-    struct token_info info;
-
-    info.token = token;
-
-    info.lexeme = (char *) malloc(strlen(lexemeBuffer) + 1); //Save the buffer
-    strcpy(info.lexeme, lexemeBuffer);
+    lastLexemeFound = (char *) malloc(strlen(lexemeBuffer) + 1); //Save the buffer
+    strcpy(lastLexemeFound, lexemeBuffer);
 
     clear_lexeme();
 
     go_to_state(0);
-    return info;
+    return token;
 }
 
 /**
@@ -141,7 +138,7 @@ struct token_info found_token_and_restart(int token) {
  * @param token
  * @return found token
  */
-struct token_info found_token_and_get_next_input(int token) {
+int found_token_and_get_next_input(int token) {
     get_next_char();
     return found_token_and_restart(token);
 }
@@ -150,7 +147,7 @@ struct token_info found_token_and_get_next_input(int token) {
  * Handles a found token, but it determines the token type, if it is a reserved word
  * @return found token
  */
-struct token_info found_token_and_check_for_reserved_word() {
+int found_token_and_check_for_reserved_word() {
     remove_last_char_from_lexeme();
 
     int token = reservedWordsTable.cSearch(lexemeBuffer);
@@ -166,11 +163,11 @@ struct token_info found_token_and_check_for_reserved_word() {
 }
 
 /**
- * Handles a literal found token, with the correct add in symbol table.
+ * Handles a literal found token, with the correct add in symbolaa table.
  * @param token
  * @return found token
  */
-struct token_info found_literal_and_restart(int token) {
+int found_literal_and_restart(int token) {
     remove_last_char_from_lexeme(); //remove the char from next token
     literalsTable.cInsert(lexemeBuffer);
     return found_token_and_restart(token);
@@ -243,7 +240,7 @@ void lexical_analyzer_dispose() {
  * ENDOFFILE token.
  * @return found token
  */
-struct token_info lexical_analyzer_next_token() {
+int lexical_analyzer_next_token() {
 
     while (true) {
 
@@ -650,6 +647,11 @@ struct token_info lexical_analyzer_next_token() {
         }
 
     }
+}
+
+char* lexical_analyzer_last_lexeme()
+{
+	return lastLexemeFound;
 }
 
 

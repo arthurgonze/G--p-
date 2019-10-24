@@ -1,3 +1,5 @@
+#include <cstring>
+
 #include "SymbolTable.h"
 #include "lexical/analyzer.h"
 #include "token.h"
@@ -89,25 +91,25 @@ int main(int argc, char *argv[]) {
     lexical_analyzer_init(input);
 
     //Print every token found on input
-    struct token_info token;
+	int token;
     do {
 
         token = lexical_analyzer_next_token();
-        printf("%s", token_id_to_name(token.token));
+        printf("%s", token_id_to_name(token));
 
 
-        switch (token.token) {
+        switch (token) {
             case ID:
             case NUMINT:
             case NUMFLOAT:
             case LITERAL:
             case LITERALCHAR:
-                printf(".%s", token.lexeme);
+                printf(".%s", lexical_analyzer_last_lexeme());
         }
 
         printf("\n");
 
-    } while (token.token != ENDOFFILE);
+    } while (token != ENDOFFILE);
 
     printf("\n");
 
