@@ -133,7 +133,7 @@ class Parser
     ExpNode* PostFixExpr();
 
     static int postFixExprAUXFollowSet [];
-    ExpNode* PostFixExprAUX();
+    ExpNode* PostFixExprAUX(ExpNode *expr);
 public:
     ProgramNode * StartParser();
 };
