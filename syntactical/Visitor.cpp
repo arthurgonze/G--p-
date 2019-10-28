@@ -4,14 +4,25 @@
 
 #include <iostream>
 #include "Visitor.h"
+#include "../lexical/analyzer.h"
+
+
+/*
+ * TO DO:
+ *
+ * MUDAR TOKEN -> token_id_name
+ * MUDAR LEXEME para node->get_lexeme
+ *
+ * AJUSTAR CADA NO PARA FAZER A FUNCAO
+ */
 
 PrintAST::PrintAST() {
     level = 0;
 }
 
-void PrintAST::printAST(const char *node_name) {
+void PrintAST::printAST(const char *node_name, const char *aux ="") {
     for (unsigned int i = 0; i < this->level; i++) std::cout << "\t";
-    std::cout << "->" << node_name << std::endl;
+    std::cout << "->" << node_name << aux << std::endl;
 }
 
 void PrintAST::up_level() {
@@ -29,196 +40,385 @@ void PrintAST::down_level() {
  */
 
 void PrintAST::visit(ProgramNode *node) {
-    Visitor::visit(node);
+    std::cout << "\n------------------------------" << std::endl;
+    std::cout << "---- ABSTRACT SYNTAX TREE ----" << std::endl;
+    std::cout << "------------------------------\n" << std::endl;
+    this->printAST("PROGRAM");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
 }
 
 void PrintAST::visit(ClassListNode *node) {
-    Visitor::visit(node);
+    this->printAST("CLASS_LIST");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
 }
 
 void PrintAST::visit(VarDeclNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(IdListNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(TypeNode *node) {
-    Visitor::visit(node);
+    this->printAST("VAR_DECL");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
 }
 
 void PrintAST::visit(FunctionDeclNode *node) {
-    Visitor::visit(node);
+    this->printAST("FUNCTION_DECL");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
+}
+
+void PrintAST::visit(IdListNode *node) {
+    this->printAST("ID_LIST");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
 }
 
 void PrintAST::visit(TypeListNode *node) {
-    Visitor::visit(node);
+    this->printAST("TYPE_LIST");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
 }
 
 void PrintAST::visit(PointerNode *node) {
-    Visitor::visit(node);
+    this->printAST("POINTER");
 }
 
 void PrintAST::visit(StatementListNode *node) {
-    Visitor::visit(node);
+    this->printAST("STATEMENT_LIST");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();;
 }
 
 void PrintAST::visit(VarStmtNode *node) {
-    Visitor::visit(node);
+    this->printAST("VAR_STMT");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
 }
 
 void PrintAST::visit(VarFuncListNode *node) {
-    Visitor::visit(node);
+    this->printAST("VAR_FUNC_LIST");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
 }
 
 void PrintAST::visit(IfNode *node) {
-    Visitor::visit(node);
+    this->printAST("IF");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
 }
 
 void PrintAST::visit(WhileNode *node) {
-    Visitor::visit(node);
+    this->printAST("WHILE");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
 }
 
 void PrintAST::visit(SwitchNode *node) {
-    Visitor::visit(node);
+    this->printAST("SWITCH");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
 }
 
 void PrintAST::visit(BreakNode *node) {
-    Visitor::visit(node);
+    this->printAST("BREAK");
 }
 
 void PrintAST::visit(PrintlnNode *node) {
-    Visitor::visit(node);
-}
+    this->printAST("PRINT_LN");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(ReadNode *node) {
-    Visitor::visit(node);
+    this->printAST("READ");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
 }
 
 void PrintAST::visit(ReturnNode *node) {
-    Visitor::visit(node);
-}
+    this->printAST("RETURN");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(CaseBlockNode *node) {
-    Visitor::visit(node);
-}
+    this->printAST("CASE_BLOCK");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(ThrowNode *node) {
-    Visitor::visit(node);
+    this->printAST("THROW");
 }
 
 void PrintAST::visit(ExpListNode *node) {
-    Visitor::visit(node);
+    this->printAST("EXP_LIST");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
 }
 
 void PrintAST::visit(TryNode *node) {
-    Visitor::visit(node);
+    this->printAST("TRY");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
 }
 
-void PrintAST::visit(IdentifierNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(IntegerNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(RealNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(LiteralNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(CharacterNode *node) {
-    Visitor::visit(node);
-}
 
 void PrintAST::visit(PrimaryNode *node) {
-    Visitor::visit(node);
-}
+    this->printAST("PRIMARY");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(FunctionCallNode *node) {
-    Visitor::visit(node);
-}
+    this->printAST("FUNCTIONAL_CALL");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(FieldAccessNode *node) {
-    Visitor::visit(node);
-}
+    this->printAST("FIELD_ACESS");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(PointerAccessNode *node) {
-    Visitor::visit(node);
-}
+    this->printAST("POINTER_ACESS");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(AddressValueNode *node) {
-    Visitor::visit(node);
-}
+    this->printAST("ADDRESS_VALUE");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(PointerValueNode *node) {
-    Visitor::visit(node);
-}
+    this->printAST("POINTER_VALUE");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(ArrayAccessNode *node) {
-    Visitor::visit(node);
-}
+    this->printAST("ARRAY_ACESS");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(ArrayDeclNode *node) {
-    Visitor::visit(node);
-}
+    this->printAST("ARRAY_DECL");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(AssignNode *node) {
-    Visitor::visit(node);
-}
+    this->printAST("ASSIGN");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(RelationalOpNode *node) {
-    Visitor::visit(node);
-}
+    this->printAST("TRY");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(AdditionOpNode *node) {
-    Visitor::visit(node);
-}
+    /*
+     * PEGAR O NOME DO OPERADOR
+     */
+    this->printAST(token_id_to_name(node->op));
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(MultiplicationOpNode *node) {
-    Visitor::visit(node);
+    /*
+     * PEGAR O NOME DO OPERADOR
+     */
+    this->printAST(token_id_to_name(node->op));
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
 }
 
 void PrintAST::visit(BooleanOpNode *node) {
-    Visitor::visit(node);
-}
+    /*
+     * PEGAR O NOME DO OPERADOR
+     */
+    this->printAST(token_id_to_name(node->op));
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(BitwiseOpNode *node) {
-    Visitor::visit(node);
-}
+    /*
+     * PEGAR O NOME DO OPERADOR
+     */
+    this->printAST(token_id_to_name(node->op));
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(NewNode *node) {
-    Visitor::visit(node);
-}
+
+    this->printAST("NEW");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}
 
 void PrintAST::visit(NotNode *node) {
-    Visitor::visit(node);
-}
+
+    this->printAST("NOT");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();}}
 
 void PrintAST::visit(SignNode *node) {
-    Visitor::visit(node);
-}
 
-void PrintAST::visit(TrueNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(FalseNode *node) {
-    Visitor::visit(node);
-}
-
-void PrintAST::visit(ThisNode *node) {
-    Visitor::visit(node);
+    this->printAST("SIGN");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
 }
 
 void PrintAST::visit(FormalListNode *node) {
-    Visitor::visit(node);
+    this->printAST("FORMAL_LIST");
+    up_level();
+    /*
+     * Fazer a busca na AST
+     */
+    down_level();
+
 }
 
+/*
+ * TERMINAL NODES
+ */
 
+void PrintAST::visit(TrueNode *node) {
+
+    this->printAST("TRUE");
+}
+
+void PrintAST::visit(FalseNode *node) {
+    this->printAST("FALSE");
+}
+
+void PrintAST::visit(ThisNode *node) {
+    this->printAST("THIS");
+}
+
+void PrintAST::visit(TypeNode *node) {
+    if(node->get_lexeme() != NULL){
+        this->printAST("TOKEN","LEXEME");
+    }else this->printAST("TOKEN");
+
+}
+
+void PrintAST::visit(IdentifierNode *node) {
+    this->printAST("ID.","LEXEME");
+
+}
+
+void PrintAST::visit(IntegerNode *node) {
+    this->printAST("INTEGER.","LEXEME");
+}
+
+void PrintAST::visit(RealNode *node) {
+    this->printAST("REAL.","LEXEME");
+}
+
+void PrintAST::visit(LiteralNode *node) {
+    this->printAST("LITERAL.","LEXEME");
+}
+
+void PrintAST::visit(CharacterNode *node) {
+    this->printAST("CHARACTER.","LEXEME");
+}
 
