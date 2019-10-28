@@ -20,18 +20,18 @@ PrintAST::PrintAST() {
     level = 0;
 }
 
-void PrintAST::printAST(const char *node_name, const char *aux ="") {
+void PrintAST::printAST(const char *node_name, const char *aux = "") {
     for (unsigned int i = 0; i < this->level; i++) std::cout << "\t";
     std::cout << "->" << node_name << aux << std::endl;
 }
 
 void PrintAST::up_level() {
-    this->level ++;
+    this->level++;
 
 }
 
 void PrintAST::down_level() {
-    this->level --;
+    this->level--;
 
 }
 
@@ -96,9 +96,6 @@ void PrintAST::visit(TypeListNode *node) {
     down_level();
 }
 
-void PrintAST::visit(PointerNode *node) {
-    this->printAST("POINTER");
-}
 
 void PrintAST::visit(StatementListNode *node) {
     this->printAST("STATEMENT_LIST");
@@ -154,17 +151,14 @@ void PrintAST::visit(SwitchNode *node) {
     down_level();
 }
 
-void PrintAST::visit(BreakNode *node) {
-    this->printAST("BREAK");
-}
-
 void PrintAST::visit(PrintlnNode *node) {
     this->printAST("PRINT_LN");
     up_level();
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(ReadNode *node) {
     this->printAST("READ");
@@ -181,7 +175,8 @@ void PrintAST::visit(ReturnNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(CaseBlockNode *node) {
     this->printAST("CASE_BLOCK");
@@ -189,10 +184,7 @@ void PrintAST::visit(CaseBlockNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
-
-void PrintAST::visit(ThrowNode *node) {
-    this->printAST("THROW");
+    down_level();
 }
 
 void PrintAST::visit(ExpListNode *node) {
@@ -220,7 +212,8 @@ void PrintAST::visit(PrimaryNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(FunctionCallNode *node) {
     this->printAST("FUNCTIONAL_CALL");
@@ -228,7 +221,8 @@ void PrintAST::visit(FunctionCallNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(FieldAccessNode *node) {
     this->printAST("FIELD_ACESS");
@@ -236,7 +230,8 @@ void PrintAST::visit(FieldAccessNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(PointerAccessNode *node) {
     this->printAST("POINTER_ACESS");
@@ -244,7 +239,8 @@ void PrintAST::visit(PointerAccessNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(AddressValueNode *node) {
     this->printAST("ADDRESS_VALUE");
@@ -252,7 +248,8 @@ void PrintAST::visit(AddressValueNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(PointerValueNode *node) {
     this->printAST("POINTER_VALUE");
@@ -260,7 +257,8 @@ void PrintAST::visit(PointerValueNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(ArrayAccessNode *node) {
     this->printAST("ARRAY_ACESS");
@@ -268,7 +266,8 @@ void PrintAST::visit(ArrayAccessNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(ArrayDeclNode *node) {
     this->printAST("ARRAY_DECL");
@@ -276,7 +275,8 @@ void PrintAST::visit(ArrayDeclNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(AssignNode *node) {
     this->printAST("ASSIGN");
@@ -284,7 +284,8 @@ void PrintAST::visit(AssignNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(RelationalOpNode *node) {
     this->printAST("TRY");
@@ -292,7 +293,8 @@ void PrintAST::visit(RelationalOpNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(AdditionOpNode *node) {
     /*
@@ -303,7 +305,8 @@ void PrintAST::visit(AdditionOpNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(MultiplicationOpNode *node) {
     /*
@@ -326,7 +329,8 @@ void PrintAST::visit(BooleanOpNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(BitwiseOpNode *node) {
     /*
@@ -337,7 +341,8 @@ void PrintAST::visit(BitwiseOpNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(NewNode *node) {
 
@@ -346,7 +351,8 @@ void PrintAST::visit(NewNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}
+    down_level();
+}
 
 void PrintAST::visit(NotNode *node) {
 
@@ -355,7 +361,8 @@ void PrintAST::visit(NotNode *node) {
     /*
      * Fazer a busca na AST
      */
-    down_level();}}
+    down_level();
+}
 
 void PrintAST::visit(SignNode *node) {
 
@@ -374,12 +381,21 @@ void PrintAST::visit(FormalListNode *node) {
      * Fazer a busca na AST
      */
     down_level();
-
 }
 
 /*
  * TERMINAL NODES
  */
+
+void PrintAST::visit(PointerNode *node) {
+    this->printAST("POINTER");
+}
+
+
+void PrintAST::visit(BreakNode *node) {
+    this->printAST("BREAK");
+}
+
 
 void PrintAST::visit(TrueNode *node) {
 
@@ -395,30 +411,34 @@ void PrintAST::visit(ThisNode *node) {
 }
 
 void PrintAST::visit(TypeNode *node) {
-    if(node->get_lexeme() != NULL){
-        this->printAST("TOKEN","LEXEME");
-    }else this->printAST("TOKEN");
+    if (node->get_lexeme() != NULL) {
+        this->printAST("TOKEN", "LEXEME");
+    } else this->printAST("TOKEN");
 
 }
 
 void PrintAST::visit(IdentifierNode *node) {
-    this->printAST("ID.","LEXEME");
+    this->printAST("ID.", "LEXEME");
 
 }
 
 void PrintAST::visit(IntegerNode *node) {
-    this->printAST("INTEGER.","LEXEME");
+    this->printAST("INTEGER.", "LEXEME");
 }
 
 void PrintAST::visit(RealNode *node) {
-    this->printAST("REAL.","LEXEME");
+    this->printAST("REAL.", "LEXEME");
 }
 
 void PrintAST::visit(LiteralNode *node) {
-    this->printAST("LITERAL.","LEXEME");
+    this->printAST("LITERAL.", "LEXEME");
 }
 
 void PrintAST::visit(CharacterNode *node) {
-    this->printAST("CHARACTER.","LEXEME");
+    this->printAST("CHARACTER.", "LEXEME");
+}
+
+void PrintAST::visit(ThrowNode *node) {
+    this->printAST("THROW");
 }
 
