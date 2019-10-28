@@ -1,6 +1,5 @@
 #include "SymbolTable.h"
 #include "lexical/analyzer.h"
-#include "lexical/error.h"
 #include "token.h"
 #include "syntactical/Parser.h"
 
@@ -96,28 +95,28 @@ int main(int argc, char *argv[])
     parser->StartParser();
 
     //Print every token found on input
-    struct token_info token;
-    do
-    {
-
-        token = lexical_analyzer_next_token();
-        printf("%s", token_id_to_name(token.token));
-
-        switch (token.token)
-        {
-            case ID:
-            case NUMINT:
-            case NUMFLOAT:
-            case LITERAL:
-            case LITERALCHAR:printf(".%s", token.lexeme);
-        }
-
-        printf("\n");
-
-    }
-    while (token.token!=ENDOFFILE);
-
-    printf("\n");
+//    struct token_info token;
+//    do
+//    {
+//
+//        token = lexical_analyzer_next_token();
+//        printf("%s", token_id_to_name(token.token));
+//
+//        switch (token.token)
+//        {
+//            case ID:
+//            case NUMINT:
+//            case NUMFLOAT:
+//            case LITERAL:
+//            case LITERALCHAR:printf(".%s", token.lexeme);
+//        }
+//
+//        printf("\n");
+//
+//    }
+//    while (token.token!=ENDOFFILE);
+//
+//    printf("\n");
 
     lexical_analyzer_dispose();
 
@@ -126,15 +125,7 @@ int main(int argc, char *argv[])
     print_symbol_table(get_identifiers_table(), false, false, true, false, "IDENTIFICADORES");
     print_symbol_table(get_literals_table(), false, false, true, false, "LITERAIS");
 
-    //Print error stack to stderr
-    error_stack *error_info;
-    while ((error_info = error_pop())!=NULL)
-    {
-        returnCode = RETURN_CODE_LEXICAL_ERROR;
-        send_error_to_stderr("[LEXICAL ERROR] Line %d: %s at column %d", error_info->lineNumber, error_info->message,
-                             error_info->columnNumber);
-    }
-    return returnCode;
+    return 0;
 }
 
 /**

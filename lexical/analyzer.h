@@ -9,6 +9,18 @@
 #define COMPILADOR_2019_3_ANALYZER_H
 
 #include "../SymbolTable.h"
+#include "ctype.h"
+#include "stdbool.h"
+#include "stdio.h"
+#include "string.h"
+#include "stdlib.h"
+
+#include "../token.h"
+#include "../SymbolTable.h"
+
+#define IO_BUFFER_SIZE 4096
+#define BUFFER_SIZE 32
+#define INITIAL_STATE 0
 
 struct token_info {
     int token;

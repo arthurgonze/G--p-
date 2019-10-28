@@ -1,21 +1,4 @@
-//
-// Created by souzajbr on 10/09/2019.
-//
-
-#include "ctype.h"
-#include "stdbool.h"
-#include "stdio.h"
-#include "string.h"
-#include "stdlib.h"
-
-#include "../token.h"
-#include "error.h"
-#include "../SymbolTable.h"
 #include "analyzer.h"
-
-#define IO_BUFFER_SIZE 4096
-#define BUFFER_SIZE 32
-#define INITIAL_STATE 0
 
 int currentState = INITIAL_STATE;
 int currentInput;
@@ -222,7 +205,6 @@ bool is_digit(char c) {
  * @param reason
  */
 void fail(char  const *reason) {
-    error_push(currentLine, currentColumn-1, reason);
     clear_lexeme();
 }
 

@@ -4,143 +4,138 @@
 #include <cstdio>
 #include "../token.h"
 #include "../lexical/analyzer.h"
+#include "AST.h"
 
 class Parser
 {
     token_info tok;
     inline void advance() { tok = lexical_analyzer_next_token(); }
-    inline void eat(int t)
-    {
-        if (tok.token == t)
-            advance();
-        else
-            printf("error();");
-    }
+    void eat(int t);
 
     static int programFollowSet [];
-    void Program(void);
+    ProgramNode* Program(FunctionListNode *functionList, TypeListNode *typeList, VarListNode *varList);
 
     static int programAUXFollowSet [];
-    void ProgramAUX(void);
+    void ProgramAUX(); // TODO
 
     static int programListFollowSet [];
-    void ProgramList(void);
+    void ProgramList(); // TODO
 
     static int typeDeclFollowSet [];
-    void TypeDecl(void);
+    TypeListNode* TypeDecl(VarListNode *varList, TokenNode *id, TypeListNode *typeList);
 
     static int varDeclFollowSet [];
-    void VarDecl(void);
+    VarListNode* VarDecl();
 
     static int idListFollowSet [];
-    void IdList(void);
+    void IdList(); // TODO
 
     static int idListAUXFollowSet [];
-    void IdListAUX(void);
+    void IdListAUX(); // TODO
 
     static int idExprFollowSet [];
-    void IdExpr(void);
+    void IdExpr(); // TODO
 
     static int pointerFollowSet [];
-    void Pointer(void);
+    PointerNode* Pointer();
 
     static int arrayFollowSet [];
-    void Array(void);
+    ArrayNode* Array(); // TODO ARRAYDECL
 
     static int formalListFollowSet [];
-    void FormalList(void);
+    void FormalList();
 
     static int formalRestFollowSet [];
-    void FormalRest(void);
+    void FormalRest();
 
     static int typeFollowSet [];
-    void Type(void);
+    TypeNode* Type();
 
     static int stmtListFollowSet [];
-    void StmtList(void);
+    StmtListNode* StmtList();
 
     static int stmtListAUXFollowSet [];
-    void StmtListAUX(void);
+    StmtListNode* StmtListAUX();
 
     static int stmtFollowSet [];
-    void Stmt(void);
+    StmtNode* Stmt();
 
     static int stmtAUXFollowSet [];
-    void StmtAUX(void);
+    StmtNode* StmtAUX();
 
     static int ifExprFollowSet [];
-    char IFExpr(void);
+    StmtNode* IFExpr(); // TODO REVIEW RETURN TYPE
 
     static int caseBlockFollowSet [];
-    void CaseBlock(void);
+    CaseBlockNode* CaseBlock();
 
     static int caseBlockAUXFollowSet [];
-    void CaseBlockAUX(void);
+    CaseBlockNode* CaseBlockAUX(TokenNode *num);
 
     static int exprListFollowSet [];
-    void ExprList(void);
+    ExpListNode* ExprList();
 
     static int exprListTailFollowSet [];
-    void ExprListTail(void);
+    ExpListNode* ExprListTail();
 
     static int exprListTailAUXFollowSet [];
-    void ExprListTailAUX(void);
+    ExpListNode* ExprListTailAUX();
 
     static int exprAssignFollowSet [];
-    void ExprAssign(void);
+    ExpNode* ExprAssign();
 
     static int exprAssignAUXFollowSet [];
-    void ExprAssignAUX(void);
+    ExpNode* ExprAssignAUX(ExpNode *expr);
 
     static int exprOrFollowSet [];
-    void ExprOr(void);
+    ExpNode* ExprOr();
 
     static int exprOrAUXFollowSet [];
-    void ExprOrAUX(void);
+    ExpNode* ExprOrAUX(ExpNode *expr);
 
     static int exprAndFollowSet [];
-    void ExprAnd(void);
+    ExpNode* ExprAnd();
 
     static int exprAndAUXFollowSet [];
-    void ExprAndAUX(void);
+    ExpNode* ExprAndAUX(ExpNode *expr);
 
     static int exprEqualityFollowSet [];
-    void ExprEquality(void);
+    ExpNode* ExprEquality();
 
     static int exprEqualityAUXFollowSet [];
-    void ExprEqualityAUX(void);
+    ExpNode* ExprEqualityAUX(ExpNode *expr);
 
     static int exprRelationalFollowSet [];
-    void ExprRelational(void);
+    ExpNode* ExprRelational();
 
     static int exprRelationalAUXFollowSet [];
-    void ExprRelationalAUX(void);
+    ExpNode* ExprRelationalAUX(ExpNode *expr);
 
     static int exprAdditiveFollowSet [];
-    void ExprAdditive(void);
+    ExpNode* ExprAdditive();
 
     static int exprAdditiveAUXFollowSet [];
-    void ExprAdditiveAUX(void);
+    ExpNode* ExprAdditiveAUX(ExpNode *expr);
 
     static int exprMultiplicativeFollowSet [];
-    void ExprMultiplicative(void);
+    ExpNode* ExprMultiplicative();
 
     static int exprMultiplicativeAUXFollowSet [];
-    void ExprMultiplicativeAUX(void);
+    ExpNode* ExprMultiplicativeAUX(ExpNode *expr);
 
     static int exprUnaryFollowSet [];
-    void ExprUnary(void);
+    ExpNode* ExprUnary();
 
     static int primaryFollowSet [];
-    void Primary(void);
+    ExpNode* Primary();
 
     static int postFixExprFollowSet [];
-    void PostFixExpr(void);
+    ExpNode* PostFixExpr();
 
     static int postFixExprAUXFollowSet [];
-    void PostFixExprAUX(void);
+    ExpNode* PostFixExprAUX(ExpNode *expr);
 public:
-    void StartParser();
+    ProgramNode * StartParser();
 };
 
 #endif //COMPILADOR_2019_3_PARSER_H
