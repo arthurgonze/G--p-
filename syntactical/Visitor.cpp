@@ -44,11 +44,17 @@ void PrintAST::visit(ProgramNode *node) {
     std::cout << "\n------------------------------" << std::endl;
     std::cout << "---- ABSTRACT SYNTAX TREE ----" << std::endl;
     std::cout << "------------------------------\n" << std::endl;
-    this->printAST("PROGRAM","aux");//override; //TODO ARRUMAR O CHAR AUX
+    this->printAST("PROGRAM");//override; //TODO ARRUMAR O CHAR AUX
     up_level();
-    /*
-     * Fazer a busca na AST
-     */
+    if(node->getFuncList() != NULL){
+        node->getFuncList()->accept(this);
+    }
+    if(node->getTypeList() != NULL){
+        node->getTypeList()->accept(this);
+    }
+    if(node->getVarList() != NULL){
+        node->getVarList()->accept(this);
+    }
     down_level();
 }
 
@@ -73,9 +79,18 @@ void PrintAST::visit(FunctionListNode *node) {
 void PrintAST::visit(IdListNode *node) {
     this->printAST("ID_LIST", "aux");
     up_level();
-    /*
-     * Fazer a busca na AST
-     */
+    if(node->get_pointer() != NULL){
+        node->get_pointer()->accept(this);
+    }
+    if(node->get_id() != NULL){
+        node->get_id()->accept(this);
+    }
+    if(node->get_array() != NULL){
+        node->get_array()->accept(this);
+    }
+    if(node->get_next() != NULL){
+        node->get_next()->accept(this);
+    }
     down_level();
 }
 
@@ -92,9 +107,12 @@ void PrintAST::visit(TypeListNode *node) {
 void PrintAST::visit(StmtListNode *node) {
     this->printAST("STATEMENT_LIST","aux");
     up_level();
-    /*
-     * Fazer a busca na AST
-     */
+    if(node->getStmtList() != NULL){
+        node->getStmtList()->accept(this);
+    }
+    if(node->getStmtNode() != NULL){
+        node->getStmtNode()->accept(this);
+    }
     down_level();;
 }
 
