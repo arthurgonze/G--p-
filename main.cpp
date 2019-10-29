@@ -102,30 +102,6 @@ int main(int argc, char *argv[])
     Parser *parser = new Parser();
     parser->StartParser();
 
-    //Print every token found on input
-//    struct token_info token;
-//    do
-//    {
-//
-//        token = lexical_analyzer_next_token();
-//        printf("%s", token_id_to_name(token.token));
-//
-//        switch (token.token)
-//        {
-//            case ID:
-//            case NUMINT:
-//            case NUMFLOAT:
-//            case LITERAL:
-//            case LITERALCHAR:printf(".%s", token.lexeme);
-//        }
-//
-//        printf("\n");
-//
-//    }
-//    while (token.token!=ENDOFFILE);
-//
-//    printf("\n");
-
     lexical_analyzer_dispose();
 
     //Print the symbol tables for reserved words, identifiers and literals

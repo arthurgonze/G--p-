@@ -28,19 +28,19 @@ class Parser
     VarListNode *VarDecl();
 
     static int idListFollowSet[];
-    IdListNode *IdList(); // TODO
+    IdListNode *IdList();
 
     static int idListAUXFollowSet[];
-    IdListNode *IdListAUX(); // TODO
+    IdListNode *IdListAUX();
 
     static int idExprFollowSet[];
-    void IdExpr(); // TODO
+    void IdExpr();
 
     static int pointerFollowSet[];
     PointerNode *Pointer();
 
     static int arrayFollowSet[];
-    ArrayNode *Array(); // TODO ARRAYDECL
+    ArrayNode *Array();
 
     static int formalListFollowSet[];
     FormalListNode* FormalList();
@@ -64,7 +64,7 @@ class Parser
     StmtNode *StmtAUX();
 
     static int ifExprFollowSet[];
-    StmtNode *IFExpr(); // TODO REVIEW RETURN TYPE
+    StmtNode *IFExpr();
 
     static int caseBlockFollowSet[];
     CaseBlockNode *CaseBlock();
