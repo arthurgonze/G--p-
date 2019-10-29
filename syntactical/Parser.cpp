@@ -211,8 +211,8 @@ IdListNode *Parser::IdList()
         default:
         {
             printf("error(IdList), Token error: %s \n", token_id_to_name(tok.token));
-            return nullptr
-        };
+            return nullptr;
+        }
     }
 }
 

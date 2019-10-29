@@ -14,11 +14,8 @@ class TokenNode;
 
 // PDF NODES
 class ProgramNode;
-//class VarListNode; // OBSOLETA
-//class NameDeclNode; // OBSOLETA
-//class FunctionListNode; // OBSOLETA
 class TypeListNode;
-class TypeNode;// TODO (id, size), (primitive, size), (pointer)
+class TypeNode;
 class PointerNode;
 class StmtListNode;
 class IfNode;
@@ -33,12 +30,9 @@ class ThrowNode;
 class ExpListNode;
 class TryNode;
 class AssignNode;
-//class NameExpNode; // OBSOLETA
 class PointerValueExpNode;
 class AdressValueNode;
 class PointerValueNode;
-//class ArrayNode; // OBSOLETA
-//class CallNode;// OBSOLETA
 class RelationalOPNode;
 class AdditionOPNode;
 class MultiplicationOPNode;
@@ -73,16 +67,16 @@ class StmtNode : public ASTNode
 {
 private:
 public:
-    virtual ~StmtNode() = default;
-    virtual void accept(Visitor *visitor) = 0;
+    ~StmtNode() override = default;
+    void accept(Visitor *visitor) override = 0;
 };
 
 class ExpNode : public StmtNode
 {
 private:
 public:
-    virtual ~ExpNode() = default;
-    virtual void accept(Visitor *visitor) = 0;
+    ~ExpNode() override = default;
+    void accept(Visitor *visitor) override = 0;
 };
 
 class TokenNode : public ExpNode
@@ -116,58 +110,6 @@ public:
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-//class VarListNode : public ASTNode
-//{
-//private:
-//    NameDeclNode *nameDecl;
-//    VarListNode *next;
-//public:
-//    VarListNode(NameDeclNode *nameDecl, VarListNode *varList);
-//    ~VarListNode() override;
-//
-//    inline NameDeclNode *getNameDecl() { return nameDecl; }
-//    inline VarListNode *getVarList() { return next; }
-//
-//    void accept(Visitor *visitor) override { visitor->visit(this); }
-//};
-//
-//class NameDeclNode : public ASTNode
-//{
-//private:
-//    TypeNode *type;
-//    TokenNode *id;
-//public:
-//    NameDeclNode(TypeNode *type, TokenNode *id);
-//    ~NameDeclNode() override;
-//
-//    inline TypeNode *getType() { return type; }
-//    inline TokenNode *getVarList() { return id; }
-//
-//    void accept(Visitor *visitor) override { visitor->visit(this); }
-//};
-//
-//class FunctionListNode : public ASTNode
-//{
-//private:
-//    TypeNode *type;
-//    TokenNode *id;
-//    VarListNode *varList;
-//    StmtListNode *stmtList;
-//
-//    FunctionListNode *next;
-//public:
-//    FunctionListNode(TypeNode *type, TokenNode *id, VarListNode *varList, StmtListNode *stmtList, FunctionListNode *functionList);
-//    ~FunctionListNode() override;
-//
-//    inline TypeNode *getType() { return type; }
-//    inline TokenNode *getId() { return id; }
-//    inline VarListNode *getVarList() { return varList; }
-//    inline StmtListNode *getStmtList() { return stmtList; }
-//    inline FunctionListNode *getFunctionList() { return next; }
-//
-//    void accept(Visitor *visitor) override { visitor->visit(this); }
-//};
-
 class TypeListNode : public ASTNode
 {
 private:
@@ -191,9 +133,6 @@ private:
     TokenNode *id;
 public:
     explicit TypeNode(TokenNode *id) { this->id = id; }
-    // TODO (id, size)
-    // TODO (primitive, size)
-    // TODO (pointer)
     ~TypeNode() override { delete this->id; }
 
     inline TokenNode *getId() { return id; }
@@ -204,12 +143,7 @@ public:
 class PointerNode : public ASTNode
 {
 private:
-//    TypeNode *type;
 public:
-//    explicit PointerNode(TypeNode *type) { this->type = type; }
-//    ~PointerNode() override { delete this->type; }
-//    inline TypeNode *getType() { return type; }
-
     explicit PointerNode() = default;
     ~PointerNode() override = default;
     void accept(Visitor *visitor) override { visitor->visit(this); }
@@ -283,6 +217,8 @@ private:
 public:
     BreakNode() = default;
     ~BreakNode() override = default;
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class PrintLnNode : public StmtNode
@@ -396,35 +332,17 @@ public:
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-//class NameExpNode : public ExpNode
-//{
-//private:
-//    ExpNode *exp;
-//    TokenNode *id;
-//public:
-//    NameExpNode(ExpNode *exp, TokenNode *id);
-//    ~NameExpNode() override;
-//
-//    inline ExpNode *getExp() { return exp; }
-//    inline TokenNode *getId() { return id; }
-//
-//    void accept(Visitor *visitor) override { visitor->visit(this); }
-//};
-
 class PointerValueExpNode : public ExpNode
 {
 private:
     ExpNode *exp;
     ExpNode *exp2;
-    //TokenNode *id;
 public:
-    //PointerValueExpNode(ExpNode *exp, TokenNode *id);
     PointerValueExpNode(ExpNode *exp, ExpNode *exp2);
     ~PointerValueExpNode() override;
 
     inline ExpNode *getExp() { return exp; }
     inline ExpNode *getExp2() { return exp2; }
-    //inline TokenNode *getId() { return id; }
 
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
@@ -454,35 +372,6 @@ public:
 
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
-
-//class ArrayNode : public ExpNode
-//{
-//private:
-//    TokenNode *numInt;
-//public:
-//    explicit ArrayNode(TokenNode *numInt) { this->numInt = numInt; }
-//    // TODO (exp, exp)
-//    ~ArrayNode() override { delete this->numInt; }
-//
-//    inline TokenNode *getNumInt() { return numInt; }
-//
-//    void accept(Visitor *visitor) override { visitor->visit(this); }
-//};
-//
-//class CallNode : public ExpNode
-//{
-//private:
-//    TokenNode *id;
-//    ExpListNode *expList;
-//public:
-//    CallNode(TokenNode *id, ExpListNode *expList);
-//    ~CallNode() override;
-//
-//    inline TokenNode *getId() { return id; }
-//    inline ExpListNode *getExpList() { return expList; }
-//
-//    void accept(Visitor *visitor) override { visitor->visit(this); }
-//};
 
 class RelationalOPNode : public ExpNode
 {
