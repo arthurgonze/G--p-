@@ -126,8 +126,8 @@ ProgramNode *Parser::ProgramList(FunctionListNode *functions, TypeListNode *type
         case TYPEDEF:
         {
             return Program(functions, typelist, varlist);
-            break
-        };
+            break;
+        }
         default:
         {
             printf("errorProgramList(), Token error: %s \n", token_id_to_name(tok.token));
@@ -610,8 +610,8 @@ StmtNode *Parser::StmtAUX()
             eat(THROW);
             eat(SEMICOLON);
             return new ThrowNode();
-            break
-        };
+            break;
+        }
         case LBRACE:
         {
             eat(LBRACE);
@@ -795,8 +795,8 @@ CaseBlockNode *Parser::CaseBlockAUX(TokenNode *num)
             return new CaseBlockNode(num, StmtList(), CaseBlock());
             //StmtList();
             //CaseBlock();
-            break
-        };
+            break;
+        }
         case CASE:
         {
             return CaseBlock();
@@ -1427,7 +1427,7 @@ ExpNode *Parser::Primary()
             eat(LPARENT);
             ExpNode *expr = ExprAssign();
             eat(RPARENT);
-            return PostFixExprAUX(expr);
+            return PostFixExprAUX();
             break;
         }
         default:

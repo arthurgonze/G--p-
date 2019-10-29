@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "Visitor.h"
+#include "AST.h"
 #include "../lexical/analyzer.h"
 
 
@@ -43,7 +44,7 @@ void PrintAST::visit(ProgramNode *node) {
     std::cout << "\n------------------------------" << std::endl;
     std::cout << "---- ABSTRACT SYNTAX TREE ----" << std::endl;
     std::cout << "------------------------------\n" << std::endl;
-    this->printAST("PROGRAM");
+    this->printAST("PROGRAM");override;
     up_level();
     /*
      * Fazer a busca na AST

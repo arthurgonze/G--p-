@@ -630,7 +630,7 @@ public:
     inline IdListNode *get_id_list() const { return id_list; }
     inline VarListNode *get_next() const { return next; }
 
-    //void accept(Visitor *visitor) override { visitor->visit(this); }
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class IdListNode : public ASTNode
@@ -649,7 +649,7 @@ public:
     inline ArrayNode *get_array() { return array; }
     inline IdListNode *get_next() { return next; }
 
-    //void accept(Visitor *visitor) override { visitor->visit(this); }
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class VarStmtNode : public ASTNode
@@ -667,7 +667,7 @@ public:
     inline StmtListNode *getStmt_list() { return stmt_list; }
     inline VarStmtNode *get_next() { return next; }
 
-    //void accept(Visitor *visitor) override { visitor->visit(this); }
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class VarFuncListNode : public ASTNode
@@ -685,7 +685,7 @@ public:
     inline FunctionListNode *getFunc_list() { return func_list; }
     inline VarFuncListNode *get_next() { return next; }
 
-    //void accept(Visitor *visitor) override { visitor->visit(this); }
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class FunctionListNode : public ASTNode
@@ -706,7 +706,7 @@ public:
     FormalListNode *get_formal_list() { return formal_list; }
     VarStmtNode *getVar_stmt() { return var_stmt; }
 
-    //void accept(Visitor *visitor) override { visitor->visit(this); }
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class PrimaryNode : public ExpNode
@@ -721,7 +721,7 @@ public:
     inline ExpNode *get_exp() { return exp; }
     inline ExpNode *get_next() { return next; }
 
-    //void accept(Visitor *visitor) override { visitor->visit(this); }
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class CallNode : public ExpNode
@@ -736,7 +736,7 @@ public:
     ExpNode *get_exp() { return exp; }
     ExpNode *get_next() { return next; }
 
-    //void accept(Visitor *visitor) override { visitor->visit(this); }
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class ArrayAccessNode : public ExpNode
@@ -751,7 +751,7 @@ public:
     ExpNode *get_exp() { return exp; }
     ExpNode *get_index_exp() { return index_exp; }
 
-    //void accept(Visitor *visitor) override { visitor->visit(this); }
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class ArrayNode : public ExpNode
@@ -764,7 +764,7 @@ public:
 
     ExpNode *get_index_exp() { return index_exp; }
 
-    //void accept(Visitor *visitor) override { visitor->visit(this); }
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 class FormalListNode : public ASTNode
@@ -785,7 +785,7 @@ public:
     inline ArrayNode *get_array() { return array; }
     inline FormalListNode *get_next() { return next; }
 
-    //void accept(Visitor *visitor) override { visitor->visit(this); }
+    void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
 #endif //COMPILADOR_2019_3_AST_H

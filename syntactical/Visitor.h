@@ -49,6 +49,18 @@ class FalseNode;
 class NotNode;
 class SignNode;
 
+// ADICIONAIS
+class ArrayAccessNode;
+//class ArrayNode;
+class FormalListNode;
+//class CallNode;
+//class FunctionListNode;
+class IdListNode;
+class PrimaryNode;
+//class VarListNode;
+class VarFuncListNode;
+class VarStmtNode;
+
 class Visitor
 {
 public:
@@ -89,6 +101,19 @@ public:
     virtual void visit(SignNode *node) {};
     virtual void visit(TrueNode *node) {};
     virtual void visit(FalseNode *node) {};
+
+    // NOS NOVOS
+    virtual void visit(ArrayAccessNode *node) {};
+    //virtual void visit(ArrayNode *node) {};
+    virtual void visit(FormalListNode *node) {};
+    //virtual void visit(CallNode *node) {};
+    //virtual void visit(FunctionListNode *node) {};
+    virtual void visit(IdListNode *node) {};
+    virtual void visit(PrimaryNode *node) {};
+    //virtual void visit(VarListNode *node) {};
+    virtual void visit(VarFuncListNode *node) {};
+    virtual void visit(VarStmtNode *node) {};
+
 };
 
 class PrintAST : public Visitor
@@ -138,6 +163,18 @@ public:
     void visit(SignNode *node) override;
     void visit(TrueNode *node) override;
     void visit(FalseNode *node) override;
+
+    // NOS NOVOS
+    void visit(ArrayAccessNode *node)override;
+    //void visit(ArrayNode *node)override;
+    void visit(FormalListNode *node)override;
+    //void visit(CallNode *node)override;
+    //void visit(FunctionListNode *node)override;
+    void visit(IdListNode *node)override;
+    void visit(PrimaryNode *node)override;
+    //void visit(VarListNode *node)override;
+    void visit(VarFuncListNode *node)override;
+    void visit(VarStmtNode *node)override;
 };
 
 #endif //VISITOR_H_INCLUDED
