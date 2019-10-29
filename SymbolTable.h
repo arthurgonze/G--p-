@@ -1,4 +1,6 @@
+#include <cstring>
 #include <string>
+
 #ifndef COMPILADOR_2019_3_SYMBOLTABLE_H
 #define COMPILADOR_2019_3_SYMBOLTABLE_H
 
