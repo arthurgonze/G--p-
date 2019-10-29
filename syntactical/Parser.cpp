@@ -56,7 +56,7 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeListNode *typeL
 
             eat(RBRACE);
             eat(ID);
-            id = new TokenNode(ID, lexical_analyzer_last_lexeme());// TODO NULL->GET_LEXEME()?
+            id = new TokenNode(ID, lexical_analyzer_last_lexeme());
             eat(SEMICOLON);
             typeList = new TypeListNode(varListNode, id, typeList);
             return Program(functionList, typeList, varList);
@@ -71,7 +71,7 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeListNode *typeL
             type = Type();
             PointerNode *pointer = Pointer();
             
-            id = new TokenNode(ID, lexical_analyzer_last_lexeme());// TODO NULL->GET_LEXEME()?
+            id = new TokenNode(ID, lexical_analyzer_last_lexeme());
 			eat(ID);
             return Program(functionList, typeList, ProgramAUX(type, pointer, id, varList));
             break;
@@ -163,7 +163,7 @@ TypeListNode *Parser::TypeDecl(TypeListNode *typeListNode)
             VarListNode *varListNode = new VarListNode(typeNode, idListNode, VarDecl());
             eat(RBRACKET);
             
-            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme()); // TODO NULL->GET_LEXEME()?
+            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
 			eat(ID);
 
 			eat(SEMICOLON);
@@ -214,7 +214,7 @@ IdListNode *Parser::IdList()
         {
             PointerNode *pointer = Pointer();
             
-            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme()); // TODO NULL->GET_LEXEME()?
+            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
 			eat(ID);
             ArrayNode *array = Array();
             IdListNode *idListNode = new IdListNode(pointer, id, array, IdListAUX());
@@ -239,7 +239,7 @@ IdListNode *Parser::IdListAUX()
             eat(COMMA);
             PointerNode *pointer = Pointer();
             
-            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme()); // TODO NULL->GET_LEXEME()?
+            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
 			eat(ID);
 
             ArrayNode *array = Array();
@@ -309,7 +309,7 @@ ArrayNode *Parser::Array()
         {
             eat(LBRACE);
            
-            TokenNode *numInt = new TokenNode(NUMINT, lexical_analyzer_last_lexeme()); // TODO SUBSTITUIR nullptr PELA FUNCAO GET_LEXEME();
+            TokenNode *numInt = new TokenNode(NUMINT, lexical_analyzer_last_lexeme());
 			eat(NUMINT);
 
 			eat(RBRACE);
@@ -338,7 +338,7 @@ FormalListNode *Parser::FormalList()
             TypeNode *type = Type();
             PointerNode *pointer = Pointer();
             
-            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme()); // TODO SUBSTITUIR nullptr PELA FUNCAO GET_LEXEME();
+            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
 			eat(ID);
 			
 			ArrayNode *array = Array();
@@ -365,7 +365,7 @@ FormalListNode *Parser::FormalRest()
             TypeNode *typeNode = Type();
             PointerNode *pointer = Pointer();
             
-            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());// TODO SUBSTITUIR nullptr PELA FUNCAO GET_LEXEME();
+            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
 			eat(ID);
 
 			ArrayNode *array = Array();
@@ -410,7 +410,7 @@ TypeNode *Parser::Type()
         case ID:
         {
             eat(ID);
-            type = new TypeNode(new TokenNode(FLOAT, nullptr)); // TODO SUBSTITUIR nullptr PELA FUNCAO GET_LEXEME();
+            type = new TypeNode(new TokenNode(FLOAT, nullptr));
             return type;
             break;
         }
@@ -516,7 +516,7 @@ StmtNode *Parser::Stmt()
 {
     switch (tok)
     {
-        case IF: // TODO CONFERIR IFEXPR
+        case IF:
         {
             eat(IF);
             eat(LPARENT);
@@ -771,7 +771,7 @@ CaseBlockNode *Parser::CaseBlock()
         {
             eat(CASE);
             
-            TokenNode *token = new TokenNode(NUMINT, lexical_analyzer_last_lexeme()); // TODO SUBSTITUIR nullptr PELA FUNCAO GET_LEXEME();
+            TokenNode *token = new TokenNode(NUMINT, lexical_analyzer_last_lexeme());
 			eat(NUMINT); 
 			eat(COLON);
             return CaseBlockAUX(token);
@@ -1405,35 +1405,35 @@ ExpNode *Parser::Primary()
         case ID:
         {
 			eat(ID);
-            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme()); // TODO SUBSTITUIR nullptr PELA FUNCAO GET_LEXEME();
+            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
 			
 			break;
         }
         case NUMINT:
         {
             
-            TokenNode *numInt = new TokenNode(NUMINT, lexical_analyzer_last_lexeme()); // TODO SUBSTITUIR nullptr PELA FUNCAO GET_LEXEME();
+            TokenNode *numInt = new TokenNode(NUMINT, lexical_analyzer_last_lexeme());
 			eat(NUMINT);
 			break;
         }
         case NUMFLOAT:
         {
             
-            TokenNode *numFloat = new TokenNode(NUMFLOAT, lexical_analyzer_last_lexeme()); // TODO SUBSTITUIR nullptr PELA FUNCAO GET_LEXEME();
+            TokenNode *numFloat = new TokenNode(NUMFLOAT, lexical_analyzer_last_lexeme());
 			eat(NUMFLOAT);
 			break;
         }
         case LITERAL:
         {
             
-            TokenNode *literalString = new TokenNode(LITERAL, lexical_analyzer_last_lexeme()); // TODO SUBSTITUIR nullptr PELA FUNCAO GET_LEXEME();
+            TokenNode *literalString = new TokenNode(LITERAL, lexical_analyzer_last_lexeme());
 			eat(LITERAL);
 			break;
         }
         case LITERALCHAR:
         {
             
-            TokenNode *literalChar = new TokenNode(LITERALCHAR, lexical_analyzer_last_lexeme()); // TODO SUBSTITUIR nullptr PELA FUNCAO GET_LEXEME();
+            TokenNode *literalChar = new TokenNode(LITERALCHAR, lexical_analyzer_last_lexeme());
 			eat(LITERALCHAR);
 
 			break;
@@ -1502,7 +1502,7 @@ ExpNode *Parser::PostFixExprAUX() // PRIMARY_AUX || FIELD_ACCESS
         {
             eat(DOT);
             
-            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme()); // TODO SUBSTITUIR nullptr PELA FUNCAO GET_LEXEME();
+            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
 			eat(ID);
 			return new PointerValueExpNode(nullptr, Primary());
             break;
@@ -1511,7 +1511,7 @@ ExpNode *Parser::PostFixExprAUX() // PRIMARY_AUX || FIELD_ACCESS
         {
             eat(POINTER);
             
-            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme()); // TODO SUBSTITUIR nullptr PELA FUNCAO GET_LEXEME();
+            TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
 			eat(ID);
 			return new PointerValueExpNode(nullptr, Primary());
             break;
