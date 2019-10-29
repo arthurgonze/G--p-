@@ -31,7 +31,7 @@ SymbolTable::SymbolTable()
     lexemeArraySize = 0; // Actual size of the lexeme array
 
 	block = new symbol_info* [TABLE_SIZE];
-	memset(block, NULL, sizeof(block) * TABLE_SIZE); //Initialize all positions with null
+	memset(block, 0, sizeof(block) * TABLE_SIZE); //Initialize all positions with null
 	
 }
 
