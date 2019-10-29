@@ -17,7 +17,7 @@ TokenNode::~TokenNode()
     delete this->lex;
 }
 
-ProgramNode::ProgramNode(FunctionListNode *functionList, TypeListNode *typeList, VarListNode *varList)
+ProgramNode::ProgramNode(FunctionListNode *functionList, TypeListNode *typeList, VarFuncListNode *varList)
 {
     this->functionList = functionList;
     this->typeList = typeList;
@@ -31,46 +31,46 @@ ProgramNode::~ProgramNode()
     delete this->varList;
 }
 
-VarListNode::VarListNode(NameDeclNode *nameDecl, VarListNode *varList)
-{
-    this->nameDecl = nameDecl;
-    this->next = varList;
-}
-
-VarListNode::~VarListNode()
-{
-    delete this->nameDecl;
-    delete this->next;
-}
-
-NameDeclNode::NameDeclNode(TypeNode *type, TokenNode *id)
-{
-    this->type = type;
-    this->id = id;
-}
-
-NameDeclNode::~NameDeclNode()
-{
-    delete this->id;
-    delete this->type;
-}
-
-FunctionListNode::FunctionListNode(TypeNode *type, TokenNode *id, VarListNode *varList, StmtListNode *stmtList, FunctionListNode *functionList)
-{
-    this->type = type;
-    this->id = id;
-    this->varList = varList;
-    this->stmtList = stmtList;
-    this->next = functionList;
-}
-
-FunctionListNode::~FunctionListNode() {
-    delete this->type;
-    delete this->id;
-    delete this->varList;
-    delete this->stmtList;
-    delete this->next;
-}
+//VarListNode::VarListNode(NameDeclNode *nameDecl, VarListNode *varList)
+//{
+//    this->nameDecl = nameDecl;
+//    this->next = varList;
+//}
+//
+//VarListNode::~VarListNode()
+//{
+//    delete this->nameDecl;
+//    delete this->next;
+//}
+//
+//NameDeclNode::NameDeclNode(TypeNode *type, TokenNode *id)
+//{
+//    this->type = type;
+//    this->id = id;
+//}
+//
+//NameDeclNode::~NameDeclNode()
+//{
+//    delete this->id;
+//    delete this->type;
+//}
+//
+//FunctionListNode::FunctionListNode(TypeNode *type, TokenNode *id, VarListNode *varList, StmtListNode *stmtList, FunctionListNode *functionList)
+//{
+//    this->type = type;
+//    this->id = id;
+//    this->varList = varList;
+//    this->stmtList = stmtList;
+//    this->next = functionList;
+//}
+//
+//FunctionListNode::~FunctionListNode() {
+//    delete this->type;
+//    delete this->id;
+//    delete this->varList;
+//    delete this->stmtList;
+//    delete this->next;
+//}
 
 TypeListNode::TypeListNode(VarListNode *var_list, TokenNode *id, TypeListNode *next)
 {
@@ -186,41 +186,43 @@ AssignNode::~AssignNode()
     delete this->exp2;
 }
 
-NameExpNode::NameExpNode(ExpNode *exp, TokenNode *id)
+//NameExpNode::NameExpNode(ExpNode *exp, TokenNode *id)
+//{
+//    this->exp = exp;
+//    this->id = id;
+//}
+//
+//NameExpNode::~NameExpNode()
+//{
+//    delete this->exp;
+//    delete this->id;
+//}
+
+PointerValueExpNode::PointerValueExpNode(ExpNode *exp, ExpNode *exp2)
 {
     this->exp = exp;
-    this->id = id;
-}
-
-NameExpNode::~NameExpNode()
-{
-    delete this->exp;
-    delete this->id;
-}
-
-PointerValueExpNode::PointerValueExpNode(ExpNode *exp, TokenNode *id)
-{
-    this->exp = exp;
-    this->id = id;
+    this->exp2 = exp2;
+    //this->id = id;
 }
 
 PointerValueExpNode::~PointerValueExpNode()
 {
     delete this->exp;
-    delete this->id;
+    delete this->exp2;
+    //delete this->id;
 }
 
-CallNode::CallNode(TokenNode *id, ExpListNode *expList)
-{
-    this->id = id;
-    this->expList = expList;
-}
-
-CallNode::~CallNode()
-{
-    delete this->id;
-    delete this->expList;
-}
+//CallNode::CallNode(TokenNode *id, ExpListNode *expList)
+//{
+//    this->id = id;
+//    this->expList = expList;
+//}
+//
+//CallNode::~CallNode()
+//{
+//    delete this->id;
+//    delete this->expList;
+//}
 
 RelationalOPNode::RelationalOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2)
 {
@@ -290,4 +292,146 @@ BitwiseOPNode::~BitwiseOPNode()
     delete this->exp1;
     delete this->exp1;
     delete this->op;
+}
+
+// Adicionais
+//class VarStmtNode;
+ArrayAccessNode::ArrayAccessNode(ExpNode *exp, ExpNode *index_exp)
+{
+    this->exp = exp;
+    this->index_exp = index_exp;
+}
+
+ArrayAccessNode::~ArrayAccessNode()
+{
+    delete this->exp;
+    delete this->index_exp;
+}
+
+FormalListNode::FormalListNode(TypeNode *type, PointerNode *pointer, TokenNode *id, ArrayNode *array, FormalListNode *next)
+{
+    this->type = type;
+    this->pointer = pointer;
+    this->id = id;
+    this->array = array;
+    this->next = next;
+}
+
+FormalListNode::~FormalListNode()
+{
+    delete this->type;
+    delete this->pointer;
+    delete this->id;
+    delete this->array;
+    delete this->next;
+}
+
+CallNode::CallNode(ExpNode *exp, ExpNode *next)
+{
+    this->exp = exp;
+    this->next = next;
+}
+
+CallNode::~CallNode()
+{
+    delete this->exp;
+    delete this->next;
+}
+
+FunctionListNode::FunctionListNode(TypeNode *type, PointerNode *pointer, TokenNode *id, FormalListNode *formal_list, VarStmtNode *var_stmt)
+{
+    this->type = type;
+    this->pointer = pointer;
+    this->id = id;
+    this->formal_list = formal_list;
+    this->var_stmt = var_stmt;
+}
+
+FunctionListNode::~FunctionListNode()
+{
+    delete this->type;
+    delete this->pointer;
+    delete this->id;
+    delete this->formal_list;
+    delete this->var_stmt;
+}
+
+IdListNode::IdListNode(PointerNode *pointer, TokenNode *id, ArrayNode *array, IdListNode *id_list)
+{
+    this->pointer = pointer;
+    this->id = id;
+    this->array = array;
+    this->next = id_list;
+}
+
+IdListNode::~IdListNode()
+{
+    delete this->pointer;
+    delete this->id;
+    delete this->array;
+    delete this->next;
+}
+
+PrimaryNode::PrimaryNode(ExpNode *exp, ExpNode *next)
+{
+    this->exp = exp;
+    this->next = next;
+}
+
+PrimaryNode::~PrimaryNode()
+{
+    delete this->exp;
+    delete this->next;
+}
+
+VarListNode::VarListNode(TypeNode *type, IdListNode *id_list, VarListNode *var_decl)
+{
+    this->type = type;
+    this->id_list = id_list;
+    this->next = var_decl;
+}
+
+VarListNode::~VarListNode()
+{
+    delete this->type;
+    delete this->id_list;
+    delete this->next;
+}
+
+VarFuncListNode::VarFuncListNode(VarListNode *decl, VarFuncListNode *next)
+{
+    this->decl = decl;
+    this->next = next;
+}
+
+VarFuncListNode::VarFuncListNode(FunctionListNode *func_list, VarFuncListNode *next)
+{
+    this->func_list = func_list;
+    this->next = next;
+}
+
+VarFuncListNode::~VarFuncListNode()
+{
+    delete this->decl;
+    delete this->func_list;
+    delete this->next;
+}
+
+VarStmtNode::VarStmtNode(VarListNode *decl, VarStmtNode *next)
+{
+    this->decl = decl;
+    this->next = next;
+}
+
+VarStmtNode::VarStmtNode(StmtListNode *stmt_list, VarStmtNode *next)
+{
+    this->stmt_list = stmt_list;
+    this->next = next;
+}
+
+VarStmtNode::~VarStmtNode()
+{
+    delete this->decl;
+    delete this->stmt_list;
+    delete this->next;
 }
