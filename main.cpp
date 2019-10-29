@@ -84,8 +84,11 @@ int main(int argc, char *argv[]) {
 			return RETURN_CODE_FILE_ERROR;
 
         input = fopen(fileName, "r");
-        if (!input)
-            return RETURN_CODE_FILE_ERROR;
+		if (!input)
+		{
+			printf("Could not open the source file '%s'", fileName);
+			return RETURN_CODE_FILE_ERROR;
+		}
     }
 
     lexical_analyzer_init(input);
