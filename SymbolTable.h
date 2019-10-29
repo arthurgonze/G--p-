@@ -1,7 +1,9 @@
+#include <cstring>
+#include <string>
+
 #ifndef COMPILADOR_2019_3_SYMBOLTABLE_H
 #define COMPILADOR_2019_3_SYMBOLTABLE_H
 
-#include<bits/stdc++.h>
 
 using namespace std;
 
@@ -14,6 +16,8 @@ struct symbol_info
     int token; //token id
     int pos; // lexem position in the lexemeArray
     struct symbol_info *next; // pointer to the next symbol
+
+	~symbol_info();
 };
 
 class SymbolTable
@@ -21,9 +25,10 @@ class SymbolTable
 public:
     void cInsert(int token, char const *lexeme);
     int cSearch(char *lexeme);
-    symbol_info **block = new symbol_info *[TABLE_SIZE]; // Table
+	symbol_info** block; // Table
     char *lexemeArray = new char[LEXEME_ARRAY_SIZE]; // An array to allocate lexeme in continuous memory
     SymbolTable(); // Constructor
+	symbol_info* auxInsert(symbol_info* root, int token, char const* lexeme);
     virtual ~SymbolTable();
 
 protected:
@@ -36,6 +41,7 @@ protected:
 //Extend Symbol Table to create the Reserved words table, Literals table and Identifiers table
 
 class ReservedWordsTable : public SymbolTable {
+public:
 
 };
 

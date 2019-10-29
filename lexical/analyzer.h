@@ -22,18 +22,15 @@
 #define BUFFER_SIZE 32
 #define INITIAL_STATE 0
 
-struct token_info {
-    int token;
-    char *lexeme;
-};
-
 SymbolTable  get_literals_table();
 
 SymbolTable  get_reserved_words_table();
 
 SymbolTable  get_identifiers_table();
 
-struct token_info lexical_analyzer_next_token();
+int lexical_analyzer_next_token();
+
+char* lexical_analyzer_last_lexeme();
 
 void lexical_analyzer_init(FILE* fp);
 

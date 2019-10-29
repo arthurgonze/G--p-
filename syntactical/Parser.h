@@ -8,7 +8,7 @@
 
 class Parser
 {
-    token_info tok;
+    int tok;
     inline void advance() { tok = lexical_analyzer_next_token(); }
     void eat(int t);
 
