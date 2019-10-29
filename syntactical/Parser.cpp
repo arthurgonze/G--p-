@@ -1,9 +1,18 @@
 #include "Parser.h"
+#include "Visitor.h"
+
+PrintAST *visitor;
+ProgramNode *program;
 
 ProgramNode *Parser::StartParser()
 {
     advance();
-    return Program(nullptr, nullptr, nullptr);
+    program = Program(nullptr, nullptr, nullptr);
+    visitor = new PrintAST();
+    program->accept(visitor);
+    delete(visitor);
+    return program;
+
 }
 
 void Parser::eat(int t)

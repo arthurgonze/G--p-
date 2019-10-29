@@ -8,15 +8,6 @@
 #include "../lexical/analyzer.h"
 
 
-/*
- * TO DO:
- *
- * MUDAR TOKEN -> token_id_name
- * MUDAR LEXEME para node->get_lexeme
- *
- * AJUSTAR CADA NO PARA FAZER A FUNCAO
- */
-
 PrintAST::PrintAST() {
     level = 0;
 }
@@ -44,7 +35,7 @@ void PrintAST::visit(ProgramNode *node) {
     std::cout << "\n------------------------------" << std::endl;
     std::cout << "---- ABSTRACT SYNTAX TREE ----" << std::endl;
     std::cout << "------------------------------\n" << std::endl;
-    this->printAST("PROGRAM");//override; //TODO ARRUMAR O CHAR AUX
+    this->printAST("PROGRAM");
     up_level();
     if (node->getFuncList() != NULL) {
         node->getFuncList()->accept(this);
@@ -59,7 +50,7 @@ void PrintAST::visit(ProgramNode *node) {
 }
 
 void PrintAST::visit(VarListNode *node) {
-    this->printAST("VAR_LIST", "c");
+    this->printAST("VAR_LIST");
     up_level();
     if (node->get_type() != NULL) {
         node->get_type()->accept(this);
@@ -74,7 +65,7 @@ void PrintAST::visit(VarListNode *node) {
 }
 
 void PrintAST::visit(FunctionListNode *node) {
-    this->printAST("FUNCTION_LIST", "aux");
+    this->printAST("FUNCTION_LIST");
     up_level();
     if (node->get_type() != NULL) {
         node->get_type()->accept(this);
@@ -95,7 +86,7 @@ void PrintAST::visit(FunctionListNode *node) {
 }
 
 void PrintAST::visit(IdListNode *node) {
-    this->printAST("ID_LIST", "aux");
+    this->printAST("ID_LIST");
     up_level();
     if (node->get_pointer() != NULL) {
         node->get_pointer()->accept(this);
@@ -113,7 +104,7 @@ void PrintAST::visit(IdListNode *node) {
 }
 
 void PrintAST::visit(TypeListNode *node) {
-    this->printAST("TYPE_LIST", "aux");
+    this->printAST("TYPE_LIST");
     up_level();
     if (node->getVarList() != NULL) {
         node->getVarList()->accept(this);
@@ -129,7 +120,7 @@ void PrintAST::visit(TypeListNode *node) {
 
 
 void PrintAST::visit(StmtListNode *node) {
-    this->printAST("STATEMENT_LIST", "aux");
+    this->printAST("STATEMENT_LIST");
     up_level();
     if (node->getStmtList() != NULL) {
         node->getStmtList()->accept(this);
@@ -141,7 +132,7 @@ void PrintAST::visit(StmtListNode *node) {
 }
 
 void PrintAST::visit(VarStmtNode *node) {
-    this->printAST("VAR_STMT", "aux");
+    this->printAST("VAR_STMT");
     up_level();
     if (node->get_decl() != NULL) {
         node->get_decl()->accept(this);
@@ -156,7 +147,7 @@ void PrintAST::visit(VarStmtNode *node) {
 }
 
 void PrintAST::visit(VarFuncListNode *node) {
-    this->printAST("VAR_FUNC_LIST", "aux");
+    this->printAST("VAR_FUNC_LIST");
     up_level();
     if (node->get_decl() != NULL) {
         node->get_decl()->accept(this);
@@ -171,7 +162,7 @@ void PrintAST::visit(VarFuncListNode *node) {
 }
 
 void PrintAST::visit(IfNode *node) {
-    this->printAST("IF", "aux");
+    this->printAST("IF");
     up_level();
     if (node->getExp() != NULL) {
         node->getExp()->accept(this);
@@ -186,7 +177,7 @@ void PrintAST::visit(IfNode *node) {
 }
 
 void PrintAST::visit(WhileNode *node) {
-    this->printAST("WHILE", "aux");
+    this->printAST("WHILE");
     up_level();
     if (node->getExp() != NULL) {
         node->getExp()->accept(this);
@@ -198,7 +189,7 @@ void PrintAST::visit(WhileNode *node) {
 }
 
 void PrintAST::visit(SwitchNode *node) {
-    this->printAST("SWITCH", "aux");
+    this->printAST("SWITCH");
     up_level();
     if (node->getExp() != NULL) {
         node->getCaseBlock()->accept(this);
@@ -207,7 +198,7 @@ void PrintAST::visit(SwitchNode *node) {
 }
 
 void PrintAST::visit(PrintLnNode *node) {
-    this->printAST("PRINT_LN", "aux");
+    this->printAST("PRINT_LN");
     up_level();
     if (node->getExpList() != NULL) {
         node->getExpList()->accept(this);
@@ -216,7 +207,7 @@ void PrintAST::visit(PrintLnNode *node) {
 }
 
 void PrintAST::visit(ReadNode *node) {
-    this->printAST("READ", "aux");
+    this->printAST("READ");
     up_level();
     if (node->getExp() != NULL) {
         node->getExp()->accept(this);
@@ -225,7 +216,7 @@ void PrintAST::visit(ReadNode *node) {
 }
 
 void PrintAST::visit(ReturnNode *node) {
-    this->printAST("RETURN", "aux");
+    this->printAST("RETURN");
     up_level();
     if (node->getExp() != NULL) {
         node->getExp()->accept(this);
@@ -234,7 +225,7 @@ void PrintAST::visit(ReturnNode *node) {
 }
 
 void PrintAST::visit(CaseBlockNode *node) {
-    this->printAST("CASE_BLOCK", "aux");
+    this->printAST("CASE_BLOCK");
     up_level();
     if (node->getNum() != NULL) {
         node->getNum()->accept(this);
@@ -249,7 +240,7 @@ void PrintAST::visit(CaseBlockNode *node) {
 }
 
 void PrintAST::visit(ExpListNode *node) {
-    this->printAST("EXP_LIST", "aux");
+    this->printAST("EXP_LIST");
     up_level();
     if (node->getExp() != NULL) {
         node->getExpList()->accept(this);
@@ -258,7 +249,7 @@ void PrintAST::visit(ExpListNode *node) {
 }
 
 void PrintAST::visit(TryNode *node) {
-    this->printAST("TRY", "aux");
+    this->printAST("TRY");
     up_level();
     if (node->getTry() != NULL) {
         node->getTry()->accept(this);
@@ -271,7 +262,7 @@ void PrintAST::visit(TryNode *node) {
 
 
 void PrintAST::visit(PrimaryNode *node) {
-    this->printAST("PRIMARY", "aux");
+    this->printAST("PRIMARY");
     up_level();
     if (node->get_exp() != NULL) {
         node->get_exp()->accept(this);
@@ -283,7 +274,7 @@ void PrintAST::visit(PrimaryNode *node) {
 }
 
 void PrintAST::visit(CallNode *node) {
-    this->printAST("CALL", "aux");
+    this->printAST("CALL");
     up_level();
     if (node->get_exp() != NULL) {
         node->get_exp()->accept(this);
@@ -296,7 +287,7 @@ void PrintAST::visit(CallNode *node) {
 
 
 void PrintAST::visit(AdressValueNode *node) {
-    this->printAST("ADDRESS_VALUE", "aux");
+    this->printAST("ADDRESS_VALUE");
     up_level();
     if (node->getExp() != NULL) {
         node->getExp()->accept(this);
@@ -305,7 +296,7 @@ void PrintAST::visit(AdressValueNode *node) {
 }
 
 void PrintAST::visit(PointerValueNode *node) {
-    this->printAST("POINTER_VALUE", "aux");
+    this->printAST("POINTER_VALUE");
     up_level();
     if (node->getExp() != NULL) {
         node->getExp()->accept(this);
@@ -314,7 +305,7 @@ void PrintAST::visit(PointerValueNode *node) {
 }
 
 void PrintAST::visit(PointerValueExpNode *node) {
-    this->printAST("POINTER_VALUE_EXP", "aux");
+    this->printAST("POINTER_VALUE_EXP");
     up_level();
     if (node->getExp() != NULL) {
         node->getExp()->accept(this);
@@ -326,7 +317,7 @@ void PrintAST::visit(PointerValueExpNode *node) {
 }
 
 void PrintAST::visit(ArrayAccessNode *node) {
-    this->printAST("ARRAY_ACCESS", "aux");
+    this->printAST("ARRAY_ACCESS");
     up_level();
     if (node->get_index_exp() != NULL) {
         node->get_index_exp()->accept(this);
@@ -339,7 +330,7 @@ void PrintAST::visit(ArrayAccessNode *node) {
 }
 
 void PrintAST::visit(ArrayNode *node) {
-    this->printAST("ARRAY", "aux");
+    this->printAST("ARRAY");
     up_level();
     if (node->get_index_exp() != NULL) {
         node->get_index_exp()->accept(this);
@@ -348,7 +339,7 @@ void PrintAST::visit(ArrayNode *node) {
 }
 
 void PrintAST::visit(AssignNode *node) {
-    this->printAST("ASSIGN", "aux");
+    this->printAST("ASSIGN");
     up_level();
     if (node->getExp1() != NULL) {
         node->getExp1()->accept(this);
@@ -360,7 +351,7 @@ void PrintAST::visit(AssignNode *node) {
 }
 
 void PrintAST::visit(RelationalOPNode *node) {
-    this->printAST(token_id_to_name(node->getOp()->getToken()), "aux");
+    this->printAST(token_id_to_name(node->getOp()->getToken()));
     up_level();
     if (node->getExp1() != NULL) {
         node->getExp1()->accept(this);
@@ -372,7 +363,7 @@ void PrintAST::visit(RelationalOPNode *node) {
 }
 
 void PrintAST::visit(AdditionOPNode *node) {
-    this->printAST(token_id_to_name(node->getOp()->getToken()), "aux");
+    this->printAST(token_id_to_name(node->getOp()->getToken()));
     up_level();
     if (node->getExp1() != NULL) {
         node->getExp1()->accept(this);
@@ -384,7 +375,7 @@ void PrintAST::visit(AdditionOPNode *node) {
 }
 
 void PrintAST::visit(MultiplicationOPNode *node) {
-    this->printAST(token_id_to_name(node->getOp()->getToken()), "aux");
+    this->printAST(token_id_to_name(node->getOp()->getToken()));
     up_level();
     if (node->getExp1() != NULL) {
         node->getExp1()->accept(this);
@@ -396,7 +387,7 @@ void PrintAST::visit(MultiplicationOPNode *node) {
 }
 
 void PrintAST::visit(BooleanOPNode *node) {
-    this->printAST(token_id_to_name(node->getOp()->getToken()), "aux");
+    this->printAST(token_id_to_name(node->getOp()->getToken()));
     up_level();
     if (node->getExp1() != NULL) {
         node->getExp1()->accept(this);
@@ -408,7 +399,7 @@ void PrintAST::visit(BooleanOPNode *node) {
 }
 
 void PrintAST::visit(BitwiseOPNode *node) {
-    this->printAST(token_id_to_name(node->getOp()->getToken()), "aux");
+    this->printAST(token_id_to_name(node->getOp()->getToken()));
     up_level();
     if (node->getExp1() != NULL) {
         node->getExp1()->accept(this);
@@ -422,7 +413,7 @@ void PrintAST::visit(BitwiseOPNode *node) {
 
 void PrintAST::visit(NotNode *node) {
 
-    this->printAST("NOT", "aux");
+    this->printAST("NOT");
     up_level();
     if (node->getExp() != NULL) {
         node->getExp()->accept(this);
@@ -432,7 +423,7 @@ void PrintAST::visit(NotNode *node) {
 
 void PrintAST::visit(SignNode *node) {
 
-    this->printAST("SIGN", "aux");
+    this->printAST("SIGN");
     up_level();
     if (node->getExp() != NULL) {
         node->getExp()->accept(this);
@@ -441,7 +432,7 @@ void PrintAST::visit(SignNode *node) {
 }
 
 void PrintAST::visit(FormalListNode *node) {
-    this->printAST("FORMAL_LIST", "aux");
+    this->printAST("FORMAL_LIST");
     up_level();
     if (node->get_type() != NULL) {
         node->get_type()->accept(this);
@@ -465,28 +456,28 @@ void PrintAST::visit(FormalListNode *node) {
  * TERMINAL NODES
  */
 void PrintAST::visit(PointerNode *node) {
-    this->printAST("POINTER", "aux");
+    this->printAST("POINTER");
 }
 
 
 void PrintAST::visit(BreakNode *node) {
-    this->printAST("BREAK", "aux");
+    this->printAST("BREAK");
 }
 
 
 void PrintAST::visit(TrueNode *node) {
 
-    this->printAST("TRUE", "aux");
+    this->printAST("TRUE");
 }
 
 void PrintAST::visit(FalseNode *node) {
-    this->printAST("FALSE", "aux");
+    this->printAST("FALSE");
 }
 
 void PrintAST::visit(TypeNode *node) {
     if (node->getId()->getLex() != NULL) {
         this->printAST(token_id_to_name(node->getId()->getToken()), node->getId()->getLex());
-    } else this->printAST(token_id_to_name(node->getId()->getToken()), "aux");
+    } else this->printAST(token_id_to_name(node->getId()->getToken()));
 
 }
 
@@ -496,6 +487,6 @@ void PrintAST::visit(TokenNode *node) {
 }
 
 void PrintAST::visit(ThrowNode *node) {
-    this->printAST("THROW", "aux");
+    this->printAST("THROW");
 }
 
