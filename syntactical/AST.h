@@ -389,7 +389,6 @@ public:
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-
 class CallNode : public ExpNode
 {
 private:
