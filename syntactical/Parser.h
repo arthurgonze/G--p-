@@ -13,28 +13,27 @@ class Parser
     void eat(int t);
 
     static int programFollowSet[];
-    ProgramNode *Program(FunctionListNode *functionList, TypeListNode *typeList, VarFuncListNode *varList);
+    ProgramNode *Program(FunctionListNode *functionList, TypeDeclNode *typeList, VarDeclNode *varList);
 
     static int programAUXFollowSet[];
-    VarFuncListNode *ProgramAUX(TypeNode *type, PointerNode *pointer, TokenNode *id, VarFuncListNode *varList);
+    ASTNode *ProgramAUX(TypeNode *type, PointerNode *pointer, TokenNode *id, VarDeclNode *varList);
 
     static int programListFollowSet[];
-    ProgramNode *ProgramList(FunctionListNode *functions, TypeListNode *typelist, VarFuncListNode *varlist);
+    ProgramNode *ProgramList(FunctionListNode *functions, TypeDeclNode *typelist, VarDeclNode *varlist);
+
+    VarStmtNode* VarStmt(VarDeclNode *varList);
+    VarStmtNode* VarStmtAux(TokenNode *id, VarDeclNode *varList);
 
     static int typeDeclFollowSet[];
-    TypeListNode *TypeDecl(TypeListNode *typeListNode);
+    TypeDeclNode *TypeDecl(TypeDeclNode *typeListNode);
 
     static int varDeclFollowSet[];
-    VarListNode *VarDecl();
+    VarDeclNode *VarDecl();
 
     static int idListFollowSet[];
     IdListNode *IdList();
-
     static int idListAUXFollowSet[];
     IdListNode *IdListAUX();
-
-    static int idExprFollowSet[];
-    void IdExpr();
 
     static int pointerFollowSet[];
     PointerNode *Pointer();
@@ -50,6 +49,7 @@ class Parser
 
     static int typeFollowSet[];
     TypeNode *Type();
+    TypeNode* TypeAux();
 
     static int stmtListFollowSet[];
     StmtListNode *StmtList();
@@ -63,8 +63,7 @@ class Parser
     static int stmtAUXFollowSet[];
     StmtNode *StmtAUX();
 
-    static int ifExprFollowSet[];
-    StmtNode *IFExpr();
+    StmtNode* ElseStmt();
 
     static int caseBlockFollowSet[];
     CaseBlockNode *CaseBlock();
@@ -129,13 +128,11 @@ class Parser
     static int primaryFollowSet[];
     ExpNode *Primary();
 
-    static int postFixExprFollowSet[];
-    ExpNode *PostFixExpr();
-
     static int postFixExprAUXFollowSet[];
-    ExpNode *PostFixExprAUX();
+    ExpNode *PostFixExprAUX(ExpNode *ex);/// +/- PrimaryAux
 
-    StmtNode* ElseStmt();
+    static int postFixExprFollowSet[];
+    ExpNode *PostFixExpr(TokenNode *id); // +/- PrimaryFAT
 public:
     ProgramNode *StartParser();
 };
