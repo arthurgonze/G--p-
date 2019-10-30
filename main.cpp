@@ -49,11 +49,6 @@ int main(int argc, char *argv[])
     Parser *parser = new Parser();
     parser->StartParser();
 
-	//Print the symbol tables for reserved words, identifiers and literals
-	get_reserved_words_table().print();
-	get_identifiers_table().print();
-	get_literals_table().print();
-
     lexical_analyzer_dispose();
 
 	printf("\n");
