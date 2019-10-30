@@ -193,7 +193,6 @@ ASTNode *Parser::ProgramAUX(TypeNode *type, PointerNode *pointer, TokenNode *id,
         }
         default:
         {
-            fprintf(stderr, "[SYNTACTICAL ERROR] error(ProgramAUX), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -242,7 +241,6 @@ TypeDeclNode *Parser::TypeDecl(TypeDeclNode *typeListNode)//OK
         }
         default:
         {
-            fprintf(stderr, "[SYNTACTICAL ERROR] error(TypeDecl), Token error: %s \n", token_id_to_name(tok));
             return typeListNode;
         }
     }
@@ -268,7 +266,6 @@ VarDeclNode *Parser::VarDecl()//ok
         }
         default:
         {
-            fprintf(stderr, "[SYNTACTICAL ERROR] error(VarDecl), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -429,7 +426,6 @@ IdListNode *Parser::IdListAUX()//ok
         }
         default:
         {
-            fprintf(stderr, "[SYNTACTICAL ERROR] error(IdListAUX), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -448,7 +444,6 @@ PointerNode *Parser::Pointer()//ok
         }
         default:
         {
-            fprintf(stderr, "[SYNTACTICAL ERROR] error(Pointer), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -472,7 +467,6 @@ ArrayNode *Parser::Array()//ok
         }
         default:
         {
-            fprintf(stderr, "[SYNTACTICAL ERROR] error(Array), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -501,7 +495,6 @@ FormalListNode *Parser::FormalList()//ok
         }
         default:
         {
-            fprintf(stderr, "[SYNTACTICAL ERROR] error(FormalList), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -528,7 +521,6 @@ FormalListNode *Parser::FormalRest()//ok
         }
         default:
         {
-            fprintf(stderr, "[SYNTACTICAL ERROR] error(FormalRest), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -687,7 +679,6 @@ StmtListNode *Parser::StmtListAUX()//OK
         }
         default:
         {
-            fprintf(stderr, "[SYNTACTICAL ERROR] error(StmtListAux), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -869,7 +860,6 @@ StmtNode *Parser::ElseStmt()//ok
         }
         default:
         {
-            fprintf(stderr, "[SYNTACTICAL ERROR] error(elseStmt), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -936,7 +926,6 @@ CaseBlockNode *Parser::CaseBlockAUX(TokenNode *num)//OK
         }
         default:
         {
-            fprintf(stderr, "[SYNTACTICAL ERROR] error(caseBlockAUX), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -966,7 +955,6 @@ ExpListNode *Parser::ExprList()//OK
         }
         default:
         {
-            fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprList), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -1014,7 +1002,6 @@ ExpListNode *Parser::ExprListTailAUX()//OK
         }
         default:
         {
-            fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprListTailAUX), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
