@@ -31,7 +31,7 @@ void Parser::eat(int t)
     }
     else
     {
-        printf("error(eat), Token error: Esperado: %s, Processado: %s \n", token_id_to_name(t), token_id_to_name(tok));
+        fprintf(stderr, "[SYNTACTICAL ERROR] error(eat), Token error: Esperado: %s, Processado: %s \n", token_id_to_name(t), token_id_to_name(tok));
     }
 
 }
@@ -86,7 +86,7 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
         }
         default:
         {
-            printf("error(Program), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(Program), Token error: %s \n", token_id_to_name(tok));
             return new ProgramNode(functionList, typeList, varList);
         }
     }
@@ -123,7 +123,7 @@ ASTNode *Parser::ProgramAUX(TypeNode *type, PointerNode *pointer, TokenNode *id,
         }
         default:
         {
-            printf("error(ProgramAUX), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(ProgramAUX), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -146,7 +146,7 @@ ProgramNode *Parser::ProgramList(FunctionListNode *functions, TypeDeclNode *type
         }
         default:
         {
-            printf("errorProgramList(), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] errorProgramList(), Token error: %s \n", token_id_to_name(tok));
             return new ProgramNode(functions, typelist, varlist);
             break;
         }
@@ -179,7 +179,7 @@ TypeDeclNode *Parser::TypeDecl(TypeDeclNode *typeListNode)
         }
         default:
         {
-            printf("error(TypeDecl), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(TypeDecl), Token error: %s \n", token_id_to_name(tok));
             return typeListNode;
         }
     }
@@ -205,7 +205,7 @@ VarDeclNode *Parser::VarDecl()
         }
         default:
         {
-            printf("error(VarDecl), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(VarDecl), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -236,7 +236,7 @@ VarStmtNode *Parser::VarStmt(VarDeclNode *varList)
         }
         default:
         {
-            printf("error(VarStmt), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(VarStmt), Token error: %s \n", token_id_to_name(tok));
             return new VarStmtNode(varList, nullptr);
         }
     }
@@ -280,7 +280,7 @@ VarStmtNode *Parser::VarStmtAux(TokenNode *id, VarDeclNode *varList)
         }
         default:
         {
-            return new VarStmtNode(varList, NULL);
+            return new VarStmtNode(varList, nullptr);
             break;
         }
     }
@@ -305,7 +305,7 @@ IdListNode *Parser::IdList()
         }
         default:
         {
-            printf("error(IdList), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(IdList), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -331,7 +331,7 @@ IdListNode *Parser::IdListAUX()
         }
         default:
         {
-            printf("error(IdListAUX), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(IdListAUX), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -350,7 +350,7 @@ PointerNode *Parser::Pointer()
         }
         default:
         {
-            printf("error(Pointer), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(Pointer), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -374,7 +374,7 @@ ArrayNode *Parser::Array()
         }
         default:
         {
-            printf("error(Array), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(Array), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -404,7 +404,7 @@ FormalListNode *Parser::FormalList()
         }
         default:
         {
-            printf("error(FormalList), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(FormalList), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -431,7 +431,7 @@ FormalListNode *Parser::FormalRest()
         }
         default:
         {
-            printf("error(FormalRest), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(FormalRest), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -474,7 +474,7 @@ TypeNode *Parser::Type()
         }
         default:
         {
-            printf("error(Type), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(Type), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -510,7 +510,7 @@ TypeNode *Parser::TypeAux()
         }
         default:
         {
-            printf("error(TypeAUX), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(TypeAUX), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -551,7 +551,7 @@ StmtListNode *Parser::StmtList()
         }
         default:
         {
-            printf("error(StmtList), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(StmtList), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -591,7 +591,7 @@ StmtListNode *Parser::StmtListAUX()
         }
         default:
         {
-            printf("error(StmtListAux), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(StmtListAux), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -643,7 +643,7 @@ StmtNode *Parser::Stmt()
         }
         default:
         {
-            printf("error(Stmt), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(Stmt), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -753,7 +753,7 @@ StmtNode *Parser::StmtAUX()
         }
         default:
         {
-            printf("error(StmtAUX), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(StmtAUX), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -770,7 +770,7 @@ StmtNode *Parser::ElseStmt()
         }
         default:
         {
-            printf("error(elseStmt), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(elseStmt), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -793,7 +793,7 @@ CaseBlockNode *Parser::CaseBlock()
         }
         default:
         {
-            printf("error(caseBlock), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(caseBlock), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -838,7 +838,7 @@ CaseBlockNode *Parser::CaseBlockAUX(TokenNode *num)
         }
         default:
         {
-            printf("error(caseBlockAUX), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(caseBlockAUX), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -868,7 +868,7 @@ ExpListNode *Parser::ExprList()
         }
         default:
         {
-            printf("error(ExprList), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprList), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -898,7 +898,7 @@ ExpListNode *Parser::ExprListTail()
         }
         default:
         {
-            printf("error(ExprListTail), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprListTail), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -917,7 +917,7 @@ ExpListNode *Parser::ExprListTailAUX()
         }
         default:
         {
-            printf("error(ExprListTailAUX), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprListTailAUX), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -947,7 +947,7 @@ ExpNode *Parser::ExprAssign()
         }
         default:
         {
-            printf("error(ExprAssign), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprAssign), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -968,7 +968,7 @@ ExpNode *Parser::ExprAssignAUX(ExpNode *expr)
             node = new AssignNode(expr, exp2);
             break;
         }
-            // Epsilon default: printf("error(ExprAssignAUX), Token error: %s \n",token_id_to_name(tok));
+            // Epsilon default: fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprAssignAUX), Token error: %s \n",token_id_to_name(tok));
     }
     return node;
 }
@@ -997,7 +997,7 @@ ExpNode *Parser::ExprOr()
         }
         default:
         {
-            printf("error(ExprOr), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprOr), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -1019,7 +1019,7 @@ ExpNode *Parser::ExprOrAUX(ExpNode *expr)
             node = new BooleanOPNode(token, expr, exp2);
             break;
         }
-            // Epsilon default: printf("error(ExprOrAUX), Token error: %s \n",token_id_to_name(tok));
+            // Epsilon default: fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprOrAUX), Token error: %s \n",token_id_to_name(tok));
     }
     return node;
 }
@@ -1048,7 +1048,7 @@ ExpNode *Parser::ExprAnd()
         }
         default:
         {
-            printf("error(ExprAnd), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprAnd), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -1070,7 +1070,7 @@ ExpNode *Parser::ExprAndAUX(ExpNode *expr)
             node = new BooleanOPNode(token, expr, exp2);
             break;
         }
-            // Epsilon default: printf("error(ExprAndAUX), Token error: %s \n",token_id_to_name(tok));
+            // Epsilon default: fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprAndAUX), Token error: %s \n",token_id_to_name(tok));
     }
     return node;
 }
@@ -1099,7 +1099,7 @@ ExpNode *Parser::ExprEquality()
         }
         default:
         {
-            printf("error(ExprEquality), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprEquality), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -1129,7 +1129,7 @@ ExpNode *Parser::ExprEqualityAUX(ExpNode *expr)
             node = new BooleanOPNode(token, expr, exp2);
             break;
         }
-            // Epsilon default: printf("error(ExprEqualityAUX), Token error: %s \n",token_id_to_name(tok));
+            // Epsilon default: fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprEqualityAUX), Token error: %s \n",token_id_to_name(tok));
     }
     return node;
 }
@@ -1158,7 +1158,7 @@ ExpNode *Parser::ExprRelational()
         }
         default:
         {
-            printf("error(ExprRelational), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprRelational), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -1204,7 +1204,7 @@ ExpNode *Parser::ExprRelationalAUX(ExpNode *expr)
             node = new BooleanOPNode(token, expr, exp2);
             break;
         }
-            // Epsilon default: printf("error(ExprRelationalAUX), Token error: %s \n",token_id_to_name(tok));
+            // Epsilon default: fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprRelationalAUX), Token error: %s \n",token_id_to_name(tok));
     }
     return node;
 }
@@ -1233,7 +1233,7 @@ ExpNode *Parser::ExprAdditive()
         }
         default:
         {
-            printf("error(ExprAdditive), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprAdditive), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -1271,7 +1271,7 @@ ExpNode *Parser::ExprAdditiveAUX(ExpNode *expr)
             node = new AdditionOPNode(token, expr, exp2);
             break;
         }
-            // Epsilon default: printf("error(ExprAdditiveAUX), Token error: %s \n",token_id_to_name(tok));
+            // Epsilon default: fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprAdditiveAUX), Token error: %s \n",token_id_to_name(tok));
     }
     return node;
 }
@@ -1301,7 +1301,7 @@ ExpNode *Parser::ExprMultiplicative()
         }
         default:
         {
-            printf("error(ExprMultiplicative), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprMultiplicative), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -1340,7 +1340,7 @@ ExpNode *Parser::ExprMultiplicativeAUX(ExpNode *expr)
             node = new MultiplicationOPNode(token, expr, exp2);
             break;
         }
-            // Epsilon default: printf("error(ExprMultiplicativeAUX), Token error: %s \n",token_id_to_name(tok));
+            // Epsilon default: fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprMultiplicativeAUX), Token error: %s \n",token_id_to_name(tok));
     }
     return node;
 }
@@ -1395,7 +1395,7 @@ ExpNode *Parser::ExprUnary()
         }
         default:
         {
-            printf("error(ExprUnary), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(ExprUnary), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -1457,7 +1457,7 @@ ExpNode *Parser::Primary()
         }
         default:
         {
-            printf("error(Primary), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(Primary), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -1491,7 +1491,7 @@ ExpNode *Parser::PostFixExprAUX(ExpNode *exp)
             return PostFixExprAUX(new ArrayCallNode(exp, index));
         }
         default:
-            printf("error(PostFixExprAUX), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(PostFixExprAUX), Token error: %s \n", token_id_to_name(tok));
             return exp;
     }
 }
@@ -1521,7 +1521,7 @@ ExpNode *Parser::PostFixExpr(TokenNode *id) //ok
         }
         default:
         {
-            printf("error(PostFixExpr), Token error: %s \n", token_id_to_name(tok));
+            fprintf(stderr, "[SYNTACTICAL ERROR] error(PostFixExpr), Token error: %s \n", token_id_to_name(tok));
             return new PrimaryNode(id);
         }
     }

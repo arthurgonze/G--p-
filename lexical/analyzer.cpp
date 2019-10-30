@@ -17,8 +17,8 @@ int currentInput;
 int currentLine = 1;
 int currentColumn = 0;
 
-char *lexemeBuffer = NULL;
-char* lastLexemeFound = NULL;
+char *lexemeBuffer = nullptr;
+char* lastLexemeFound = nullptr;
 int lexemeLength = 0;
 int lexemeBufferSize = 0;
 
@@ -67,7 +67,7 @@ void get_next_char() {
     /* Buffer is empty */
     if (n == 0) {
         ;
-        n = fgets(buf, IO_BUFFER_SIZE, filePointer) != NULL ? strlen(buf) : 0;
+        n = fgets(buf, IO_BUFFER_SIZE, filePointer) != nullptr ? strlen(buf) : 0;
         bufp = buf;
     }
 
@@ -479,7 +479,7 @@ int lexical_analyzer_next_token() {
             case 34:
                 return found_token_and_restart(RBRACKET); //found RBRACKET
             case 35:
-                return found_token_and_restart(COMMA); //found COLON
+                return found_token_and_restart(COMMA); //found COMMA
             case 36:
                 return found_token_and_restart(SEMICOLON); //found SEMICOLON
             case 37:
