@@ -1,313 +1,129 @@
+
 #include "AST.h"
 
-/**
- * Module with constructors and destructors of some classes from the AST.
- * Only those that could not be inlined were defined here.
- */
-
-TokenNode::TokenNode(int token, char *lex)
+TokenNode::TokenNode(int tok, char *lex)
 {
-    this->token = token;
+    this->tok = tok;
     this->lex = lex;
 }
-
 TokenNode::~TokenNode()
 {
-    // TODO delete this->token;
     delete this->lex;
 }
-
-ProgramNode::ProgramNode(FunctionListNode *functionList, TypeListNode *typeList, VarFuncListNode *varList)
+ProgramNode::ProgramNode(FunctionListNode *functions, TypeDeclNode *typelist, VarDeclNode *varlist)
 {
-    this->functionList = functionList;
-    this->typeList = typeList;
-    this->varList = varList;
+    this->functions = functions;
+    this->typelist = typelist;
+    this->varlist = varlist;
 }
-
 ProgramNode::~ProgramNode()
 {
-    delete this->functionList;
-    delete this->typeList;
-    delete this->varList;
+    delete this->varlist;
+    delete this->typelist;
+    delete this->functions;
 }
-
-//VarListNode::VarListNode(NameDeclNode *nameDecl, VarListNode *varList)
-//{
-//    this->nameDecl = nameDecl;
-//    this->next = varList;
-//}
-//
-//VarListNode::~VarListNode()
-//{
-//    delete this->nameDecl;
-//    delete this->next;
-//}
-//
-//NameDeclNode::NameDeclNode(TypeNode *type, TokenNode *id)
-//{
-//    this->type = type;
-//    this->id = id;
-//}
-//
-//NameDeclNode::~NameDeclNode()
-//{
-//    delete this->id;
-//    delete this->type;
-//}
-//
-//FunctionListNode::FunctionListNode(TypeNode *type, TokenNode *id, VarListNode *varList, StmtListNode *stmtList, FunctionListNode *functionList)
-//{
-//    this->type = type;
-//    this->id = id;
-//    this->varList = varList;
-//    this->stmtList = stmtList;
-//    this->next = functionList;
-//}
-//
-//FunctionListNode::~FunctionListNode() {
-//    delete this->type;
-//    delete this->id;
-//    delete this->varList;
-//    delete this->stmtList;
-//    delete this->next;
-//}
-
-TypeListNode::TypeListNode(VarListNode *var_list, TokenNode *id, TypeListNode *next)
+TryNode::TryNode(StmtNode *tryStmt, StmtNode *catchStmt)
 {
-    this->varList = var_list;
-    this->id = id;
+    this->tryStmt = tryStmt;
+    this->catchStmt = catchStmt;
+}
+TryNode::~TryNode()
+{
+    delete this->tryStmt;
+    delete this->catchStmt;
+}
+StmtListNode::StmtListNode(StmtNode *stmt, StmtListNode *next)
+{
+    this->stmt = stmt;
     this->next = next;
 }
-
-TypeListNode::~TypeListNode()
-{
-    delete this->varList;
-    delete this->id;
-    delete this->next;
-}
-
-StmtListNode::StmtListNode(StmtNode *statement, StmtListNode *statement_list)
-{
-    this->stmt = statement;
-    this->next = statement_list;
-}
-
 StmtListNode::~StmtListNode()
 {
-    delete this->stmt;
     delete this->next;
+    delete this->stmt;
 }
-
-IfNode::IfNode(ExpNode *exp, StmtNode *if_stmt, StmtNode *else_stmt)
+WhileNode::WhileNode(ExpNode *head, StmtNode *body)
 {
-    this->exp = exp;
-    this->ifStmt = if_stmt;
-    this->elseStmt = else_stmt;
+    this->head = head;
+    this->body = body;
 }
-
-IfNode::~IfNode()
-{
-    delete this->exp;
-    delete this->ifStmt;
-    delete this->elseStmt;
-}
-
-WhileNode::WhileNode(ExpNode *exp, StmtNode *statement)
-{
-    this->exp = exp;
-    this->stmt = statement;
-}
-
 WhileNode::~WhileNode()
 {
-    delete this->exp;
-    delete this->stmt;
+    delete this->head;
+    delete this->body;
 }
-
-SwitchNode::SwitchNode(ExpNode *exp, CaseBlockNode *case_block)
+IfNode::IfNode(ExpNode *head, StmtNode *trueStmt, StmtNode *falseStmt)
 {
-    this->exp = exp;
-    this->caseBlock = case_block;
+    this->head = head;
+    this->trueStmt = trueStmt;
+    this->falseStmt = falseStmt;
 }
-
-SwitchNode::~SwitchNode()
+IfNode::~IfNode()
 {
-    delete this->exp;
-    delete this->caseBlock;
+    delete this->head;
+    delete this->trueStmt;
+    delete this->falseStmt;
 }
-
-CaseBlockNode::CaseBlockNode(TokenNode *num, StmtListNode *statement_list, CaseBlockNode *case_block)
+CaseBlockNode::CaseBlockNode(TokenNode *num, StmtListNode *stmt, CaseBlockNode *next)
 {
     this->num = num;
-    this->stmt = statement_list;
-    this->next = case_block;
+    this->stmt = stmt;
+    this->next = next;
 }
-
 CaseBlockNode::~CaseBlockNode()
 {
     delete this->num;
     delete this->stmt;
     delete this->next;
 }
-
-ExpListNode::ExpListNode(ExpNode *exp, ExpListNode *exp_list)
+SwitchNode::SwitchNode(ExpNode *exp, CaseBlockNode *block)
 {
     this->exp = exp;
-    this->next = exp_list;
+    this->block = block;
 }
-
-ExpListNode::~ExpListNode()
+SwitchNode::~SwitchNode()
 {
     delete this->exp;
+    delete this->block;
+}
+IdListNode::IdListNode(PointerNode *pointer, TokenNode *id, ArrayNode *array, IdListNode *next)
+{
+    this->pointer = pointer;
+    this->id = id;
+    this->array = array;
+    this->next = next;
+}
+IdListNode::~IdListNode()
+{
+    delete this->pointer;
+    delete this->id;
+    delete this->array;
     delete this->next;
 }
-
-TryNode::TryNode(StmtNode *try_stmt, StmtNode *catch_stmt)
+VarDeclNode::VarDeclNode(TypeNode *type, IdListNode *idlist, VarDeclNode *next)
 {
-    this->tryStmt = try_stmt;
-    this->catchStmt = catch_stmt;
+    this->type = type;
+    this->idlist = idlist;
+    this->next = next;
 }
-
-TryNode::~TryNode()
+VarDeclNode::~VarDeclNode()
 {
-    delete this->tryStmt;
-    delete this->catchStmt;
+    delete this->type;
+    delete this->idlist;
+    delete this->next;
 }
-
-AssignNode::AssignNode(ExpNode *left_exp, ExpNode *right_exp)
+TypeDeclNode::TypeDeclNode(VarDeclNode *dec, TokenNode *id, TypeDeclNode *next)
 {
-    this->exp1 = left_exp;
-    this->exp2 = right_exp;
+    this->dec = dec;
+    this->id = id;
+    this->next = next;
 }
-
-AssignNode::~AssignNode()
+TypeDeclNode::~TypeDeclNode()
 {
-    delete this->exp1;
-    delete this->exp2;
+    delete this->dec;
+    delete this->id;
+    delete this->next;
 }
-
-//NameExpNode::NameExpNode(ExpNode *exp, TokenNode *id)
-//{
-//    this->exp = exp;
-//    this->id = id;
-//}
-//
-//NameExpNode::~NameExpNode()
-//{
-//    delete this->exp;
-//    delete this->id;
-//}
-
-PointerValueExpNode::PointerValueExpNode(ExpNode *exp, ExpNode *exp2)
-{
-    this->exp = exp;
-    this->exp2 = exp2;
-    //this->id = id;
-}
-
-PointerValueExpNode::~PointerValueExpNode()
-{
-    delete this->exp;
-    delete this->exp2;
-    //delete this->id;
-}
-
-//CallNode::CallNode(TokenNode *id, ExpListNode *expList)
-//{
-//    this->id = id;
-//    this->expList = expList;
-//}
-//
-//CallNode::~CallNode()
-//{
-//    delete this->id;
-//    delete this->expList;
-//}
-
-RelationalOPNode::RelationalOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2)
-{
-    this->op = op;
-    this->exp1 = exp1;
-    this->exp2 = exp2;
-}
-
-RelationalOPNode::~RelationalOPNode()
-{
-    delete this->exp1;
-    delete this->exp1;
-    delete this->op;
-}
-
-AdditionOPNode::AdditionOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2)
-{
-    this->op = op;
-    this->exp1 = exp1;
-    this->exp2 = exp2;;
-}
-
-AdditionOPNode::~AdditionOPNode()
-{
-    delete this->exp1;
-    delete this->exp1;
-    delete this->op;
-}
-
-MultiplicationOPNode::MultiplicationOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2)
-{
-    this->op = op;
-    this->exp1 = exp1;
-    this->exp2 = exp2;;
-}
-
-MultiplicationOPNode::~MultiplicationOPNode()
-{
-    delete this->exp1;
-    delete this->exp1;
-    delete this->op;
-}
-
-BooleanOPNode::BooleanOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2)
-{
-    this->op = op;
-    this->exp1 = exp1;
-    this->exp2 = exp2;;
-}
-
-BooleanOPNode::~BooleanOPNode()
-{
-    delete this->exp1;
-    delete this->exp1;
-    delete this->op;
-}
-
-BitwiseOPNode::BitwiseOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2)
-{
-    this->op = op;
-    this->exp1 = exp1;
-    this->exp2 = exp2;
-}
-
-BitwiseOPNode::~BitwiseOPNode()
-{
-    delete this->exp1;
-    delete this->exp1;
-    delete this->op;
-}
-
-// Adicionais
-//class VarStmtNode;
-ArrayAccessNode::ArrayAccessNode(ExpNode *exp, ExpNode *index_exp)
-{
-    this->exp = exp;
-    this->index_exp = index_exp;
-}
-
-ArrayAccessNode::~ArrayAccessNode()
-{
-    delete this->exp;
-    delete this->index_exp;
-}
-
 FormalListNode::FormalListNode(TypeNode *type, PointerNode *pointer, TokenNode *id, ArrayNode *array, FormalListNode *next)
 {
     this->type = type;
@@ -316,7 +132,6 @@ FormalListNode::FormalListNode(TypeNode *type, PointerNode *pointer, TokenNode *
     this->array = array;
     this->next = next;
 }
-
 FormalListNode::~FormalListNode()
 {
     delete this->type;
@@ -325,113 +140,157 @@ FormalListNode::~FormalListNode()
     delete this->array;
     delete this->next;
 }
-
-CallNode::CallNode(ExpNode *exp, ExpNode *next)
+ExpListNode::ExpListNode(ExpNode *exp, ExpListNode *next)
 {
     this->exp = exp;
     this->next = next;
 }
-
+ExpListNode::~ExpListNode()
+{
+    delete this->exp;
+    delete this->next;
+}
+CallNode::CallNode(TokenNode *id, ExpListNode *parameters)
+{
+    this->id = id;
+    this->parameters = parameters;
+}
 CallNode::~CallNode()
 {
-    delete this->exp;
-    delete this->next;
-}
-
-FunctionListNode::FunctionListNode(TypeNode *type, PointerNode *pointer, TokenNode *id, FormalListNode *formal_list, VarStmtNode *var_stmt)
-{
-    this->type = type;
-    this->pointer = pointer;
-    this->id = id;
-    this->formal_list = formal_list;
-    this->var_stmt = var_stmt;
-}
-
-FunctionListNode::~FunctionListNode()
-{
-    delete this->type;
-    delete this->pointer;
     delete this->id;
-    delete this->formal_list;
-    delete this->var_stmt;
+    delete this->parameters;
 }
-
-IdListNode::IdListNode(PointerNode *pointer, TokenNode *id, ArrayNode *array, IdListNode *id_list)
+PrimaryNode::PrimaryNode(TokenNode *token)
 {
-    this->pointer = pointer;
-    this->id = id;
-    this->array = array;
-    this->next = id_list;
+    this->token = token;
+    this->exp = nullptr;
 }
-
-IdListNode::~IdListNode()
+PrimaryNode::PrimaryNode(CallNode *function)
 {
-    delete this->pointer;
-    delete this->id;
-    delete this->array;
-    delete this->next;
+    this->exp = function;
+    this->token = nullptr;
 }
-
-PrimaryNode::PrimaryNode(ExpNode *exp, ExpNode *next)
+PrimaryNode::PrimaryNode(ExpNode *exp)
 {
     this->exp = exp;
-    this->next = next;
+    this->token = nullptr;
 }
-
 PrimaryNode::~PrimaryNode()
 {
+    delete this->token;
     delete this->exp;
-    delete this->next;
 }
-
-VarListNode::VarListNode(TypeNode *type, IdListNode *id_list, VarListNode *var_decl)
+AssignNode::AssignNode(ExpNode *exp1, ExpNode *exp2)
 {
-    this->type = type;
-    this->id_list = id_list;
-    this->next = var_decl;
+    this->exp1 = exp1;
+    this->exp2 = exp2;
 }
-
-VarListNode::~VarListNode()
+AssignNode::~AssignNode()
 {
-    delete this->type;
-    delete this->id_list;
-    delete this->next;
+    delete this->exp1;
+    delete this->exp2;
 }
-
-VarFuncListNode::VarFuncListNode(VarListNode *decl, VarFuncListNode *next)
+BooleanOPNode::BooleanOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2)
 {
-    this->decl = decl;
-    this->next = next;
+    this->op = op;
+    this->exp1 = exp1;
+    this->exp2 = exp2;
 }
-
-VarFuncListNode::VarFuncListNode(FunctionListNode *func_list, VarFuncListNode *next)
+BooleanOPNode::~BooleanOPNode()
 {
-    this->func_list = func_list;
-    this->next = next;
+    delete this->op;
+    delete this->exp1;
+    delete this->exp2;
 }
-
-VarFuncListNode::~VarFuncListNode()
+NameExpNode::NameExpNode(ExpNode *exp, TokenNode *id)
 {
-    delete this->decl;
-    delete this->func_list;
-    delete this->next;
+    this->exp = exp;
+    this->id = id;
 }
-
-VarStmtNode::VarStmtNode(VarListNode *decl, VarStmtNode *next)
+NameExpNode::~NameExpNode()
 {
-    this->decl = decl;
-    this->next = next;
+    delete this->exp;
+    delete this->id;
 }
-
-VarStmtNode::VarStmtNode(StmtListNode *stmt_list, VarStmtNode *next)
+PointerExpNode::PointerExpNode(ExpNode *exp, TokenNode *id)
 {
-    this->stmt_list = stmt_list;
-    this->next = next;
+    this->exp = exp;
+    this->id = id;
 }
-
+PointerExpNode::~PointerExpNode()
+{
+    delete this->id;
+    delete this->exp;
+}
+ArrayCallNode::ArrayCallNode(ExpNode *exp, ExpNode *index)
+{
+    this->exp = exp;
+    this->index = index;
+}
+ArrayCallNode::~ArrayCallNode()
+{
+    delete this->index;
+    delete this->exp;
+}
+AdditionOPNode::AdditionOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2)
+{
+    this->op = op;
+    this->exp1 = exp1;
+    this->exp2;
+}
+AdditionOPNode::~AdditionOPNode()
+{
+    delete this->op;
+    delete this->exp1;
+    delete this->exp2;
+}
+MultiplicationOPNode::MultiplicationOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2)
+{
+    this->op = op;
+    this->exp1 = exp1;
+    this->exp2 = exp2;
+}
+MultiplicationOPNode::~MultiplicationOPNode()
+{
+    delete this->op;
+    delete this->exp1;
+    delete this->exp2;
+}
+VarStmtNode::VarStmtNode(VarDeclNode *dec, StmtListNode *body)
+{
+    this->dec = dec;
+    this->body = body;
+}
 VarStmtNode::~VarStmtNode()
 {
-    delete this->decl;
-    delete this->stmt_list;
+    delete this->dec;
+    delete this->body;
+}
+FunctionNode::FunctionNode(TypeNode *type, PointerNode *pointer, TokenNode *id, FormalListNode *parameters, VarDeclNode *local, StmtListNode *body)
+{
+    this->type = type;
+    this->pointer = pointer;
+    this->id = id;
+    this->parameters = parameters;
+    this->local = local;
+    this->body = body;
+}
+FunctionNode::~FunctionNode()
+{
+    delete this->type;
+    delete this->pointer;
+    delete this->id;
+    delete this->parameters;
+    delete this->local;
+    delete this->body;
+}
+FunctionListNode::FunctionListNode(FunctionNode *function, FunctionListNode *next)
+{
+    this->function = function;
+    this->next = next;
+}
+FunctionListNode::~FunctionListNode()
+{
+    delete this->function;
     delete this->next;
 }
