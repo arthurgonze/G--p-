@@ -479,7 +479,7 @@ int lexical_analyzer_next_token() {
             case 34:
                 return found_token_and_restart(RBRACKET); //found RBRACKET
             case 35:
-                return found_token_and_restart(COLON); //found COLON
+                return found_token_and_restart(COMMA); //found COLON
             case 36:
                 return found_token_and_restart(SEMICOLON); //found SEMICOLON
             case 37:

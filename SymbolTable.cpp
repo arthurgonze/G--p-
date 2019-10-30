@@ -66,7 +66,7 @@ symbol_info* SymbolTable::auxInsert(symbol_info* root, int token, char const* le
 	}
 
 	//If there's a valid node, check if its not a duplicate
-	if (root->token == token && strcmp(lexemeArray + root->pos, lexeme))
+	if (!(root->token == token && strcmp(lexemeArray + root->pos, lexeme) == 0 ))
 		root->next = auxInsert(root->next, token, lexeme);
 	
 	return root;
