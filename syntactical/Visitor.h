@@ -5,6 +5,7 @@
 #define VISITOR_H_INCLUDED
 
 // AST NODES
+
 class ASTNode;
 class TokenNode;
 class ProgramNode;

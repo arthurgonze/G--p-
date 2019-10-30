@@ -108,54 +108,7 @@ int SymbolTable::cSearch(char *lexeme)
     return -1;
 }
 
-SymbolTable::~SymbolTable() {
-
-}
-//
-//void LiteralsTable::cInsert(char const *lexeme) {
-//
-//    unsigned long pos = cHash(lexeme);
-//
-//    if (block[pos] == nullptr) {
-//        block[pos] = new symbol_info();
-//        block[pos]->pos = headIndex;
-//
-//        int lexemeSize = strlen(lexeme);
-//        if (lexemeSize + headIndex >= lexemeArraySize) // Check if the string will exceed the array free space
-//        {
-//            lexemeArraySize += LEXEME_ARRAY_SIZE;
-//            lexemeArray = (char *) realloc(lexemeArray, lexemeArraySize);
-//        }
-//        strcpy(lexemeArray + headIndex, lexeme);
-//        headIndex += lexemeSize + 1; // +1 cause of \0
-//        block[pos]->next = nullptr;
-//    }
-//}
-//
-//void IdentifiersTable::cInsert(char const *lexeme) {
-//
-//    unsigned long pos = cHash(lexeme);
-//
-//	symbol_info* info = block[pos];
-//
-//	if(info)
-//    if (block[pos]==nullptr)
-//    {
-//        block[pos] = new symbol_info();
-//        block[pos]->pos = headIndex;
-//
-//        int lexemeSize = strlen(lexeme);
-//        if (lexemeSize + headIndex >= lexemeArraySize) // Check if the string will exceed the array free space
-//        {
-//            lexemeArraySize += LEXEME_ARRAY_SIZE;
-//            lexemeArray = (char *) realloc(lexemeArray, lexemeArraySize);
-//        }
-//        strcpy(lexemeArray + headIndex, lexeme);
-//        headIndex += lexemeSize + 1; // +1 cause of \0
-//        block[pos]->next = nullptr;
-//    }
-//
-//}
+SymbolTable::~SymbolTable() = default;
 
 void LiteralsTable::cInsert(char const* lexeme)
 {

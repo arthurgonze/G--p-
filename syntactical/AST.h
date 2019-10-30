@@ -59,7 +59,7 @@ public:
 class ExpNode : public ASTNode
 {
 public:
-    virtual void accept(Visitor *visitor) override = 0;
+    void accept(Visitor *visitor) override = 0;
 };
 
 class BreakNode : public ASTNode
@@ -117,6 +117,22 @@ public:
 
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
+
+class ExpListNode : public ASTNode
+{
+private:
+    ExpNode *exp;
+    ExpListNode *next;
+public:
+    ExpListNode(ExpNode *exp, ExpListNode *next);
+    ~ExpListNode() override;
+
+    inline ExpNode *getExp() { return exp; }
+    inline ExpListNode *getNext() { return next; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
+};
+
 
 class PrintNode : public ASTNode
 {
@@ -188,7 +204,7 @@ public:
     explicit StmtNode(ThrowNode *aux) { this->stmt = aux; }
     explicit StmtNode(TryNode *aux) { this->stmt = aux; }
     explicit StmtNode(SwitchNode *aux) { this->stmt = reinterpret_cast<ASTNode *>(aux); } // TODO ARRUMAR ESSE CAST
-    virtual ~StmtNode() { delete this->stmt; }
+    ~StmtNode() override { delete this->stmt; }
 
     inline ASTNode *getStmt() { return stmt; }
 
@@ -373,20 +389,6 @@ public:
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-class ExpListNode : public ASTNode
-{
-private:
-    ExpNode *exp;
-    ExpListNode *next;
-public:
-    ExpListNode(ExpNode *exp, ExpListNode *next);
-    ~ExpListNode() override;
-
-    inline ExpNode *getExp() { return exp; }
-    inline ExpListNode *getNext() { return next; }
-
-    void accept(Visitor *visitor) override { visitor->visit(this); }
-};
 
 class CallNode : public ExpNode
 {
