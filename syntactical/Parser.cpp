@@ -81,6 +81,12 @@ void Parser::Eat(int t)
 
 }
 
+template<typename Base, typename T>
+inline bool instanceof(const T *)
+{
+    return std::is_base_of<Base, T>::value;
+}
+
 int Parser::programFollowSet[] = {7, TYPEDEF, INT, FLOAT, BOOL, ID, CHAR, ENDOFFILE};
 ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeList, VarDeclNode *varList) // OK
 {
@@ -131,6 +137,17 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
             Eat(ID);
 
             ASTNode *ast = ProgramAUX(type, pointer, id, varList);
+            if (instanceof<FunctionNode>(ast))
+            {
+                FunctionNode *f = (FunctionNode *) ast;
+                functionList = new FunctionListNode(f, functionList);
+                return ProgramList(functionList, typeList, varList);
+            }
+            else
+            {
+                varList = (VarDeclNode *) ast;
+                return Program(functionList, typeList, varList);
+            }
 
             return ProgramList(functionList, typeList, varList);
         }
@@ -160,7 +177,7 @@ ASTNode *Parser::ProgramAUX(TypeNode *type, PointerNode *pointer, TokenNode *id,
             Eat(RPARENT);
             Eat(LBRACE);
             VarStmtNode *varStmtNode = VarStmt(nullptr);
-            FunctionNode *func = nullptr;
+            FunctionNode *func = new FunctionNode(type,pointer,id,parameters,varStmtNode->getDecl(),varStmtNode->getBody());
             Eat(RBRACE);
             return func;
             break;
