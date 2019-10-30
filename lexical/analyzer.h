@@ -22,11 +22,11 @@
 #define BUFFER_SIZE 32
 #define INITIAL_STATE 0
 
-SymbolTable  get_literals_table();
+LiteralsTable  get_literals_table();
 
-SymbolTable  get_reserved_words_table();
+ReservedWordsTable  get_reserved_words_table();
 
-SymbolTable  get_identifiers_table();
+IdentifiersTable  get_identifiers_table();
 
 int lexical_analyzer_next_token();
 

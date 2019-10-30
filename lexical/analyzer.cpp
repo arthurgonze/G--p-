@@ -38,15 +38,15 @@ ReservedWordsTable  reservedWordsUsedTable;
 
 FILE* filePointer;
 
-SymbolTable get_literals_table() {
+LiteralsTable get_literals_table() {
     return literalsTable;
 }
 
-SymbolTable get_identifiers_table() {
+IdentifiersTable get_identifiers_table() {
     return identifiersTable;
 }
 
-SymbolTable get_reserved_words_table() {
+ReservedWordsTable get_reserved_words_table() {
     return reservedWordsUsedTable;
 }
 
@@ -227,7 +227,7 @@ void handle_next_line() {
  */
 void lexical_analyzer_dispose() {
     free(lexemeBuffer);
-
+	free(lastLexemeFound);
 }
 
 /**

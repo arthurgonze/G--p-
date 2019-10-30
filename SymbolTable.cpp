@@ -1,4 +1,5 @@
 #include "SymbolTable.h"
+#include "lexical/analyzer.h"
 
 /**
  * Polynomial Rolling Hash Function
@@ -111,6 +112,9 @@ int SymbolTable::cSearch(char *lexeme)
 SymbolTable::~SymbolTable() {
 
 }
+void SymbolTable::print()
+{
+}
 //
 //void LiteralsTable::cInsert(char const *lexeme) {
 //
@@ -162,12 +166,119 @@ void LiteralsTable::cInsert(char const* lexeme)
 	SymbolTable::cInsert(30, lexeme);
 }
 
+void LiteralsTable::print()
+{
+	printf("\nTABELA DE SÍMBOLOS: LITERAIS\n");
+	printf("-------------------------------------------\n");
+
+	//Check if column names headers needs to be printed
+	//If necessary, print selected;
+	printf("LEXEMA\t\t");
+
+	printf("\n-------------------------------------------\n");
+	
+	for (int i = 0; i < TABLE_SIZE; ++i)
+	{ //Get all the entries
+
+		symbol_info* temp = block[i];
+		if (temp == NULL) //If its null, nothing to be done
+			continue;
+
+		while (temp != NULL)
+		{
+
+			//Verify flags to print only requested columns
+
+			printf("%s\t\t", this->lexemeArray + temp->pos);
+
+			printf("\n");
+			temp = temp->next;
+
+		}
+
+	}
+
+	printf("\n");
+}
+
 void IdentifiersTable::cInsert(char const* lexeme)
 {
 	SymbolTable::cInsert(10, lexeme);
 }
 
+void IdentifiersTable::print()
+{
+	printf("\nTABELA DE SÍMBOLOS: LITERAIS\n");
+	printf("-------------------------------------------\n");
+
+	//Check if column names headers needs to be printed
+	//If necessary, print selected;
+	printf("LEXEMA\t\t");
+
+	printf("\n-------------------------------------------\n");
+
+	for (int i = 0; i < TABLE_SIZE; ++i)
+	{ //Get all the entries
+
+		symbol_info* temp = block[i];
+		if (temp == NULL) //If its null, nothing to be done
+			continue;
+
+		while (temp != NULL)
+		{
+
+			//Verify flags to print only requested columns
+
+			printf("%s\t\t", this->lexemeArray + temp->pos);
+
+			printf("\n");
+			temp = temp->next;
+
+		}
+
+	}
+
+	printf("\n");
+}
+
 symbol_info::~symbol_info()
 {
 	delete next;
+}
+
+void ReservedWordsTable::print()
+{
+	printf("\nTABELA DE SÍMBOLOS: PALAVRAS RESERVADAS\n");
+	printf("-------------------------------------------\n");
+
+	//Check if column names headers needs to be printed
+	//If necessary, print selected;
+
+	printf("TOKEN\t\tCÓDIGO");
+
+	printf("\n-------------------------------------------\n");
+	
+	for (int i = 0; i < TABLE_SIZE; ++i)
+	{ //Get all the entries
+
+		symbol_info* temp = block[i];
+		if (temp == NULL) //If its null, nothing to be done
+			continue;
+
+		while (temp != NULL)
+		{
+
+			//Verify flags to print only requested columns
+			printf("%s\t\t", token_id_to_name(temp->token));
+
+			printf("%d", temp->token);
+
+			printf("\n");
+			temp = temp->next;
+
+		}
+
+	}
+
+	printf("\n");
 }

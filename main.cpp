@@ -9,59 +9,6 @@
 #define RETURN_CODE_FILE_ERROR 1
 #define RETURN_CODE_LEXICAL_ERROR 2
 
-void print_symbol_table(SymbolTable symbolTable, bool showHeader, bool showToken, bool showLexeme,
-                        bool showInternalCode, char const *tableName)
-{
-    struct symbol_info **block = symbolTable.block;
-
-    printf("\nTABELA DE SÍMBOLOS: %s\n", tableName);
-    printf("-------------------------------------------\n");
-
-    //Check if column names headers needs to be printed
-    //If necessary, print selected;
-    if (showHeader)
-    {
-        if (showToken)
-            printf("TOKEN\t\t");
-
-        if (showLexeme)
-            printf("LEXEMA\t\t");
-
-        if (showInternalCode)
-            printf("CÓDIGO");
-
-        printf("\n-------------------------------------------\n");
-    }
-    for (int i = 0; i < TABLE_SIZE; ++i)
-    { //Get all the entries
-
-        symbol_info *temp = block[i];
-        if (temp==NULL) //If its null, nothing to be done
-            continue;
-
-        while (temp!=NULL)
-        {
-
-            //Verify flags to print only requested columns
-            if (showToken)
-                printf("%s\t\t", token_id_to_name(temp->token));
-
-            if (showLexeme)
-                printf("%s\t\t", symbolTable.lexemeArray + temp->pos);
-
-            if (showInternalCode)
-                printf("%d", temp->token);
-
-            printf("\n");
-            temp = temp->next;
-
-        }
-
-    }
-
-    printf("\n");
-}
-
 int main(int argc, char *argv[])
 {
 
@@ -102,12 +49,14 @@ int main(int argc, char *argv[])
     Parser *parser = new Parser();
     parser->StartParser();
 
+	//Print the symbol tables for reserved words, identifiers and literals
+	get_reserved_words_table().print();
+	get_identifiers_table().print();
+	get_literals_table().print();
+
     lexical_analyzer_dispose();
 
-    //Print the symbol tables for reserved words, identifiers and literals
-    print_symbol_table(get_reserved_words_table(), true, true, false, true, "PALAVRAS RESERVADAS");
-    print_symbol_table(get_identifiers_table(), false, false, true, false, "IDENTIFICADORES");
-    print_symbol_table(get_literals_table(), false, false, true, false, "LITERAIS");
+	printf("\n");
 
     return 0;
 }
