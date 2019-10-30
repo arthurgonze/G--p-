@@ -568,7 +568,7 @@ void PrintAST::visit(TypeNode *node)
 {
     if (node->getId()->getLex()!=nullptr)
     {
-        this->printAST(token_id_to_name(node->getId()->getToken()), node->getId()->getLex());
+        this->printAST(((const char *)strcat((char*)token_id_to_name(node->getId()->getToken()),".")), node->getId()->getLex());
     }
     else
     {

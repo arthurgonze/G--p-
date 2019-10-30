@@ -120,7 +120,7 @@ void LiteralsTable::cInsert(char const* lexeme)
 
 void LiteralsTable::print()
 {
-	printf("\nTABELA DE SÕMBOLOS: LITERAIS\n");
+	printf("\nTABELA DE S√çMBOLOS: LITERAIS\n");
 	printf("-------------------------------------------\n");
 
 	//Check if column names headers needs to be printed
@@ -133,10 +133,10 @@ void LiteralsTable::print()
 	{ //Get all the entries
 
 		symbol_info* temp = block[i];
-		if (temp == NULL) //If its null, nothing to be done
+		if (temp == nullptr) //If its null, nothing to be done
 			continue;
 
-		while (temp != NULL)
+		while (temp != nullptr)
 		{
 
 			//Verify flags to print only requested columns
@@ -160,7 +160,7 @@ void IdentifiersTable::cInsert(char const* lexeme)
 
 void IdentifiersTable::print()
 {
-	printf("\nTABELA DE SÕMBOLOS: LITERAIS\n");
+	printf("\nTABELA DE S√çMBOLOS: LITERAIS\n");
 	printf("-------------------------------------------\n");
 
 	//Check if column names headers needs to be printed
@@ -173,10 +173,10 @@ void IdentifiersTable::print()
 	{ //Get all the entries
 
 		symbol_info* temp = block[i];
-		if (temp == NULL) //If its null, nothing to be done
+		if (temp == nullptr) //If its null, nothing to be done
 			continue;
 
-		while (temp != NULL)
+		while (temp != nullptr)
 		{
 
 			//Verify flags to print only requested columns
@@ -200,13 +200,13 @@ symbol_info::~symbol_info()
 
 void ReservedWordsTable::print()
 {
-	printf("\nTABELA DE SÕMBOLOS: PALAVRAS RESERVADAS\n");
+	printf("\nTABELA DE S√çMBOLOS: PALAVRAS RESERVADAS\n");
 	printf("-------------------------------------------\n");
 
 	//Check if column names headers needs to be printed
 	//If necessary, print selected;
 
-	printf("TOKEN\t\tC”DIGO");
+	printf("TOKEN\t\tC√ìDIGO");
 
 	printf("\n-------------------------------------------\n");
 	
@@ -214,10 +214,10 @@ void ReservedWordsTable::print()
 	{ //Get all the entries
 
 		symbol_info* temp = block[i];
-		if (temp == NULL) //If its null, nothing to be done
+		if (temp == nullptr) //If its null, nothing to be done
 			continue;
 
-		while (temp != NULL)
+		while (temp != nullptr)
 		{
 
 			//Verify flags to print only requested columns

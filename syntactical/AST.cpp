@@ -236,7 +236,7 @@ AdditionOPNode::AdditionOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2)
 {
     this->op = op;
     this->exp1 = exp1;
-    this->exp2;
+    this->exp2 = exp2;
 }
 AdditionOPNode::~AdditionOPNode()
 {
