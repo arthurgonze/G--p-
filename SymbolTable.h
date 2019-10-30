@@ -30,7 +30,7 @@ public:
     SymbolTable(); // Constructor
 	symbol_info* auxInsert(symbol_info* root, int token, char const* lexeme);
     virtual ~SymbolTable();
-
+	void print();
 protected:
     int headIndex = 0; // A variable to store the first free position in the lexeme array
     int lexemeArraySize = 0; // Actual size of the lexeme array
@@ -42,18 +42,19 @@ protected:
 
 class ReservedWordsTable : public SymbolTable {
 public:
-
+	void print();
 };
 
 class LiteralsTable : public SymbolTable {
     public:
        void cInsert(char const *lexeme);
+	   void print();
 
 };
 class IdentifiersTable : public SymbolTable {
     public:
         void cInsert(char const *lexeme);
-
+		void print();
 };
 
 
