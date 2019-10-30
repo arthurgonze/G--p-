@@ -9,8 +9,10 @@
 class Parser
 {
     int tok;
-    inline void advance() { tok = lexical_analyzer_next_token(); }
-    void eat(int t);
+    inline int Advance() { return tok = lexical_analyzer_next_token(); }
+    void Eat(int t);
+    void EatOrSkip(int expected, int *syncSet);
+    void Sync (int * syncSet);
 
     static int programFollowSet[];
     ProgramNode *Program(FunctionListNode *functionList, TypeDeclNode *typeList, VarDeclNode *varList);

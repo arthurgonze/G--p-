@@ -6,7 +6,7 @@ ProgramNode *program;
 
 ProgramNode *Parser::StartParser()
 {
-    advance();
+    Advance();
     program = Program(nullptr, nullptr, nullptr);
     visitor = new PrintAST();
     program->accept(visitor);
@@ -15,7 +15,52 @@ ProgramNode *Parser::StartParser()
 
 }
 
-void Parser::eat(int t)
+void Parser::EatOrSkip(int expected, int *syncSet)
+{
+    int tamConjunto = syncSet[0], i;
+    if (Advance()!=expected)
+    {
+        fprintf(stderr, "[SYNTACTICAL ERROR] Token error: Esperado: %s, Processado: %s \n", token_id_to_name(expected), token_id_to_name(tok));
+    }
+
+    while (Advance()!=ENDOFFILE)
+    {
+        if (Advance()==expected)    //verifica se o proximo token é igual ao token esperado
+        {
+            return;
+        }
+        else
+        {
+            for (i = 1; i <= tamConjunto; i++) //verifica se o proximo token é igual a um token do conjunto de sincronizacao
+            {
+                if (Advance()==syncSet[i])
+                {
+                    return;
+                }
+            }
+        }
+        Advance();
+    }
+}
+
+void Parser::Sync(int *syncSet)
+{
+    fprintf(stderr, "[SYNTACTICAL ERROR] Token error: Esperado: %s, Processado: %s \n", token_id_to_name(0), token_id_to_name(tok));
+    int tamConjunto = syncSet[0], i;
+    while (Advance()!=ENDOFFILE)
+    {
+        Eat(ENDOFFILE);
+        for (i = 1; i <= tamConjunto; i++)
+        {
+            if (Advance()==syncSet[i])
+            {
+                return;
+            }
+        }
+    }
+}
+
+void Parser::Eat(int t)
 {
     if (tok==t)
     {
@@ -27,7 +72,7 @@ void Parser::eat(int t)
         {
             fprintf(stdout, "MATCH - %s\n", token_id_to_name(t));
         }
-        advance();
+        Advance();
     }
     else
     {
@@ -36,26 +81,38 @@ void Parser::eat(int t)
 
 }
 
-int Parser::programFollowSet[] = {-1};
+int Parser::programFollowSet[] = {7, TYPEDEF, INT, FLOAT, BOOL, ID, CHAR, ENDOFFILE};
 ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeList, VarDeclNode *varList) // OK
 {
     switch (tok)
     {
         case TYPEDEF:
         {
-            eat(TYPEDEF);
-            eat(STRUCT);
-            eat(LBRACE);
+            Eat(TYPEDEF);
+
+            EatOrSkip(STRUCT, programFollowSet);
+            Eat(STRUCT);
+
+            EatOrSkip(LBRACE, programFollowSet);
+            Eat(LBRACE);
+
             TypeNode *type = Type();
             IdListNode *idList = IdList();
-            eat(SEMICOLON);
+
+            EatOrSkip(SEMICOLON, programFollowSet);
+            Eat(SEMICOLON);
+
             VarDeclNode *varListNode = new VarDeclNode(type, idList, VarDecl());
-            eat(RBRACE);
 
+            EatOrSkip(RBRACE, programFollowSet);
+            Eat(RBRACE);
+
+            EatOrSkip(ID, programFollowSet);
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
-            eat(ID);
+            Eat(ID);
 
-            eat(SEMICOLON);
+            EatOrSkip(SEMICOLON, programFollowSet);
+            Eat(SEMICOLON);
             typeList = new TypeDeclNode(varListNode, id, typeList);
             typeList = TypeDecl(typeList);
             return Program(functionList, typeList, varList);
@@ -71,7 +128,7 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
             PointerNode *pointer = Pointer();
 
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
-            eat(ID);
+            Eat(ID);
 
             ASTNode *ast = ProgramAUX(type, pointer, id, varList);
 
@@ -79,7 +136,7 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
         }
         case ENDOFFILE:
         {
-            eat(ENDOFFILE);
+            Eat(ENDOFFILE);
             return new ProgramNode(functionList, typeList, varList);
             break;
         }
@@ -98,13 +155,13 @@ ASTNode *Parser::ProgramAUX(TypeNode *type, PointerNode *pointer, TokenNode *id,
     {
         case LPARENT:
         {
-            eat(LPARENT);
+            Eat(LPARENT);
             FormalListNode *parameters = FormalList();
-            eat(RPARENT);
-            eat(LBRACE);
+            Eat(RPARENT);
+            Eat(LBRACE);
             VarStmtNode *varStmtNode = VarStmt(nullptr);
             FunctionNode *func = nullptr;
-            eat(RBRACE);
+            Eat(RBRACE);
             return func;
             break;
         }
@@ -113,7 +170,7 @@ ASTNode *Parser::ProgramAUX(TypeNode *type, PointerNode *pointer, TokenNode *id,
         {
             ArrayNode *array = Array();
             IdListNode *idList = new IdListNode(pointer, id, array, IdListAUX());
-            eat(SEMICOLON);
+            Eat(SEMICOLON);
             VarDeclNode *list = new VarDeclNode(type, idList, varFunc);
             return list;
         }
@@ -149,19 +206,19 @@ TypeDeclNode *Parser::TypeDecl(TypeDeclNode *typeListNode)//OK
     {
         case TYPEDEF:
         {
-            eat(TYPEDEF);
-            eat(STRUCT);
-            eat(LBRACE);
+            Eat(TYPEDEF);
+            Eat(STRUCT);
+            Eat(LBRACE);
             TypeNode *typeNode = Type();
             IdListNode *idListNode = IdList();
-            eat(SEMICOLON);
+            Eat(SEMICOLON);
             VarDeclNode *varListNode = new VarDeclNode(typeNode, idListNode, VarDecl());
-            eat(RBRACKET);
+            Eat(RBRACKET);
 
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
-            eat(ID);
+            Eat(ID);
 
-            eat(SEMICOLON);
+            Eat(SEMICOLON);
             typeListNode = new TypeDeclNode(varListNode, id, typeListNode);
             return TypeDecl(typeListNode);
             break;
@@ -187,7 +244,7 @@ VarDeclNode *Parser::VarDecl()//ok
         {
             TypeNode *type = Type();
             IdListNode *idListNode = IdList();
-            eat(SEMICOLON);
+            Eat(SEMICOLON);
             VarDeclNode *varList = new VarDeclNode(type, idListNode, VarDecl());
             return varList;
             break;
@@ -207,7 +264,7 @@ VarStmtNode *Parser::VarStmt(VarDeclNode *varList)//ok
         case ID:
         {
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
-            eat(ID);
+            Eat(ID);
             return VarStmtAux(id, varList);
             break;
         }
@@ -218,7 +275,7 @@ VarStmtNode *Parser::VarStmt(VarDeclNode *varList)//ok
         {
             TypeNode *type = TypeAux();
             IdListNode *idList = IdList();
-            eat(SEMICOLON);
+            Eat(SEMICOLON);
             varList = new VarDeclNode(type, idList, varList);
             return VarStmt(varList);
             break;
@@ -264,7 +321,7 @@ VarStmtNode *Parser::VarStmtAux(TokenNode *id, VarDeclNode *varList) //ok
         case ID:
         {
             IdListNode *idListNode = IdList();
-            eat(SEMICOLON);
+            Eat(SEMICOLON);
             varList = new VarDeclNode(new TypeNode(id), idListNode, varList);
             return VarStmt(varList);
         }
@@ -301,7 +358,7 @@ VarStmtNode *Parser::VarStmtAux(TokenNode *id, VarDeclNode *varList) //ok
             exp = ExprOrAUX(exp);
             exp = ExprAssignAUX(exp);
 
-            eat(SEMICOLON);
+            Eat(SEMICOLON);
             StmtListNode *stmtList = new StmtListNode(new StmtNode(exp), StmtListAUX());
             VarStmtNode *varStmtNode = new VarStmtNode(varList, stmtList);
             return varStmtNode;
@@ -322,7 +379,7 @@ IdListNode *Parser::IdList() //ok
         case ID:
         {
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
-            eat(ID);
+            Eat(ID);
             ArrayNode *array = Array();
             IdListNode *idListNode = new IdListNode(pointer, id, array, IdListAUX());
             return idListNode;
@@ -342,11 +399,11 @@ IdListNode *Parser::IdListAUX()//ok
     {
         case COMMA:
         {
-            eat(COMMA);
+            Eat(COMMA);
             PointerNode *pointer = Pointer();
 
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
-            eat(ID);
+            Eat(ID);
 
             ArrayNode *array = Array();
             IdListNode *idListNode = new IdListNode(pointer, id, array, IdListAUX());
@@ -368,7 +425,7 @@ PointerNode *Parser::Pointer()//ok
     {
         case STAR:
         {
-            eat(STAR);
+            Eat(STAR);
             return new PointerNode();
             break;
         }
@@ -387,12 +444,12 @@ ArrayNode *Parser::Array()//ok
     {
         case LBRACKET:
         {
-            eat(LBRACKET);
+            Eat(LBRACKET);
 
             TokenNode *numInt = new TokenNode(NUMINT, lexical_analyzer_last_lexeme());
-            eat(NUMINT);
+            Eat(NUMINT);
 
-            eat(RBRACKET);
+            Eat(RBRACKET);
             return new ArrayNode(numInt);
             break;
         }
@@ -419,7 +476,7 @@ FormalListNode *Parser::FormalList()//ok
             PointerNode *pointer = Pointer();
 
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
-            eat(ID);
+            Eat(ID);
 
             ArrayNode *array = Array();
             FormalListNode *list = new FormalListNode(type, pointer, id, array, FormalRest());
@@ -440,12 +497,12 @@ FormalListNode *Parser::FormalRest()//ok
     {
         case COMMA:
         {
-            eat(COMMA);
+            Eat(COMMA);
             TypeNode *typeNode = Type();
             PointerNode *pointer = Pointer();
 
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
-            eat(ID);
+            Eat(ID);
 
             ArrayNode *array = Array();
             FormalListNode *formalList = new FormalListNode(typeNode, pointer, id, array, FormalRest());
@@ -468,31 +525,31 @@ TypeNode *Parser::Type()//ok
         case INT:
         {
             TokenNode *type = new TokenNode(INT, nullptr);
-            eat(INT);
+            Eat(INT);
             return new TypeNode(type);
         }
         case FLOAT:
         {
             TokenNode *type = new TokenNode(FLOAT, nullptr);
-            eat(FLOAT);
+            Eat(FLOAT);
             return new TypeNode(type);
         }
         case BOOL:
         {
             TokenNode *type = new TokenNode(BOOL, nullptr);
-            eat(BOOL);
+            Eat(BOOL);
             return new TypeNode(type);
         }
         case ID:
         {
             TokenNode *type = new TokenNode(ID, lexical_analyzer_last_lexeme());
-            eat(ID);
+            Eat(ID);
             return new TypeNode(type);
         }
         case CHAR:
         {
             TokenNode *type = new TokenNode(CHAR, nullptr);
-            eat(CHAR);
+            Eat(CHAR);
             return new TypeNode(type);
         }
         default:
@@ -510,25 +567,25 @@ TypeNode *Parser::TypeAux()//ok
         case INT:
         {
             TokenNode *type = new TokenNode(INT, nullptr);
-            eat(INT);
+            Eat(INT);
             return new TypeNode(type);
         }
         case FLOAT:
         {
             TokenNode *type = new TokenNode(FLOAT, nullptr);
-            eat(FLOAT);
+            Eat(FLOAT);
             return new TypeNode(type);
         }
         case BOOL:
         {
             TokenNode *type = new TokenNode(BOOL, nullptr);
-            eat(BOOL);
+            Eat(BOOL);
             return new TypeNode(type);
         }
         case CHAR:
         {
             TokenNode *type = new TokenNode(CHAR, nullptr);
-            eat(CHAR);
+            Eat(CHAR);
             return new TypeNode(type);
         }
         default:
@@ -627,10 +684,10 @@ StmtNode *Parser::Stmt() //OK
     {
         case IF:
         {
-            eat(IF);
-            eat(LPARENT);
+            Eat(IF);
+            Eat(LPARENT);
             ExpNode *exp = ExprAssign();
-            eat(RPARENT);
+            Eat(RPARENT);
             StmtNode *ifStmt = Stmt();
             StmtNode *elseStmt = ElseStmt();
             IfNode *stmt = new IfNode(exp, ifStmt, elseStmt);
@@ -679,82 +736,82 @@ StmtNode *Parser::StmtAUX()//OK
     {
         case WHILE:
         {
-            eat(WHILE);
-            eat(LPARENT);
+            Eat(WHILE);
+            Eat(LPARENT);
             ExpNode *exp = ExprAssign();
-            eat(RPARENT);
+            Eat(RPARENT);
             WhileNode *aux = new WhileNode(exp, Stmt());
             return new StmtNode(aux);
         }
         case SWITCH:
         {
-            eat(SWITCH);
-            eat(LPARENT);
+            Eat(SWITCH);
+            Eat(LPARENT);
             ExpNode *exp = ExprAssign();
-            eat(RPARENT);
-            eat(LBRACE);
+            Eat(RPARENT);
+            Eat(LBRACE);
             CaseBlockNode *cbNode = CaseBlock();
-            eat(RBRACE);
+            Eat(RBRACE);
             SwitchNode *aux = new SwitchNode(exp, cbNode);
             return new StmtNode(aux);
         }
         case BREAK:
         {
-            eat(BREAK);
-            BreakNode* breakNode = new BreakNode();
-            eat(SEMICOLON);
+            Eat(BREAK);
+            BreakNode *breakNode = new BreakNode();
+            Eat(SEMICOLON);
             return new StmtNode(breakNode);
         }
         case PRINT:
         {
-            eat(PRINT);
-            eat(LPARENT);
+            Eat(PRINT);
+            Eat(LPARENT);
             ExpListNode *expList = ExprList();
-            eat(RPARENT);
-            eat(SEMICOLON);
+            Eat(RPARENT);
+            Eat(SEMICOLON);
             PrintNode *print = new PrintNode(expList);
             return new StmtNode(print);
         }
         case READLN:
         {
-            eat(READLN);
-            eat(LPARENT);
+            Eat(READLN);
+            Eat(LPARENT);
             ExpNode *exp = ExprAssign();
-            eat(RPARENT);
-            eat(SEMICOLON);
+            Eat(RPARENT);
+            Eat(SEMICOLON);
             return new StmtNode(new ReadLnNode(exp));
         }
         case RETURN:
         {
-            eat(RETURN);
+            Eat(RETURN);
             ExpNode *exp = ExprAssign();
-            eat(SEMICOLON);
+            Eat(SEMICOLON);
             return new StmtNode(new ReturnNode(exp));
         }
         case THROW:
         {
-            eat(THROW);
-            eat(SEMICOLON);
+            Eat(THROW);
+            Eat(SEMICOLON);
             return new StmtNode(new ThrowNode);
             break;
         }
         case LBRACE:
         {
-            eat(LBRACE);
+            Eat(LBRACE);
             StmtListNode *stmtList = StmtList();
-            eat(RBRACKET);
+            Eat(RBRACKET);
             return new StmtNode(stmtList);
         }
         case TRY:
         {
-            eat(TRY);
+            Eat(TRY);
             StmtNode *tryStmt = Stmt();
-            eat(CATCH);
-            eat(LPARENT);
-            eat(DOT);
-            eat(DOT);
-            eat(DOT);
-            eat(RPARENT);
+            Eat(CATCH);
+            Eat(LPARENT);
+            Eat(DOT);
+            Eat(DOT);
+            Eat(DOT);
+            Eat(RPARENT);
             StmtNode *exception = Stmt();
             return new StmtNode(new TryNode(tryStmt, exception));
         }
@@ -767,13 +824,13 @@ StmtNode *Parser::StmtAUX()//OK
         case NUMINT:
         case NUMFLOAT:
         case LITERAL:
-        // TODO case LITERALCHAR:?
+            // TODO case LITERALCHAR:?
         case TRUE:
         case FALSE:
         case LPARENT:
         {
             ExpNode *exp = ExprAssign();
-            eat(SEMICOLON);
+            Eat(SEMICOLON);
             return new StmtNode(exp);
         }
         default:
@@ -790,7 +847,7 @@ StmtNode *Parser::ElseStmt()//ok
     {
         case ELSE:
         {
-            eat(ELSE);
+            Eat(ELSE);
             return Stmt();
         }
         default:
@@ -808,11 +865,11 @@ CaseBlockNode *Parser::CaseBlock()//OK
     {
         case CASE:
         {
-            eat(CASE);
+            Eat(CASE);
 
             TokenNode *token = new TokenNode(NUMINT, lexical_analyzer_last_lexeme());
-            eat(NUMINT);
-            eat(COLON);
+            Eat(NUMINT);
+            Eat(COLON);
             return CaseBlockAUX(token);
             break;
         }
@@ -853,7 +910,7 @@ CaseBlockNode *Parser::CaseBlockAUX(TokenNode *num)//OK
         case NUMINT:
         case NUMFLOAT:
         case LITERAL:
-        //TODO case LITERALCHAR: ?
+            //TODO case LITERALCHAR: ?
         case TRUE:
         case FALSE:
         case LPARENT:
@@ -882,7 +939,7 @@ ExpListNode *Parser::ExprList()//OK
         case NUMINT:
         case NUMFLOAT:
         case LITERAL:
-        //TODO case LITERALCHAR:?
+            //TODO case LITERALCHAR:?
         case TRUE:
         case FALSE:
         case LPARENT:
@@ -912,7 +969,7 @@ ExpListNode *Parser::ExprListTail()//OK
         case NUMINT:
         case NUMFLOAT:
         case LITERAL:
-        // TODO case LITERALCHAR:?
+            // TODO case LITERALCHAR:?
         case TRUE:
         case FALSE:
         case LPARENT:
@@ -934,7 +991,7 @@ ExpListNode *Parser::ExprListTailAUX()//OK
     {
         case COMMA:
         {
-            eat(COMMA);
+            Eat(COMMA);
             return ExprListTail();
             break;
         }
@@ -960,7 +1017,7 @@ ExpNode *Parser::ExprAssign()
         case NUMINT:
         case NUMFLOAT:
         case LITERAL:
-        // TODO case LITERALCHAR:?
+            // TODO case LITERALCHAR:?
         case TRUE:
         case FALSE:
         case LPARENT:
@@ -984,7 +1041,7 @@ ExpNode *Parser::ExprAssignAUX(ExpNode *expr)//ok
     {
         case ASSIGN:
         {
-            eat(ASSIGN);
+            Eat(ASSIGN);
             exp2 = ExprAssign();
             node = new AssignNode(expr, exp2);
             break;
@@ -1008,7 +1065,7 @@ ExpNode *Parser::ExprOr()//ok
         case NUMINT:
         case NUMFLOAT:
         case LITERAL:
-        // TODO case LITERALCHAR:?
+            // TODO case LITERALCHAR:?
         case TRUE:
         case FALSE:
         case LPARENT:
@@ -1033,7 +1090,7 @@ ExpNode *Parser::ExprOrAUX(ExpNode *expr)//ok
     {
         case OR:
         {
-            eat(OR);
+            Eat(OR);
             token = new TokenNode(OR, nullptr);
             exp2 = ExprOr();
             node = new BooleanOPNode(token, expr, exp2);
@@ -1083,7 +1140,7 @@ ExpNode *Parser::ExprAndAUX(ExpNode *expr)//ok
     {
         case AND:
         {
-            eat(AND);
+            Eat(AND);
             token = new TokenNode(AND, nullptr);
             exp2 = ExprAnd();
             node = new BooleanOPNode(token, expr, exp2);
@@ -1133,7 +1190,7 @@ ExpNode *Parser::ExprEqualityAUX(ExpNode *expr)//ok
     {
         case EQ:
         {
-            eat(EQ);
+            Eat(EQ);
             token = new TokenNode(EQ, nullptr);
             exp2 = ExprEquality();
             node = new BooleanOPNode(token, expr, exp2);
@@ -1141,7 +1198,7 @@ ExpNode *Parser::ExprEqualityAUX(ExpNode *expr)//ok
         }
         case NE:
         {
-            eat(NE);
+            Eat(NE);
             token = new TokenNode(NE, nullptr);
             exp2 = ExprEquality();
             node = new BooleanOPNode(token, expr, exp2);
@@ -1191,7 +1248,7 @@ ExpNode *Parser::ExprRelationalAUX(ExpNode *expr)//ok
     {
         case LT:
         {
-            eat(LT);
+            Eat(LT);
             token = new TokenNode(LT, nullptr);
             exp2 = ExprRelational();
             node = new BooleanOPNode(token, expr, exp2);
@@ -1199,7 +1256,7 @@ ExpNode *Parser::ExprRelationalAUX(ExpNode *expr)//ok
         }
         case GT:
         {
-            eat(GT);
+            Eat(GT);
             token = new TokenNode(GT, nullptr);
             exp2 = ExprRelational();
             node = new BooleanOPNode(token, expr, exp2);
@@ -1207,7 +1264,7 @@ ExpNode *Parser::ExprRelationalAUX(ExpNode *expr)//ok
         }
         case LE:
         {
-            eat(LE);
+            Eat(LE);
             token = new TokenNode(LE, nullptr);
             exp2 = ExprRelational();
             node = new BooleanOPNode(token, expr, exp2);
@@ -1215,7 +1272,7 @@ ExpNode *Parser::ExprRelationalAUX(ExpNode *expr)//ok
         }
         case GE:
         {
-            eat(GE);
+            Eat(GE);
             token = new TokenNode(GE, nullptr);
             exp2 = ExprRelational();
             node = new BooleanOPNode(token, expr, exp2);
@@ -1265,7 +1322,7 @@ ExpNode *Parser::ExprAdditiveAUX(ExpNode *expr)//ok
     {
         case PIPE:
         {
-            eat(PIPE);
+            Eat(PIPE);
             token = new TokenNode(PIPE, nullptr);
             exp2 = ExprAdditive();
             node = new AdditionOPNode(token, expr, exp2);
@@ -1273,7 +1330,7 @@ ExpNode *Parser::ExprAdditiveAUX(ExpNode *expr)//ok
         }
         case PLUS:
         {
-            eat(PLUS);
+            Eat(PLUS);
             token = new TokenNode(PLUS, nullptr);
             exp2 = ExprAdditive();
             node = new AdditionOPNode(token, expr, exp2);
@@ -1281,7 +1338,7 @@ ExpNode *Parser::ExprAdditiveAUX(ExpNode *expr)//ok
         }
         case MINUS:
         {
-            eat(MINUS);
+            Eat(MINUS);
             token = new TokenNode(MINUS, nullptr);
             exp2 = ExprAdditive();
             node = new AdditionOPNode(token, expr, exp2);
@@ -1334,7 +1391,7 @@ ExpNode *Parser::ExprMultiplicativeAUX(ExpNode *expr)//ok
     {
         case ADDRESS:
         {
-            eat(ADDRESS);
+            Eat(ADDRESS);
             token = new TokenNode(ADDRESS, nullptr);
             exp2 = ExprMultiplicative();
             node = new MultiplicationOPNode(token, expr, exp2);
@@ -1342,7 +1399,7 @@ ExpNode *Parser::ExprMultiplicativeAUX(ExpNode *expr)//ok
         }
         case STAR:
         {
-            eat(STAR);
+            Eat(STAR);
             token = new TokenNode(STAR, nullptr);
             exp2 = ExprMultiplicative();
             node = new MultiplicationOPNode(token, expr, exp2);
@@ -1350,7 +1407,7 @@ ExpNode *Parser::ExprMultiplicativeAUX(ExpNode *expr)//ok
         }
         case SLASH:
         {
-            eat(SLASH);
+            Eat(SLASH);
             token = new TokenNode(SLASH, nullptr);
             exp2 = ExprMultiplicative();
             node = new MultiplicationOPNode(token, expr, exp2);
@@ -1358,7 +1415,7 @@ ExpNode *Parser::ExprMultiplicativeAUX(ExpNode *expr)//ok
         }
         case PERCENT:
         {
-            eat(PERCENT);
+            Eat(PERCENT);
             token = new TokenNode(PERCENT, nullptr);
             exp2 = ExprMultiplicative();
             node = new MultiplicationOPNode(token, expr, exp2);
@@ -1377,31 +1434,31 @@ ExpNode *Parser::ExprUnary()//ok
     {
         case NOT:
         {
-            eat(NOT);
+            Eat(NOT);
             return new SignNode(ExprUnary());
             break;
         }
         case PLUS:
         {
-            eat(PLUS);
+            Eat(PLUS);
             return ExprUnary();
             break;
         }
         case MINUS:
         {
-            eat(MINUS);
+            Eat(MINUS);
             return new SignNode(ExprUnary());
             break;
         }
         case STAR:
         {
-            eat(STAR);
+            Eat(STAR);
             return new PointerValNode(ExprUnary());
             break;
         }
         case ADDRESS:
         {
-            eat(ADDRESS);
+            Eat(ADDRESS);
             return new AddressValNode(ExprUnary());
             break;
         }
@@ -1434,49 +1491,49 @@ ExpNode *Parser::Primary()
         case ID:
         {
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
-            eat(ID);
+            Eat(ID);
             return PostFixExpr(id);
         }
         case NUMINT:
         {
             TokenNode *numInt = new TokenNode(NUMINT, lexical_analyzer_last_lexeme());
-            eat(NUMINT);
+            Eat(NUMINT);
             return PostFixExprAUX(new PrimaryNode(numInt));
         }
         case NUMFLOAT:
         {
             TokenNode *numFloat = new TokenNode(NUMFLOAT, lexical_analyzer_last_lexeme());
-            eat(NUMFLOAT);
+            Eat(NUMFLOAT);
             return PostFixExprAUX(new PrimaryNode(numFloat));
         }
         case LITERAL:
         {
 
             TokenNode *literalString = new TokenNode(LITERAL, lexical_analyzer_last_lexeme());
-            eat(LITERAL);
+            Eat(LITERAL);
             return PostFixExprAUX(new PrimaryNode(literalString));
         }
         case TRUE:
         {
-            eat(TRUE);
+            Eat(TRUE);
             ExpNode *expNode = new PrimaryNode(new TokenNode(TRUE, nullptr));
             return PostFixExprAUX(expNode);
         }
         case FALSE:
         {
-            eat(FALSE);
+            Eat(FALSE);
             ExpNode *expNode = new PrimaryNode(new TokenNode(FALSE, nullptr));
             return PostFixExprAUX(expNode);
             break;
         }
         case STAR:
         {
-            eat(STAR);
+            Eat(STAR);
             return PostFixExprAUX(new PointerValNode(ExprAssign()));
         }
         case ADDRESS:
         {
-            eat(ADDRESS);
+            Eat(ADDRESS);
             return PostFixExprAUX(new AddressValNode(ExprAssign()));
         }
         default:
@@ -1495,23 +1552,23 @@ ExpNode *Parser::PostFixExprAUX(ExpNode *exp)
     {
         case DOT:
         {
-            eat(DOT);
+            Eat(DOT);
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
-            eat(ID);
+            Eat(ID);
             return PostFixExprAUX(new NameExpNode(exp, id));
         }
         case POINTER:
         {
-            eat(POINTER);
+            Eat(POINTER);
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
-            eat(ID);
+            Eat(ID);
             return PostFixExprAUX(new PointerExpNode(exp, id));
         }
         case LBRACKET:
         {
-            eat(LBRACKET);
+            Eat(LBRACKET);
             ExpNode *index = ExprAssign();
-            eat(RBRACKET);
+            Eat(RBRACKET);
             return PostFixExprAUX(new ArrayCallNode(exp, index));
         }
         default:
@@ -1530,9 +1587,9 @@ ExpNode *Parser::PostFixExpr(TokenNode *id) //ok
     {
         case LPARENT:
         {
-            eat(LPARENT);
+            Eat(LPARENT);
             ExpListNode *expList = ExprList();
-            eat(RPARENT);
+            Eat(RPARENT);
             CallNode *callNode = new CallNode(id, expList);
             PrimaryNode *primary = new PrimaryNode(PostFixExprAUX(callNode));
             return primary;
