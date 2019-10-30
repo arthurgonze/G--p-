@@ -31,7 +31,7 @@ SymbolTable::SymbolTable()
     lexemeArraySize = 0; // Actual size of the lexeme array
 
 	block = new symbol_info* [TABLE_SIZE];
-	memset(block, 0, sizeof(block) * TABLE_SIZE); //Initialize all positions with null
+	memset(block, 0, sizeof(block) * TABLE_SIZE); //Initialize all positions with nullptr
 	
 }
 
@@ -43,13 +43,13 @@ SymbolTable::SymbolTable()
 */
 symbol_info* SymbolTable::auxInsert(symbol_info* root, int token, char const* lexeme) {
 
-	if (root == NULL)
+	if (root == nullptr)
 	{
 		//Create the new node with info
 		symbol_info* newNode = new symbol_info();
 		newNode->token = token;
 		newNode->pos = headIndex;
-		newNode->next = NULL;
+		newNode->next = nullptr;
 
 		//Add the lexeme to array
 		int lexemeSize = strlen(lexeme);
@@ -66,7 +66,7 @@ symbol_info* SymbolTable::auxInsert(symbol_info* root, int token, char const* le
 	}
 
 	//If there's a valid node, check if its not a duplicate
-	if (root->token == token && strcmp(lexemeArray + root->pos, lexeme))
+	if (!(root->token == token && strcmp(lexemeArray + root->pos, lexeme) == 0))
 		root->next = auxInsert(root->next, token, lexeme);
 	
 	return root;
@@ -97,7 +97,7 @@ int SymbolTable::cSearch(char *lexeme)
     unsigned long pos = cHash(lexeme);
     symbol_info *temp = block[pos];
 
-    while (temp!=NULL)
+    while (temp!=nullptr)
     {
         if (strcmp(lexemeArray + temp->pos, lexeme)==0)
         {
@@ -116,7 +116,7 @@ SymbolTable::~SymbolTable() {
 //
 //    unsigned long pos = cHash(lexeme);
 //
-//    if (block[pos] == NULL) {
+//    if (block[pos] == nullptr) {
 //        block[pos] = new symbol_info();
 //        block[pos]->pos = headIndex;
 //
@@ -128,7 +128,7 @@ SymbolTable::~SymbolTable() {
 //        }
 //        strcpy(lexemeArray + headIndex, lexeme);
 //        headIndex += lexemeSize + 1; // +1 cause of \0
-//        block[pos]->next = NULL;
+//        block[pos]->next = nullptr;
 //    }
 //}
 //
@@ -139,7 +139,7 @@ SymbolTable::~SymbolTable() {
 //	symbol_info* info = block[pos];
 //
 //	if(info)
-//    if (block[pos]==NULL)
+//    if (block[pos]==nullptr)
 //    {
 //        block[pos] = new symbol_info();
 //        block[pos]->pos = headIndex;
@@ -152,7 +152,7 @@ SymbolTable::~SymbolTable() {
 //        }
 //        strcpy(lexemeArray + headIndex, lexeme);
 //        headIndex += lexemeSize + 1; // +1 cause of \0
-//        block[pos]->next = NULL;
+//        block[pos]->next = nullptr;
 //    }
 //
 //}
