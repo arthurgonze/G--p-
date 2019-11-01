@@ -96,28 +96,28 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
         {
             Eat(TYPEDEF);
 
-            EatOrSkip(STRUCT, programFollowSet);
+           // EatOrSkip(STRUCT, programFollowSet);
             Eat(STRUCT);
 
-            EatOrSkip(LBRACE, programFollowSet);
+         //   EatOrSkip(LBRACE, programFollowSet);
             Eat(LBRACE);
 
             TypeNode *type = Type();
             IdListNode *idList = IdList();
 
-            EatOrSkip(SEMICOLON, programFollowSet);
+        //    EatOrSkip(SEMICOLON, programFollowSet);
             Eat(SEMICOLON);
 
             VarDeclNode *varListNode = new VarDeclNode(type, idList, VarDecl());
 
-            EatOrSkip(RBRACE, programFollowSet);
+        //    EatOrSkip(RBRACE, programFollowSet);
             Eat(RBRACE);
 
-            EatOrSkip(ID, programFollowSet);
+       //     EatOrSkip(ID, programFollowSet);
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
             Eat(ID);
 
-            EatOrSkip(SEMICOLON, programFollowSet);
+       //     EatOrSkip(SEMICOLON, programFollowSet);
             Eat(SEMICOLON);
             typeList = new TypeDeclNode(varListNode, id, typeList);
             typeList = TypeDecl(typeList);

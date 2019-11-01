@@ -15,8 +15,8 @@ PrintAST::PrintAST()
 void PrintAST::printAST(const char *node_name, const char *aux = "")
 {
     for (unsigned int i = 0; i < this->level; i++)
-        std::cout << "\t";
-    std::cout << "->" << node_name << aux << std::endl;
+        std::cout << "    ";
+    std::cout << "->" << node_name <<"."<< aux << std::endl;
 }
 
 void PrintAST::up_level()
@@ -568,7 +568,7 @@ void PrintAST::visit(TypeNode *node)
 {
     if (node->getId()->getLex()!=nullptr)
     {
-        this->printAST(((const char *)strcat((char*)token_id_to_name(node->getId()->getToken()),".")), node->getId()->getLex());
+        this->printAST(token_id_to_name(node->getId()->getToken()), node->getId()->getLex());
     }
     else
     {
@@ -579,7 +579,7 @@ void PrintAST::visit(TypeNode *node)
 
 void PrintAST::visit(TokenNode *node)
 {
-    this->printAST("ID.", node->getLex());
+    this->printAST(token_id_to_name(node->getToken()), node->getLex());
 }
 
 void PrintAST::visit(ThrowNode *node)
