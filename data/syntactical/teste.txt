@@ -3,9 +3,8 @@ typedef struct {
  float b;
 } c; 
 
-float f (int c) {
+float f (int c, float b) {
 
- float b;
  c = c + 2;
  b = c + 1.21;
  b = 2e10;
@@ -17,7 +16,7 @@ float f (int c) {
 int main (){
  c *x;
  x->a=2;
- x.b= f(2); 
+ x.b= f(2,3); 
 
  return 0;
 }
