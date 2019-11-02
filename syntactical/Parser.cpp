@@ -756,7 +756,7 @@ StmtNode *Parser::StmtAUX()
 
             EatOrSkip(LBRACE, stmtAUXFollowSet);
             CaseBlockNode *cbNode = CaseBlock();
-            EatOrSkip(RPARENT, stmtAUXFollowSet);
+            EatOrSkip(RPARENT, stmtAUXFollowSet) ; // TODO confirmar se é RPARENT ou RBRACE mesmo
 
             SwitchNode *aux = new SwitchNode(exp, cbNode);
             return new StmtNode(aux);
