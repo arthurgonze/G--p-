@@ -242,7 +242,7 @@ void PrintAST::visit(ExpListNode *node)
     {
         node->getExp()->accept(this);
     }
-    if (node->getExp()!=nullptr)
+    if (node->getNext()!=nullptr)
     {
         node->getNext()->accept(this);
     }

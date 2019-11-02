@@ -1586,7 +1586,7 @@ ExpNode *Parser::PostFixExprAUX(ExpNode *exp)
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(PostFixExprAUX), Token error: %s \n", token_id_to_name(tok));
+//            fprintf(stderr, "[SYNTAX ERROR] error(PostFixExprAUX), Token error: %s \n", token_id_to_name(tok));
             return exp;
         }
     }
