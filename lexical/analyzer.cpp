@@ -414,8 +414,8 @@ int lexical_analyzer_next_token() {
                     get_next_char_and_go_to(20);
                 else if (is_letter(currentInput))
                     go_to_state(94);
-                else if (currentInput == ',')
-                    go_to_state(95);
+//                else if (currentInput == ',')
+//                    go_to_state(95);
                 else
                     go_to_state(24);
                 break;
@@ -632,10 +632,10 @@ int lexical_analyzer_next_token() {
                 fail("The ID can't start with int numbers");
                 go_to_state(INITIAL_STATE);
                 break;
-            case 95: //Number fail state : change ',' to '.'
-                fail("Missing . character. Maybe change ',' to '.' ");
-                go_to_state(INITIAL_STATE);
-                break;
+//            case 95: //Number fail state : change ',' to '.'
+//                fail("Missing . character. Maybe change ',' to '.' ");
+//                go_to_state(INITIAL_STATE);
+//                break;
             case 96: //Missing ' character fail state
                 fail("Missing \' character");
                 go_to_state(INITIAL_STATE);
