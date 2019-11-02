@@ -51,44 +51,44 @@ class Visitor
 {
 public:
     virtual ~Visitor() = default;;
-    virtual void visit(ProgramNode *node) {};
-    virtual void visit(TypeNode *node) {};
-    virtual void visit(FunctionListNode *node) {};
-    virtual void visit(PointerNode *node) {};
-    virtual void visit(StmtListNode *node) {};
-    virtual void visit(IfNode *node) {};
-    virtual void visit(WhileNode *node) {};
-    virtual void visit(SwitchNode *node) {};
-    virtual void visit(BreakNode *node) {};
-    virtual void visit(PrintNode *node) {};
-    virtual void visit(ReadLnNode *node) {};
-    virtual void visit(ReturnNode *node) {};
-    virtual void visit(CaseBlockNode *node) {};
-    virtual void visit(ThrowNode *node) {};
-    virtual void visit(ExpListNode *node) {};
-    virtual void visit(TryNode *node) {};
-    virtual void visit(TokenNode *node) {};
-    virtual void visit(AssignNode *node) {};
-    virtual void visit(ArrayNode *node) {};
-    virtual void visit(CallNode *node) {};
-    virtual void visit(AdditionOPNode *node) {};
-    virtual void visit(MultiplicationOPNode *node) {};
-    virtual void visit(BooleanOPNode *node) {};
-    virtual void visit(NotNode *node) {};
-    virtual void visit(SignNode *node) {};
-    virtual void visit(ArrayCallNode *node) {};
-    virtual void visit(FormalListNode *node) {};
-    virtual void visit(IdListNode *node) {};
-    virtual void visit(PrimaryNode *node) {};
-    virtual void visit(VarStmtNode *node) {};
-    virtual void visit(FunctionNode *node) {};
-    virtual void visit(PointerExpNode *node) {};
-    virtual void visit(NameExpNode *node) {};
-    virtual void visit(VarDeclNode *node) {};
-    virtual void visit(TypeDeclNode *node) {};
-    virtual void visit(AddressValNode *node) {};
-    virtual void visit(PointerValNode *node) {};
-    virtual void visit(StmtNode *node) {};
+    virtual void visit(ProgramNode *node) = 0;
+    virtual void visit(TypeNode *node) = 0;
+    virtual void visit(FunctionListNode *node) = 0;
+    virtual void visit(PointerNode *node) = 0;
+    virtual void visit(StmtListNode *node) = 0;
+    virtual void visit(IfNode *node) = 0;
+    virtual void visit(WhileNode *node) = 0;
+    virtual void visit(SwitchNode *node) = 0;
+    virtual void visit(BreakNode *node) = 0;
+    virtual void visit(PrintNode *node) = 0;
+    virtual void visit(ReadLnNode *node) = 0;
+    virtual void visit(ReturnNode *node) = 0;
+    virtual void visit(CaseBlockNode *node) = 0;
+    virtual void visit(ThrowNode *node) = 0;
+    virtual void visit(ExpListNode *node) = 0;
+    virtual void visit(TryNode *node) = 0;
+    virtual void visit(TokenNode *node) = 0;
+    virtual void visit(AssignNode *node) = 0;
+    virtual void visit(ArrayNode *node) = 0;
+    virtual void visit(CallNode *node) = 0;
+    virtual void visit(AdditionOPNode *node) = 0;
+    virtual void visit(MultiplicationOPNode *node) = 0;
+    virtual void visit(BooleanOPNode *node) = 0;
+    virtual void visit(NotNode *node) = 0;
+    virtual void visit(SignNode *node) = 0;
+    virtual void visit(ArrayCallNode *node) = 0;
+    virtual void visit(FormalListNode *node) = 0;
+    virtual void visit(IdListNode *node) = 0;
+    virtual void visit(PrimaryNode *node) = 0;
+    virtual void visit(VarStmtNode *node) = 0;
+    virtual void visit(FunctionNode *node) = 0;
+    virtual void visit(PointerExpNode *node) = 0;
+    virtual void visit(NameExpNode *node) = 0;
+    virtual void visit(VarDeclNode *node) = 0;
+    virtual void visit(TypeDeclNode *node) = 0;
+    virtual void visit(AddressValNode *node) = 0;
+    virtual void visit(PointerValNode *node) = 0;
+    virtual void visit(StmtNode *node) = 0;
 
 };
 
@@ -96,7 +96,8 @@ class PrintAST : public Visitor
 {
 private:
     unsigned int level;
-    void printAST(const char *node_name, const char * aux);
+    void printAST(const char *node_name);
+    void printLexemeAST(const char *node_name, const char * aux);
     void up_level();
     void down_level();
 
