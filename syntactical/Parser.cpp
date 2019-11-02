@@ -15,48 +15,61 @@ ProgramNode *Parser::StartParser()
 
 }
 
-void Parser::EatOrSkip(int expected, int *syncSet)
+/**
+* If the current token is the expected eats the token and return the lexeme if the current token is LITERAL, INTEGER, REAL, ID or CHARACTER.
+* Else prints an error message and skips all tokens until it finds one that is in the sync set.
+*/
+const char *Parser::EatOrSkip(int expectedToken, const int *syncSet)
 {
-    int tamConjunto = syncSet[0], i;
-    if (Advance()!=expected)
+    if (tok==expectedToken)
     {
-        fprintf(stderr, "[SYNTAX ERROR] Token error: Esperado: %s, Processado: %s \n", token_id_to_name(expected), token_id_to_name(tok));
+        const char *aux = (tok==LITERAL || tok==NUMINT || tok==NUMFLOAT || tok==ID || tok==LITERALCHAR) ? lexical_analyzer_last_lexeme() : nullptr;
+        Eat(tok);
+        return aux;
     }
-
-    while (Advance()!=ENDOFFILE)
+    else
     {
-        if (Advance()==expected)    //verifica se o proximo token é igual ao token esperado
+        //print_syntactic_error(expected_token, -1); ///generic error
+        int i = 0;
+        while (tok!=ENDOFFILE)
         {
-            return;
-        }
-        else
-        {
-            for (i = 1; i <= tamConjunto; i++) //verifica se o proximo token é igual a um token do conjunto de sincronizacao
+            while (syncSet[i]!='\0')
             {
-                if (Advance()==syncSet[i])
-                {
-                    return;
-                }
+                if (tok!=syncSet[i])
+                    i++;
+                else
+                    return nullptr;
             }
+            i = 0;
+            Eat(tok);
+            //printf("-->ERROR");
         }
-        Advance();
+        return nullptr;
     }
 }
 
-void Parser::Sync(int *syncSet)
+/**
+* Skips all tokens until it finds one that is in the sync set.
+*/
+void Parser::Sync(int token, const int *syncSet)
 {
-    fprintf(stderr, "[SYNTAX ERROR] Token error: Esperado: %s, Processado: %s \n", token_id_to_name(0), token_id_to_name(tok));
-    int tamConjunto = syncSet[0], i;
-    while (Advance()!=ENDOFFILE)
+    // TODO print_syntactic_error(-1, error_id); /// specific error
+    int i = 0;
+    while (tok!=ENDOFFILE)
     {
-        Eat(ENDOFFILE);
-        for (i = 1; i <= tamConjunto; i++)
+        while (syncSet[i]!='\0')
         {
-            if (Advance()==syncSet[i])
+            if (tok!=syncSet[i])
+            {
+                i++;
+            }
+            else
             {
                 return;
             }
         }
+        i = 0;
+        Eat(tok);
     }
 }
 
@@ -87,7 +100,7 @@ inline bool instanceof(const T *)
     return std::is_base_of<Base, T>::value;
 }
 
-int Parser::programFollowSet[] = {7, TYPEDEF, INT, FLOAT, BOOL, ID, CHAR, ENDOFFILE};
+int Parser::programFollowSet[] = {TYPEDEF, INT, FLOAT, BOOL, ID, CHAR, ENDOFFILE, '\0'};
 ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeList, VarDeclNode *varList) // OK
 {
     switch (tok)
@@ -96,29 +109,29 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
         {
             Eat(TYPEDEF);
 
-           // EatOrSkip(STRUCT, programFollowSet);
-            Eat(STRUCT);
+            EatOrSkip(STRUCT, programFollowSet);
+            //Eat(STRUCT);
 
-         //   EatOrSkip(LBRACE, programFollowSet);
-            Eat(LBRACE);
+            EatOrSkip(LBRACE, programFollowSet);
+            //Eat(LBRACE);
 
             TypeNode *type = Type();
             IdListNode *idList = IdList();
 
-        //    EatOrSkip(SEMICOLON, programFollowSet);
-            Eat(SEMICOLON);
+            EatOrSkip(SEMICOLON, programFollowSet);
+            //Eat(SEMICOLON);
 
             VarDeclNode *varListNode = new VarDeclNode(type, idList, VarDecl());
 
-        //    EatOrSkip(RBRACE, programFollowSet);
-            Eat(RBRACE);
+            EatOrSkip(RBRACE, programFollowSet);
+            //Eat(RBRACE);
 
-       //     EatOrSkip(ID, programFollowSet);
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
-            Eat(ID);
+            EatOrSkip(ID, programFollowSet);
+            //Eat(ID);
 
-       //     EatOrSkip(SEMICOLON, programFollowSet);
-            Eat(SEMICOLON);
+            EatOrSkip(SEMICOLON, programFollowSet);
+            //Eat(SEMICOLON);
             typeList = new TypeDeclNode(varListNode, id, typeList);
             typeList = TypeDecl(typeList);
             return Program(functionList, typeList, varList);
@@ -137,19 +150,15 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
             Eat(ID);
 
             ASTNode *ast = ProgramAUX(type, pointer, id, varList);
-            if (instanceof<FunctionNode>(ast))
+            if (dynamic_cast<FunctionNode *>(ast))
             {
                 FunctionNode *f = (FunctionNode *) ast;
                 functionList = new FunctionListNode(f, functionList);
                 return ProgramList(functionList, typeList, varList);
-            }
-            else
-            {
-                varList = (VarDeclNode *) ast;
-                return Program(functionList, typeList, varList);
-            }
 
-            return ProgramList(functionList, typeList, varList);
+            }
+            varList = (VarDeclNode *) ast;
+            return Program(functionList, typeList, varList);
         }
         case ENDOFFILE:
         {
@@ -177,7 +186,7 @@ ASTNode *Parser::ProgramAUX(TypeNode *type, PointerNode *pointer, TokenNode *id,
             Eat(RPARENT);
             Eat(LBRACE);
             VarStmtNode *varStmtNode = VarStmt(nullptr);
-            FunctionNode *func = new FunctionNode(type,pointer,id,parameters,varStmtNode->getDecl(),varStmtNode->getBody());
+            FunctionNode *func = new FunctionNode(type, pointer, id, parameters, varStmtNode->getDecl(), varStmtNode->getBody());
             Eat(RBRACE);
             return func;
             break;

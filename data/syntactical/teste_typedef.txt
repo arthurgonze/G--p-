@@ -1,9 +1,1 @@
-typedef struct {
-int a; 
-int b;
-} c; 
-
-int main (){
-c x;
- x.a=2;
-}
+typedef struct 
