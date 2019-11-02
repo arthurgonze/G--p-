@@ -23,7 +23,10 @@ class Parser
     static int programListFollowSet[];
     ProgramNode *ProgramList(FunctionListNode *functions, TypeDeclNode *typelist, VarDeclNode *varlist);
 
+    static int varStmtFollowSet[];
     VarStmtNode* VarStmt(VarDeclNode *varList);
+
+    static int varStmtAuxFollowSet[];
     VarStmtNode* VarStmtAux(TokenNode *id, VarDeclNode *varList);
 
     static int typeDeclFollowSet[];
@@ -51,6 +54,8 @@ class Parser
 
     static int typeFollowSet[];
     TypeNode *Type();
+
+    static int typeAuxFollowSet[];
     TypeNode* TypeAux();
 
     static int stmtListFollowSet[];
@@ -65,6 +70,7 @@ class Parser
     static int stmtAUXFollowSet[];
     StmtNode *StmtAUX();
 
+    static int elseStmtFollowSet[];
     StmtNode* ElseStmt();
 
     static int caseBlockFollowSet[];
