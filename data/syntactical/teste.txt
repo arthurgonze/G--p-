@@ -1,0 +1,22 @@
+typedef struct {
+ int a; 
+ float b;
+} c; 
+
+float f (int c, float b) {
+
+ c = c + 2;
+ b = c + 1.21;
+ b = 2e10;
+
+ return b;
+}
+
+
+int main (){
+ c *x;
+ x->a=2;
+ x.b= f(2,3); 
+
+ return 0;
+}
