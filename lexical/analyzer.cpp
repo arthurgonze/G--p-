@@ -467,7 +467,11 @@ int lexical_analyzer_next_token() {
             case 28:
                 return found_token_and_restart(RPARENT); //found RPARENT
             case 29:
-                return found_token_and_restart(MINUS); //found MINUS
+                if (currentInput == '>')
+                    get_next_char_and_go_to(56);
+                else
+                    go_to_state(57);
+                break;
             case 30:
                 return found_token_and_restart(LPARENT); //found LPARENT
             case 31:
@@ -608,7 +612,11 @@ int lexical_analyzer_next_token() {
                 } else
                     go_to_state(23);
                 break;
-            case 91: //Unexpected float number before the ID = fail state
+            case 56:
+                return found_token_and_restart(POINTER); //found POINTER
+            case 57:
+                return found_token_and_restart(MINUS); //found MINUS
+            case 91: //Unexpected float     number before the ID = fail state
                 fail("The ID can't start with float numbers");
                 go_to_state(INITIAL_STATE);
                 break;

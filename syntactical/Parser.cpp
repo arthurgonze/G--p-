@@ -137,19 +137,15 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
             Eat(ID);
 
             ASTNode *ast = ProgramAUX(type, pointer, id, varList);
-            if (instanceof<FunctionNode>(ast))
-            {
+
+            if (dynamic_cast<FunctionNode*>(ast)) {
                 FunctionNode *f = (FunctionNode *) ast;
                 functionList = new FunctionListNode(f, functionList);
                 return ProgramList(functionList, typeList, varList);
-            }
-            else
-            {
-                varList = (VarDeclNode *) ast;
-                return Program(functionList, typeList, varList);
-            }
 
-            return ProgramList(functionList, typeList, varList);
+            }
+            varList = (VarDeclNode *) ast;
+            return Program(functionList, typeList, varList);
         }
         case ENDOFFILE:
         {
@@ -1577,7 +1573,7 @@ ExpNode *Parser::PostFixExprAUX(ExpNode *exp)
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(PostFixExprAUX), Token error: %s \n", token_id_to_name(tok));
+//            fprintf(stderr, "[SYNTAX ERROR] error(PostFixExprAUX), Token error: %s \n", token_id_to_name(tok));
             return exp;
         }
     }
