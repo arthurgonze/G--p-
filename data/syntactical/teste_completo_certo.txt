@@ -14,9 +14,18 @@ float f (int c, float b) {
 
 
 int main (){
+ char v;
+ char * z;
  c *x;
  x->a=2;
  x.b= f(2,3); 
-
+ 
+ v = '\n'; 
+ try{
+ 	z = "abacasad";	
+ } catch (...) throw;
  return 0;
 }
+
+
+
