@@ -64,7 +64,7 @@ void Parser::Eat(int t)
 {
     if (tok==t)
     {
-        if (t==ID || t==NUMINT || t==NUMFLOAT)
+        if (t==ID || t==NUMINT || t==NUMFLOAT|| t == LITERALCHAR || t == LITERAL)
         {
             fprintf(stdout, "MATCH - %s.%s\n", token_id_to_name(t), lexical_analyzer_last_lexeme());
         }
@@ -79,12 +79,6 @@ void Parser::Eat(int t)
         fprintf(stderr, "[SYNTAX ERROR] error(eat), Token error: Esperado: %s, Processado: %s \n", token_id_to_name(t), token_id_to_name(tok));
     }
 
-}
-
-template<typename Base, typename T>
-inline bool instanceof(const T *)
-{
-    return std::is_base_of<Base, T>::value;
 }
 
 int Parser::programFollowSet[] = {7, TYPEDEF, INT, FLOAT, BOOL, ID, CHAR, ENDOFFILE};

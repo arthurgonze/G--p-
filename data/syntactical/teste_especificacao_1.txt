@@ -1,0 +1,4 @@
+int main() {
+ float i;
+ x = 5 - h;
+}

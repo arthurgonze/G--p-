@@ -1,0 +1,5 @@
+
+char f() {
+if (a < b) m(); else c.g = k + 1;
+return '\0';
+}
