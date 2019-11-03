@@ -138,7 +138,6 @@ public:
     void visit(PointerExpNode *node) override;
     void visit(NameExpNode *node) override;
 
-    // TODO
     void visit(VarDeclNode *node) override;
     void visit(TypeDeclNode *node) override;
     void visit(AddressValNode *node) override;
