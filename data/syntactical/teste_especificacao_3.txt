@@ -1,6 +1,11 @@
 int a;
 float b;
 
+typedef struct { 
+ int c;
+ int z;
+} teste;
+
 int calcula(int k, int h) {
       readln( numb1 );
       println(k, "foram calculados");

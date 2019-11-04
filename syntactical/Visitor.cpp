@@ -50,17 +50,17 @@ void PrintAST::visit(ProgramNode *node)
     std::cout << "------------------------------\n" << std::endl;
     this->printAST("PROGRAM");
     up_level();
-    if (node->getFunctions()!=nullptr)
+    if (node->getVarList()!=nullptr)
     {
-        node->getFunctions()->accept(this);
+        node->getVarList()->accept(this);
     }
     if (node->getTypeList()!=nullptr)
     {
         node->getTypeList()->accept(this);
     }
-    if (node->getVarList()!=nullptr)
+    if (node->getFunctions()!=nullptr)
     {
-        node->getVarList()->accept(this);
+        node->getFunctions()->accept(this);
     }
     down_level();
 }
@@ -69,13 +69,13 @@ void PrintAST::visit(FunctionListNode *node)
 {
     this->printAST("FUNCTION_LIST");
     up_level();
-    if (node->getFunction()!=nullptr)
-    {
-        node->getFunction()->accept(this);
-    }
     if (node->getNext()!=nullptr)
     {
         node->getNext()->accept(this);
+    }
+    if (node->getFunction()!=nullptr)
+    {
+        node->getFunction()->accept(this);
     }
     down_level();
 }
