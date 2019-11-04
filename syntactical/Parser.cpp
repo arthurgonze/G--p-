@@ -186,6 +186,7 @@ ASTNode *Parser::ProgramAUX(TypeNode *type, PointerNode *pointer, TokenNode *id,
         }
         case COMMA:
         case LBRACE:
+        case SEMICOLON: // PARA O CASO int a; no main
         {
             ArrayNode *array = Array();
             IdListNode *idList = new IdListNode(pointer, id, array, IdListAUX());
@@ -1584,7 +1585,6 @@ ExpNode *Parser::Primary()
             Eat(FALSE);
             ExpNode *expNode = new PrimaryNode(new TokenNode(FALSE, nullptr));
             return PostFixExprAUX(expNode);
-            break;
         }
         case STAR:
         {
@@ -1596,6 +1596,14 @@ ExpNode *Parser::Primary()
             Eat(ADDRESS);
             return PostFixExprAUX(new AddressValNode(ExprAssign()));
         }
+        case LPARENT:
+        {
+            Eat(LPARENT);
+            ExpNode *exp = ExprAssign();
+            EatOrSkip(RPARENT, stmtAUXFollowSet); // TODO @arthur dá uma olhada se eu fiz certo aqui
+            return  exp;
+        }
+
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(Primary), Token error: %s \n", token_id_to_name(tok));

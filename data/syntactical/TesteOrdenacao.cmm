@@ -1,0 +1,38 @@
+
+int ordenar(int* vet,int n){
+	int i,j,min,aux;
+
+	i=0;
+	while(i<n-1){
+
+		j=i+1;
+		min=j;
+
+		while(j<n){
+
+			if(vet[j]<vet[min])
+
+				min = j;
+
+			j=j+1;
+		}
+
+		aux=vet[i];
+
+		vet[i]=vet[min];
+
+		vet[min]=aux;
+
+		i=i+1;
+	}
+	return 0;
+}
+
+int main () {
+
+	int vet[10],n;
+
+	vet[0]=0;
+	ordenar(vet,n);
+	return 0;
+}
