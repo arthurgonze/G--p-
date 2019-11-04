@@ -158,10 +158,12 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(Program), Token error: %s \n", token_id_to_name(tok));
-            return new ProgramNode(functionList, typeList, varList);
+            Sync(tok, programFollowSet);
+            return Program(functionList, typeList, varList);
+//            return new ProgramNode(functionList, typeList, varList);
         }
     }
-
+    return new ProgramNode(functionList, typeList, varList);
 }
 
 int Parser::programAUXFollowSet[] = {ENDOFFILE, '\0'};
@@ -917,8 +919,7 @@ CaseBlockNode *Parser::CaseBlock()
         {
             Eat(CASE);
 
-            TokenNode *token = new TokenNode(NUMINT, lexical_analyzer_last_lexeme());
-            EatOrSkip(NUMINT, caseBlockFollowSet);
+            TokenNode *token = new TokenNode(NUMINT, EatOrSkip(NUMINT, caseBlockFollowSet));
             EatOrSkip(COLON, caseBlockFollowSet);
             return CaseBlockAUX(token);
         }
@@ -940,7 +941,8 @@ CaseBlockNode *Parser::CaseBlockAUX(TokenNode *num)
     {
         case CASE:
         {
-            return CaseBlock();
+            return new CaseBlockNode(num, nullptr, CaseBlock());
+            //return CaseBlock();
         }
 
         case IF:
