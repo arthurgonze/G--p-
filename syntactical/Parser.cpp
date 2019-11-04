@@ -145,7 +145,6 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
                 FunctionNode *f = (FunctionNode *) ast;
                 functionList = new FunctionListNode(f, functionList);
                 return ProgramList(functionList, typeList, varList);
-
             }
             varList = (VarDeclNode *) ast;
             return Program(functionList, typeList, varList);
