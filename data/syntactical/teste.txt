@@ -1,31 +1,6 @@
-typedef struct {
-
-  float peso, altura;
-
- Pessoa;
-
-float imc (float peso, float altura) {
-
-  return peso / (altura * altura);
-
-}
-
-int main (int args) {
-
-  Pessoa Johnny;
-  float IMCJohnny;
-
-  Johnny.peso = 80.8;
-  Johnny.altura = 1.90;
-
-  IMCJohnny = imc (Johnny.peso, Johnny.altura);
-
-  if (IMCJohnny < 18)
-     println ("Abaixo do peso");
-  else if (IMCJohnny >= 18 && IMCJohnny < 25.5)
-     println ("Peso normal");
-  else if ((IMCJohnny >= 25.5) && (IMVJohnny < 30))
-     println ("Acima do peso");
-  else
-     println ("Obeso");
+int main () 
+{
+	int v[3];
+    v[3] = 5;
+    return 0;
 }
