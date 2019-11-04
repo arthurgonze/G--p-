@@ -592,8 +592,14 @@ void PrintAST::visit(TypeNode *node)
 
 void PrintAST::visit(TokenNode *node)
 {
-    this->printLexemeAST(token_id_to_name(node->getToken()), node->getLex());
-}
+    if (node->getLex()!=nullptr)
+    {
+        this->printLexemeAST(token_id_to_name(node->getToken()), node->getLex());
+    }
+    else
+    {
+        this->printAST(token_id_to_name(node->getToken()));
+    }}
 
 
 

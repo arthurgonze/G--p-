@@ -1,0 +1,14 @@
+int a;
+float b;
+
+int calcula(int k, int h) {
+      readln( numb1 );
+      println(k, "foram calculados");
+}
+
+int main() {
+
+  x = y + (u*7);
+  soma(calcula(k,7,5,a));
+
+}
