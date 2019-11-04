@@ -1,32 +1,31 @@
 typedef struct {
- int a; 
- float b;
-} c; 
 
-float f (int c, float b) {
+  float peso, altura;
 
- c = c + 2;
- b = c + 1.21;
- if(a)
- b = 2e10;
+} Pessoa;
 
- return b;
+float imc (float peso, float altura) {
+
+  return peso / (altura * altura);
+
 }
 
+int main (int args) {
 
-int main (){
- char v;
- char * z;
- c *x;
- x->a=2;
- x.b= f(2,3); 
- 
- v = '\n'; 
- try{
- 	z = "abacasad";	
- } catch (...) throw;
- return 0;
+  Pessoa Johnny;
+  float IMCJohnny;
+
+  Johnny.peso = 80.8;
+  Johnny.altura = 1.90;
+
+  IMCJohnny = imc (Johnny.peso, Johnny.altura);
+
+  if (IMCJohnny < 18)
+     println ("Abaixo do peso");
+  else if (IMCJohnny >= 18 && IMCJohnny < 25.5)
+     println ("Peso normal");
+  else if ((IMCJohnny >= 25.5) && (IMVJohnny < 30))
+     println ("Acima do peso");
+  else
+     println ("Obeso");
 }
-
-
-

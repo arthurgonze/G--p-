@@ -391,9 +391,10 @@ VarStmtNode *Parser::VarStmtAux(TokenNode *id, VarDeclNode *varList)
         }
         default:
         {
-            return new VarStmtNode(varList, nullptr);
+            Sync(tok, varStmtAuxFollowSet);
         }
     }
+    return new VarStmtNode(varList, nullptr);
 }
 
 int Parser::idListFollowSet[] = {SEMICOLON, RPARENT, ENDOFFILE, '\0'};// TODO talvez remover rparent
@@ -575,9 +576,11 @@ TypeNode *Parser::Type()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(Type), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, typeFollowSet);
+//            return nullptr;
         }
     }
+    return nullptr;
 }
 
 int Parser::typeAuxFollowSet[] = {LPARENT, STAR, ID, ENDOFFILE, '\0'};// TODO talvez remover rparent
@@ -613,9 +616,11 @@ TypeNode *Parser::TypeAux()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(TypeAUX), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, typeAuxFollowSet);
+//            return nullptr;
         }
     }
+    return nullptr;
 }
 
 int Parser::stmtListFollowSet[] = {RBRACE, CASE, ENDOFFILE, '\0'};
@@ -654,9 +659,11 @@ StmtListNode *Parser::StmtList()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(StmtList), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, stmtListFollowSet);
+//            return nullptr;
         }
     }
+    return nullptr;
 }
 
 int Parser::stmtListAUXFollowSet[] = {RBRACKET, CASE, ENDOFFILE, '\0'};
@@ -747,9 +754,11 @@ StmtNode *Parser::Stmt()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(Stmt), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, stmtFollowSet);
+//            return nullptr;
         }
     }
+    return nullptr;
 }
 
 // CATCH, ELSE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, ABRE_CHAVE, TRY, NEGACAO, MAIS, MENOS, ID, NUM_INT, NUM_REAL,
@@ -873,9 +882,11 @@ StmtNode *Parser::StmtAUX()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(StmtAUX), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, stmtAUXFollowSet);
+//            return nullptr;
         }
     }
+    return nullptr;
 }
 
 int Parser::elseStmtFollowSet[] = {RBRACKET, ENDOFFILE, '\0'};
@@ -914,9 +925,11 @@ CaseBlockNode *Parser::CaseBlock()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(caseBlock), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, caseBlockFollowSet);
+//            return nullptr;
         }
     }
+    return nullptr;
 }
 
 int Parser::caseBlockAUXFollowSet[] = {RBRACE, ENDOFFILE, '\0'};
@@ -1018,9 +1031,11 @@ ExpListNode *Parser::ExprListTail()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(ExprListTail), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, exprListTailFollowSet);
+//            return nullptr;
         }
     }
+    return nullptr;
 }
 
 int Parser::exprListTailAUXFollowSet[] = {RPARENT, ENDOFFILE, '\0'};
@@ -1066,9 +1081,11 @@ ExpNode *Parser::ExprAssign()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(ExprAssign), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, exprAssignFollowSet);
+//            return nullptr;
         }
     }
+    return nullptr;
 }
 
 int Parser::exprAssignAUXFollowSet[] = {SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
@@ -1117,9 +1134,11 @@ ExpNode *Parser::ExprOr()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(ExprOr), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, exprOrFollowSet);
+//            return nullptr;
         }
     }
+    return nullptr;
 }
 
 int Parser::exprOrAUXFollowSet[] = {EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
@@ -1168,9 +1187,11 @@ ExpNode *Parser::ExprAnd()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(ExprAnd), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, exprAndFollowSet);
+//            return nullptr;
         }
     }
+    return nullptr;
 }
 
 int Parser::exprAndAUXFollowSet[] = {OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
@@ -1222,9 +1243,11 @@ ExpNode *Parser::ExprEquality()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(ExprEquality), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, exprEqualityFollowSet);
+//            return nullptr;
         }
     }
+    return nullptr;
 }
 
 int Parser::exprEqualityAUXFollowSet[] = {AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
@@ -1284,9 +1307,11 @@ ExpNode *Parser::ExprRelational()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(ExprRelational), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, exprRelationalFollowSet);
+//            return nullptr;
         }
     }
+    return nullptr;
 }
 
 int Parser::exprRelationalAUXFollowSet[] = {EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
@@ -1362,9 +1387,11 @@ ExpNode *Parser::ExprAdditive()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(ExprAdditive), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, exprAdditiveFollowSet);
+//            return nullptr;
         }
     }
+    return nullptr;
 }
 
 int Parser::exprAdditiveAUXFollowSet[] = {LT, GT, LE, GE, EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
@@ -1432,9 +1459,11 @@ ExpNode *Parser::ExprMultiplicative()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(ExprMultiplicative), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, exprMultiplicativeFollowSet);
+//            return nullptr;
         }
     }
+    return nullptr;
 }
 
 int Parser::exprMultiplicativeAUXFollowSet[] = {PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
@@ -1530,9 +1559,11 @@ ExpNode *Parser::ExprUnary()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(ExprUnary), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, exprUnaryFollowSet);
+            //return nullptr;
         }
     }
+    return nullptr;//TODO
 }
 
 int Parser::primaryFollowSet[] = {DOT, POINTER, LBRACE, LPARENT, ADDRESS, STAR, SLASH, PIPE, PLUS, MINUS, LT, GT, LE, GE,
@@ -1607,9 +1638,11 @@ ExpNode *Parser::Primary()
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(Primary), Token error: %s \n", token_id_to_name(tok));
-            return nullptr;
+            Sync(tok, primaryFollowSet);
+//            return nullptr;
         }
     }
+    return nullptr; //TODO
 }
 
 int Parser::postFixExprAUXFollowSet[] = {ADDRESS, STAR, SLASH, PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ,
