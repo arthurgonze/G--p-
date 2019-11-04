@@ -157,11 +157,11 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(Program), Token error: %s \n", token_id_to_name(tok));
-            return new ProgramNode(functionList, typeList, varList);
+            Sync(tok, programFollowSet);
+            return Program(functionList, typeList, varList);
         }
     }
-
+    return new ProgramNode(functionList, typeList, varList);
 }
 
 int Parser::programAUXFollowSet[] = {ENDOFFILE, '\0'};
@@ -216,7 +216,6 @@ ProgramNode *Parser::ProgramList(FunctionListNode *functions, TypeDeclNode *type
         }
         default:
         {
-            //fprintf(stderr, "[SYNTAX ERROR] errorProgramList(), Token error: %s \n", token_id_to_name(tok));
             return Program(functions, typelist, varlist);
         }
     }
@@ -413,7 +412,6 @@ IdListNode *Parser::IdList()
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(IdList), Token error: %s \n", token_id_to_name(tok));
             return nullptr;
         }
     }
@@ -575,9 +573,7 @@ TypeNode *Parser::Type()
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(Type), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, typeFollowSet);
-//            return nullptr;
         }
     }
     return nullptr;
@@ -615,9 +611,7 @@ TypeNode *Parser::TypeAux()
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(TypeAUX), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, typeAuxFollowSet);
-//            return nullptr;
         }
     }
     return nullptr;
@@ -658,9 +652,7 @@ StmtListNode *Parser::StmtList()
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(StmtList), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, stmtListFollowSet);
-//            return nullptr;
         }
     }
     return nullptr;
@@ -753,16 +745,13 @@ StmtNode *Parser::Stmt()
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(Stmt), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, stmtFollowSet);
-//            return nullptr;
         }
     }
     return nullptr;
 }
 
-// CATCH, ELSE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, ABRE_CHAVE, TRY, NEGACAO, MAIS, MENOS, ID, NUM_INT, NUM_REAL,
-// LITERAL, ABRE_PARENTESES, E_BIT, MULTIPLICACAO, TRUE_TOKEN, FALSE_TOKEN, TOKEN_EOF
+
 int Parser::stmtAUXFollowSet[] = {CATCH, ELSE, IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETURN, THROW, LBRACE, TRY, NOT, PLUS, MINUS, ID, NUMINT,
                                   NUMFLOAT, LITERAL, LITERALCHAR, LPARENT, ADDRESS, STAR, TRUE, FALSE, RBRACE, CASE, ENDOFFILE, '\0'}; // TODO talvez tirar RBRACE e CASE
 StmtNode *Parser::StmtAUX()
@@ -881,9 +870,7 @@ StmtNode *Parser::StmtAUX()
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(StmtAUX), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, stmtAUXFollowSet);
-//            return nullptr;
         }
     }
     return nullptr;
@@ -917,16 +904,17 @@ CaseBlockNode *Parser::CaseBlock()
         {
             Eat(CASE);
 
-            TokenNode *token = new TokenNode(NUMINT, lexical_analyzer_last_lexeme());
-            EatOrSkip(NUMINT, caseBlockFollowSet);
+            TokenNode *token = new TokenNode(NUMINT, EatOrSkip(NUMINT, caseBlockFollowSet));
             EatOrSkip(COLON, caseBlockFollowSet);
             return CaseBlockAUX(token);
         }
+        case  RBRACE:
+        {
+            return nullptr;
+        }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(caseBlock), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, caseBlockFollowSet);
-//            return nullptr;
         }
     }
     return nullptr;
@@ -940,7 +928,7 @@ CaseBlockNode *Parser::CaseBlockAUX(TokenNode *num)
     {
         case CASE:
         {
-            return CaseBlock();
+            return new CaseBlockNode(num, nullptr, CaseBlock());
         }
 
         case IF:
@@ -1030,9 +1018,7 @@ ExpListNode *Parser::ExprListTail()
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(ExprListTail), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, exprListTailFollowSet);
-//            return nullptr;
         }
     }
     return nullptr;
@@ -1080,9 +1066,7 @@ ExpNode *Parser::ExprAssign()
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(ExprAssign), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, exprAssignFollowSet);
-//            return nullptr;
         }
     }
     return nullptr;
@@ -1103,7 +1087,6 @@ ExpNode *Parser::ExprAssignAUX(ExpNode *expr)
             node = new AssignNode(expr, exp2);
             break;
         }
-            // Epsilon default: fprintf(stderr, "[SYNTAX ERROR] error(ExprAssignAUX), Token error: %s \n",token_id_to_name(tok));
     }
     return node;
 }
@@ -1133,9 +1116,7 @@ ExpNode *Parser::ExprOr()
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(ExprOr), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, exprOrFollowSet);
-//            return nullptr;
         }
     }
     return nullptr;
@@ -1157,7 +1138,6 @@ ExpNode *Parser::ExprOrAUX(ExpNode *expr)
             node = new BooleanOPNode(token, expr, exp2);
             break;
         }
-            // Epsilon default: fprintf(stderr, "[SYNTAX ERROR] error(ExprOrAUX), Token error: %s \n",token_id_to_name(tok));
     }
     return node;
 }
@@ -1186,9 +1166,7 @@ ExpNode *Parser::ExprAnd()
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(ExprAnd), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, exprAndFollowSet);
-//            return nullptr;
         }
     }
     return nullptr;
@@ -1212,7 +1190,6 @@ ExpNode *Parser::ExprAndAUX(ExpNode *expr)
             node = new BooleanOPNode(token, expr, exp2);
             break;
         }
-            // Epsilon default: fprintf(stderr, "[SYNTAX ERROR] error(ExprAndAUX), Token error: %s \n",token_id_to_name(tok));
     }
     return node;
 }
@@ -1242,9 +1219,7 @@ ExpNode *Parser::ExprEquality()
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(ExprEquality), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, exprEqualityFollowSet);
-//            return nullptr;
         }
     }
     return nullptr;
@@ -1276,7 +1251,6 @@ ExpNode *Parser::ExprEqualityAUX(ExpNode *expr)
             node = new BooleanOPNode(token, expr, exp2);
             break;
         }
-            // Epsilon default: fprintf(stderr, "[SYNTAX ERROR] error(ExprEqualityAUX), Token error: %s \n",token_id_to_name(tok));
     }
     return node;
 }
@@ -1306,9 +1280,7 @@ ExpNode *Parser::ExprRelational()
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(ExprRelational), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, exprRelationalFollowSet);
-//            return nullptr;
         }
     }
     return nullptr;
@@ -1356,7 +1328,6 @@ ExpNode *Parser::ExprRelationalAUX(ExpNode *expr)
             node = new BooleanOPNode(token, expr, exp2);
             break;
         }
-            // Epsilon default: fprintf(stderr, "[SYNTAX ERROR] error(ExprRelationalAUX), Token error: %s \n",token_id_to_name(tok));
     }
     return node;
 }
@@ -1386,9 +1357,7 @@ ExpNode *Parser::ExprAdditive()
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(ExprAdditive), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, exprAdditiveFollowSet);
-//            return nullptr;
         }
     }
     return nullptr;
@@ -1428,7 +1397,6 @@ ExpNode *Parser::ExprAdditiveAUX(ExpNode *expr)
             node = new AdditionOPNode(token, expr, exp2);
             break;
         }
-            // Epsilon default: fprintf(stderr, "[SYNTAX ERROR] error(ExprAdditiveAUX), Token error: %s \n",token_id_to_name(tok));
     }
     return node;
 }
@@ -1458,9 +1426,7 @@ ExpNode *Parser::ExprMultiplicative()
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(ExprMultiplicative), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, exprMultiplicativeFollowSet);
-//            return nullptr;
         }
     }
     return nullptr;
@@ -1508,7 +1474,6 @@ ExpNode *Parser::ExprMultiplicativeAUX(ExpNode *expr)
             node = new MultiplicationOPNode(token, expr, exp2);
             break;
         }
-            // Epsilon default: fprintf(stderr, "[SYNTAX ERROR] error(ExprMultiplicativeAUX), Token error: %s \n",token_id_to_name(tok));
     }
     return node;
 }
@@ -1558,12 +1523,10 @@ ExpNode *Parser::ExprUnary()
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(ExprUnary), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, exprUnaryFollowSet);
-            //return nullptr;
         }
     }
-    return nullptr;//TODO
+    return nullptr;
 }
 
 int Parser::primaryFollowSet[] = {DOT, POINTER, LBRACE, LPARENT, ADDRESS, STAR, SLASH, PIPE, PLUS, MINUS, LT, GT, LE, GE,
@@ -1637,12 +1600,10 @@ ExpNode *Parser::Primary()
 
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(Primary), Token error: %s \n", token_id_to_name(tok));
             Sync(tok, primaryFollowSet);
-//            return nullptr;
         }
     }
-    return nullptr; //TODO
+    return nullptr;
 }
 
 int Parser::postFixExprAUXFollowSet[] = {ADDRESS, STAR, SLASH, PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ,
@@ -1674,7 +1635,6 @@ ExpNode *Parser::PostFixExprAUX(ExpNode *exp)
         }
         default:
         {
-//            fprintf(stderr, "[SYNTAX ERROR] error(PostFixExprAUX), Token error: %s \n", token_id_to_name(tok));
             return exp;
         }
     }
@@ -1707,7 +1667,6 @@ ExpNode *Parser::PostFixExpr(TokenNode *id)
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(PostFixExpr), Token error: %s \n", token_id_to_name(tok));
             return new PrimaryNode(id);
         }
     }
