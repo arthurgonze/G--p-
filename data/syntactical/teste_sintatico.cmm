@@ -21,14 +21,14 @@ int main() {
   while(a + 8 > 900 * 8) {
 
     a.b[89].c.e.f = t(u, j);
-    a.c.d[9].c.d.c.d.c.d.c.d.c.d.c[90] = 0;
+    a.c.d[9].c.d.c.d.c.d.c.d.c.d->z[90] = 0;
     break;
     return ct;
   }
 
   switch(y = b = d = true) {
-	case 8: h = b; break;
-        case 10: break;
+	case 8: h = b;	
+        case 10:
         case 12: if(u) g; else h(c, &x); break;
   }
 

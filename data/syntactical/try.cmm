@@ -3,8 +3,19 @@ int main(){
 	char b;
 	try{
 		a=b;
-	}catch(...){
+	}catch(..){
 		a=0;	
 	} throw;
    return 0 - a * (b + b);
+}
+
+int main (){
+	a->c.a=2;
+
+	switch (a
+    {
+		case 3: break;
+		case 2: break;
+	}
+	return 5;
 }
