@@ -2,7 +2,7 @@ typedef struct {
 
   float peso, altura;
 
-} Pessoa;
+ Pessoa;
 
 float imc (float peso, float altura) {
 
