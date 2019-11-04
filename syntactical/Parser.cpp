@@ -908,6 +908,10 @@ CaseBlockNode *Parser::CaseBlock()
             EatOrSkip(COLON, caseBlockFollowSet);
             return CaseBlockAUX(token);
         }
+        case  RBRACE:
+        {
+            return nullptr;
+        }
         default:
         {
             Sync(tok, caseBlockFollowSet);
