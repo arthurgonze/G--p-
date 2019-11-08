@@ -372,6 +372,7 @@ VarStmtNode *Parser::VarStmtAux(TokenNode *id, VarDeclNode *varList)
         case NE:
         case AND:
         case OR:
+        case LBRACKET:
         {
             ExpNode *exp = PostFixExpr(id);
             exp = ExprMultiplicativeAUX(exp);
@@ -1539,6 +1540,7 @@ ExpNode *Parser::Primary()
         {
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
             Eat(ID);
+//            ArrayNode *array = Array();
             return PostFixExpr(id);
         }
         case NUMINT:
