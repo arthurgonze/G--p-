@@ -12,12 +12,20 @@ PrintAST::PrintAST()
     level = 0;
 }
 
-void PrintAST::printAST(const char *node_name, const char *aux = "")
+void PrintAST::printAST(const char *node_name)
 {
     for (unsigned int i = 0; i < this->level; i++)
-        std::cout << "\t";
-    std::cout << "->" << node_name << aux << std::endl;
+        std::cout << "    ";
+    std::cout << "->" << node_name << std::endl;
 }
+
+void PrintAST::printLexemeAST(const char *node_name, const char *aux )
+{
+    for (unsigned int i = 0; i < this->level; i++)
+        std::cout << "    ";
+    std::cout << "->" << node_name <<"."<< aux << std::endl;
+}
+
 
 void PrintAST::up_level()
 {
@@ -42,17 +50,17 @@ void PrintAST::visit(ProgramNode *node)
     std::cout << "------------------------------\n" << std::endl;
     this->printAST("PROGRAM");
     up_level();
-    if (node->getFunctions()!=nullptr)
+    if (node->getVarList()!=nullptr)
     {
-        node->getFunctions()->accept(this);
+        node->getVarList()->accept(this);
     }
     if (node->getTypeList()!=nullptr)
     {
         node->getTypeList()->accept(this);
     }
-    if (node->getVarList()!=nullptr)
+    if (node->getFunctions()!=nullptr)
     {
-        node->getVarList()->accept(this);
+        node->getFunctions()->accept(this);
     }
     down_level();
 }
@@ -61,13 +69,13 @@ void PrintAST::visit(FunctionListNode *node)
 {
     this->printAST("FUNCTION_LIST");
     up_level();
-    if (node->getFunction()!=nullptr)
-    {
-        node->getFunction()->accept(this);
-    }
     if (node->getNext()!=nullptr)
     {
         node->getNext()->accept(this);
+    }
+    if (node->getFunction()!=nullptr)
+    {
+        node->getFunction()->accept(this);
     }
     down_level();
 }
@@ -234,7 +242,7 @@ void PrintAST::visit(ExpListNode *node)
     {
         node->getExp()->accept(this);
     }
-    if (node->getExp()!=nullptr)
+    if (node->getNext()!=nullptr)
     {
         node->getNext()->accept(this);
     }
@@ -564,11 +572,16 @@ void PrintAST::visit(BreakNode *node)
     this->printAST("BREAK");
 }
 
+void PrintAST::visit(ThrowNode *node)
+{
+    this->printAST("THROW");
+}
+
 void PrintAST::visit(TypeNode *node)
 {
     if (node->getId()->getLex()!=nullptr)
     {
-        this->printAST(((const char *)strcat((char*)token_id_to_name(node->getId()->getToken()),".")), node->getId()->getLex());
+        this->printLexemeAST(token_id_to_name(node->getId()->getToken()), node->getId()->getLex());
     }
     else
     {
@@ -579,12 +592,15 @@ void PrintAST::visit(TypeNode *node)
 
 void PrintAST::visit(TokenNode *node)
 {
-    this->printAST("ID.", node->getLex());
-}
+    if (node->getLex()!=nullptr)
+    {
+        this->printLexemeAST(token_id_to_name(node->getToken()), node->getLex());
+    }
+    else
+    {
+        this->printAST(token_id_to_name(node->getToken()));
+    }}
 
-void PrintAST::visit(ThrowNode *node)
-{
-    this->printAST("THROW");
-}
+
 
 

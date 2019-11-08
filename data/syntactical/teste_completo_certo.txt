@@ -1,0 +1,32 @@
+typedef struct {
+ int a; 
+ float b;
+} c; 
+
+float f (int c, float b) {
+
+ c = c + 2;
+ b = c + 1.21;
+ if(a)
+ b = 2e10;
+
+ return b;
+}
+
+
+int main (){
+ char v;
+ char * z;
+ c *x;
+ x->a=2;
+ x.b= f(2,3); 
+ 
+ v = '\n'; 
+ try{
+ 	z = "abacasad";	
+ } catch (...) throw;
+ return 0;
+}
+
+
+

@@ -96,7 +96,8 @@ class PrintAST : public Visitor
 {
 private:
     unsigned int level;
-    void printAST(const char *node_name, const char * aux);
+    void printAST(const char *node_name);
+    void printLexemeAST(const char *node_name, const char * aux);
     void up_level();
     void down_level();
 
@@ -137,7 +138,6 @@ public:
     void visit(PointerExpNode *node) override;
     void visit(NameExpNode *node) override;
 
-    // TODO
     void visit(VarDeclNode *node) override;
     void visit(TypeDeclNode *node) override;
     void visit(AddressValNode *node) override;

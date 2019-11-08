@@ -1,0 +1,44 @@
+int a, b, c[100];
+float q;
+
+typedef struct {
+  int a;
+  float k; /*nao funciona ser for struct fk */
+} teste;
+
+int h(int u, int k) {
+  h = h;
+}
+
+int main() {
+  char fk , t;
+  boolean ok;
+  teste h;
+  char * z; 
+
+  h->a = 9-8;
+
+  while(a + 8 > 900 * 8) {
+
+    a.b[89].c.e.f = t(u, j);
+    a.c.d[9].c.d.c.d.c.d.c.d.c.d->z[90] = 0;
+    break;
+    return ct;
+  }
+
+  switch(y = b = d = true) {
+	case 8: h = b;	
+        case 10:
+        case 12: if(u) g; else h(c, &x); break;
+  }
+
+  a = b + y = 9;
+  6;
+  "ajklsdhasjkldhaskdj" + 8;
+  
+  return 0;
+
+
+}
+
+

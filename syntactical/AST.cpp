@@ -1,7 +1,7 @@
 
 #include "AST.h"
 
-TokenNode::TokenNode(int tok, char *lex)
+TokenNode::TokenNode(int tok, const char *lex)
 {
     this->tok = tok;
     this->lex = lex;

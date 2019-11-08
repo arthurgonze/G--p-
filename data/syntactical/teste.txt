@@ -1,0 +1,6 @@
+int main () 
+{
+	int v[3];
+    v[3] = 5;
+    return 0;
+}

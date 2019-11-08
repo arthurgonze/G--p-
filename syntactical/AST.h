@@ -90,13 +90,13 @@ class TokenNode : public ASTNode
 {
 private:
     int tok;
-    char *lex;
+    const char *lex;
 public:
-    TokenNode(int tok, char *lex);
+    TokenNode(int tok, const char *lex);
     ~TokenNode() override;
 
     inline int getToken() { return tok; }
-    inline char *getLex() { return lex; }
+    inline const char *getLex() { return lex; }
 
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
