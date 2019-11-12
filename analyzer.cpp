@@ -8,8 +8,8 @@
 #include "string.h"
 #include "stdlib.h"
 
-#include "../token.h"
-#include "../SymbolTable.h"
+#include "token.h"
+#include "symboltable.h"
 #include "analyzer.h"
 
 int currentState = INITIAL_STATE;

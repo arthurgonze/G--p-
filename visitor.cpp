@@ -3,9 +3,9 @@
 //
 
 #include <iostream>
-#include "Visitor.h"
-#include "AST.h"
-#include "../lexical/analyzer.h"
+#include "visitor.h"
+#include "ast.h"
+#include "analyzer.h"
 
 PrintAST::PrintAST()
 {

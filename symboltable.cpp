@@ -1,5 +1,5 @@
-#include "SymbolTable.h"
-#include "lexical/analyzer.h"
+#include "symboltable.h"
+#include "analyzer.h"
 
 /**
  * Polynomial Rolling Hash Function
@@ -115,7 +115,7 @@ void SymbolTable::print() {}
 
 void LiteralsTable::cInsert(char const* lexeme)
 {
-	SymbolTable::cInsert(30, lexeme);
+	SymbolTable::cInsert(LITERAL, lexeme);
 }
 
 void LiteralsTable::print()
@@ -155,7 +155,7 @@ void LiteralsTable::print()
 
 void IdentifiersTable::cInsert(char const* lexeme)
 {
-	SymbolTable::cInsert(10, lexeme);
+	SymbolTable::cInsert(ID, lexeme);
 }
 
 void IdentifiersTable::print()

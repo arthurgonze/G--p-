@@ -27,7 +27,7 @@ int ordenar(int* vet,int n){
 	return 0;
 }
 
-int main () {
+int main (int argc, char* argv) {
 
 	int vet[10],n;
 

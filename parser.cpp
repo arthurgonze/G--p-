@@ -1,5 +1,5 @@
-#include "Parser.h"
-#include "Visitor.h"
+#include "parser.h"
+#include "visitor.h"
 
 PrintAST *visitor;
 ProgramNode *program;

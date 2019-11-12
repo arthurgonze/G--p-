@@ -1,5 +1,5 @@
 
-#include "AST.h"
+#include "ast.h"
 
 TokenNode::TokenNode(int tok, const char *lex)
 {

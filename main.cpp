@@ -1,9 +1,9 @@
 #include <cstring>
 
-#include "SymbolTable.h"
-#include "lexical/analyzer.h"
+#include "symboltable.h"
+#include "analyzer.h"
 #include "token.h"
-#include "syntactical/Parser.h"
+#include "parser.h"
 
 #define RETURN_CODE_OK 0
 #define RETURN_CODE_FILE_ERROR 1

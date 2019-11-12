@@ -2,9 +2,9 @@
 #define COMPILADOR_2019_3_PARSER_H
 
 #include <cstdio>
-#include "../token.h"
-#include "../lexical/analyzer.h"
-#include "AST.h"
+#include "token.h"
+#include "analyzer.h"
+#include "ast.h"
 
 class Parser
 {
