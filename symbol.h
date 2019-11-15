@@ -42,25 +42,25 @@ public:
 class IdSymbol : public Symbol
 {
 public:
-    explicit IdSymbol(const char *lexeme) : Symbol(lexeme, nullptr, nullptr) {};
+    explicit IdSymbol(const char *lexeme) : Symbol(lexeme, NULL, NULL) {};
 };
 
 class LiteralSymbol : public Symbol
 {
 public:
-    explicit LiteralSymbol(const char *lexeme) : Symbol(lexeme, nullptr, nullptr) {};
+    explicit LiteralSymbol(const char *lexeme) : Symbol(lexeme, NULL, NULL) {};
 };
 
 class NumIntSymbol : public Symbol
 {
 public:
-    explicit NumIntSymbol(const char *lexeme) : Symbol(lexeme, nullptr, nullptr) {};
+    explicit NumIntSymbol(const char *lexeme) : Symbol(lexeme, NULL, NULL) {};
 };
 
 class NumFloatSymbol : public Symbol
 {
 public:
-    explicit NumFloatSymbol(const char *lexeme) : Symbol(lexeme, nullptr, nullptr) {};
+    explicit NumFloatSymbol(const char *lexeme) : Symbol(lexeme, NULL, NULL) {};
 };
 
 // new from here to the end

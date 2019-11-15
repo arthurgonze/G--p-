@@ -13,7 +13,7 @@ Symbol::~Symbol()
     free(this->nextSymbol);
 }
 
-ReservedTokenSymbol::ReservedTokenSymbol(const char *lexeme, int tokenID): Symbol(lexeme, nullptr, nullptr)
+ReservedTokenSymbol::ReservedTokenSymbol(const char *lexeme, int tokenID): Symbol(lexeme, NULL, NULL)
 {
     this->tokenID = tokenID;
 }

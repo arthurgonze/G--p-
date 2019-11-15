@@ -20,6 +20,12 @@ struct symbol_info
     ~symbol_info();
 };
 
+
+class Symbol;
+class StructSymbol;
+class FunctionSymbol;
+class VarSymbol;
+
 class SymbolTable
 {
 protected:
@@ -30,26 +36,29 @@ protected:
     const char *previousScopeLexeme;// new
     const char *currentScopeLexeme;// new
 
+    static unsigned long cHash(string const &name); // Hash Function
+
+    void insert(Symbol *symbol, const char *lexeme); // new
+
+    Symbol *search(const char *lexeme);// new
+
+    void print();
+public:
+    SymbolTable();
+    virtual ~SymbolTable();
+
     symbol_info **block; // Table
     Symbol **newBlock;// TODO agora symbol_info == Symbol
     char *lexemeArray = new char[LEXEME_ARRAY_SIZE]; // An array to allocate lexeme in continuous memory
 
-    static unsigned long cHash(string const &name); // Hash Function
-
-    void cInsert(int token, const char *lexeme);
-    symbol_info *auxInsert(symbol_info *root, int token, const char *lexeme);
-    void insert(Symbol *symbol, const char *lexeme); // new
-
-    int cSearch(char *lexeme);// TODO não é const char *?
-    Symbol *search(const char *lexeme);// new
-
-    void print() = default;
-public:
-    SymbolTable();
-    virtual ~SymbolTable() = default;
 
     void beginScope(const char *lexemeScope);// new
     void endScope();// new
+
+    void cInsert(int token, const char *lexeme);
+    symbol_info *auxInsert(symbol_info *root, int token, const char *lexeme);
+
+    int cSearch(char *lexeme);// TODO não é const char *?
 };
 
 //Extend Symbol Table to create the Reserved words table, Literals table and Identifiers table
