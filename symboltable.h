@@ -3,6 +3,7 @@
 
 #include <cstring>
 #include <string>
+#include <iostream>
 #include "symbol.h"
 
 using namespace std;
@@ -19,7 +20,6 @@ struct symbol_info
 
     ~symbol_info();
 };
-
 
 class Symbol;
 class StructSymbol;
@@ -42,10 +42,10 @@ protected:
 
     Symbol *search(const char *lexeme);// new
 
-    void print();
+    virtual void print();
 public:
     SymbolTable();
-    virtual ~SymbolTable();
+    virtual ~SymbolTable() = default;
 
     symbol_info **block; // Table
     Symbol **newBlock;// TODO agora symbol_info == Symbol
@@ -65,75 +65,75 @@ public:
 class ReservedWordsTable : public SymbolTable
 {
 public:
-    void print();// TODO especializar o print?
+    void print() override;// TODO especializar o print?
     // TODO metodo de busca proprio?
-    // ex.: ReservedTokenSymbol *search(const char *lexeme) { return (ReservedTokenSymbol*) SymbolTable::search(lexeme); }
+    // ReservedTokenSymbol *search(const char *lexeme) { return (ReservedTokenSymbol*) SymbolTable::search(lexeme); }
 };
 class LiteralsTable : public SymbolTable
 {
 public:
     void cInsert(const char *lexeme);
-    void print();
+    void print() override;
 };
 class IdsTable : public SymbolTable
 {
 public:
     void cInsert(const char *lexeme);
-    void print();
+    void print() override;
 };
 class NumIntTable : public SymbolTable
 {
 public:
-    void cInsert(const char *lexeme);
-    void print();
+    // TODO void cInsert(const char *lexeme); ?
+    void print() override;
 };
 class NumFloatTable : public SymbolTable
 {
 public:
-    void cInsert(const char *lexeme);
-    void print();
+    // TODO void cInsert(const char *lexeme); ?
+    void print() override;
 };
 
 class StructTable : public SymbolTable // TODO
 {
 public:
     StructTable();
-    virtual ~StructTable();
+    ~StructTable() override;
 
     bool insert(const char *lexeme, VarDeclNode *varDecl);
 
     StructSymbol *search(const char *lexeme);
 
-    void print();
+    void print() override;
 };
 
 class FunctionTable : public SymbolTable // TODO
 {
 public:
     FunctionTable();
-    virtual ~FunctionTable();
+    ~FunctionTable() override;
 
-    bool insert(TypeNode *type, const char *lexeme, FormalListNode *varDecl, bool pointer);
+    bool insert(TypeNode *returnType, const char *lexeme, FormalListNode *varDecl, bool pointer);
 
     FunctionSymbol *search(const char *lexeme);
 
     FunctionSymbol *searchInScope(const char *lexeme, const char *lexemeScope);
 
-    void print();
+    void print() override;
 };
 
 class VarTable : public SymbolTable // TODO
 {
 public:
     VarTable();
-    virtual ~VarTable();
+    ~VarTable() override;
 
-    bool insert(TypeNode *type, const char *lexeme, bool pointer, int array, bool parameter);
+    bool insert(TypeNode *type, const char *lexeme, bool pointer, int arraySize, bool parameter);
 
     VarSymbol *search(const char *lexeme);
     VarSymbol *searchInScope(const char *lexeme, const char *LexemeScope);
 
-    void print();
+    void print() override;
 };
 
 #endif //COMPILADOR_2019_3_SYMBOLTABLE_H

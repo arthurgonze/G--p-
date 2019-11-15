@@ -18,35 +18,38 @@ int currentLine = 1;
 int currentColumn = 0;
 
 char *lexemeBuffer = nullptr;
-char* lastLexemeFound = nullptr;
+char *lastLexemeFound = nullptr;
 int lexemeLength = 0;
 int lexemeBufferSize = 0;
 
-char const * tokens [] = {"ENDOFILE","LT","LE","EQ","NE","GT","GE","IF","BOOL","ELSE","ID",
-                          "INT","FLOAT","COMMA","LPARENT","RPARENT","ASSIGN","SEMICOLON",
-                          "WHILE","LBRACKET","RBRACKET","SWITCH","BREAK","RETURN","PRINT",
-                          "READLN","THROW","TRY","CATCH","CASE","LITERAL","TRUE","FALSE",
-                          "ADDRESS","STAR","DOT","LBRACE","RBRACE","NOT","CHAR","QUOTE",
-                          "SIMPLEQUOTE","BACKSLASH","COLON","PLUS","MINUS","PIPE","SLASH",
-                          "PERCENT","AND","OR","POINTER","TYPEDEF","STRUCT","NUMINT",
-                          "NUMFLOAT","LITERALCHAR"};
+char const *tokens[] = {"ENDOFILE", "LT", "LE", "EQ", "NE", "GT", "GE", "IF", "BOOL", "ELSE", "ID",
+                        "INT", "FLOAT", "COMMA", "LPARENT", "RPARENT", "ASSIGN", "SEMICOLON",
+                        "WHILE", "LBRACKET", "RBRACKET", "SWITCH", "BREAK", "RETURN", "PRINT",
+                        "READLN", "THROW", "TRY", "CATCH", "CASE", "LITERAL", "TRUE", "FALSE",
+                        "ADDRESS", "STAR", "DOT", "LBRACE", "RBRACE", "NOT", "CHAR", "QUOTE",
+                        "SIMPLEQUOTE", "BACKSLASH", "COLON", "PLUS", "MINUS", "PIPE", "SLASH",
+                        "PERCENT", "AND", "OR", "POINTER", "TYPEDEF", "STRUCT", "NUMINT",
+                        "NUMFLOAT", "LITERALCHAR"};
 
-ReservedWordsTable  reservedWordsTable;
-LiteralsTable  literalsTable;
-IdsTable  identifiersTable;
-ReservedWordsTable  reservedWordsUsedTable;
+ReservedWordsTable reservedWordsTable;
+LiteralsTable literalsTable;
+IdsTable identifiersTable;
+ReservedWordsTable reservedWordsUsedTable;
 
-FILE* filePointer;
+FILE *filePointer;
 
-LiteralsTable get_literals_table() {
+LiteralsTable get_literals_table()
+{
     return literalsTable;
 }
 
-IdsTable get_identifiers_table() {
+IdsTable get_identifiers_table()
+{
     return identifiersTable;
 }
 
-ReservedWordsTable get_reserved_words_table() {
+ReservedWordsTable get_reserved_words_table()
+{
     return reservedWordsUsedTable;
 }
 
@@ -54,9 +57,11 @@ ReservedWordsTable get_reserved_words_table() {
  * Set the currentInput to the next char in input stream,
  * updating the lexeme buffer with the new one and handling the column count
  */
-void get_next_char() {
+void get_next_char()
+{
 
-    if (lexemeLength == lexemeBufferSize) {
+    if (lexemeLength==lexemeBufferSize)
+    {
         lexemeBufferSize += BUFFER_SIZE;
         lexemeBuffer = (char *) realloc(lexemeBuffer, lexemeBufferSize);
     }
@@ -65,9 +70,9 @@ void get_next_char() {
     static char *bufp = buf;
     static int n = 0;
     /* Buffer is empty */
-    if (n == 0) {
-        ;
-        n = fgets(buf, IO_BUFFER_SIZE, filePointer) != nullptr ? strlen(buf) : 0;
+    if (n==0)
+    { ;
+        n = fgets(buf, IO_BUFFER_SIZE, filePointer)!=nullptr ? strlen(buf) : 0;
         bufp = buf;
     }
 
@@ -80,7 +85,8 @@ void get_next_char() {
 /**
  * Clear the dirty entries from lexeme buffer
  */
-void clear_lexeme() {
+void clear_lexeme()
+{
 
     memset(lexemeBuffer, 0, lexemeBufferSize);
 
@@ -92,7 +98,8 @@ void clear_lexeme() {
  * Get next input and set automaton state
  * @param state target automaton state
  */
-void get_next_char_and_go_to(int state) {
+void get_next_char_and_go_to(int state)
+{
     get_next_char();
     currentState = state;
 }
@@ -101,14 +108,16 @@ void get_next_char_and_go_to(int state) {
  * Set automaton state keeping the current input
  * @param state target automaton state
  */
-void go_to_state(int state) {
+void go_to_state(int state)
+{
     currentState = state;
 }
 
 /**
  * Remove last char from buffer (usually it belongs to the next token lexeme)
  */
-void remove_last_char_from_lexeme() {
+void remove_last_char_from_lexeme()
+{
     lexemeBuffer[lexemeLength - 1] = '\0';
 }
 
@@ -117,7 +126,8 @@ void remove_last_char_from_lexeme() {
  * @param token
  * @return found token and lexeme
  */
-int found_token_and_restart(int token) {
+int found_token_and_restart(int token)
+{
     remove_last_char_from_lexeme();
 
     lastLexemeFound = (char *) malloc(strlen(lexemeBuffer) + 1); //Save the buffer
@@ -134,7 +144,8 @@ int found_token_and_restart(int token) {
  * @param token
  * @return found token
  */
-int found_token_and_get_next_input(int token) {
+int found_token_and_get_next_input(int token)
+{
     get_next_char();
     return found_token_and_restart(token);
 }
@@ -143,16 +154,19 @@ int found_token_and_get_next_input(int token) {
  * Handles a found token, but it determines the token type, if it is a reserved word
  * @return found token
  */
-int found_token_and_check_for_reserved_word() {
+int found_token_and_check_for_reserved_word()
+{
     remove_last_char_from_lexeme();
 
     int token = reservedWordsTable.cSearch(lexemeBuffer);
 
-    if(token >= 0) {
+    if (token >= 0)
+    {
         reservedWordsUsedTable.cInsert(token, lexemeBuffer);
         return found_token_and_restart(token);
     }
-    else {
+    else
+    {
         identifiersTable.cInsert(lexemeBuffer);
         return found_token_and_restart(ID);
     }
@@ -163,7 +177,8 @@ int found_token_and_check_for_reserved_word() {
  * @param token
  * @return found token
  */
-int found_literal_and_restart(int token) {
+int found_literal_and_restart(int token)
+{
     remove_last_char_from_lexeme(); //remove the char from next token
     literalsTable.cInsert(lexemeBuffer);
     return found_token_and_restart(token);
@@ -173,7 +188,8 @@ int found_literal_and_restart(int token) {
  * [MANDATORY] Initialize the analyzer module, create the symtable for reserved words and
  * prepare the input
  */
-void lexical_analyzer_init(FILE* fp) {
+void lexical_analyzer_init(FILE *fp)
+{
 
     filePointer = fp;
 
@@ -201,11 +217,13 @@ void lexical_analyzer_init(FILE* fp) {
     get_next_char();
 }
 
-bool is_letter(char c) {
+bool is_letter(char c)
+{
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
-bool is_digit(char c) {
+bool is_digit(char c)
+{
     return c >= '0' && c <= '9';
 }
 
@@ -213,21 +231,24 @@ bool is_digit(char c) {
  * Handles the fail state
  * @param reason
  */
-void fail(char  const *reason) {
-	fprintf(stderr, "[LEXICAL ERROR] %s at %d:%d\n", reason, currentLine, currentColumn - 1);
+void fail(char const *reason)
+{
+    fprintf(stderr, "[LEXICAL ERROR] %s at %d:%d\n", reason, currentLine, currentColumn - 1);
     clear_lexeme();
 }
 
-void handle_next_line() {
+void handle_next_line()
+{
     currentLine++;
     currentColumn = 1;
 }
 /**
  * Terminates the analyzer instance
  */
-void lexical_analyzer_dispose() {
+void lexical_analyzer_dispose()
+{
     free(lexemeBuffer);
-	free(lastLexemeFound);
+    free(lastLexemeFound);
 }
 
 /**
@@ -235,24 +256,32 @@ void lexical_analyzer_dispose() {
  * ENDOFFILE token.
  * @return found token
  */
-int lexical_analyzer_next_token() {
+int lexical_analyzer_next_token()
+{
 
-    while (true) {
+    while (true)
+    {
 
-        switch (currentState) {
+        switch (currentState)
+        {
 
             case INITIAL_STATE:
-                if (currentInput == '\n')
+                if (currentInput=='\n')
                     handle_next_line();
-                if (isspace(currentInput)) {
+                if (isspace(currentInput))
+                {
                     get_next_char_and_go_to(INITIAL_STATE);
                     clear_lexeme();
-                } else if (is_letter(currentInput)) {
+                }
+                else if (is_letter(currentInput))
+                {
                     get_next_char_and_go_to(13);
-                } else if (is_digit(currentInput))
+                }
+                else if (is_digit(currentInput))
                     get_next_char_and_go_to(19);
                 else
-                    switch (currentInput) {
+                    switch (currentInput)
+                    {
                         case '<':
                             get_next_char_and_go_to(1);
                             break;
@@ -328,7 +357,8 @@ int lexical_analyzer_next_token() {
                     }
                 break;
             case 1:
-                switch (currentInput) {
+                switch (currentInput)
+                {
                     case '=':
                         go_to_state(2);
                         break;
@@ -342,7 +372,8 @@ int lexical_analyzer_next_token() {
             case 3:
                 return found_token_and_restart(LT); //found LT
             case 4:
-                switch (currentInput) {
+                switch (currentInput)
+                {
                     case '=':
                         get_next_char_and_go_to(6);
                         break;
@@ -352,7 +383,8 @@ int lexical_analyzer_next_token() {
                 }
                 break;
             case 5:
-                switch (currentInput) {
+                switch (currentInput)
+                {
                     case '=':
                         get_next_char_and_go_to(8);
                         break;
@@ -370,7 +402,8 @@ int lexical_analyzer_next_token() {
             case 9:
                 return found_token_and_restart(GT); //found GT
             case 10:
-                switch (currentInput) {
+                switch (currentInput)
+                {
                     case '=':
                         get_next_char_and_go_to(11);
                         break;
@@ -408,9 +441,9 @@ int lexical_analyzer_next_token() {
             case 19:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(19);
-                else if (currentInput == '.')
+                else if (currentInput=='.')
                     get_next_char_and_go_to(25);
-                else if (currentInput == 'e' || currentInput == 'E')
+                else if (currentInput=='e' || currentInput=='E')
                     get_next_char_and_go_to(20);
                 else if (is_letter(currentInput))
                     go_to_state(94);
@@ -422,7 +455,7 @@ int lexical_analyzer_next_token() {
             case 20:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(22);
-                else if (currentInput == '+' || currentInput == '-')
+                else if (currentInput=='+' || currentInput=='-')
                     get_next_char_and_go_to(21);
                 else
                     go_to_state(93);
@@ -436,7 +469,8 @@ int lexical_analyzer_next_token() {
             case 22:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(22);
-                else {
+                else
+                {
                     go_to_state(23);
                 }
                 break;
@@ -455,7 +489,7 @@ int lexical_analyzer_next_token() {
             case 26:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(26);
-                else if (currentInput == 'E' || currentInput == 'e')
+                else if (currentInput=='E' || currentInput=='e')
                     get_next_char_and_go_to(20);
                 else if (is_letter(currentInput))
                     go_to_state(91);
@@ -467,7 +501,7 @@ int lexical_analyzer_next_token() {
             case 28:
                 return found_token_and_restart(RPARENT); //found RPARENT
             case 29:
-                if (currentInput == '>')
+                if (currentInput=='>')
                     get_next_char_and_go_to(56);
                 else
                     go_to_state(57);
@@ -487,7 +521,8 @@ int lexical_analyzer_next_token() {
             case 36:
                 return found_token_and_restart(SEMICOLON); //found SEMICOLON
             case 37:
-                switch (currentInput) {
+                switch (currentInput)
+                {
                     case '"':
                         get_next_char_and_go_to(40);
                         break;
@@ -506,7 +541,8 @@ int lexical_analyzer_next_token() {
                 }
                 break;
             case 38:
-                switch (currentInput) {
+                switch (currentInput)
+                {
                     case '\\':
                         get_next_char_and_go_to(99);
                         break;
@@ -523,7 +559,8 @@ int lexical_analyzer_next_token() {
                 get_next_char_and_go_to(37);
                 break;
             case 42:
-                switch (currentInput) {
+                switch (currentInput)
+                {
                     case '\'':
                         get_next_char_and_go_to(98);
                         break;
@@ -537,7 +574,7 @@ int lexical_analyzer_next_token() {
                 }
                 break;
             case 43:
-                if (currentInput == '|')
+                if (currentInput=='|')
                     get_next_char_and_go_to(44);
                 else
                     go_to_state(45);
@@ -547,7 +584,7 @@ int lexical_analyzer_next_token() {
             case 45:
                 return found_token_and_restart(PIPE);
             case 46:
-                if (currentInput == '&')
+                if (currentInput=='&')
                     get_next_char_and_go_to(47);
                 else
                     go_to_state(48);
@@ -557,7 +594,8 @@ int lexical_analyzer_next_token() {
             case 48:
                 return found_token_and_restart(ADDRESS);
             case 49:
-                switch (currentInput) {
+                switch (currentInput)
+                {
                     case '*':
                         get_next_char_and_go_to(51);
                         break;
@@ -569,7 +607,8 @@ int lexical_analyzer_next_token() {
             case 50:
                 return found_token_and_restart(SLASH);
             case 51:
-                switch (currentInput) {
+                switch (currentInput)
+                {
                     case '*':
                         get_next_char_and_go_to(52);
                         break;
@@ -585,7 +624,8 @@ int lexical_analyzer_next_token() {
                 }
                 break;
             case 52:
-                switch (currentInput) {
+                switch (currentInput)
+                {
                     case '/':
                         get_next_char_and_go_to(INITIAL_STATE);
                         break;
@@ -605,11 +645,13 @@ int lexical_analyzer_next_token() {
             case 55:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(55);
-                else if (currentInput == 'e' || currentInput == 'E')
+                else if (currentInput=='e' || currentInput=='E')
                     get_next_char_and_go_to(20);
-                else if (is_letter(currentInput)) {
+                else if (is_letter(currentInput))
+                {
                     go_to_state(18);
-                } else
+                }
+                else
                     go_to_state(23);
                 break;
             case 56:
@@ -652,9 +694,9 @@ int lexical_analyzer_next_token() {
     }
 }
 
-char* lexical_analyzer_last_lexeme()
+char *lexical_analyzer_last_lexeme()
 {
-	return lastLexemeFound;
+    return lastLexemeFound;
 }
 
 /**
@@ -662,7 +704,8 @@ char* lexical_analyzer_last_lexeme()
  * @param id Kind of token
  * @return Textual value of token
  */
-char const* token_id_to_name(int id) {
+char const *token_id_to_name(int id)
+{
 
     return tokens[id];
 }

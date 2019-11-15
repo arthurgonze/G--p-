@@ -74,7 +74,7 @@ private:
     int offset;
     int size;
 public:
-    VarSymbol(const char *lexeme, int scope, const char *lexemeScope, TypeNode *type, bool pointer, int arraySize,  bool parameter);
+    VarSymbol(const char *lexeme, int scope, const char *lexemeScope, TypeNode *type, bool pointer, int arraySize, bool parameter);
     ~VarSymbol() override;
 
     inline bool isPointer() { return pointer; }
@@ -83,7 +83,6 @@ public:
     inline int getArraySize() { return arraySize; }
     inline int getOffset() { return offset; }
     inline int getSize() { return size; }
-
 
     inline void setOffset(int offset) { this->offset = offset; }
     inline void setSize(int size) { this->size = size; }
