@@ -1,6 +1,12 @@
 #include "symboltable.h"
 #include "analyzer.h"
 
+symbol_info::~symbol_info()
+{
+	delete next;
+}
+
+
 /**
  * Polynomial Rolling Hash Function
  * p-> It is reasonable to make p a prime number roughly equal to the number of characters in the input alphabet
@@ -35,6 +41,8 @@ SymbolTable::SymbolTable()
 	memset(block, 0, sizeof(block) * TABLE_SIZE); //Initialize all positions with nullptr
 	
 }
+
+SymbolTable::~SymbolTable() = default;
 
 /**
 *	Recursive function to perform the insertion
@@ -109,7 +117,6 @@ int SymbolTable::cSearch(char *lexeme)
     return -1;
 }
 
-SymbolTable::~SymbolTable() = default;
 void SymbolTable::print() {}
 
 
@@ -153,12 +160,12 @@ void LiteralsTable::print()
 	printf("\n");
 }
 
-void IdentifiersTable::cInsert(char const* lexeme)
+void IdsTable::cInsert(char const* lexeme)
 {
 	SymbolTable::cInsert(ID, lexeme);
 }
 
-void IdentifiersTable::print()
+void IdsTable::print()
 {
 	printf("\nTABELA DE SÍMBOLOS: LITERAIS\n");
 	printf("-------------------------------------------\n");
@@ -191,11 +198,6 @@ void IdentifiersTable::print()
 	}
 
 	printf("\n");
-}
-
-symbol_info::~symbol_info()
-{
-	delete next;
 }
 
 void ReservedWordsTable::print()

@@ -33,7 +33,7 @@ char const * tokens [] = {"ENDOFILE","LT","LE","EQ","NE","GT","GE","IF","BOOL","
 
 ReservedWordsTable  reservedWordsTable;
 LiteralsTable  literalsTable;
-IdentifiersTable  identifiersTable;
+IdsTable  identifiersTable;
 ReservedWordsTable  reservedWordsUsedTable;
 
 FILE* filePointer;
@@ -42,7 +42,7 @@ LiteralsTable get_literals_table() {
     return literalsTable;
 }
 
-IdentifiersTable get_identifiers_table() {
+IdsTable get_identifiers_table() {
     return identifiersTable;
 }
 

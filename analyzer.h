@@ -26,7 +26,7 @@ LiteralsTable  get_literals_table();
 
 ReservedWordsTable  get_reserved_words_table();
 
-IdentifiersTable  get_identifiers_table();
+IdsTable  get_identifiers_table();
 
 int lexical_analyzer_next_token();
 

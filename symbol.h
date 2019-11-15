@@ -8,8 +8,8 @@ class Symbol
 {
 private:
     const char *lexeme;
-    const char *lexemeScope;
-    int scope;
+    const char *lexemeScope;// new
+    int scope;// new
     Symbol *nextSymbol;
 public:
     Symbol(const char *lexeme, int scope, const char *lexemeScope);
@@ -63,6 +63,7 @@ public:
     explicit NumFloatSymbol(const char *lexeme) : Symbol(lexeme, nullptr, nullptr) {};
 };
 
+// new from here to the end
 class VarSymbol : public Symbol
 {
 private:

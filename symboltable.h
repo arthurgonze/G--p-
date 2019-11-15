@@ -1,9 +1,9 @@
-#include <cstring>
-#include <string>
-
 #ifndef COMPILADOR_2019_3_SYMBOLTABLE_H
 #define COMPILADOR_2019_3_SYMBOLTABLE_H
 
+#include <cstring>
+#include <string>
+#include "symbol.h"
 
 using namespace std;
 
@@ -17,45 +17,114 @@ struct symbol_info
     int pos; // lexem position in the lexemeArray
     struct symbol_info *next; // pointer to the next symbol
 
-	~symbol_info();
+    ~symbol_info();
 };
 
 class SymbolTable
 {
-public:
-    void cInsert(int token, char const *lexeme);
-    int cSearch(char *lexeme);
-	symbol_info** block; // Table
-    char *lexemeArray = new char[LEXEME_ARRAY_SIZE]; // An array to allocate lexeme in continuous memory
-    SymbolTable(); // Constructor
-	symbol_info* auxInsert(symbol_info* root, int token, char const* lexeme);
-    virtual ~SymbolTable();
-	void print();
 protected:
     int headIndex = 0; // A variable to store the first free position in the lexeme array
     int lexemeArraySize = 0; // Actual size of the lexeme array
-    static unsigned long cHash(string const& name); // Hash Function
-};
 
+    int currentScope;// new
+    const char *previousScopeLexeme;// new
+    const char *currentScopeLexeme;// new
+
+    symbol_info **block; // Table
+    Symbol **newBlock;// TODO agora symbol_info == Symbol
+    char *lexemeArray = new char[LEXEME_ARRAY_SIZE]; // An array to allocate lexeme in continuous memory
+
+    static unsigned long cHash(string const &name); // Hash Function
+
+    void cInsert(int token, const char *lexeme);
+    symbol_info *auxInsert(symbol_info *root, int token, const char *lexeme);
+    void insert(Symbol *symbol, const char *lexeme); // new
+
+    int cSearch(char *lexeme);// TODO não é const char *?
+    Symbol *search(const char *lexeme);// new
+
+    void print() = default;
+public:
+    SymbolTable();
+    virtual ~SymbolTable() = default;
+
+    void beginScope(const char *lexemeScope);// new
+    void endScope();// new
+};
 
 //Extend Symbol Table to create the Reserved words table, Literals table and Identifiers table
-
-class ReservedWordsTable : public SymbolTable {
+class ReservedWordsTable : public SymbolTable
+{
 public:
-	void print();
+    void print();// TODO especializar o print?
+    // TODO metodo de busca proprio?
+    // ex.: ReservedTokenSymbol *search(const char *lexeme) { return (ReservedTokenSymbol*) SymbolTable::search(lexeme); }
+};
+class LiteralsTable : public SymbolTable
+{
+public:
+    void cInsert(const char *lexeme);
+    void print();
+};
+class IdsTable : public SymbolTable
+{
+public:
+    void cInsert(const char *lexeme);
+    void print();
+};
+class NumIntTable : public SymbolTable
+{
+public:
+    void cInsert(const char *lexeme);
+    void print();
+};
+class NumFloatTable : public SymbolTable
+{
+public:
+    void cInsert(const char *lexeme);
+    void print();
 };
 
-class LiteralsTable : public SymbolTable {
-    public:
-       void cInsert(char const *lexeme);
-	   void print();
+class StructTable : public SymbolTable // TODO
+{
+public:
+    StructTable();
+    virtual ~StructTable();
 
-};
-class IdentifiersTable : public SymbolTable {
-    public:
-        void cInsert(char const *lexeme);
-		void print();
+    bool insert(const char *lexeme, VarDeclNode *varDecl);
+
+    StructSymbol *search(const char *lexeme);
+
+    void print();
 };
 
+class FunctionTable : public SymbolTable // TODO
+{
+public:
+    FunctionTable();
+    virtual ~FunctionTable();
+
+    bool insert(TypeNode *type, const char *lexeme, FormalListNode *varDecl, bool pointer);
+
+    FunctionSymbol *search(const char *lexeme);
+
+    FunctionSymbol *searchInScope(const char *lexeme, const char *lexemeScope);
+
+    void print();
+};
+
+class VarTable : public SymbolTable // TODO
+{
+public:
+    VarTable();
+    virtual ~VarTable();
+
+    bool insert(TypeNode *type, const char *lexeme, bool pointer, int array, bool parameter);
+
+    VarSymbol *search(const char *lexeme);
+    VarSymbol *searchInScope(const char *lexeme, const char *LexemeScope);
+
+    void print();
+};
 
 #endif //COMPILADOR_2019_3_SYMBOLTABLE_H
