@@ -262,6 +262,38 @@ void ReservedWordsTable::print()
     }
 }
 
+/// IntegerTable
+/** Verify if the symbol is in the table.
+* If not, instantiates a new IntegerSymbol and inserts it.
+*/
+void NumIntTable::cInsert(const char *lexeme)
+{
+    if (cSearch(lexeme)==NULL)
+    {
+        SymbolTable::cInsert(new NumIntSymbol(&lexemeArray[headIndex]), lexeme);
+    }
+}
+void NumIntTable::print()
+{
+    SymbolTable::print();
+}
+
+/// RealTable
+/** Verify if the symbol is in the table.
+* If not, instantiates a new RealSymbol and inserts it.
+*/
+void NumFloatTable::cInsert(const char *lexeme)
+{
+    if (cSearch(lexeme)==NULL)
+    {
+        SymbolTable::cInsert(new NumFloatSymbol(&lexemeArray[headIndex]), lexeme);
+    }
+}
+void NumFloatTable::print()
+{
+    SymbolTable::print();
+}
+
 /// VarTable
 VarTable::VarTable()
 {

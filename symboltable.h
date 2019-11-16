@@ -75,13 +75,13 @@ public:
 class NumIntTable : public SymbolTable
 {
 public:
-    // TODO void cInsert(const char *lexeme); ?
+    void cInsert(const char *lexeme);
     void print() override;
 };
 class NumFloatTable : public SymbolTable
 {
 public:
-    // TODO void cInsert(const char *lexeme); ?
+    void cInsert(const char *lexeme);
     void print() override;
 };
 

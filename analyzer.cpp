@@ -30,7 +30,8 @@ char const *tokens[] = {"ENDOFILE", "LT", "LE", "EQ", "NE", "GT", "GE", "IF", "B
 ReservedWordsTable reservedWordsTable;
 LiteralsTable literalsTable;
 IdsTable identifiersTable;
-ReservedWordsTable reservedWordsUsedTable;
+NumIntTable numIntTable;
+NumFloatTable numFloatTable;
 
 FILE *filePointer;
 
@@ -44,10 +45,6 @@ IdsTable get_identifiers_table()
     return identifiersTable;
 }
 
-ReservedWordsTable get_reserved_words_table()
-{
-    return reservedWordsUsedTable;
-}
 
 /**
  * Set the currentInput to the next char in input stream,
@@ -55,7 +52,6 @@ ReservedWordsTable get_reserved_words_table()
  */
 void get_next_char()
 {
-
     if (lexemeLength==lexemeBufferSize)
     {
         lexemeBufferSize += BUFFER_SIZE;
@@ -180,6 +176,16 @@ int found_literal_and_restart(int token)
 {
     remove_last_char_from_lexeme(); //remove the char from next token
     literalsTable.cInsert(lexemeBuffer);
+    return found_token_and_restart(token);
+}
+int found_numInt_and_restart(int token)
+{
+    numIntTable.cInsert(lexemeBuffer);
+    return found_token_and_restart(token);
+}
+int found_numFloat_and_restart(int token)
+{
+    numFloatTable.cInsert(lexemeBuffer);
     return found_token_and_restart(token);
 }
 
@@ -474,9 +480,9 @@ int lexical_analyzer_next_token()
                 }
                 break;
             case 23:
-                return found_token_and_restart(NUMFLOAT); //found NUMFLOAT
+                return found_numFloat_and_restart(NUMFLOAT); //found NUMFLOAT
             case 24:
-                return found_token_and_restart(NUMINT); //found NUMINT
+                return found_numInt_and_restart(NUMINT); //found NUMINT
             case 25:
                 if (is_digit(currentInput))
                     get_next_char_and_go_to(26);
