@@ -1,7 +1,3 @@
-//
-// Created by souzajbr on 10/09/2019.
-//
-
 #include "ctype.h"
 #include "stdbool.h"
 #include "stdio.h"
@@ -71,7 +67,7 @@ void get_next_char()
     static int n = 0;
     /* Buffer is empty */
     if (n==0)
-    { ;
+    {
         n = fgets(buf, IO_BUFFER_SIZE, filePointer)!=nullptr ? strlen(buf) : 0;
         bufp = buf;
     }
@@ -126,6 +122,7 @@ void remove_last_char_from_lexeme()
  * @param token
  * @return found token and lexeme
  */
+//int found_token_and_restart(int token)
 int found_token_and_restart(int token)
 {
     remove_last_char_from_lexeme();
@@ -158,12 +155,13 @@ int found_token_and_check_for_reserved_word()
 {
     remove_last_char_from_lexeme();
 
-    int token = reservedWordsTable.cSearch(lexemeBuffer);
+//    int token = reservedWordsTable.cSearch(lexemeBuffer);
+    ReservedTokenSymbol* token = reservedWordsTable.cSearch(lexemeBuffer);
 
-    if (token >= 0)
+    if (token !=nullptr)
     {
-        reservedWordsUsedTable.cInsert(token, lexemeBuffer);
-        return found_token_and_restart(token);
+        // TODO nao precisamos mais dessa tabela reservedWordsUsedTable.cInsert(lexemeBuffer, token->getTokenID());
+        return found_token_and_restart(token->getTokenID());
     }
     else
     {
@@ -177,6 +175,7 @@ int found_token_and_check_for_reserved_word()
  * @param token
  * @return found token
  */
+//int found_literal_and_restart(int token)
 int found_literal_and_restart(int token)
 {
     remove_last_char_from_lexeme(); //remove the char from next token

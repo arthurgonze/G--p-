@@ -1,11 +1,6 @@
 #include "symboltable.h"
 #include "analyzer.h"
 
-symbol_info::~symbol_info()
-{
-    delete next;
-}
-
 /**
  * Polynomial Rolling Hash Function
  * p-> It is reasonable to make p a prime number roughly equal to the number of characters in the input alphabet
@@ -36,7 +31,7 @@ SymbolTable::SymbolTable()
     headIndex = 0; // A variable to store the first free position in this array
     lexemeArraySize = 0; // Actual size of the lexeme array
 
-    block = new symbol_info *[TABLE_SIZE];
+    block = new Symbol *[TABLE_SIZE];
     memset(block, 0, sizeof(block)*TABLE_SIZE); //Initialize all positions with nullptr
 
 }
@@ -47,16 +42,16 @@ SymbolTable::SymbolTable()
 *	@param token Token ID
 *	@param lexeme Lexeme string
 */
-symbol_info *SymbolTable::auxInsert(symbol_info *root, int token, char const *lexeme)
+Symbol *SymbolTable::auxInsert(Symbol *root, int token, const char *lexeme)
 {
 
     if (root==nullptr)
     {
-        //Create the new node with info
-        symbol_info *newNode = new symbol_info();
-        newNode->token = token;
-        newNode->pos = headIndex;
-        newNode->next = nullptr;
+        // TODO Create the new node with info
+        Symbol *newNode = new Symbol(NULL, NULL, NULL);
+//        newNode->token = token;
+//        newNode->pos = headIndex;
+//        newNode->next = nullptr;
 
         //Add the lexeme to array
         int lexemeSize = strlen(lexeme);
@@ -64,7 +59,6 @@ symbol_info *SymbolTable::auxInsert(symbol_info *root, int token, char const *le
         {
             lexemeArraySize += LEXEME_ARRAY_SIZE;
             lexemeArray = (char *) realloc(lexemeArray, lexemeArraySize);
-
         }
         strcpy(lexemeArray + headIndex, lexeme);
         headIndex += lexemeSize + 1; // +1 cause of \0
@@ -72,9 +66,11 @@ symbol_info *SymbolTable::auxInsert(symbol_info *root, int token, char const *le
         return newNode;
     }
 
-    //If there's a valid node, check if its not a duplicate
-    if (!(root->token==token && strcmp(lexemeArray + root->pos, lexeme)==0))
-        root->next = auxInsert(root->next, token, lexeme);
+    // TODO If there's a valid node, check if its not a duplicate
+//    if (!(root->token==token && strcmp(lexemeArray + root->pos, lexeme)==0))
+//    {
+//        root->next = auxInsert(root->next, token, lexeme);
+//    }
 
     return root;
 }
@@ -87,30 +83,32 @@ symbol_info *SymbolTable::auxInsert(symbol_info *root, int token, char const *le
  * @param token
  * @param lexeme
  */
-void SymbolTable::cInsert(int token, char const *lexeme)
-{
-    unsigned long pos = cHash(lexeme);
-    block[pos] = auxInsert(block[pos], token, lexeme);
-}
+//void SymbolTable::cInsert(int token, const char *lexeme)
+//{
+//    unsigned long pos = cHash(lexeme);
+//    block[pos] = auxInsert(block[pos], token, lexeme);
+//}
 
 /** Given a Symbol inserts it in the hash table and add the lexeme
 * to the lexemes array.
 * Reallocs the lexemes array if needed.
 */
-void SymbolTable::insert(Symbol *symbol, const char *lexeme)
+void SymbolTable::cInsert(Symbol *symbol, const char *lexeme)
 {
     if (lexeme!=NULL)
     {
         unsigned int index = cHash(lexeme);
-        symbol->setNextSymbol(newBlock[index]);
-        newBlock[index] = symbol;
-        if (headIndex + strlen(lexeme) >= lexemeArraySize)
-        {
-            lexemeArraySize += (1 + strlen(lexeme)/LEXEME_ARRAY_SIZE)*LEXEME_ARRAY_SIZE;
-            lexemeArray = (char *) realloc(lexemeArray, lexemeArraySize*sizeof(char));
-        }
-        strcpy(&lexemeArray[headIndex], lexeme);
-        lexemeArraySize += strlen(lexeme) + 1;
+        symbol->setNextSymbol(block[index]);
+        // TODO block[index] = auxInsert(block[index], lexeme);
+//        symbol->setNextSymbol(newBlock[index]);
+//        newBlock[index] = symbol;
+//        if (headIndex + strlen(lexeme) >= lexemeArraySize)
+//        {
+//            lexemeArraySize += (1 + strlen(lexeme)/LEXEME_ARRAY_SIZE)*LEXEME_ARRAY_SIZE;
+//            lexemeArray = (char *) realloc(lexemeArray, lexemeArraySize*sizeof(char));
+//        }
+//        strcpy(&lexemeArray[headIndex], lexeme);
+//        lexemeArraySize += strlen(lexeme) + 1;
     }
 }
 
@@ -120,38 +118,25 @@ void SymbolTable::insert(Symbol *symbol, const char *lexeme)
  * @param lexeme
  * @return
  */
-int SymbolTable::cSearch(char *lexeme)
-{
-    unsigned long pos = cHash(lexeme);
-    symbol_info *temp = block[pos];
-
-    while (temp!=nullptr)
-    {
-        if (strcmp(lexemeArray + temp->pos, lexeme)==0)
-        {
-            return temp->token;
-        }
-        temp = temp->next;
-    }
-    return -1;
-}
 
 /** Verify if a symbol is in the table.
 * If true, returns the Symbol, else returns NULL.
 */
-Symbol *SymbolTable::search(const char *value)
+Symbol *SymbolTable::cSearch(const char *lexeme)
 {
-    if (value!=nullptr)
+    if (lexeme!=nullptr)
     {
-        unsigned long index = cHash(value);
-        Symbol *sym;
-        for (sym = newBlock[index]; sym!=nullptr; sym = sym->getNextSymbol())
+        unsigned long pos = cHash(lexeme);
+        Symbol *temp = block[pos];
+        while (temp!=nullptr)
         {
-            if (strcmp(sym->getLexeme(), value)==0)
+            if (strcmp(temp->getLexeme(), lexeme)==0)
             {
-                return sym;
+                return temp;
             }
+            temp = temp->getNextSymbol();
         }
+        return nullptr;
     }
     return nullptr;
 }
@@ -172,9 +157,12 @@ void SymbolTable::endScope()
     currentScope -= 1;
 }
 
-void LiteralsTable::cInsert(char const *lexeme)
+void LiteralsTable::cInsert(const char *lexeme)
 {
-    SymbolTable::cInsert(LITERAL, lexeme);
+    if (cSearch(lexeme)==NULL)
+    {
+        SymbolTable::cInsert(new LiteralSymbol(&lexemeArray[headIndex]), lexeme);
+    }
 }
 
 void LiteralsTable::print()
@@ -191,30 +179,30 @@ void LiteralsTable::print()
     for (int i = 0; i < TABLE_SIZE; ++i)
     { //Get all the entries
 
-        symbol_info *temp = block[i];
+        Symbol *temp = block[i];
         if (temp==nullptr) //If its null, nothing to be done
+        {
             continue;
+        }
 
         while (temp!=nullptr)
         {
-
             //Verify flags to print only requested columns
-
-            printf("%s\t\t", this->lexemeArray + temp->pos);
+            printf("%s\t\t", this->lexemeArray + temp->getScope());// TODO temp->getScope() era temp->pos
 
             printf("\n");
-            temp = temp->next;
-
+            temp = temp->getNextSymbol();
         }
-
     }
-
     printf("\n");
 }
 
-void IdsTable::cInsert(char const *lexeme)
+void IdsTable::cInsert(const char *lexeme)
 {
-    SymbolTable::cInsert(ID, lexeme);
+    if (cSearch(lexeme)==NULL)
+    {
+        SymbolTable::cInsert(new IdSymbol(&lexemeArray[headIndex]), lexeme);
+    }
 }
 
 void IdsTable::print()
@@ -225,68 +213,53 @@ void IdsTable::print()
     //Check if column names headers needs to be printed
     //If necessary, print selected;
     printf("LEXEMA\t\t");
-
     printf("\n-------------------------------------------\n");
 
     for (int i = 0; i < TABLE_SIZE; ++i)
     { //Get all the entries
 
-        symbol_info *temp = block[i];
+        Symbol *temp = block[i];
         if (temp==nullptr) //If its null, nothing to be done
+        {
             continue;
+        }
 
         while (temp!=nullptr)
         {
-
             //Verify flags to print only requested columns
-
-            printf("%s\t\t", this->lexemeArray + temp->pos);
+            printf("%s\t\t", this->lexemeArray + temp->getScope());// TODO temp->getScope() era temp->pos
 
             printf("\n");
-            temp = temp->next;
-
+            temp = temp->getNextSymbol();
         }
-
     }
-
     printf("\n");
+}
+
+/// ReservedTable
+/** Verify if the symbol is in the table.
+* If not, instantiates a new ReservedSymbol and inserts it.
+*/
+void ReservedWordsTable::cInsert(int tokenID, const char *lexeme)
+{
+    if (cSearch(lexeme)==NULL)
+    {
+        SymbolTable::cInsert(new ReservedTokenSymbol(lexeme, tokenID), lexeme);
+    }
 }
 
 void ReservedWordsTable::print()
 {
     printf("\nTABELA DE SÍMBOLOS: PALAVRAS RESERVADAS\n");
-    printf("-------------------------------------------\n");
-
-    //Check if column names headers needs to be printed
-    //If necessary, print selected;
-
-    printf("TOKEN\t\tCÓDIGO");
-
-    printf("\n-------------------------------------------\n");
-
-    for (int i = 0; i < TABLE_SIZE; ++i)
-    { //Get all the entries
-
-        symbol_info *temp = block[i];
-        if (temp==nullptr) //If its null, nothing to be done
-            continue;
-
-        while (temp!=nullptr)
+    cout << "Lexeme" << "\t" << "Token number" << endl;
+    cout << "_____________________________" << endl;
+    for (int i = 0; i < TABLE_SIZE; i++)
+    {
+        for (ReservedTokenSymbol *sym = (ReservedTokenSymbol *) block[i]; sym!=NULL; sym = (ReservedTokenSymbol *) sym->getNextSymbol())
         {
-
-            //Verify flags to print only requested columns
-            printf("%s\t\t", token_id_to_name(temp->token));
-
-            printf("%d", temp->token);
-
-            printf("\n");
-            temp = temp->next;
-
+            std::cout << sym->getLexeme() << "\t" << sym->getTokenID() << std::endl;
         }
-
     }
-
-    printf("\n");
 }
 
 /// VarTable
@@ -308,7 +281,7 @@ VarSymbol *VarTable::search(const char *lexeme)
 {
     if (lexeme!=NULL)
     {
-        VarSymbol *varSymbol = (VarSymbol *) SymbolTable::search(lexeme);
+        VarSymbol *varSymbol = (VarSymbol *) SymbolTable::cSearch(lexeme);
         while (varSymbol!=NULL && varSymbol->getScope() <= currentScope)
         {
             if ((varSymbol->getLexeme()==lexeme && varSymbol->isScope(currentScopeLexeme)) ||
@@ -326,7 +299,7 @@ VarSymbol *VarTable::searchInScope(const char *lexeme, const char *scopeLexeme)
 {
     if (lexeme!=NULL)
     {
-        VarSymbol *varSymbol = (VarSymbol *) SymbolTable::search(lexeme);
+        VarSymbol *varSymbol = (VarSymbol *) SymbolTable::cSearch(lexeme);
         while (varSymbol!=NULL)
         {
             if (varSymbol->getLexeme()==lexeme && varSymbol->isScope(scopeLexeme))
@@ -348,7 +321,7 @@ bool VarTable::insert(TypeNode *type, const char *lexeme, bool pointer, int arra
     if (varSymbol==NULL || varSymbol->getScope() < currentScope || !varSymbol->isScope(currentScopeLexeme))
     {
         // VarSymbol(const char *lexeme, int scope, const char *lexemeScope, TypeNode *type, bool pointer, int arraySize, bool parameter);
-        SymbolTable::insert(new VarSymbol(lexeme, currentScope, currentScopeLexeme, type, pointer, arraySize, parameter), lexeme);
+        SymbolTable::cInsert(new VarSymbol(lexeme, currentScope, currentScopeLexeme, type, pointer, arraySize, parameter), lexeme);
         return true;
     }
     return false;
@@ -361,7 +334,7 @@ void VarTable::print()
     std::cout << "_____________________________" << std::endl;
     for (int i = 0; i < TABLE_SIZE; i++)
     {
-        for (VarSymbol *symbol = (VarSymbol *) newBlock[i]; symbol!=NULL; symbol = (VarSymbol *) symbol->getNextSymbol())
+        for (VarSymbol *symbol = (VarSymbol *) block[i]; symbol!=NULL; symbol = (VarSymbol *) symbol->getNextSymbol())
         {
             std::cout << symbol->getLexeme() << "\t" << symbol->getScope() << "\t" << symbol->getLexemeScope() << std::endl;
         }
@@ -387,7 +360,7 @@ FunctionSymbol *FunctionTable::search(const char *lexeme)
 {
     if (lexeme!=NULL)
     {
-        FunctionSymbol *funcSymbol = (FunctionSymbol *) SymbolTable::search(lexeme);
+        FunctionSymbol *funcSymbol = (FunctionSymbol *) SymbolTable::cSearch(lexeme);
         while (funcSymbol!=NULL && funcSymbol->getScope() <= currentScope)
         {
             if ((funcSymbol->getLexeme()==lexeme && funcSymbol->isScope(currentScopeLexeme)) ||
@@ -405,7 +378,7 @@ FunctionSymbol *FunctionTable::searchInScope(const char *lexeme, const char *sco
 {
     if (lexeme!=NULL)
     {
-        FunctionSymbol *funcSymbol = (FunctionSymbol *) SymbolTable::search(lexeme);
+        FunctionSymbol *funcSymbol = (FunctionSymbol *) SymbolTable::cSearch(lexeme);
         while (funcSymbol!=NULL)
         {
             if (funcSymbol->getLexeme()==lexeme && funcSymbol->isScope(scopeLexeme))
@@ -424,7 +397,7 @@ bool FunctionTable::insert(TypeNode *returnType, const char *lexeme, FormalListN
     if (funcSymbol==NULL || funcSymbol->getScope() < currentScope || !funcSymbol->isScope(currentScopeLexeme))
     {
         //FunctionSymbol(const char *lexeme, int scope, const char *lexemeScope, TypeNode *returnType, bool pointer, FormalListNode *varDecl);
-        SymbolTable::insert(new FunctionSymbol(lexeme, currentScope, currentScopeLexeme, returnType, pointer, varDecl), lexeme);
+        SymbolTable::cInsert(new FunctionSymbol(lexeme, currentScope, currentScopeLexeme, returnType, pointer, varDecl), lexeme);
         return true;
     }
     return false;
@@ -437,7 +410,7 @@ void FunctionTable::print()
     std::cout << "_____________________________" << std::endl;
     for (int i = 0; i < TABLE_SIZE; i++)
     {
-        for (FunctionSymbol *symbol = (FunctionSymbol *) newBlock[i]; symbol!=NULL; symbol = (FunctionSymbol *) symbol->getNextSymbol())
+        for (FunctionSymbol *symbol = (FunctionSymbol *) block[i]; symbol!=NULL; symbol = (FunctionSymbol *) symbol->getNextSymbol())
         {
             std::cout << symbol->getLexeme() << "\t" << symbol->getScope() << "\t" << symbol->getLexemeScope() << std::endl;
         }
@@ -463,7 +436,7 @@ StructSymbol *StructTable::search(const char *lexeme)
 {
     if (lexeme!=NULL)
     {
-        StructSymbol *structSymbol = (StructSymbol *) SymbolTable::search(lexeme);
+        StructSymbol *structSymbol = (StructSymbol *) SymbolTable::cSearch(lexeme);
         while (structSymbol!=NULL && structSymbol->getScope() <= currentScope)
         {
             if ((structSymbol->getLexeme()==lexeme && structSymbol->isScope(currentScopeLexeme)) ||
@@ -483,7 +456,7 @@ bool StructTable::insert(const char *lexeme, VarDeclNode *varDecl)
     if (structSymbol==NULL || structSymbol->getScope() < currentScope || !structSymbol->isScope(currentScopeLexeme))
     {
         //StructSymbol(const char *lexeme, int scope, const char *lexemeScope, VarDeclNode *varDecl)
-        SymbolTable::insert(new StructSymbol(lexeme, currentScope, currentScopeLexeme, varDecl), lexeme);
+        SymbolTable::cInsert(new StructSymbol(lexeme, currentScope, currentScopeLexeme, varDecl), lexeme);
         return true;
     }
     return false;
@@ -495,7 +468,7 @@ void StructTable::print()
     std::cout << "_____________________________" << std::endl;
     for (int i = 0; i < TABLE_SIZE; i++)
     {
-        for (StructSymbol *symbol = (StructSymbol *) newBlock[i]; symbol!=NULL; symbol = (StructSymbol *) symbol->getNextSymbol())
+        for (StructSymbol *symbol = (StructSymbol *) block[i]; symbol!=NULL; symbol = (StructSymbol *) symbol->getNextSymbol())
         {
             std::cout << symbol->getLexeme() << "\t" << symbol->getScope() << "\t" << symbol->getLexemeScope() << std::endl;
         }

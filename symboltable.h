@@ -11,20 +11,11 @@ using namespace std;
 #define TABLE_SIZE 101 // An arbitrary prime number that showed good performance
 #define LEXEME_ARRAY_SIZE 4096 // A memory block size
 
-// Two columns of the symbol table with token ID and lexeme position in the lexeme array
-struct symbol_info
-{
-    int token; //token id
-    int pos; // lexem position in the lexemeArray
-    struct symbol_info *next; // pointer to the next symbol
-
-    ~symbol_info();
-};
-
 class Symbol;
 class StructSymbol;
 class FunctionSymbol;
 class VarSymbol;
+class ReservedTokenSymbol;
 
 class SymbolTable
 {
@@ -37,37 +28,37 @@ protected:
     const char *currentScopeLexeme;// new
 
     static unsigned long cHash(string const &name); // Hash Function
-
-    void insert(Symbol *symbol, const char *lexeme); // new
-
-    Symbol *search(const char *lexeme);// new
+    //symbol_info *auxInsert(symbol_info *root, int token, const char *lexeme);
+    Symbol *auxInsert(Symbol *root, int token, const char *lexeme);
 
     virtual void print();
 public:
     SymbolTable();
     virtual ~SymbolTable() = default;
 
-    symbol_info **block; // Table
-    Symbol **newBlock;// TODO agora symbol_info == Symbol
+    //symbol_info **block; // Table
+    Symbol **block; // Table
     char *lexemeArray = new char[LEXEME_ARRAY_SIZE]; // An array to allocate lexeme in continuous memory
 
 
     void beginScope(const char *lexemeScope);// new
     void endScope();// new
 
-    void cInsert(int token, const char *lexeme);
-    symbol_info *auxInsert(symbol_info *root, int token, const char *lexeme);
+    //void cInsert(int token, const char *lexeme);
+    void cInsert(Symbol *symbol, const char *lexeme); // new
 
-    int cSearch(char *lexeme);// TODO não é const char *?
+    //int cSearch(char *lexeme);// TODO não é const char *?
+    Symbol *cSearch(const char *lexeme);// new
 };
 
 //Extend Symbol Table to create the Reserved words table, Literals table and Identifiers table
 class ReservedWordsTable : public SymbolTable
 {
 public:
+    void cInsert(int tokenID, const char *lexeme);
     void print() override;// TODO especializar o print?
     // TODO metodo de busca proprio?
-    // ReservedTokenSymbol *search(const char *lexeme) { return (ReservedTokenSymbol*) SymbolTable::search(lexeme); }
+    ReservedTokenSymbol *cSearch(const char *lexeme) { return (ReservedTokenSymbol *) SymbolTable::cSearch(lexeme); }
 };
 class LiteralsTable : public SymbolTable
 {
