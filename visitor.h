@@ -47,10 +47,10 @@ class SignNode;
 class VarStmtNode;
 class PrimaryNode;
 
-class visitor
+class Visitor
 {
 public:
-    virtual ~visitor() = default;;
+    virtual ~Visitor() = default;;
     virtual void visit(ProgramNode *node) = 0;
     virtual void visit(TypeNode *node) = 0;
     virtual void visit(FunctionListNode *node) = 0;
@@ -92,7 +92,7 @@ public:
 
 };
 
-class PrintAST : public visitor
+class PrintAST : public Visitor
 {
 private:
     unsigned int level;

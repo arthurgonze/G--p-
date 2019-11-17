@@ -79,7 +79,6 @@ void get_next_char()
  */
 void clear_lexeme()
 {
-
     memset(lexemeBuffer, 0, lexemeBufferSize);
 
     lexemeBuffer[0] = (char) currentInput;
@@ -266,13 +265,13 @@ int lexical_analyzer_next_token()
 
     while (true)
     {
-
         switch (currentState)
         {
-
             case INITIAL_STATE:
                 if (currentInput=='\n')
+                {
                     handle_next_line();
+                }
                 if (isspace(currentInput))
                 {
                     get_next_char_and_go_to(INITIAL_STATE);
@@ -283,7 +282,9 @@ int lexical_analyzer_next_token()
                     get_next_char_and_go_to(13);
                 }
                 else if (is_digit(currentInput))
+                {
                     get_next_char_and_go_to(19);
+                }
                 else
                     switch (currentInput)
                     {
@@ -423,15 +424,23 @@ int lexical_analyzer_next_token()
                 return found_token_and_restart(NOT); //found NOT
             case 13:
                 if (is_letter(currentInput) || is_digit(currentInput))
+                {
                     get_next_char_and_go_to(13);
+                }
                 else
+                {
                     go_to_state(15);
+                }
                 break;
             case 14:
                 if (is_digit(currentInput))
+                {
                     get_next_char_and_go_to(55);
+                }
                 else
+                {
                     go_to_state(53);
+                }
                 break;
             case 15:
                 return found_token_and_check_for_reserved_word();
@@ -445,35 +454,55 @@ int lexical_analyzer_next_token()
                 break;
             case 19:
                 if (is_digit(currentInput))
+                {
                     get_next_char_and_go_to(19);
+                }
                 else if (currentInput=='.')
+                {
                     get_next_char_and_go_to(25);
+                }
                 else if (currentInput=='e' || currentInput=='E')
+                {
                     get_next_char_and_go_to(20);
+                }
                 else if (is_letter(currentInput))
+                {
                     go_to_state(94);
-//                else if (currentInput == ',')
-//                    go_to_state(95);
+                }
                 else
+                {
                     go_to_state(24);
+                }
                 break;
             case 20:
                 if (is_digit(currentInput))
+                {
                     get_next_char_and_go_to(22);
+                }
                 else if (currentInput=='+' || currentInput=='-')
+                {
                     get_next_char_and_go_to(21);
+                }
                 else
+                {
                     go_to_state(93);
+                }
                 break;
             case 21:
                 if (is_digit(currentInput))
+                {
                     get_next_char_and_go_to(22);
+                }
                 else
+                {
                     go_to_state(92);
+                }
                 break;
             case 22:
                 if (is_digit(currentInput))
+                {
                     get_next_char_and_go_to(22);
+                }
                 else
                 {
                     go_to_state(23);
@@ -485,21 +514,35 @@ int lexical_analyzer_next_token()
                 return found_numInt_and_restart(NUMINT); //found NUMINT
             case 25:
                 if (is_digit(currentInput))
+                {
                     get_next_char_and_go_to(26);
+                }
                 else if (is_letter(currentInput))
+                {
                     go_to_state(91);
+                }
                 else
+                {
                     go_to_state(23);
+                }
                 break;
             case 26:
                 if (is_digit(currentInput))
+                {
                     get_next_char_and_go_to(26);
+                }
                 else if (currentInput=='E' || currentInput=='e')
+                {
                     get_next_char_and_go_to(20);
+                }
                 else if (is_letter(currentInput))
+                {
                     go_to_state(91);
+                }
                 else
+                {
                     go_to_state(23);
+                }
                 break;
             case 27:
                 return found_token_and_restart(PLUS); //found PLUS
@@ -507,9 +550,13 @@ int lexical_analyzer_next_token()
                 return found_token_and_restart(RPARENT); //found RPARENT
             case 29:
                 if (currentInput=='>')
+                {
                     get_next_char_and_go_to(56);
+                }
                 else
+                {
                     go_to_state(57);
+                }
                 break;
             case 30:
                 return found_token_and_restart(LPARENT); //found LPARENT
@@ -649,9 +696,13 @@ int lexical_analyzer_next_token()
                 return found_token_and_restart(ENDOFFILE); //found EOF
             case 55:
                 if (is_digit(currentInput))
+                {
                     get_next_char_and_go_to(55);
+                }
                 else if (currentInput=='e' || currentInput=='E')
+                {
                     get_next_char_and_go_to(20);
+                }
                 else if (is_letter(currentInput))
                 {
                     go_to_state(18);
