@@ -16,6 +16,10 @@ class StructSymbol;
 class FunctionSymbol;
 class VarSymbol;
 class ReservedTokenSymbol;
+class LiteralSymbol;
+class IdSymbol;
+class NumIntSymbol;
+class NumFloatSymbol;
 
 class SymbolTable
 {

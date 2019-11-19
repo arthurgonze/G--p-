@@ -4,6 +4,7 @@
 #include "analyzer.h"
 #include "token.h"
 #include "parser.h"
+#include "semantic.h"
 
 #define RETURN_CODE_OK 0
 #define RETURN_CODE_FILE_ERROR 1
@@ -47,7 +48,9 @@ int main(int argc, char *argv[])
     lexical_analyzer_init(input);
 
     Parser *parser = new Parser();
-    parser->StartParser();
+    ProgramNode *ast = parser->StartParser();
+
+    startSemantic(ast);
 
     lexical_analyzer_dispose();
 

@@ -4,11 +4,11 @@
 TokenNode::TokenNode(int tok, const char *lex)
 {
     this->token = tok;
-    this->lexeme = lex;
+    this->setLexeme(lex);
 }
 TokenNode::~TokenNode()
 {
-    delete this->lexeme;
+    //delete this->token;
 }
 ProgramNode::ProgramNode(FunctionListNode *functions, TypeDeclNode *typelist, VarDeclNode *varlist)
 {

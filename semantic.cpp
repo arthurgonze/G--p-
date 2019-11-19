@@ -19,7 +19,7 @@ void startSemantic(ProgramNode *ast)
     functionTable = new FunctionTable();
     structTable = new StructTable();
 
-    semanticVisitor = new Semantic(ast);
+    semanticVisitor->visit(ast);
 }
 void endSemantic()
 {
@@ -223,9 +223,10 @@ void Semantic::visit(IdListNode *idListNode)
             idListNode->getId()->setArraySize(idListNode->getArray()->getArraySize());
         }
     }
-    if (!varTable->cInsert(new TypeNode(idListNode->getId()->getType(), idListNode->getId()->getTypeLexeme(),
-                                        idListNode->getLine()), idListNode->getId()->getLexeme(),
-                           idListNode->getId()->isPointer(), idListNode->getId()->getArraySize(), BOOL_FALSE))
+    TypeNode *typeNode = new TypeNode(idListNode->getId(), idListNode->getId()->getTypeLexeme());
+    typeNode->setLine(idListNode->getLine());
+    if (!varTable->cInsert(typeNode, idListNode->getId()->getLexeme(), idListNode->getId()->isPointer(),
+                           idListNode->getId()->getArraySize(), BOOL_FALSE))
     {
         // TODO print_semantic_error(ERROR_VARIABLE_ALREADY_EXISTS, node->get_line());
     }
@@ -529,7 +530,7 @@ void Semantic::visit(CallNode *callNode)
 //
 //                callNode->pointer = functionTable->pointer;
 //                callNode->array = 0;
-//                ///Recupera o type de retorno da função e associa esse type ao 'call'
+//                ///Recupera o type de returnAtt da função e associa esse type ao 'call'
 //                if (functionTable->returnType->id->TOKEN==ID)
 //                {
 //                    callNode->typeName = functionTable->returnType->id->lexeme;
@@ -881,20 +882,20 @@ void Semantic::visit(StmtNode *stmtNode)// TODO
         stmtNode->getStmt()->accept(this);
         if (typeid(*stmtNode->getStmt())==typeid(ReturnNode))
         {
-            stmtNode->isReturn() = true;
+            stmtNode->setReturn(true);
         }
         if (typeid(*stmtNode->getStmt())==typeid(IfNode))
         {
             IfNode *aux = (IfNode *) stmtNode->getStmt();
             if (aux->getTrueStmt() && aux->getFalseStmt())
             {
-                stmtNode->isReturn() = aux->getTrueStmt()->isReturn() && aux->getFalseStmt()->isReturn();
+                stmtNode->setReturn(aux->getTrueStmt()->isReturn() && aux->getFalseStmt()->isReturn());
             }
         }
         if (typeid(*stmtNode->getStmt())==typeid(StmtListNode))
         {
             StmtListNode *aux = (StmtListNode *) stmtNode->getStmt();
-            stmtNode->isReturn() = aux->isReturn();
+            stmtNode->setReturn(aux->isReturn());
         }
     }
 }
@@ -904,12 +905,12 @@ void Semantic::visit(StmtListNode *stmtListNode)
     if (stmtListNode->getStmt())
     {
         stmtListNode->getStmt()->accept(this);
-        //  TODO stmtListNode->retorno = stmtListNode->getStmt()->retorno;
+        //  TODO stmtListNode->returnAtt = stmtListNode->getStmt()->returnAtt;
     }
     if (stmtListNode->getNext())
     {
         stmtListNode->getNext()->accept(this);
-        // TODO stmtListNode->retorno = stmtListNode->retorno || stmtListNode->getNext()->retorno;
+        // TODO stmtListNode->returnAtt = stmtListNode->returnAtt || stmtListNode->getNext()->returnAtt;
     }
 }
 //**********************************************************************
@@ -958,7 +959,7 @@ void Semantic::visit(ReturnNode *returnNode)
 //        returnNode->getExp()->accept(this);
 //        returnNode->pointer = activeFunction->pointer;
 //        returnNode->array = 0;
-//        ///Recupera o valor de retorno esperado da função ativa
+//        ///Recupera o valor de returnAtt esperado da função ativa
 //        if (activeFunction->returnType->id->TOKEN==ID)
 //        {
 //            returnNode->typeName = activeFunction->returnType->id->lexeme;
@@ -984,7 +985,7 @@ void Semantic::visit(ReturnNode *returnNode)
 //            returnNode->typeName = NULL;
 //            returnNode->type = boolean;
 //        }
-//        ///Compara o type do valor retornado e o type do retorno esperado pela função ativa
+//        ///Compara o type do valor retornado e o type do returnAtt esperado pela função ativa
 //        typeTest(returnNode, returnNode->getExp());
 //    }
     if (returnNode->getExp()!=NULL)
@@ -1241,7 +1242,11 @@ void Semantic::visit(NameExpNode *nameExpNode)// TODO
     if (nameExpNode->getExp())
     {
         nameExpNode->getExp()->accept(this);
-        arrayTest(nameExpNode->getExp());
+//        arrayTest(nameExpNode->getExp());
+        if (nameExpNode->getExp()->getArraySize())
+        {
+            // TODO imprimeErroSemantico("Array inesperado", exp->line);
+        }
 
         if (nameExpNode->getExp()->isPointer())
             // TODO imprimeErroSemantico("Ponteiro nao esperado", nameExpNode->exp->line);
@@ -1330,13 +1335,13 @@ void Semantic::visit(NotNode *notNode)
     }
     notNode->setType(BOOL);
     notNode->setTypeLexeme(token_id_to_name(BOOL));
-    if (notNode->setValue(token_id_to_name(TRUE)==notNode->getValue()))
+    if (token_id_to_name(TRUE)==notNode->getLexeme())
     {
-        token_id_to_name(FALSE);
+        notNode->setLexeme(token_id_to_name(FALSE));
     }
     else
     {
-        token_id_to_name(TRUE);
+        notNode->setLexeme(token_id_to_name(TRUE));
     }
 }
 //**********************************************************************
@@ -1520,7 +1525,7 @@ void Semantic::visit(PointerExpNode *pointerExpNode)// TODO
     if (pointerExpNode->getExp())
     {
         pointerExpNode->getExp()->accept(this);
-        arrayTest(pointerExpNode->getExp());
+        // TODO arrayTest(pointerExpNode->getExp());
         if (pointerExpNode->getExp()->isPointer() && pointerExpNode->getExp()->getTypeLexeme())
         {
             StructSymbol *dec = structTable->cSearch(pointerExpNode->getExp()->getTypeLexeme());

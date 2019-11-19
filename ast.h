@@ -66,7 +66,7 @@ class ExpNode : public ASTNode
 {
 private:
     // TODO
-//    const char *lexeme;
+    const char *lexeme;
     bool lValue, pointer;
     int type, arraySize;
     const char *typeLexeme;
@@ -76,12 +76,14 @@ public:
     inline int getType() const { return type; }
     inline int getArraySize() const { return arraySize; }
     inline const char *getTypeLexeme() const { return typeLexeme; }
+    inline const char *getLexeme() const { return lexeme; }
 
     inline void setLValue(bool lValue) { this->lValue = lValue; }
     inline void setPointer(bool pointer) { this->pointer = pointer; }
     inline void setType(int type) { this->type = type; }
     inline void setArraySize(int arraySize) { this->arraySize = arraySize; }
     inline void setTypeLexeme(const char *typeLexeme) { this->typeLexeme = typeLexeme; }
+    inline void setLexeme(const char *lexeme) { this->lexeme = lexeme; }
 
     void accept(Visitor *visitor) override = 0;
 };
@@ -112,11 +114,11 @@ public:
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-class TokenNode : public ASTNode
+class TokenNode : public ExpNode // TODO era ASTNode
 {
 private:
     int token;
-    const char *lexeme;
+    //const char *lexeme;
     int offset;
     // TODO
     // bool parameter;
@@ -126,11 +128,11 @@ public:
     ~TokenNode() override;
 
     inline int getToken() { return token; }
-    inline const char *getLexeme() { return lexeme; }
+    //inline const char *getLexeme() { return lexeme; }
     inline int getOffset() const { return offset; }
 
     inline void setToken(int token) { this->token = token; }
-    inline void setLexeme(const char *lexeme) { this->lexeme = lexeme; }
+    //inline void setLexeme(const char *lexeme) { this->lexeme = lexeme; }
     inline void setOffset(int offset) { this->offset = offset; }
 
     void accept(Visitor *visitor) override { visitor->visit(this); }
@@ -225,7 +227,7 @@ public:
 class StmtNode : public ASTNode
 {
 private:
-    bool retorno;
+    bool returnAtt;
     ASTNode *stmt;
 public:
     explicit StmtNode(StmtListNode *stmtList) { this->stmt = reinterpret_cast<ASTNode *>(stmtList); } // TODO ARRUMAR ESSE CAST
@@ -242,7 +244,10 @@ public:
     ~StmtNode() override { delete this->stmt; }
 
     inline ASTNode *getStmt() { return stmt; }
-    inline bool isReturn() const { return retorno; }
+    inline bool isReturn() const { return returnAtt; }
+
+    inline void setReturn(bool returnAtt) { this->returnAtt = returnAtt; }
+    inline void setStmt(ASTNode *stmt) { this->stmt = stmt; }
 
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
@@ -250,7 +255,7 @@ public:
 class StmtListNode : public ASTNode
 {
 private:
-    bool retorno;
+    bool returnAtt;
     StmtNode *stmt;
     StmtListNode *next;
 public :
@@ -259,7 +264,11 @@ public :
 
     inline StmtNode *getStmt() { return stmt; }
     inline StmtListNode *getNext() { return next; }
-    inline bool isReturn() const { return retorno; }
+    inline bool isReturn() const { return returnAtt; }
+
+    void setReturn(bool returnAtt) { this->returnAtt = returnAtt; }
+    void setStmt(StmtNode *stmt) { this->stmt = stmt; }
+    void setNext(StmtListNode *next) { this->next = next; }
 
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
@@ -332,17 +341,22 @@ class TypeNode : public ASTNode
 {
 private:
     TokenNode *id;
-    // const char *lexeme;?
+    const char *lexeme;
 public:
     explicit TypeNode(TokenNode *id) { this->id = id; }
+    TypeNode(TokenNode *id, const char *lexeme) : id(id), lexeme(lexeme) {}
     ~TypeNode() override { delete this->id; }
 
     inline TokenNode *getId() { return id; }
+    const char *getLexeme() const { return lexeme; }
+
+    void setId(TokenNode *id) { this->id = id; }
+    void setLexeme(const char *lexeme) { this->lexeme = lexeme; }
 
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-class ArrayNode : public ASTNode
+class ArrayNode : public ExpNode// TODO era um ASTNode
 {
 private:
     TokenNode *numInt;
