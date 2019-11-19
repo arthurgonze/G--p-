@@ -34,13 +34,13 @@ void endSemantic()
     delete structTable;
 }
 
-void BeginScope(const char *scopeLex)
+void beginScope(const char *scopeLex)
 {
     varTable->beginScope(scopeLex);
     functionTable->beginScope(scopeLex);
     structTable->beginScope(scopeLex);
 }
-void EndScope()
+void endScope()
 {
     varTable->endScope();
     functionTable->endScope();
@@ -143,8 +143,8 @@ void Semantic::visit(VarDeclNode *varDeclNode)
     IdListNode *id_list_aux = varDeclNode->getIdList();
     while (id_list_aux!=NULL)
     {
-        id_list_aux->getId()->set_type(varDeclNode->getType()->getId()->getToken());
-        id_list_aux->getId()->setType_lex(varDeclNode->getType()->getId()->getLexeme());
+        id_list_aux->getId()->setType(varDeclNode->getType()->getId()->getToken());
+        id_list_aux->getId()->setTypeLexeme(varDeclNode->getType()->getId()->getLexeme());
         id_list_aux = id_list_aux->getNext();
     }
     if (varDeclNode->getIdList()!=NULL)
@@ -183,28 +183,28 @@ void Semantic::visit(VarDeclNode *varDeclNode)
                 var = varTable->cSearch(list_aux->getId()->getLexeme());
             }
             int size_aux = BYTE_SIZE;
-            if (list_aux->get_array()!=NULL)
+            if (list_aux->getArray()!=NULL)
             {
-                size_aux *= atoi(list_aux->get_array()->get_index_exp()->get_value());
+                size_aux *= atoi(list_aux->getArray()->getNumInt()->getLexeme());
             }
-            if (active_function!=NULL)
+            if (activeFunction!=NULL)
             {
-                list_aux->get_id()->set_offset(active_function->getLocal_size() + total_size_aux + size_aux);
+                list_aux->getId()->setOffset(activeFunction->getLocalSize() + total_size_aux + size_aux);
             }
-            var->set_size(size_aux);
-            var->set_offset(list_aux->get_id()->get_offset());
+            var->setSize(size_aux);
+            var->setOffset(list_aux->getId()->getOffset());
             total_size_aux += size_aux;
-            list_aux = list_aux->get_next();
+            list_aux = list_aux->getNext();
         }
-        if (active_function!=NULL)
+        if (activeFunction!=NULL)
         {
-            active_function->incrementLocal_size(total_size_aux);
+            activeFunction->incrementLocalSize(total_size_aux);
         }
     }
 
-    if (varDeclNode->get_next()!=NULL)
+    if (varDeclNode->getNext()!=NULL)
     {
-        varDeclNode->get_next()->accept(this);
+        varDeclNode->getNext()->accept(this);
     }
 }
 //**********************************************************************
@@ -213,26 +213,26 @@ void Semantic::visit(IdListNode *idListNode)
 //    if(id->next)
 //        id->next->accept(this);
 
-    if (idListNode->get_id()!=NULL)
+    if (idListNode->getId()!=NULL)
     {
-        idListNode->get_id()->accept(this);
-        idListNode->get_id()->set_pointer(idListNode->get_pointer()!=NULL);
-        if (idListNode->get_array()!=NULL)
+        idListNode->getId()->accept(this);
+        idListNode->getId()->setPointer(idListNode->getPointer()!=NULL);
+        if (idListNode->getArray()!=NULL)
         {
-            idListNode->get_array()->accept(this);
-            idListNode->get_id()->set_array_size(idListNode->get_array()->get_array_size());
+            idListNode->getArray()->accept(this);
+            idListNode->getId()->setArraySize(idListNode->getArray()->getArraySize());
         }
     }
-    if (!var_table->insert(new TypeNode(idListNode->get_id()->get_type(), idListNode->get_id()->getType_lex(),
-                                        idListNode->get_line()), idListNode->get_id()->get_lexeme(),
-                           idListNode->get_id()->is_pointer(), idListNode->get_id()->get_array_size(), BOOL_FALSE))
+    if (!varTable->cInsert(new TypeNode(idListNode->getId()->getType(), idListNode->getId()->getTypeLexeme(),
+                                        idListNode->getLine()), idListNode->getId()->getLexeme(),
+                           idListNode->getId()->isPointer(), idListNode->getId()->getArraySize(), BOOL_FALSE))
     {
         // TODO print_semantic_error(ERROR_VARIABLE_ALREADY_EXISTS, node->get_line());
     }
 
-    if (idListNode->get_next()!=NULL)
+    if (idListNode->getNext()!=NULL)
     {
-        idListNode->get_next()->accept(this);
+        idListNode->getNext()->accept(this);
     }
 
     /**/
@@ -326,74 +326,91 @@ void Semantic::visit(TypeDeclNode *typeDeclNode) // TODO
 //        }
 //    }
 
-    const char *type_lex = node->get_id()!=NULL ? node->get_id()->get_lexeme() : NULL;
+    const char *typeLex = typeDeclNode->getId()!=NULL ? typeDeclNode->getId()->getLexeme() : NULL;
 
-    if (node->get_next()!=NULL)
-        node->get_next()->accept(this);
+    if (typeDeclNode->getNext()!=NULL)
+    {
+        typeDeclNode->getNext()->accept(this);
+    }
 
-    begin_scope(type_lex);
-    if (node->get_var_list()!=NULL)
-        node->get_var_list()->accept(this);
-    end_scope();
+    beginScope(typeLex);
+    if (typeDeclNode->getDecl()!=NULL)
+    {
+        typeDeclNode->getDecl()->accept(this);
+    }
+    endScope();
 
-    if (!struct_table->insert(type_lex, node->get_var_list()))
-        print_semantic_error(ERROR_STRUCT_ALREADY_EXISTS, node->get_line());
+    if (!structTable->cInsert(typeLex, typeDeclNode->getDecl()))
+    {
+        // TODO print_semantic_error(ERROR_STRUCT_ALREADY_EXISTS, typeDeclNode->get_line());
+    }
 
     /**/
-    if (node->get_next()!=NULL)
-        node->get_next()->accept(this);
-
-    const char *type_lex = node->get_id()!=NULL ? node->get_id()->get_lexeme() : NULL;
-    begin_scope(type_lex);
-    if (node->get_var_list()!=NULL)
+    if (typeDeclNode->getNext()!=NULL)
     {
-        node->get_var_list()->accept(this);
-        VarDeclNode *var_list_aux = node->get_var_list();
+        typeDeclNode->getNext()->accept(this);
+    }
+
+    //const char *typeLex = typeDeclNode->getId()!=NULL ? typeDeclNode->getId()->getLexeme() : NULL;
+    beginScope(typeLex);
+    if (typeDeclNode->getDecl()!=NULL)
+    {
+        typeDeclNode->getDecl()->accept(this);
+        VarDeclNode *var_list_aux = typeDeclNode->getDecl();
         int total_size_aux = 0;
         while (var_list_aux!=NULL)
         {
-            IdListNode *id_list_aux = var_list_aux->get_id_list();
+            IdListNode *id_list_aux = var_list_aux->getIdList();
             while (id_list_aux!=NULL)
             {
-                VarSymbol *var = var_table->lookup_in_scope(id_list_aux->get_id()->get_lexeme(),
-                                                            node->get_id()->get_lexeme());
+                VarSymbol *var = varTable->searchInScope(id_list_aux->getId()->getLexeme(),
+                                                         typeDeclNode->getId()->getLexeme());
                 int size_aux = BYTE_SIZE;
-                if (id_list_aux->get_array()!=NULL)
-                    size_aux *= atoi(id_list_aux->get_array()->get_index_exp()->get_value());
-                var->set_size(size_aux);
-                var->set_offset(total_size_aux);
+                if (id_list_aux->getArray()!=NULL)
+                {
+                    size_aux *= atoi(id_list_aux->getArray()->getNumInt()->getLexeme());
+                }
+                var->setSize(size_aux);
+                var->setOffset(total_size_aux);
                 total_size_aux += size_aux;
-                id_list_aux = id_list_aux->get_next();
+                id_list_aux = id_list_aux->getNext();
             }
-            var_list_aux = var_list_aux->get_next()->get_var_decl();
+            var_list_aux = var_list_aux->getNext()->getNext();
         }
-        StructSymbol *struct_symbol = struct_table->lookup(node->get_id()->get_lexeme());
-        struct_symbol->set_size(total_size_aux);
+        StructSymbol *structSymbol = structTable->cSearch(typeDeclNode->getId()->getLexeme());
+        structSymbol->setSize(total_size_aux);
     }
-    end_scope();
+    endScope();
 
 }
 //**********************************************************************
 void Semantic::visit(TokenNode *tokenNode)
 {
     //TODO
-    // ID -> node->set_value(node->get_lexeme());
-
-    // NUMINT -> node->set_type(INT);
-    //    node->setType_lex(get_token_name(INT));
-    //    node->set_value(node->get_lexeme());
-
-    // NUMFLOAT ->node->set_type(FLOAT);
-    //    node->setType_lex(get_token_name(FLOAT));
-    //    node->set_value(node->get_lexeme());
-
-    // LITERALCHAR -node->set_type(CHAR);
-    //    node->setType_lex(get_token_name(CHAR));
-    //    node->set_value(node->get_lexeme());
-
-    // LITERAL ->node->set_type(LITERAL);
-    //    node->setType_lex(get_token_name(LITERAL));
-    //    node->set_value(node->get_lexeme());
+    if (tokenNode->getToken()==ID)
+    {
+        tokenNode->setLexeme(tokenNode->getLexeme());
+    }
+    if (tokenNode->getToken()==INT)
+    {
+        tokenNode->setTypeLexeme(token_id_to_name(INT));
+        tokenNode->setLexeme(tokenNode->getLexeme());
+    }
+    if (tokenNode->getToken()==FLOAT)
+    {
+        tokenNode->setTypeLexeme(token_id_to_name(FLOAT));
+        tokenNode->setLexeme(tokenNode->getLexeme());
+    }
+    if (tokenNode->getToken()==CHAR)
+    {
+        tokenNode->setTypeLexeme(token_id_to_name(CHAR));
+        tokenNode->setLexeme(tokenNode->getLexeme());
+    }
+    if (tokenNode->getToken()==LITERAL)
+    {
+        tokenNode->setTypeLexeme(token_id_to_name(LITERAL));
+        tokenNode->setLexeme(tokenNode->getLexeme());
+    }
 }
 //**********************************************************************
 void Semantic::visit(TypeNode *typeNode)
@@ -615,7 +632,7 @@ void Semantic::visit(CallNode *callNode)
             while (exp!=NULL && param!=NULL)
             {
                 if (exp->getExp()->getType()!=param->getType()->getId()->getToken() ||
-                    exp->getExp()->getTypeLex()!=param->getType()->getId()->getLexeme())
+                    exp->getExp()->getTypeLexeme()!=param->getType()->getId()->getLexeme())
                 {
                     // TODO print_semantic_error(ERROR_PARAMETER_TYPE_MISMATCH, callNode->getLine());
                     exp = exp->getNext();
@@ -637,13 +654,13 @@ void Semantic::visit(CallNode *callNode)
         if (callNode->getParameters()->getNext()!=NULL)
         {
             callNode->getParameters()->getNext()->accept(this);
-            callNode->setType(callNode->getParameters()->getNext()->getType());
-            callNode->setTypeLex(callNode->getParameters()->getNext()->getTypeLex());
+            callNode->setType(callNode->getParameters()->getNext()->getExp()->getType());
+            callNode->setTypeLexeme(callNode->getParameters()->getNext()->getExp()->getTypeLexeme());
         }
         else
         {
             callNode->setType(funcSymbol->getReturnType()->getId()->getToken());
-            callNode->setTypeLex(funcSymbol->getReturnType()->getId()->getLexeme());
+            callNode->setTypeLexeme(funcSymbol->getReturnType()->getId()->getLexeme());
         }
     }
     else
@@ -735,13 +752,13 @@ void Semantic::visit(PrimaryNode *primaryNode)
         primaryNode->getExp()->accept(this);
         if (TokenNode *id = dynamic_cast<TokenNode *>(primaryNode->getExp()))
         {
-            primaryNode->setLvalue(BOOL_TRUE);
+            primaryNode->setLValue(BOOL_TRUE);
             if (primaryNode->getExp()!=NULL && typeid(*primaryNode->getExp())==typeid(CallNode))
             {
                 CallNode *function_call = dynamic_cast<CallNode *>(primaryNode->getExp());
                 primaryNode->getExp()->accept(this);
                 primaryNode->setType(primaryNode->getExp()->getType());
-                primaryNode->setTypeLex(primaryNode->getExp()->getTypeLex());
+                primaryNode->setTypeLexeme(primaryNode->getExp()->getTypeLexeme());
             }
             else
             {
@@ -751,7 +768,7 @@ void Semantic::visit(PrimaryNode *primaryNode)
                 {
 
                     id->setType(var_symbol->getType()->getId()->getToken());
-                    id->setTypeLex(var_symbol->getType()->getId()->getLexeme());
+                    id->setTypeLexeme(var_symbol->getType()->getId()->getLexeme());
 
                     if (var_symbol->getType()->getId()->getToken()!=INT
                         && var_symbol->getType()->getId()->getToken()!=FLOAT
@@ -764,7 +781,7 @@ void Semantic::visit(PrimaryNode *primaryNode)
                     else
                     {
                         primaryNode->setType(primaryNode->getExp()->getType());
-                        primaryNode->setTypeLex(primaryNode->getExp()->getTypeLex());
+                        primaryNode->setTypeLexeme(primaryNode->getExp()->getTypeLexeme());
                     }
                 }
                 else
@@ -786,7 +803,7 @@ void Semantic::visit(PrimaryNode *primaryNode)
                 // TODO print_semantic_error(ERROR_UNEXPECTED_ACCESS_IN_NOT_ID_TYPE, primaryNode->get_line());
             }
             primaryNode->setType(primaryNode->getExp()->getType());
-            primaryNode->setTypeLex(primaryNode->getExp()->getTypeLex());
+            primaryNode->setTypeLexeme(primaryNode->getExp()->getTypeLexeme());
         }
         else
         {
@@ -794,18 +811,18 @@ void Semantic::visit(PrimaryNode *primaryNode)
             {
                 primaryNode->getExp()->accept(this);
                 primaryNode->setType(primaryNode->getExp()->getType());
-                primaryNode->setTypeLex(primaryNode->getExp()->getTypeLex());
+                primaryNode->setTypeLexeme(primaryNode->getExp()->getTypeLexeme());
             }
             else
             {
                 primaryNode->setType(primaryNode->getExp()->getType());
-                primaryNode->setTypeLex(primaryNode->getExp()->getTypeLex());
+                primaryNode->setTypeLexeme(primaryNode->getExp()->getTypeLexeme());
             }
         }
 
         primaryNode->setPointer(primaryNode->getExp()->isPointer());
         primaryNode->setArraySize(primaryNode->getExp()->getArraySize());
-        primaryNode->setValue(primaryNode->getExp()->getValue());
+        primaryNode->getToken()->setLexeme(primaryNode->getToken()->getLexeme());
     }
 }
 //**********************************************************************
@@ -842,7 +859,7 @@ void Semantic::visit(FunctionNode *functionNode)// TODO
         functionNode->getBody()->accept(this);
         if (functionNode->getType())
         {
-            if (!functionNode->getBody()->retorno)
+            if (!functionNode->getBody()->isReturn())
             {
                 // TODO imprimeAvisoSemantico(functions->getTexto( activeFunction->pegaIndiceLexema()));
             }
@@ -864,20 +881,20 @@ void Semantic::visit(StmtNode *stmtNode)// TODO
         stmtNode->getStmt()->accept(this);
         if (typeid(*stmtNode->getStmt())==typeid(ReturnNode))
         {
-            stmtNode->retorno = true;
+            stmtNode->isReturn() = true;
         }
         if (typeid(*stmtNode->getStmt())==typeid(IfNode))
         {
             IfNode *aux = (IfNode *) stmtNode->getStmt();
             if (aux->getTrueStmt() && aux->getFalseStmt())
             {
-                stmtNode->retorno = aux->getTrueStmt()->retorno && aux->getFalseStmt()->retorno;
+                stmtNode->isReturn() = aux->getTrueStmt()->isReturn() && aux->getFalseStmt()->isReturn();
             }
         }
         if (typeid(*stmtNode->getStmt())==typeid(StmtListNode))
         {
             StmtListNode *aux = (StmtListNode *) stmtNode->getStmt();
-            stmtNode->retorno = aux->retorno;
+            stmtNode->isReturn() = aux->isReturn();
         }
     }
 }
@@ -901,7 +918,7 @@ void Semantic::visit(ReadLnNode *read)
     if (read->getExp())
     {
         read->getExp()->accept(this);
-        if (!read->getExp()->lval)
+        if (!read->getExp()->isLValue())
         {
             // TODO imprimeErroSemantico("Lval esperado no Read", read->exp->line);
         }
@@ -1005,7 +1022,7 @@ void Semantic::visit(IfNode *ifNode)
     if (ifNode->getHead()!=NULL)
     {
         ifNode->getHead()->accept(this);
-        if (ifNode->getHead()->gettype()!=BOOL)
+        if (ifNode->getHead()->getType()!=BOOL)
         {
             // TODO print_semantic_error(ERROR_BOOLEAN_EXPRESSION_REQUIRED, node->get_line());
         }
@@ -1095,7 +1112,7 @@ void Semantic::visit(AdditionOPNode *additionOPNode)
         {
             additionOPNode->setType(FLOAT);
         }
-        additionOPNode->setTypeLex(getTokenName(additionOPNode->getType()));
+        additionOPNode->setTypeLexeme(token_id_to_name(additionOPNode->getType()));
     }
 
 }
@@ -1166,7 +1183,7 @@ void Semantic::visit(AssignNode *assignNode)
         assignNode->getExp2()->accept(this);
     }
 
-    if (!assignNode->getExp1()->isLvalue())
+    if (!assignNode->getExp1()->isLValue())
     {
         // TODO print_semantic_error(ERROR_LVALUE_REQUIRED_AS_LEFT_OPERAND_OF_ASSIGNMENT, node->get_line());
     }
@@ -1215,55 +1232,55 @@ void Semantic::visit(BooleanOPNode *booleanOPNode)
         // TODO print_semantic_error(ERROR_LOGICAL_OP_TYPE, node->get_line());
     }
     booleanOPNode->setType(BOOL);
-    booleanOPNode->setTypeLex(getTokenName(BOOL));
+    booleanOPNode->setTypeLexeme(token_id_to_name(BOOL));
 }
 //**********************************************************************
 void Semantic::visit(NameExpNode *nameExpNode)// TODO
 {
-    nameExpNode->lval = true;
+    nameExpNode->setLValue(true);
     if (nameExpNode->getExp())
     {
         nameExpNode->getExp()->accept(this);
         arrayTest(nameExpNode->getExp());
 
-        if (nameExpNode->getExp()->pointer)
+        if (nameExpNode->getExp()->isPointer())
             // TODO imprimeErroSemantico("Ponteiro nao esperado", nameExpNode->exp->line);
 
-            if (nameExpNode->getExp()->typeName)
+            if (nameExpNode->getExp()->getTypeLexeme())
             {
                 ///Verifica acesso a campos de uma estrutura
-                StructSymbol *decl = structTable->cSearch(nameExpNode->getExp()->typeName);
+                StructSymbol *decl = structTable->cSearch(nameExpNode->getExp()->getTypeLexeme());
                 if (decl)
                 {
                     VarSymbol *campo = varTable->cSearch(nameExpNode->getId()->getLexeme());
                     if (campo)
                     {
-                        nameExpNode->pointer = campo->isPointer();
-                        nameExpNode->array = campo->getArraySize();
+                        nameExpNode->setPointer(campo->isPointer());
+                        nameExpNode->setArraySize(campo->getArraySize());
                         if (campo->getType()->getId()->getToken()==ID)
                         {
-                            nameExpNode->typeName = campo->getType()->getId()->getLexeme();
-                            nameExpNode->type = TYPEDEF;
+                            nameExpNode->setTypeLexeme(campo->getType()->getId()->getLexeme());
+                            nameExpNode->setType(TYPEDEF);
                         }
                         else if (campo->getType()->getId()->getToken()==INT)
                         {
-                            nameExpNode->typeName = NULL;
-                            nameExpNode->type = NUMINT;
+                            nameExpNode->setTypeLexeme(NULL);
+                            nameExpNode->setType(NUMINT);
                         }
                         else if (campo->getType()->getId()->getToken()==FLOAT)
                         {
-                            nameExpNode->typeName = NULL;
-                            nameExpNode->type = NUMFLOAT;
+                            nameExpNode->setTypeLexeme(NULL);
+                            nameExpNode->setType(NUMFLOAT);
                         }
                         else if (campo->getType()->getId()->getToken()==CHAR)
                         {
-                            nameExpNode->typeName = NULL;
-                            nameExpNode->type = LITERALCHAR;
+                            nameExpNode->setTypeLexeme(NULL);
+                            nameExpNode->setType(LITERALCHAR);
                         }
                         else if (campo->getType()->getId()->getToken()==BOOL)
                         {
-                            nameExpNode->typeName = NULL;
-                            nameExpNode->type = BOOL;
+                            nameExpNode->setTypeLexeme(NULL);
+                            nameExpNode->setType(BOOL);
                         }
                     }
                     else
@@ -1307,19 +1324,19 @@ void Semantic::visit(NotNode *notNode)
     {
         notNode->getExp()->accept(this);
     }
-    if (notNode->getExp()->get_type()!=BOOL)
+    if (notNode->getExp()->getType()!=BOOL)
     {
         // TODO print_semantic_error(ERROR_LOGICAL_OP_TYPE, node->get_line());
     }
     notNode->setType(BOOL);
-    notNode->setTypeLex(getTokenName(BOOL));
-    if (notNode->setValue(getTokenName(TRUE)==notNode->getValue()))
+    notNode->setTypeLexeme(token_id_to_name(BOOL));
+    if (notNode->setValue(token_id_to_name(TRUE)==notNode->getValue()))
     {
-        getTokenName(FALSE);
+        token_id_to_name(FALSE);
     }
     else
     {
-        getTokenName(TRUE);
+        token_id_to_name(TRUE);
     }
 }
 //**********************************************************************
@@ -1399,7 +1416,7 @@ void Semantic::visit(MultiplicationOPNode *multiplicationOPNode)
         {
             multiplicationOPNode->setType(FLOAT);
         }
-        multiplicationOPNode->setTypeLexeme(getTokenName(multiplicationOPNode->getType()));
+        multiplicationOPNode->setTypeLexeme(token_id_to_name(multiplicationOPNode->getType()));
     }
 }
 //**********************************************************************
@@ -1425,7 +1442,7 @@ void Semantic::visit(SignNode *signNode)
     {
         signNode->getExp()->accept(this);
         signNode->setType(signNode->getExp()->getType());
-        signNode->setTypeLexeme(signNode->getExp()->getTypeLex());
+        signNode->setTypeLexeme(signNode->getExp()->getTypeLexeme());
     }
 }
 //**********************************************************************
@@ -1499,45 +1516,45 @@ void Semantic::visit(FunctionListNode *functionListNode)
 //**********************************************************************
 void Semantic::visit(PointerExpNode *pointerExpNode)// TODO
 {
-    pointerExpNode->lval = true;
+    pointerExpNode->setLValue(true);
     if (pointerExpNode->getExp())
     {
         pointerExpNode->getExp()->accept(this);
         arrayTest(pointerExpNode->getExp());
-        if (pointerExpNode->getExp()->pointer && pointerExpNode->getExp()->typeName)
+        if (pointerExpNode->getExp()->isPointer() && pointerExpNode->getExp()->getTypeLexeme())
         {
-            StructSymbol *dec = structTable->cSearch(pointerExpNode->getExp()->typeName);
+            StructSymbol *dec = structTable->cSearch(pointerExpNode->getExp()->getTypeLexeme());
             if (dec)
             {
                 VarSymbol *campo = varTable->cSearch(pointerExpNode->getId()->getLexeme());
                 if (campo)
                 {
-                    pointerExpNode->pointer = campo->isPointer();
-                    pointerExpNode->array = campo->getArraySize();
+                    pointerExpNode->setPointer(campo->isPointer());
+                    pointerExpNode->setArraySize(campo->getArraySize());
                     if (campo->getType()->getId()->getToken()==ID)
                     {
-                        pointerExpNode->typeName = campo->getType()->getId()->getLexeme();
-                        pointerExpNode->type = TYPEDEF;
+                        pointerExpNode->setTypeLexeme(campo->getType()->getId()->getLexeme());
+                        pointerExpNode->setType(TYPEDEF);
                     }
                     else if (campo->getType()->getId()->getToken()==INT)
                     {
-                        pointerExpNode->typeName = NULL;
-                        pointerExpNode->type = NUMINT;
+                        pointerExpNode->setTypeLexeme(NULL);
+                        pointerExpNode->setType(NUMINT);
                     }
                     else if (campo->getType()->getId()->getToken()==FLOAT)
                     {
-                        pointerExpNode->typeName = NULL;
-                        pointerExpNode->type = NUMFLOAT;
+                        pointerExpNode->setTypeLexeme(NULL);
+                        pointerExpNode->setType(NUMFLOAT);
                     }
                     else if (campo->getType()->getId()->getToken()==CHAR)
                     {
-                        pointerExpNode->typeName = NULL;
-                        pointerExpNode->type = LITERALCHAR;
+                        pointerExpNode->setTypeLexeme(NULL);
+                        pointerExpNode->setType(LITERALCHAR);
                     }
                     else if (campo->getType()->getId()->getToken()==BOOL)
                     {
-                        pointerExpNode->typeName = NULL;
-                        pointerExpNode->type = BOOL;
+                        pointerExpNode->setTypeLexeme(NULL);
+                        pointerExpNode->setType(BOOL);
                     }
                 }
                 else
@@ -1552,11 +1569,11 @@ void Semantic::visit(PointerExpNode *pointerExpNode)// TODO
         }
         else
         {
-            if (pointerExpNode->getExp()->pointer)
+            if (pointerExpNode->getExp()->isPointer())
             {
                 // TODO imprimeErroSemantico("Ponteiro esperado", pointerExpNode->exp->line);
             }
-            if (pointerExpNode->getExp()->typeName)
+            if (pointerExpNode->getExp()->getTypeLexeme())
             {
                 // TODO imprimeErroSemantico("Struct esperada", pointerExpNode->exp->line);
             }

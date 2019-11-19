@@ -242,7 +242,7 @@ public:
     ~StmtNode() override { delete this->stmt; }
 
     inline ASTNode *getStmt() { return stmt; }
-    inline bool isRetorno() const { return retorno; }
+    inline bool isReturn() const { return retorno; }
 
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
@@ -259,7 +259,7 @@ public :
 
     inline StmtNode *getStmt() { return stmt; }
     inline StmtListNode *getNext() { return next; }
-    inline bool isRetorno() const { return retorno; }
+    inline bool isReturn() const { return retorno; }
 
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
