@@ -28,7 +28,6 @@ protected:
     const char *currentScopeLexeme;// new
 
     static unsigned long cHash(string const &name); // Hash Function
-    //symbol_info *auxInsert(symbol_info *root, int token, const char *lexeme);
     Symbol *auxInsert(Symbol *root, int token, const char *lexeme);
 
     virtual void print();
@@ -36,7 +35,6 @@ public:
     SymbolTable();
     virtual ~SymbolTable() = default;
 
-    //symbol_info **block; // Table
     Symbol **block; // Table
     char *lexemeArray = new char[LEXEME_ARRAY_SIZE]; // An array to allocate lexeme in continuous memory
 
@@ -44,10 +42,8 @@ public:
     void beginScope(const char *lexemeScope);// new
     void endScope();// new
 
-    //void cInsert(int token, const char *lexeme);
     void cInsert(Symbol *symbol, const char *lexeme); // new
 
-    //int cSearch(char *lexeme);// TODO não é const char *?
     Symbol *cSearch(const char *lexeme);// new
 };
 
@@ -57,7 +53,6 @@ class ReservedWordsTable : public SymbolTable
 public:
     void cInsert(int tokenID, const char *lexeme);
     void print() override;// TODO especializar o print?
-    // TODO metodo de busca proprio?
     ReservedTokenSymbol *cSearch(const char *lexeme) { return (ReservedTokenSymbol *) SymbolTable::cSearch(lexeme); }
 };
 class LiteralsTable : public SymbolTable
@@ -65,24 +60,29 @@ class LiteralsTable : public SymbolTable
 public:
     void cInsert(const char *lexeme);
     void print() override;
+
+    LiteralSymbol *cSearch(const char *lexeme) { return (LiteralSymbol *) SymbolTable::cSearch(lexeme); }
 };
 class IdsTable : public SymbolTable
 {
 public:
     void cInsert(const char *lexeme);
     void print() override;
+    IdSymbol *cSearch(const char *lexeme) { return (IdSymbol *) SymbolTable::cSearch(lexeme); }
 };
 class NumIntTable : public SymbolTable
 {
 public:
     void cInsert(const char *lexeme);
     void print() override;
+    NumIntSymbol *cSearch(const char *lexeme) { return (NumIntSymbol *) SymbolTable::cSearch(lexeme); }
 };
 class NumFloatTable : public SymbolTable
 {
 public:
     void cInsert(const char *lexeme);
     void print() override;
+    NumFloatSymbol *cSearch(const char *lexeme) { return (NumFloatSymbol *) SymbolTable::cSearch(lexeme); }
 };
 
 class StructTable : public SymbolTable // TODO
@@ -91,9 +91,9 @@ public:
     StructTable();
     ~StructTable() override;
 
-    bool insert(const char *lexeme, VarDeclNode *varDecl);
+    bool cInsert(const char *lexeme, VarDeclNode *varDecl);
 
-    StructSymbol *search(const char *lexeme);
+    StructSymbol *cSearch(const char *lexeme);
 
     void print() override;
 };
@@ -104,9 +104,9 @@ public:
     FunctionTable();
     ~FunctionTable() override;
 
-    bool insert(TypeNode *returnType, const char *lexeme, FormalListNode *varDecl, bool pointer);
+    bool cInsert(TypeNode *returnType, const char *lexeme, FormalListNode *varDecl, bool pointer);
 
-    FunctionSymbol *search(const char *lexeme);
+    FunctionSymbol *cSearch(const char *lexeme);
 
     FunctionSymbol *searchInScope(const char *lexeme, const char *lexemeScope);
 
@@ -119,9 +119,9 @@ public:
     VarTable();
     ~VarTable() override;
 
-    bool insert(TypeNode *type, const char *lexeme, bool pointer, int arraySize, bool parameter);
+    bool cInsert(TypeNode *type, const char *lexeme, bool pointer, int arraySize, bool parameter);
 
-    VarSymbol *search(const char *lexeme);
+    VarSymbol *cSearch(const char *lexeme);
     VarSymbol *searchInScope(const char *lexeme, const char *LexemeScope);
 
     void print() override;

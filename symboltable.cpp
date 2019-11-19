@@ -309,7 +309,7 @@ VarTable::~VarTable()
     currentScopeLexeme = NULL;
 }
 
-VarSymbol *VarTable::search(const char *lexeme)
+VarSymbol *VarTable::cSearch(const char *lexeme)
 {
     if (lexeme!=NULL)
     {
@@ -347,9 +347,9 @@ VarSymbol *VarTable::searchInScope(const char *lexeme, const char *scopeLexeme)
 /**
  * @return true if inserted and false if not
  */
-bool VarTable::insert(TypeNode *type, const char *lexeme, bool pointer, int arraySize, bool parameter)
+bool VarTable::cInsert(TypeNode *type, const char *lexeme, bool pointer, int arraySize, bool parameter)
 {
-    VarSymbol *varSymbol = search(lexeme);
+    VarSymbol *varSymbol = cSearch(lexeme);
     if (varSymbol==NULL || varSymbol->getScope() < currentScope || !varSymbol->isScope(currentScopeLexeme))
     {
         // VarSymbol(const char *lexeme, int scope, const char *lexemeScope, TypeNode *type, bool pointer, int arraySize, bool parameter);
@@ -388,7 +388,7 @@ FunctionTable::~FunctionTable()
     currentScopeLexeme = NULL;
 }
 
-FunctionSymbol *FunctionTable::search(const char *lexeme)
+FunctionSymbol *FunctionTable::cSearch(const char *lexeme)
 {
     if (lexeme!=NULL)
     {
@@ -423,9 +423,9 @@ FunctionSymbol *FunctionTable::searchInScope(const char *lexeme, const char *sco
     return NULL;
 }
 
-bool FunctionTable::insert(TypeNode *returnType, const char *lexeme, FormalListNode *varDecl, bool pointer)
+bool FunctionTable::cInsert(TypeNode *returnType, const char *lexeme, FormalListNode *varDecl, bool pointer)
 {
-    FunctionSymbol *funcSymbol = search(lexeme);
+    FunctionSymbol *funcSymbol = cSearch(lexeme);
     if (funcSymbol==NULL || funcSymbol->getScope() < currentScope || !funcSymbol->isScope(currentScopeLexeme))
     {
         //FunctionSymbol(const char *lexeme, int scope, const char *lexemeScope, TypeNode *returnType, bool pointer, FormalListNode *varDecl);
@@ -464,7 +464,7 @@ StructTable::~StructTable()
     currentScopeLexeme = NULL;
 }
 
-StructSymbol *StructTable::search(const char *lexeme)
+StructSymbol *StructTable::cSearch(const char *lexeme)
 {
     if (lexeme!=NULL)
     {
@@ -482,9 +482,9 @@ StructSymbol *StructTable::search(const char *lexeme)
     return NULL;
 }
 
-bool StructTable::insert(const char *lexeme, VarDeclNode *varDecl)
+bool StructTable::cInsert(const char *lexeme, VarDeclNode *varDecl)
 {
-    StructSymbol *structSymbol = search(lexeme);
+    StructSymbol *structSymbol = cSearch(lexeme);
     if (structSymbol==NULL || structSymbol->getScope() < currentScope || !structSymbol->isScope(currentScopeLexeme))
     {
         //StructSymbol(const char *lexeme, int scope, const char *lexemeScope, VarDeclNode *varDecl)
