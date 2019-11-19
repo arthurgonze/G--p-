@@ -11,15 +11,14 @@ FunctionSymbol *activeFunction = NULL;
 
 int breakEnabled = BOOL_FALSE;
 
-Semantic *semanticVisitor;
 
 void startSemantic(ProgramNode *ast)
 {
     varTable = new VarTable();
     functionTable = new FunctionTable();
     structTable = new StructTable();
-
-    semanticVisitor->visit(ast);
+    Semantic semanticVisitor;
+    semanticVisitor.visit(ast);
 }
 void endSemantic()
 {
@@ -28,7 +27,7 @@ void endSemantic()
     structTable->print();
 
     activeFunction = NULL;
-    delete semanticVisitor;
+    //delete semanticVisitor;
     delete varTable;
     delete functionTable;
     delete structTable;
@@ -62,10 +61,13 @@ SymbolTable *getTable(int table)
     }
 }
 
-Semantic::Semantic(ProgramNode *ast)
-{
-    visit(ast);
-}
+//Semantic::Semantic()
+//{
+//    //ctor
+//}
+//Semantic::~Semantic(){
+//    //dtor
+//}
 
 //**********************************************************************
 void Semantic::visit(ProgramNode *programNode)
@@ -1602,6 +1604,7 @@ void Semantic::visit(CaseBlockNode *caseBlockNode)
         caseBlockNode->getNext()->accept(this);
     }
 }
+Semantic::Semantic() {}
 
 
 

@@ -53,6 +53,7 @@ int main(int argc, char *argv[])
     startSemantic(ast);
 
     lexical_analyzer_dispose();
+    endSemantic();
 
 	printf("\n");
 

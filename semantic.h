@@ -43,8 +43,7 @@ int typeSyze(TypeNode* type);
 class Semantic:public Visitor
 {
 public:
-    explicit Semantic(ProgramNode *ast);
-    ~Semantic() override = 0;
+    Semantic();
 
     void visit(TokenNode *tokenNode) override;
     void visit(ProgramNode *programNode) override;
@@ -81,5 +80,8 @@ public:
     void visit(ArrayCallNode *arrayCallNode) override;
     void visit(FunctionListNode *functionListNode) override;
     void visit(PointerExpNode *pointerExpNode) override;
+    void visit(PointerNode *node) override {}
+    void visit(ArrayNode *node) override {}
+    void visit(VarStmtNode *node) override {}
 };
 #endif //COMPILADOR_2019_3_SEMANTIC_H

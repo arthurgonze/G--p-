@@ -50,7 +50,7 @@ class PrimaryNode;
 class Visitor
 {
 public:
-    virtual ~Visitor() = default;;
+    virtual ~Visitor() = default;
     virtual void visit(ProgramNode *node) = 0;
     virtual void visit(TypeNode *node) = 0;
     virtual void visit(FunctionListNode *node) = 0;
