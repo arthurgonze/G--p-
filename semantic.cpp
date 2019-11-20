@@ -193,8 +193,11 @@ void Semantic::visit(VarDeclNode *varDeclNode)
             {
                 list_aux->getId()->setOffset(activeFunction->getLocalSize() + total_size_aux + size_aux);
             }
-            var->setSize(size_aux);
-            var->setOffset(list_aux->getId()->getOffset());
+            if(var)
+            {
+                var->setSize(size_aux);
+                var->setOffset(list_aux->getId()->getOffset());
+            }
             total_size_aux += size_aux;
             list_aux = list_aux->getNext();
         }
@@ -831,49 +834,144 @@ void Semantic::visit(PrimaryNode *primaryNode)
 //**********************************************************************
 void Semantic::visit(FunctionNode *functionNode)// TODO
 {
-    if (functionNode->getType() && functionNode->getType()->getId() && functionNode->getId())
+//    if (functionNode->getType() && functionNode->getType()->getId() && functionNode->getId())
+//    {
+//        ///Se o retorno da função for de um type definido, verifica-se se esse type já foi declarado
+//        if (functionNode->getType()->getId()->getToken()==ID)
+//        {
+//            if (!varTable->cSearch(functionNode->getId()->getLexeme()))// VARTABLE OR FUNCTION TABLE?
+//            {
+//                // TODO imprimeErroSemanticoTipoDesc(functionNode->type->id->lexeme, functionNode->type->line);
+//                ///erro semantico type não definido
+//            }
+//        }
+//        ///Declara a função
+//        FunctionSymbol *decl = functionTable->cSearch(functionNode->getId()->getLexeme());
+//        ///Salva a função ativa
+//        activeFunction = decl;
+//        // TODO functionDeclaration(decl, functionNode->getId()->getLexeme(), functionNode->getType()->line);
+//    }
+//    // TODO BeginScope();?
+//    if (functionNode->getParameters())
+//    {
+//        functionNode->getParameters()->accept(this);
+//    }
+//    if (functionNode->getLocal())
+//    {
+//        functionNode->getLocal()->accept(this);
+//    }
+//    if (functionNode->getBody())
+//    {
+//        functionNode->getBody()->accept(this);
+//        if (functionNode->getType())
+//        {
+//            if (!functionNode->getBody()->isReturn())
+//            {
+//                // TODO imprimeAvisoSemantico(functions->getTexto( activeFunction->pegaIndiceLexema()));
+//            }
+//        }
+//    }
+//    else if (functionNode->getType())
+//    {
+//        // TODO imprimeAvisoSemantico(functions->getTexto( activeFunction->pegaIndiceLexema()));
+//    }
+//    // TODO EndScope();
+//    //fprintf(stdout,"Funcao %s tem  %d bytes de parameters e %d bytes de var locais %d maior chamada de funcao\n",functions->getTexto( activeFunction->pegaIndiceLexema()), activeFunction->tamparam,activeFunction->tamloc, activeFunction->tammaiorchamada);
+//    activeFunction = NULL;
+
+    const char *function_lex = functionNode->getId() != NULL ? functionNode->getId()->getLexeme() : NULL;
+
+//    if (functionNode->getNext() != NULL)
+//    {
+//        functionNode->getNext()->accept(this);
+//    }
+//
+//    beginScope(function_lex);
+//    if (functionNode->getId() != NULL)
+//    {
+//        functionNode->getId()->accept(this);
+//    }
+//    if (functionNode->getParameters() != NULL)
+//    {
+//        functionNode->getParameters()->accept(this);
+//    }
+//    if (functionNode->getVar_stmt() != NULL)
+//    {
+//        functionNode->getVar_stmt()->accept(this);
+//    }
+//    endScope();
+
+    if (!functionTable->cInsert(functionNode->getType(), function_lex, functionNode->getParameters(), functionNode->getPointer() != NULL))
     {
-        ///Se o retorno da função for de um type definido, verifica-se se esse type já foi declarado
+        // TODO print_semantic_error(ERROR_FUNCTION_ALREADY_EXISTS, functionNode->get_line());
+    }
+    /**/
+    if (functionNode->getBody() != NULL)
+    {
+        functionNode->getBody()->accept(this);
+    }
+
+    // const char *function_lex = functionNode->get_id() != NULL ? functionNode->get_id()->get_lexeme() : NULL;
+
+    ///*** Check if type was declared
+    if (functionNode->getType() != NULL && functionNode->getId() != NULL)
+    {
         if (functionNode->getType()->getId()->getToken()==ID)
         {
-            if (!varTable->cSearch(functionNode->getId()->getLexeme()))// VARTABLE OR FUNCTION TABLE?
+            if (!structTable->cSearch(functionNode->getType()->getLexeme())) ///SEMANTIC ERROR - TYPE NOT DEFINED
             {
-                // TODO imprimeErroSemanticoTipoDesc(functionNode->type->id->lexeme, functionNode->type->line);
-                ///erro semantico type não definido
+                // TODO print_semantic_error(ERROR_RETURN_TYPE_NOT_DEFINED, functionNode->get_line());
             }
         }
-        ///Declara a função
-        FunctionSymbol *decl = functionTable->cSearch(functionNode->getId()->getLexeme());
-        ///Salva a função ativa
-        activeFunction = decl;
-        // TODO functionDeclaration(decl, functionNode->getId()->getLexeme(), functionNode->getType()->line);
     }
-    // TODO BeginScope();?
-    if (functionNode->getParameters())
+
+    activeFunction = functionTable->cSearch(function_lex);
+    beginScope(function_lex);
+    if (functionNode->getId() != NULL)
+    {
+        functionNode->getId()->accept(this);
+    }
+    if (functionNode->getParameters() != NULL)
     {
         functionNode->getParameters()->accept(this);
     }
-    if (functionNode->getLocal())
+    if (functionNode->getLocal() != NULL)
     {
         functionNode->getLocal()->accept(this);
     }
-    if (functionNode->getBody())
+    VarDeclNode *var_stmt_aux = functionNode->getLocal();
+    while (var_stmt_aux != NULL && var_stmt_aux->getNext() != NULL)
     {
-        functionNode->getBody()->accept(this);
-        if (functionNode->getType())
+        var_stmt_aux = var_stmt_aux->getNext();
+    }
+    if (var_stmt_aux != NULL && var_stmt_aux->getIdList() != NULL)
+    {
+        StmtListNode *stmt_list_aux = functionNode->getBody();
+        while (stmt_list_aux != NULL && stmt_list_aux->getStmt() != NULL)
         {
-            if (!functionNode->getBody()->isReturn())
+            if (typeid(*stmt_list_aux->getStmt()) == typeid(ReturnNode))
             {
-                // TODO imprimeAvisoSemantico(functions->getTexto( activeFunction->pegaIndiceLexema()));
+                stmt_list_aux->getStmt()->accept(this);
+                ReturnNode *return_stmt = dynamic_cast<ReturnNode *>(stmt_list_aux->getStmt());
+                if (functionNode->getType()->getId()->getToken() != return_stmt->getExp()->getType())
+                {
+                    // TODO print_semantic_error(ERROR_INCOMPATIBLE_RETURN_TYPE, functionNode->get_line());
+                }
+                stmt_list_aux = stmt_list_aux->getNext();
+            }
+            else
+            {
+                ///if there's an expected return value
+                if (stmt_list_aux->getNext() == NULL)  ///SEMANTIC ERROR - MISSING RETURN STATEMENT
+                {
+                    // TODO print_semantic_error(ERROR_MISSING_RETURN_STATEMENT, functionNode->get_line());
+                    break;
+                }
+                else stmt_list_aux = stmt_list_aux->getNext();
             }
         }
     }
-    else if (functionNode->getType())
-    {
-        // TODO imprimeAvisoSemantico(functions->getTexto( activeFunction->pegaIndiceLexema()));
-    }
-    // TODO EndScope();
-    //fprintf(stdout,"Funcao %s tem  %d bytes de parameters e %d bytes de var locais %d maior chamada de funcao\n",functions->getTexto( activeFunction->pegaIndiceLexema()), activeFunction->tamparam,activeFunction->tamloc, activeFunction->tammaiorchamada);
+    endScope();
     activeFunction = NULL;
 }
 //**********************************************************************

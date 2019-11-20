@@ -13,7 +13,6 @@ ProgramNode *Parser::StartParser()
     program->accept(visitor);
     delete (visitor);
     return program;
-
 }
 
 /**
@@ -412,6 +411,7 @@ IdListNode *Parser::IdList()
         }
         default:
         {
+            //delete(pointer);// TODO
             return nullptr;
         }
     }
@@ -1088,6 +1088,7 @@ ExpNode *Parser::ExprAssignAUX(ExpNode *expr)
             break;
         }
     }
+    //delete exp2; // TODO
     return node;
 }
 
@@ -1139,6 +1140,8 @@ ExpNode *Parser::ExprOrAUX(ExpNode *expr)
             break;
         }
     }
+    //delete(token);
+    //delete(exp2);
     return node;
 }
 
