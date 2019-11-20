@@ -32,7 +32,7 @@ protected:
     const char *currentScopeLexeme;// new
 
     static unsigned long cHash(string const &name); // Hash Function
-    Symbol *auxInsert(Symbol *root, int token, const char *lexeme);
+    Symbol *auxInsert(Symbol *root, const char *lexeme);
 
     virtual void print();
 public:

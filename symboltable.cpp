@@ -42,7 +42,7 @@ SymbolTable::SymbolTable()
 *	@param token Token ID
 *	@param lexeme Lexeme string
 */
-Symbol *SymbolTable::auxInsert(Symbol *root, int token, const char *lexeme)
+Symbol *SymbolTable::auxInsert(Symbol *root, const char *lexeme)
 {
 
     if (root==nullptr)
@@ -97,18 +97,17 @@ void SymbolTable::cInsert(Symbol *symbol, const char *lexeme)
 {
     if (lexeme!=NULL)
     {
-        unsigned int index = cHash(lexeme);
+        unsigned long index = cHash(lexeme);
+        //block[index] = auxInsert(block[index], lexeme);
         symbol->setNextSymbol(block[index]);
-        // TODO block[index] = auxInsert(block[index], lexeme);
-//        symbol->setNextSymbol(newBlock[index]);
-//        newBlock[index] = symbol;
-//        if (headIndex + strlen(lexeme) >= lexemeArraySize)
-//        {
-//            lexemeArraySize += (1 + strlen(lexeme)/LEXEME_ARRAY_SIZE)*LEXEME_ARRAY_SIZE;
-//            lexemeArray = (char *) realloc(lexemeArray, lexemeArraySize*sizeof(char));
-//        }
-//        strcpy(&lexemeArray[headIndex], lexeme);
-//        lexemeArraySize += strlen(lexeme) + 1;
+        block[index] = symbol;
+        if (headIndex + strlen(lexeme) >= lexemeArraySize)
+        {
+            lexemeArraySize += (1 + strlen(lexeme)/LEXEME_ARRAY_SIZE)*LEXEME_ARRAY_SIZE;
+            lexemeArray = (char *) realloc(lexemeArray, lexemeArraySize*sizeof(char));
+        }
+        strcpy(&lexemeArray[headIndex], lexeme);
+        headIndex += strlen(lexeme) + 1;
     }
 }
 
@@ -251,13 +250,13 @@ void ReservedWordsTable::cInsert(int tokenID, const char *lexeme)
 void ReservedWordsTable::print()
 {
     printf("\nTABELA DE SÍMBOLOS: PALAVRAS RESERVADAS\n");
-    cout << "Lexeme" << "\t" << "Token number" << endl;
+    cout << "Lexeme" << "\t" << "Token" << endl;
     cout << "_____________________________" << endl;
     for (int i = 0; i < TABLE_SIZE; i++)
     {
         for (ReservedTokenSymbol *sym = (ReservedTokenSymbol *) block[i]; sym!=NULL; sym = (ReservedTokenSymbol *) sym->getNextSymbol())
         {
-            std::cout << sym->getLexeme() << "\t" << sym->getTokenID() << std::endl;
+            std::cout << sym->getLexeme() << "\t" << token_id_to_name(sym->getTokenID()) << std::endl;
         }
     }
 }
@@ -361,14 +360,14 @@ bool VarTable::cInsert(TypeNode *type, const char *lexeme, bool pointer, int arr
 
 void VarTable::print()
 {
-    cout << "VARS" << std::endl;
-    cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << std::endl;
-    std::cout << "_____________________________" << std::endl;
+    cout << "VARS" << endl;
+    cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << endl;
+    cout << "_____________________________" << endl;
     for (int i = 0; i < TABLE_SIZE; i++)
     {
         for (VarSymbol *symbol = (VarSymbol *) block[i]; symbol!=NULL; symbol = (VarSymbol *) symbol->getNextSymbol())
         {
-            std::cout << symbol->getLexeme() << "\t" << symbol->getScope() << "\t" << symbol->getLexemeScope() << std::endl;
+            cout << symbol->getLexeme() << "\t" << symbol->getScope() << "\t" << symbol->getLexemeScope() << endl;
         }
     }
 }
@@ -437,14 +436,14 @@ bool FunctionTable::cInsert(TypeNode *returnType, const char *lexeme, FormalList
 
 void FunctionTable::print()
 {
-    cout << "FUNCTIONS" << std::endl;
-    std::cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << std::endl;
-    std::cout << "_____________________________" << std::endl;
+    cout << "FUNCTIONS" << endl;
+    cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << endl;
+    cout << "_____________________________" << endl;
     for (int i = 0; i < TABLE_SIZE; i++)
     {
         for (FunctionSymbol *symbol = (FunctionSymbol *) block[i]; symbol!=NULL; symbol = (FunctionSymbol *) symbol->getNextSymbol())
         {
-            std::cout << symbol->getLexeme() << "\t" << symbol->getScope() << "\t" << symbol->getLexemeScope() << std::endl;
+            cout << symbol->getLexeme() << "\t" << symbol->getScope() << "\t" << symbol->getLexemeScope() << endl;
         }
     }
 }
@@ -496,13 +495,14 @@ bool StructTable::cInsert(const char *lexeme, VarDeclNode *varDecl)
 
 void StructTable::print()
 {
-    std::cout << "STRUCTS" << std::endl;
-    std::cout << "_____________________________" << std::endl;
+    cout << "STRUCTS" << endl;
+    cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << endl;
+    cout << "_____________________________" << endl;
     for (int i = 0; i < TABLE_SIZE; i++)
     {
         for (StructSymbol *symbol = (StructSymbol *) block[i]; symbol!=NULL; symbol = (StructSymbol *) symbol->getNextSymbol())
         {
-            std::cout << symbol->getLexeme() << "\t" << symbol->getScope() << "\t" << symbol->getLexemeScope() << std::endl;
+            cout << symbol->getLexeme() << "\t" << symbol->getScope() << "\t" << symbol->getLexemeScope() << endl;
         }
     }
 }

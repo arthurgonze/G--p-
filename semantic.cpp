@@ -46,20 +46,20 @@ void endScope()
     structTable->endScope();
 }
 
-SymbolTable *getTable(int table)
-{
-    switch (table)
-    {
-        case STRUCT:
-            return structTable;
-        case FUNCTION_TABLE_ID:
-            return functionTable;
-        case VAR_TABLE_ID:
-            return varTable;
-        default:
-            return NULL;
-    }
-}
+//SymbolTable *getTable(int table)
+//{
+//    switch (table)
+//    {
+//        case STRUCT:
+//            return structTable;
+//        case FUNCTION_TABLE_ID:
+//            return functionTable;
+//        case VAR_TABLE_ID:
+//            return varTable;
+//        default:
+//            return NULL;
+//    }
+//}
 
 //Semantic::Semantic()
 //{
@@ -178,11 +178,14 @@ void Semantic::visit(VarDeclNode *varDeclNode)
             VarSymbol *var;
             if (activeFunction!=NULL)
             {
-                var = varTable->searchInScope(list_aux->getId()->getLexeme(), activeFunction->getLexeme());
+                const char *aux1 = list_aux->getId()->getLexeme();
+                const char *aux2 = activeFunction->getLexeme();
+                var = varTable->searchInScope(aux1, aux2);
             }
             else
             {
-                var = varTable->cSearch(list_aux->getId()->getLexeme());
+                const char *aux = list_aux->getId()->getLexeme();
+                var = varTable->cSearch(aux);
             }
             int size_aux = BYTE_SIZE;
             if (list_aux->getArray()!=NULL)
@@ -193,7 +196,7 @@ void Semantic::visit(VarDeclNode *varDeclNode)
             {
                 list_aux->getId()->setOffset(activeFunction->getLocalSize() + total_size_aux + size_aux);
             }
-            if(var)
+            if(var)//TODO
             {
                 var->setSize(size_aux);
                 var->setOffset(list_aux->getId()->getOffset());
