@@ -468,7 +468,7 @@ public:
     explicit PrimaryNode(ExpNode *exp);
     ~PrimaryNode() override;
 
-    inline TokenNode *getToken() { return token; }
+    inline TokenNode *getTokenNode() { return token; }
     inline ExpNode *getExp() { return exp; }
 
     void accept(Visitor *visitor) override { visitor->visit(this); }

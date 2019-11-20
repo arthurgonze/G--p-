@@ -268,9 +268,9 @@ void PrintAST::visit(PrimaryNode *node)
 {
     this->printAST("PRIMARY");
     up_level();
-    if (node->getToken()!=nullptr)
+    if (node->getTokenNode()!=nullptr)
     {
-        node->getToken()->accept(this);
+        node->getTokenNode()->accept(this);
     }
     if (node->getExp()!=nullptr)
     {

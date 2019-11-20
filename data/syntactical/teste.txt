@@ -1,5 +1,62 @@
-int main () 
-{
-    int a, v[50];
-    v[5] = 5;
+int a, b, c[100];
+
+int teste;
+
+typedef struct {
+  int a[090000];
+  float o4;
+  bool a2;
+  int *o, i, *o3;
+  int a3;
+  char o2;
+
+} teste2;
+
+int h(int u, int k) {
+   u = h(9,9);
+   return 8;
 }
+
+teste2 *fudeu(int i) {
+   return fudeu(i);
+}
+
+int d, e, f[100];
+
+teste2 *k, o[899];
+
+int main() {
+  int *t;
+  float hh;
+  bool ok;
+  bool y, b, d;
+  int *hhhhhh, *asdasdasd;
+  ok = 9 == h(*t, *t);
+  hh = a + 9---------------8;
+  hh = 9.0 + h(*t, 9);
+  /*iu->a[9000].h[09]->k->a[0999].p->a[0] = 9;*/
+  k->a[9000] = o[09].a[9] + k->a[0999] - (o[99]).a3;
+  while(a -   8 > 900 * 8) {
+	break;
+    /*a.b[89].c.d(9,0).e.f = t(u, j);
+    a.c.d[9].c.d.c.d.c.d.c.d.c.d.c[90] = 0;*/
+    break;
+    /*return ct;*/
+  }
+  
+  
+  
+   if(y = b = d = true) return 1;
+  switch(*(t)) {
+        case 8: d = b;
+        case 10: break;
+        case 12: if(d && y && d || y) main(); else h(*t,* t);/*h(&t, t);*/
+  }
+
+  a =  - 9;
+  6;
+  print("ajklsdhasjkldhaskdj", 8);
+  return 0;
+}
+
+
