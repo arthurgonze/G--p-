@@ -12,35 +12,14 @@
 #include "symboltable.h"
 #include "analyzer.h"
 
-
-#define INT_ID      1
-#define FLOAT_ID    2
-#define LITERAL_ID  3
-#define TYPEDEF_ID  4
-#define CHAR_ID     5
-#define BOOLEAN_ID  6
-
-#define FUNCTION_TABLE_ID   1
-#define VAR_TABLE_ID        2
-
-#define POINTER_SIZE    4
-#define INT_SIZE        4
-#define FLOAT_SIZE      4
-#define CHAR_SIZE       4
-#define BOOLEAN_SIZE    4
 #define BYTE_SIZE       4
-
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define BOOL_TRUE 1
 #define BOOL_FALSE 0
 
-
 void startSemantic(ProgramNode *ast);
 void endSemantic();
-SymbolTable* getTable(int table);
-int typeSyze(TypeNode* type);
 
-class Semantic:public Visitor
+class Semantic : public Visitor
 {
 public:
     Semantic();

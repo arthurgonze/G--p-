@@ -2,7 +2,6 @@
 #define COMPILADOR_2019_3_AST_H
 
 #include "visitor.h"
-// Nos da ASA, 44-4 = 40
 // Abstracts roots
 class ASTNode;
 
@@ -65,7 +64,6 @@ public:
 class ExpNode : public ASTNode
 {
 private:
-    // TODO
     const char *lexeme;
     bool lValue, pointer;
     int type, arraySize;
@@ -114,15 +112,11 @@ public:
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-class TokenNode : public ExpNode // TODO era ASTNode
+class TokenNode : public ExpNode
 {
 private:
     int token;
-    //const char *lexeme;
     int offset;
-    // TODO
-    // bool parameter;
-    // bool global;
 public:
     TokenNode(int tok, const char *lex);
     ~TokenNode() override;
@@ -230,9 +224,9 @@ private:
     bool returnAtt;
     ASTNode *stmt;
 public:
-    explicit StmtNode(StmtListNode *stmtList) { this->stmt = reinterpret_cast<ASTNode *>(stmtList); } // TODO ARRUMAR ESSE CAST
-    explicit StmtNode(IfNode *aux) { this->stmt = reinterpret_cast<ASTNode *>(aux); } // TODO ARRUMAR ESSE CAST
-    explicit StmtNode(WhileNode *aux) { this->stmt = reinterpret_cast<ASTNode *>(aux); } // TODO ARRUMAR ESSE CAST
+    explicit StmtNode(StmtListNode *stmtList) { this->stmt = reinterpret_cast<ASTNode *>(stmtList); }
+    explicit StmtNode(IfNode *aux) { this->stmt = reinterpret_cast<ASTNode *>(aux); }
+    explicit StmtNode(WhileNode *aux) { this->stmt = reinterpret_cast<ASTNode *>(aux); }
     explicit StmtNode(ExpNode *aux) { this->stmt = aux; }
     explicit StmtNode(BreakNode *aux) { this->stmt = aux; }
     explicit StmtNode(PrintNode *aux) { this->stmt = aux; }
@@ -240,7 +234,7 @@ public:
     explicit StmtNode(ReturnNode *aux) { this->stmt = aux; }
     explicit StmtNode(ThrowNode *aux) { this->stmt = aux; }
     explicit StmtNode(TryNode *aux) { this->stmt = aux; }
-    explicit StmtNode(SwitchNode *aux) { this->stmt = reinterpret_cast<ASTNode *>(aux); } // TODO ARRUMAR ESSE CAST
+    explicit StmtNode(SwitchNode *aux) { this->stmt = reinterpret_cast<ASTNode *>(aux); }
     ~StmtNode() override { delete this->stmt; }
 
     inline ASTNode *getStmt() { return stmt; }
@@ -356,7 +350,7 @@ public:
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-class ArrayNode : public ExpNode// TODO era um ASTNode
+class ArrayNode : public ExpNode
 {
 private:
     TokenNode *numInt;

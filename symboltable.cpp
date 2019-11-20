@@ -37,68 +37,18 @@ SymbolTable::SymbolTable()
 }
 
 /**
-*	Recursive function to perform the insertion
-*	@param root Root node to vist
-*	@param token Token ID
-*	@param lexeme Lexeme string
-*/
-Symbol *SymbolTable::auxInsert(Symbol *root, const char *lexeme)
-{
-
-    if (root==nullptr)
-    {
-        // TODO Create the new node with info
-        Symbol *newNode = new Symbol(NULL, NULL, NULL);
-//        newNode->token = token;
-//        newNode->pos = headIndex;
-//        newNode->next = nullptr;
-
-        //Add the lexeme to array
-        int lexemeSize = strlen(lexeme);
-        if (lexemeSize + headIndex >= lexemeArraySize) // Check if the string will exceed the array free space
-        {
-            lexemeArraySize += LEXEME_ARRAY_SIZE;
-            lexemeArray = (char *) realloc(lexemeArray, lexemeArraySize);
-        }
-        strcpy(lexemeArray + headIndex, lexeme);
-        headIndex += lexemeSize + 1; // +1 cause of \0
-
-        return newNode;
-    }
-
-    // TODO If there's a valid node, check if its not a duplicate
-//    if (!(root->token==token && strcmp(lexemeArray + root->pos, lexeme)==0))
-//    {
-//        root->next = auxInsert(root->next, token, lexeme);
-//    }
-
-    return root;
-}
-
-/**
  * If there is no element in the chain then new element is added in front,
  * otherwise through hashing if we reach a chain or, bucket that contains an
  * element then we insert the new element at the beginning of the chain and
  * the rest of the elements is linked to the end of new node.
- * @param token
+ * @param symbol
  * @param lexeme
  */
-//void SymbolTable::cInsert(int token, const char *lexeme)
-//{
-//    unsigned long pos = cHash(lexeme);
-//    block[pos] = auxInsert(block[pos], token, lexeme);
-//}
-
-/** Given a Symbol inserts it in the hash table and add the lexeme
-* to the lexemes array.
-* Reallocs the lexemes array if needed.
-*/
 void SymbolTable::cInsert(Symbol *symbol, const char *lexeme)
 {
     if (lexeme!=NULL)
     {
         unsigned long index = cHash(lexeme);
-        //block[index] = auxInsert(block[index], lexeme);
         symbol->setNextSymbol(block[index]);
         block[index] = symbol;
         if (headIndex + strlen(lexeme) >= lexemeArraySize)
@@ -117,10 +67,6 @@ void SymbolTable::cInsert(Symbol *symbol, const char *lexeme)
  * @param lexeme
  * @return
  */
-
-/** Verify if a symbol is in the table.
-* If true, returns the Symbol, else returns NULL.
-*/
 Symbol *SymbolTable::cSearch(const char *lexeme)
 {
     if (lexeme!=nullptr)
@@ -187,7 +133,7 @@ void LiteralsTable::print()
         while (temp!=nullptr)
         {
             //Verify flags to print only requested columns
-            printf("%s\t\t", this->lexemeArray + temp->getScope());// TODO temp->getScope() era temp->pos
+            printf("%s\t\t", this->lexemeArray + temp->getScope());
 
             printf("\n");
             temp = temp->getNextSymbol();
@@ -226,7 +172,7 @@ void IdsTable::print()
         while (temp!=nullptr)
         {
             //Verify flags to print only requested columns
-            printf("%s\t\t", this->lexemeArray + temp->getScope());// TODO temp->getScope() era temp->pos
+            printf("%s\t\t", this->lexemeArray + temp->getScope());
 
             printf("\n");
             temp = temp->getNextSymbol();
@@ -351,7 +297,6 @@ bool VarTable::cInsert(TypeNode *type, const char *lexeme, bool pointer, int arr
     VarSymbol *varSymbol = cSearch(lexeme);
     if (varSymbol==NULL || varSymbol->getScope() < currentScope || !varSymbol->isScope(currentScopeLexeme))
     {
-        // VarSymbol(const char *lexeme, int scope, const char *lexemeScope, TypeNode *type, bool pointer, int arraySize, bool parameter);
         SymbolTable::cInsert(new VarSymbol(lexeme, currentScope, currentScopeLexeme, type, pointer, arraySize, parameter), lexeme);
         return true;
     }
@@ -431,7 +376,6 @@ bool FunctionTable::cInsert(TypeNode *returnType, const char *lexeme, FormalList
     FunctionSymbol *funcSymbol = cSearch(lexeme);
     if (funcSymbol==NULL || funcSymbol->getScope() < currentScope || !funcSymbol->isScope(currentScopeLexeme))
     {
-        //FunctionSymbol(const char *lexeme, int scope, const char *lexemeScope, TypeNode *returnType, bool pointer, FormalListNode *varDecl);
         SymbolTable::cInsert(new FunctionSymbol(lexeme, currentScope, currentScopeLexeme, returnType, pointer, varDecl), lexeme);
         return true;
     }

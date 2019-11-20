@@ -155,7 +155,6 @@ int found_token_and_check_for_reserved_word()
 
     if (token !=nullptr)
     {
-        // TODO nao precisamos mais dessa tabela reservedWordsUsedTable.cInsert(lexemeBuffer, token->getTokenID());
         return found_token_and_restart(token->getTokenID());
     }
     else

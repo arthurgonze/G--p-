@@ -56,7 +56,7 @@ class ReservedWordsTable : public SymbolTable
 {
 public:
     void cInsert(int tokenID, const char *lexeme);
-    void print() override;// TODO especializar o print?
+    void print() override;
     ReservedTokenSymbol *cSearch(const char *lexeme) { return (ReservedTokenSymbol *) SymbolTable::cSearch(lexeme); }
 };
 class LiteralsTable : public SymbolTable
@@ -89,7 +89,7 @@ public:
     NumFloatSymbol *cSearch(const char *lexeme) { return (NumFloatSymbol *) SymbolTable::cSearch(lexeme); }
 };
 
-class StructTable : public SymbolTable // TODO
+class StructTable : public SymbolTable
 {
 public:
     StructTable();
@@ -102,7 +102,7 @@ public:
     void print() override;
 };
 
-class FunctionTable : public SymbolTable // TODO
+class FunctionTable : public SymbolTable
 {
 public:
     FunctionTable();
@@ -117,7 +117,7 @@ public:
     void print() override;
 };
 
-class VarTable : public SymbolTable // TODO
+class VarTable : public SymbolTable
 {
 public:
     VarTable();
