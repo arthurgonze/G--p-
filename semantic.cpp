@@ -660,9 +660,9 @@ void Semantic::visit(CallNode *callNode)
                 // TODO print_semantic_error(ERROR_TOO_MANY_ARGUMENTS, callNode->getLine());
             }
         }
-        if (callNode->getParameters()->getNext()!=NULL)
+        if (callNode->getParameters()!=NULL && callNode->getParameters()->getNext()!=NULL && callNode->getParameters()->getNext()->getExp()!=NULL)
         {
-            callNode->getParameters()->getNext()->accept(this);
+            callNode->getParameters()->getNext()->getExp()->accept(this);
             callNode->setType(callNode->getParameters()->getNext()->getExp()->getType());
             callNode->setTypeLexeme(callNode->getParameters()->getNext()->getExp()->getTypeLexeme());
         }

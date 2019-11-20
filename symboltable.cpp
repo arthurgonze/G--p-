@@ -360,16 +360,20 @@ bool VarTable::cInsert(TypeNode *type, const char *lexeme, bool pointer, int arr
 
 void VarTable::print()
 {
-    cout << "VARS" << endl;
+    cout << "\n*****************************" << endl;
+    cout << "\t\t" << "VARS" << endl;
+    cout << "*****************************" << endl;
     cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << endl;
-    cout << "_____________________________" << endl;
+    cout << "*****************************" << endl;
     for (int i = 0; i < TABLE_SIZE; i++)
     {
         for (VarSymbol *symbol = (VarSymbol *) block[i]; symbol!=NULL; symbol = (VarSymbol *) symbol->getNextSymbol())
         {
-            cout << symbol->getLexeme() << "\t" << symbol->getScope() << "\t" << symbol->getLexemeScope() << endl;
+            cout << symbol->getLexeme() << "\t\t" << symbol->getScope() << "\t\t" << symbol->getLexemeScope() << endl;
         }
     }
+    cout << "*****************************" << endl;
+    cout << "##########################################################" << endl;
 }
 
 /// FunctionTable
@@ -436,16 +440,20 @@ bool FunctionTable::cInsert(TypeNode *returnType, const char *lexeme, FormalList
 
 void FunctionTable::print()
 {
-    cout << "FUNCTIONS" << endl;
+    cout << "\n*****************************" << endl;
+    cout << "\t\t" << "FUNCTIONS" << endl;
+    cout << "*****************************" << endl;
     cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << endl;
-    cout << "_____________________________" << endl;
+    cout << "*****************************" << endl;
     for (int i = 0; i < TABLE_SIZE; i++)
     {
         for (FunctionSymbol *symbol = (FunctionSymbol *) block[i]; symbol!=NULL; symbol = (FunctionSymbol *) symbol->getNextSymbol())
         {
-            cout << symbol->getLexeme() << "\t" << symbol->getScope() << "\t" << symbol->getLexemeScope() << endl;
+            cout << symbol->getLexeme() << "\t\t" << symbol->getScope() << "\t\t" << symbol->getLexemeScope() << endl;
         }
     }
+    cout << "*****************************" << endl;
+    cout << "##########################################################" << endl;
 }
 
 /// StructTable
@@ -495,9 +503,12 @@ bool StructTable::cInsert(const char *lexeme, VarDeclNode *varDecl)
 
 void StructTable::print()
 {
-    cout << "STRUCTS" << endl;
-    cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << endl;
-    cout << "_____________________________" << endl;
+    cout << "\n*****************************" << endl;
+    cout << "\t\t" << "STRUCTS" << endl;
+    cout << "*****************************" << endl;
+    cout << "Lexeme" << "\t\t" << "Scope" << "\t\t" << "Scope Lexeme" << endl;
+    cout << "*****************************" << endl;
+
     for (int i = 0; i < TABLE_SIZE; i++)
     {
         for (StructSymbol *symbol = (StructSymbol *) block[i]; symbol!=NULL; symbol = (StructSymbol *) symbol->getNextSymbol())
@@ -505,5 +516,7 @@ void StructTable::print()
             cout << symbol->getLexeme() << "\t" << symbol->getScope() << "\t" << symbol->getLexemeScope() << endl;
         }
     }
+    cout << "*****************************" << endl;
+    cout << "##########################################################" << endl;
 }
 
