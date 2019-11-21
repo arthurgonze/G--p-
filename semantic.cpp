@@ -14,6 +14,7 @@ void startSemantic(ProgramNode *ast)
     structTable = new StructTable();
     Semantic semanticVisitor;
     semanticVisitor.visit(ast);
+    fprintf(stderr, "\n");
 }
 void endSemantic()
 {
@@ -58,12 +59,12 @@ void Semantic::visit(ProgramNode *programNode)
 
 void Semantic::visit(VarDeclNode *varDeclNode)
 {
-    IdListNode *id_list_aux = varDeclNode->getIdList();
-    while (id_list_aux!=NULL)
+    IdListNode *idListAux = varDeclNode->getIdList();
+    while (idListAux!=NULL)
     {
-        id_list_aux->getId()->setType(varDeclNode->getType()->getId()->getToken());
-        id_list_aux->getId()->setTypeLexeme(varDeclNode->getType()->getId()->getLexeme());
-        id_list_aux = id_list_aux->getNext();
+        idListAux->getId()->setType(varDeclNode->getType()->getId()->getToken());
+        idListAux->getId()->setTypeLexeme(varDeclNode->getType()->getId()->getLexeme());
+        idListAux = idListAux->getNext();
     }
     if (varDeclNode->getIdList()!=NULL)
     {
@@ -80,46 +81,46 @@ void Semantic::visit(VarDeclNode *varDeclNode)
         {
             if (!structTable->cSearch(varDeclNode->getType()->getId()->getLexeme()))
             {
-                fprintf(stderr, "[SEMANTIC ERROR - VarDeclNode] TYPE NOT DEFINED, line: %d \n", varDeclNode->getLine());
+                fprintf(stderr, "[SEMANTIC ERROR - VarDeclNode] TYPE NOT DEFINED, line: %d, typeLexeme: %s \n", varDeclNode->getLine(), varDeclNode->getType()->getLexeme());
             }
         }
     }
     if (varDeclNode->getIdList()!=NULL)
     {
         varDeclNode->getIdList()->accept(this);
-        IdListNode *list_aux = varDeclNode->getIdList();
-        int total_size_aux = 0;
-        while (list_aux!=NULL)
+        IdListNode *listAux = varDeclNode->getIdList();
+        int totalSizeAux = 0;
+        while (listAux!=NULL)
         {
             VarSymbol *var;
             if (activeFunction!=NULL)
             {
-                const char *aux1 = list_aux->getId()->getLexeme();
+                const char *aux1 = listAux->getId()->getLexeme();
                 const char *aux2 = activeFunction->getLexeme();
                 var = varTable->searchInScope(aux1, aux2);
             }
             else
             {
-                const char *aux = list_aux->getId()->getLexeme();
+                const char *aux = listAux->getId()->getLexeme();
                 var = varTable->cSearch(aux);
             }
-            int size_aux = BYTE_SIZE;
-            if (list_aux->getArray()!=NULL)
+            int sizeAux = BYTE_SIZE;
+            if (listAux->getArray()!=NULL)
             {
-                size_aux *= atoi(list_aux->getArray()->getNumInt()->getLexeme());
+                sizeAux *= atoi(listAux->getArray()->getNumInt()->getLexeme());
             }
             if (activeFunction!=NULL)
             {
-                list_aux->getId()->setOffset(activeFunction->getLocalSize() + total_size_aux + size_aux);
+                listAux->getId()->setOffset(activeFunction->getLocalSize() + totalSizeAux + sizeAux);
             }
-            var->setSize(size_aux);
-            var->setOffset(list_aux->getId()->getOffset());
-            total_size_aux += size_aux;
-            list_aux = list_aux->getNext();
+            var->setSize(sizeAux);
+            var->setOffset(listAux->getId()->getOffset());
+            totalSizeAux += sizeAux;
+            listAux = listAux->getNext();
         }
         if (activeFunction!=NULL)
         {
-            activeFunction->incrementLocalSize(total_size_aux);
+            activeFunction->incrementLocalSize(totalSizeAux);
         }
     }
 
@@ -169,7 +170,14 @@ void Semantic::visit(IdListNode *idListNode)
 
 void Semantic::visit(TypeDeclNode *typeDeclNode)
 {
-    const char *typeLex = typeDeclNode->getId()!=NULL ? typeDeclNode->getId()->getLexeme() : NULL;
+    const char *typeLex;
+    if(typeDeclNode->getId()!=NULL)
+    {
+        typeLex = typeDeclNode->getId()->getLexeme();
+    }else
+    {
+        typeLex = NULL;
+    }
 
     if (typeDeclNode->getNext()!=NULL)
     {
@@ -185,7 +193,7 @@ void Semantic::visit(TypeDeclNode *typeDeclNode)
 
     if (!structTable->cInsert(typeLex, typeDeclNode->getDecl()))
     {
-        fprintf(stderr, "[SEMANTIC ERROR - typeDeclNode] STRUCT ALREADY EXISTS, line: %d \n", typeDeclNode->getLine());
+        fprintf(stderr, "[SEMANTIC ERROR - typeDeclNode] STRUCT ALREADY EXISTS, line: %d, lexeme: %s \n", typeDeclNode->getLine(), typeDeclNode->getId()->getLexeme());
     }
     if (typeDeclNode->getNext()!=NULL)
     {
@@ -196,28 +204,28 @@ void Semantic::visit(TypeDeclNode *typeDeclNode)
     if (typeDeclNode->getDecl()!=NULL)
     {
         typeDeclNode->getDecl()->accept(this);
-        VarDeclNode *var_list_aux = typeDeclNode->getDecl();
-        int total_size_aux = 0;
-        while (var_list_aux!=NULL)
+        VarDeclNode *varListAux = typeDeclNode->getDecl();
+        int totalSizeAux = 0;
+        while (varListAux!=NULL)
         {
-            IdListNode *id_list_aux = var_list_aux->getIdList();
-            while (id_list_aux!=NULL)
+            IdListNode *idListAux = varListAux->getIdList();
+            while (idListAux!=NULL)
             {
-                VarSymbol *var = varTable->searchInScope(id_list_aux->getId()->getLexeme(), typeDeclNode->getId()->getLexeme());
-                int size_aux = BYTE_SIZE;
-                if (id_list_aux->getArray()!=NULL)
+                VarSymbol *var = varTable->searchInScope(idListAux->getId()->getLexeme(), typeDeclNode->getId()->getLexeme());
+                int sizeAux = BYTE_SIZE;
+                if (idListAux->getArray()!=NULL)
                 {
-                    size_aux *= atoi(id_list_aux->getArray()->getNumInt()->getLexeme());
+                    sizeAux *= atoi(idListAux->getArray()->getNumInt()->getLexeme());
                 }
-                var->setSize(size_aux);
-                var->setOffset(total_size_aux);
-                total_size_aux += size_aux;
-                id_list_aux = id_list_aux->getNext();
+                var->setSize(sizeAux);
+                var->setOffset(totalSizeAux);
+                totalSizeAux += sizeAux;
+                idListAux = idListAux->getNext();
             }
-            var_list_aux = var_list_aux->getNext()->getNext();
+            varListAux = varListAux->getNext()->getNext();
         }
         StructSymbol *structSymbol = structTable->cSearch(typeDeclNode->getId()->getLexeme());
-        structSymbol->setSize(total_size_aux);
+        structSymbol->setSize(totalSizeAux);
     }
     endScope();
 
@@ -253,7 +261,14 @@ void Semantic::visit(TokenNode *tokenNode)
 
 void Semantic::visit(FormalListNode *formalListNode)
 {
-    const char *idLexAux = formalListNode->getId()!=NULL ? formalListNode->getId()->getLexeme() : NULL;
+    const char *idLexAux;
+    if(formalListNode->getId()!=NULL)
+    {
+        idLexAux = formalListNode->getId()->getLexeme();
+    }else
+    {
+        idLexAux = NULL;
+    }
     if (formalListNode->getId()!=NULL)
     {
         formalListNode->getId()->accept(this);
@@ -262,11 +277,18 @@ void Semantic::visit(FormalListNode *formalListNode)
     {
         formalListNode->getArray()->accept(this);
     }
-    int arraySize = formalListNode->getArray()!=NULL ? atoi(formalListNode->getArray()->getNumInt()->getLexeme()) : -1;
 
+    int arraySize;
+    if(formalListNode->getArray()!=NULL)
+    {
+        arraySize = atoi(formalListNode->getArray()->getNumInt()->getLexeme());
+    }else
+    {
+        arraySize = -1;
+    }
     if (!varTable->cInsert(formalListNode->getType(), idLexAux, formalListNode->getPointer()!=NULL, arraySize, BOOL_TRUE))
     {
-        fprintf(stderr, "[SEMANTIC ERROR - formalListNode] VARIABLE ALREADY EXISTS, line: %d \n", formalListNode->getLine());
+        fprintf(stderr, "[SEMANTIC ERROR - formalListNode] VARIABLE ALREADY EXISTS, line: %d, lexeme: %s \n", formalListNode->getLine(), formalListNode->getId()->getLexeme());
     }
 
     if (formalListNode->getNext()!=NULL)
@@ -332,7 +354,7 @@ void Semantic::visit(CallNode *callNode)
                 if (exp->getExp()->getType()!=param->getType()->getId()->getToken() ||
                     exp->getExp()->getTypeLexeme()!=param->getType()->getId()->getLexeme())
                 {
-                    fprintf(stderr, "[SEMANTIC ERROR - callNode] PARAMETER TYPE MISMATCH, line: %d \n", callNode->getLine());
+                    fprintf(stderr, "[SEMANTIC ERROR - callNode] PARAMETER TYPE MISMATCH, line: %d, lexeme: %s \n", callNode->getLine(), callNode->getId()->getLexeme());
 
                     exp = exp->getNext();
                     param = param->getNext();
@@ -343,11 +365,11 @@ void Semantic::visit(CallNode *callNode)
             }
             if (exp==NULL && param!=NULL)
             {
-                fprintf(stderr, "[SEMANTIC ERROR - callNode] TOO FEW ARGUMENTS, line: %d \n", callNode->getLine());
+                fprintf(stderr, "[SEMANTIC ERROR - callNode] TOO FEW ARGUMENTS, line: %d, lexeme: %s \n", callNode->getLine(), callNode->getId()->getLexeme());
             }
             else if (exp!=NULL && param==NULL)
             {
-                fprintf(stderr, "[SEMANTIC ERROR - callNode] TOO MANY ARGUMENTS, line: %d \n", callNode->getLine());
+                fprintf(stderr, "[SEMANTIC ERROR - callNode] TOO MANY ARGUMENTS, line: %d, lexeme: %s \n", callNode->getLine(), callNode->getId()->getLexeme());
             }
         }
         if (callNode->getParameters()!=NULL && callNode->getParameters()->getNext()!=NULL && callNode->getParameters()->getNext()->getExp()!=NULL)
@@ -364,7 +386,7 @@ void Semantic::visit(CallNode *callNode)
     }
     else
     {
-        fprintf(stderr, "[SEMANTIC ERROR - callNode] FUNCTION NOT DECLARED, line: %d \n", callNode->getLine());
+        fprintf(stderr, "[SEMANTIC ERROR - callNode] FUNCTION NOT DECLARED, line: %d, lexeme: %s \n", callNode->getLine(), callNode->getId()->getLexeme());
     }
 }
 
@@ -378,26 +400,25 @@ void Semantic::visit(PrimaryNode *primaryNode)
             primaryNode->setLValue(BOOL_TRUE);
             if (primaryNode->getExp()!=NULL && typeid(*primaryNode->getExp())==typeid(CallNode))
             {
-                CallNode *function_call = dynamic_cast<CallNode *>(primaryNode->getExp());
+                CallNode *functionCall = dynamic_cast<CallNode *>(primaryNode->getExp());
                 primaryNode->getExp()->accept(this);
                 primaryNode->setType(primaryNode->getExp()->getType());
                 primaryNode->setTypeLexeme(primaryNode->getExp()->getTypeLexeme());
             }
             else
             {
-                VarSymbol *var_symbol = varTable->cSearch(id->getLexeme());
+                VarSymbol *varSymbol = varTable->cSearch(id->getLexeme());
 
-                if (var_symbol!=NULL)
+                if (varSymbol!=NULL)
                 {
+                    id->setType(varSymbol->getType()->getId()->getToken());
+                    id->setTypeLexeme(varSymbol->getType()->getId()->getLexeme());
 
-                    id->setType(var_symbol->getType()->getId()->getToken());
-                    id->setTypeLexeme(var_symbol->getType()->getId()->getLexeme());
-
-                    if (var_symbol->getType()->getId()->getToken()!=INT && var_symbol->getType()->getId()->getToken()!=FLOAT
-                        && var_symbol->getType()->getId()->getToken()!=CHAR && var_symbol->getType()->getId()->getToken()!=LITERAL
-                        && var_symbol->getType()->getId()->getToken()!=BOOL)
+                    if (varSymbol->getType()->getId()->getToken()!=INT && varSymbol->getType()->getId()->getToken()!=FLOAT
+                        && varSymbol->getType()->getId()->getToken()!=CHAR && varSymbol->getType()->getId()->getToken()!=LITERAL
+                        && varSymbol->getType()->getId()->getToken()!=BOOL)
                     {
-                        fprintf(stderr, "[SEMANTIC ERROR - primaryNode] TYPE NOT DEFINED, line: %d \n", primaryNode->getLine());
+                        fprintf(stderr, "[SEMANTIC ERROR - primaryNode] TYPE NOT DEFINED, line: %d, lexeme: %s \n", primaryNode->getLine(), primaryNode->getLexeme());
                     }
                     else
                     {
@@ -407,7 +428,7 @@ void Semantic::visit(PrimaryNode *primaryNode)
                 }
                 else
                 {
-                    fprintf(stderr, "[SEMANTIC ERROR - primaryNode] VARIABLE NOT DECLARED, line: %d \n", primaryNode->getLine());
+                    fprintf(stderr, "[SEMANTIC ERROR - primaryNode] VARIABLE NOT DECLARED, line: %d, lexeme: %s \n", primaryNode->getLine(), primaryNode->getLexeme());
                 }
 
             }
@@ -418,7 +439,7 @@ void Semantic::visit(PrimaryNode *primaryNode)
         {
             if (primaryNode->getExp()!=NULL)
             {
-                fprintf(stderr, "[SEMANTIC ERROR - primaryNode] UNEXPECTED ACCESS IN NOT ID TYPE, line: %d \n", primaryNode->getLine());
+                fprintf(stderr, "[SEMANTIC ERROR - primaryNode] UNEXPECTED ACCESS IN NOT ID TYPE, line: %d, lexeme: %s \n", primaryNode->getLine(), primaryNode->getLexeme());
             }
             primaryNode->setType(primaryNode->getExp()->getType());
             primaryNode->setTypeLexeme(primaryNode->getExp()->getTypeLexeme());
@@ -446,11 +467,18 @@ void Semantic::visit(PrimaryNode *primaryNode)
 
 void Semantic::visit(FunctionNode *functionNode)
 {
-    const char *function_lex = functionNode->getId()!=NULL ? functionNode->getId()->getLexeme() : NULL;
-
-    if (!functionTable->cInsert(functionNode->getType(), function_lex, functionNode->getParameters(), functionNode->getPointer()!=NULL))
+    const char *functionLexeme;
+    if(functionNode->getId()!=NULL)
     {
-        fprintf(stderr, "[SEMANTIC ERROR - functionNode] FUNCTION ALREADY EXISTS, line: %d \n", functionNode->getLine());
+        functionLexeme = functionNode->getId()->getLexeme();
+    }else
+    {
+        functionLexeme = NULL;
+    }
+
+    if (!functionTable->cInsert(functionNode->getType(), functionLexeme, functionNode->getParameters(), functionNode->getPointer()!=NULL))
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - functionNode] FUNCTION ALREADY EXISTS, line: %d, lexeme: %s \n", functionNode->getLine(), functionNode->getId()->getLexeme());
     }
 
     if (functionNode->getBody()!=NULL)
@@ -465,13 +493,13 @@ void Semantic::visit(FunctionNode *functionNode)
         {
             if (!structTable->cSearch(functionNode->getType()->getLexeme()))
             {
-                fprintf(stderr, "[SEMANTIC ERROR - functionNode] RETURN TYPE NOT DEFINED, line: %d \n", functionNode->getLine());
+                fprintf(stderr, "[SEMANTIC ERROR - functionNode] RETURN TYPE NOT DEFINED, line: %d, lexeme: %s \n", functionNode->getLine(), functionNode->getId()->getLexeme());
             }
         }
     }
 
-    activeFunction = functionTable->cSearch(function_lex);
-    beginScope(function_lex);
+    activeFunction = functionTable->cSearch(functionLexeme);
+    beginScope(functionLexeme);
     if (functionNode->getId()!=NULL)
     {
         functionNode->getId()->accept(this);
@@ -484,36 +512,36 @@ void Semantic::visit(FunctionNode *functionNode)
     {
         functionNode->getLocal()->accept(this);
     }
-    VarDeclNode *var_stmt_aux = functionNode->getLocal();
-    while (var_stmt_aux!=NULL && var_stmt_aux->getNext()!=NULL)
+    VarDeclNode *varStmtAux = functionNode->getLocal();
+    while (varStmtAux!=NULL && varStmtAux->getNext()!=NULL)
     {
-        var_stmt_aux = var_stmt_aux->getNext();
+        varStmtAux = varStmtAux->getNext();
     }
-    if (var_stmt_aux!=NULL && var_stmt_aux->getIdList()!=NULL)
+    if (varStmtAux!=NULL && varStmtAux->getIdList()!=NULL)
     {
-        StmtListNode *stmt_list_aux = functionNode->getBody();
-        while (stmt_list_aux!=NULL && stmt_list_aux->getStmt()!=NULL)
+        StmtListNode *stmtListAux = functionNode->getBody();
+        while (stmtListAux!=NULL && stmtListAux->getStmt()!=NULL)
         {
-            if (typeid(*stmt_list_aux->getStmt())==typeid(ReturnNode))
+            if (typeid(*stmtListAux->getStmt())==typeid(ReturnNode))
             {
-                stmt_list_aux->getStmt()->accept(this);
-                ReturnNode *return_stmt = dynamic_cast<ReturnNode *>(stmt_list_aux->getStmt());
-                if (functionNode->getType()->getId()->getToken()!=return_stmt->getExp()->getType())
+                stmtListAux->getStmt()->accept(this);
+                ReturnNode *returnStmt = dynamic_cast<ReturnNode *>(stmtListAux->getStmt());
+                if (functionNode->getType()->getId()->getToken()!=returnStmt->getExp()->getType())
                 {
-                    fprintf(stderr, "[SEMANTIC ERROR - functionNode] INCOMPATIBLE RETURN TYPE, line: %d \n", functionNode->getLine());
+                    fprintf(stderr, "[SEMANTIC ERROR - functionNode] INCOMPATIBLE RETURN TYPE, line: %d, lexeme: %s \n", functionNode->getLine(), functionNode->getId()->getLexeme());
                 }
-                stmt_list_aux = stmt_list_aux->getNext();
+                stmtListAux = stmtListAux->getNext();
             }
             else
             {
-                if (stmt_list_aux->getNext()==NULL)
+                if (stmtListAux->getNext()==NULL)
                 {
-                    fprintf(stderr, "[SEMANTIC ERROR - functionNode] MISSING RETURN STATEMENT, line: %d \n", functionNode->getLine());
+                    fprintf(stderr, "[SEMANTIC ERROR - functionNode] MISSING RETURN STATEMENT, line: %d, lexeme: %s \n", functionNode->getLine(), functionNode->getId()->getLexeme());
                     break;
                 }
                 else
                 {
-                    stmt_list_aux = stmt_list_aux->getNext();
+                    stmtListAux = stmtListAux->getNext();
                 }
             }
         }
@@ -566,7 +594,7 @@ void Semantic::visit(ReadLnNode *read)
         read->getExp()->accept(this);
         if (!read->getExp()->isLValue())
         {
-            fprintf(stderr, "[SEMANTIC ERROR - read] LVALUE EXPECTED, line: %d \n", read->getExp()->getLine()); // TODO read->exp->line?
+            fprintf(stderr, "[SEMANTIC ERROR - read] LVALUE EXPECTED, line: %d, lexeme: %s \n", read->getExp()->getLine(), read->getExp()->getLexeme()); // TODO read->exp->line?
         }
     }
 }
@@ -586,7 +614,7 @@ void Semantic::visit(WhileNode *whileNode)
         whileNode->getHead()->accept(this);
         if (whileNode->getHead()->getType()!=BOOL)
         {
-            fprintf(stderr, "[SEMANTIC ERROR - whileNode] BOOLEAN EXPRESSION REQUIRED, line: %d \n", whileNode->getLine());
+            fprintf(stderr, "[SEMANTIC ERROR - whileNode] BOOLEAN EXPRESSION REQUIRED, line: %d, Conditionlexeme: %s \n", whileNode->getLine(), whileNode->getHead()->getLexeme());
         }
     }
     breakEnabled = BOOL_TRUE;
@@ -632,7 +660,7 @@ void Semantic::visit(IfNode *ifNode)
         ifNode->getHead()->accept(this);
         if (ifNode->getHead()->getType()!=BOOL)
         {
-            fprintf(stderr, "[SEMANTIC ERROR - ifNode] BOOLEAN EXPRESSION REQUIRED, line: %d \n", ifNode->getLine());
+            fprintf(stderr, "[SEMANTIC ERROR - ifNode] BOOLEAN EXPRESSION REQUIRED, line: %d, conditionLexeme: %s \n", ifNode->getLine(), ifNode->getHead()->getLexeme());
         }
     }
     if (ifNode->getTrueStmt()!=NULL)
@@ -652,7 +680,7 @@ void Semantic::visit(SwitchNode *switchNode)
         switchNode->getExp()->accept(this);
         if (switchNode->getExp()->getType()!=INT)
         {
-            fprintf(stderr, "[SEMANTIC ERROR - switchNode] INT VALUE REQUIRED, line: %d \n", switchNode->getLine());
+            fprintf(stderr, "[SEMANTIC ERROR - switchNode] INT VALUE REQUIRED, line: %d, lexeme: %s \n", switchNode->getLine(), switchNode->getExp()->getLexeme());
         }
     }
     if (switchNode->getBlock()!=NULL)
@@ -663,7 +691,7 @@ void Semantic::visit(SwitchNode *switchNode)
     }
     else
     {
-        fprintf(stderr, "[SEMANTIC ERROR - switchNode] CASE STATEMENT REQUIRED, line: %d \n", switchNode->getLine());
+        fprintf(stderr, "[SEMANTIC ERROR - switchNode] CASE STATEMENT REQUIRED, line: %d, lexeme: %s \n", switchNode->getLine(), switchNode->getExp()->getLexeme());
     }
 }
 
@@ -681,7 +709,7 @@ void Semantic::visit(AdditionOPNode *additionOPNode)
     if ((additionOPNode->getExp1()->getType()!=INT && additionOPNode->getExp1()->getType()!=FLOAT) &&
         (additionOPNode->getExp2()->getType()==INT || additionOPNode->getExp2()->getType()==FLOAT))
     {
-        fprintf(stderr, "[SEMANTIC ERROR - additionOPNode] ARITHMETIC OP TYPE, line: %d \n", additionOPNode->getLine());
+        fprintf(stderr, "[SEMANTIC ERROR - additionOPNode] ARITHMETIC OP TYPE, line: %d, lexeme: %s \n", additionOPNode->getLine(), additionOPNode->getLexeme());
     }
     else
     {
@@ -716,14 +744,13 @@ void Semantic::visit(AssignNode *assignNode)
     {
         assignNode->getExp2()->accept(this);
     }
-
     if (!assignNode->getExp1()->isLValue())
     {
-        fprintf(stderr, "[SEMANTIC ERROR - assignNode] LVALUE EXPECTED: %d \n", assignNode->getLine());
+        fprintf(stderr, "[SEMANTIC ERROR - assignNode] LVALUE EXPECTED, line: %d, lexeme Exp1: %s, lexeme Exp2: %s \n", assignNode->getLine(), assignNode->getExp1()->getLexeme(), assignNode->getExp2()->getLexeme());
     }
     if (assignNode->getExp1()->getType()!=assignNode->getExp2()->getType())
     {
-        fprintf(stderr, "[SEMANTIC ERROR - assignNode] CANNOT ASSIGN TO DIFFERENT TYPE, line: %d \n", assignNode->getLine());
+        fprintf(stderr, "[SEMANTIC ERROR - assignNode] CANNOT ASSIGN TO DIFFERENT TYPE, line: %d, lexeme Exp1: %s, lexeme Exp2: %s \n", assignNode->getLine(), assignNode->getExp1()->getLexeme(), assignNode->getExp2()->getLexeme());
     }
 }
 
@@ -737,10 +764,9 @@ void Semantic::visit(BooleanOPNode *booleanOPNode)
     {
         booleanOPNode->getExp2()->accept(this);
     }
-
     if (booleanOPNode->getExp1()->getType()!=BOOL || booleanOPNode->getExp2()->getType()!=BOOL)
     {
-        fprintf(stderr, "[SEMANTIC ERROR - booleanOPNode] LOGICAL OP TYPE, line: %d \n", booleanOPNode->getLine());
+        fprintf(stderr, "[SEMANTIC ERROR - booleanOPNode] LOGICAL OP TYPE, line: %d, OPLexeme: %s \n", booleanOPNode->getLine(), token_id_to_name(booleanOPNode->getOp()->getToken()));
     }
     booleanOPNode->setType(BOOL);
     booleanOPNode->setTypeLexeme(token_id_to_name(BOOL));
@@ -754,12 +780,12 @@ void Semantic::visit(NameExpNode *nameExpNode)
         nameExpNode->getExp()->accept(this);
         if (nameExpNode->getExp()->getArraySize())
         {
-            fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] UNEXPECTED ARRAY, line: %d \n", nameExpNode->getLine());
+            fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] UNEXPECTED ARRAY, line: %d, lexeme: %s \n", nameExpNode->getLine(), nameExpNode->getId()->getLexeme());
         }
 
         if (nameExpNode->getExp()->isPointer())
         {
-            fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] UNEXPECTED POINTER, line: %d \n", nameExpNode->getExp()->getLine());// nameExpNode->exp->line
+            fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] UNEXPECTED POINTER, line: %d, lexeme: %s \n", nameExpNode->getExp()->getLine(), nameExpNode->getExp()->getLexeme());// nameExpNode->exp->line
         }
 
         if (nameExpNode->getExp()->getTypeLexeme())
@@ -801,17 +827,17 @@ void Semantic::visit(NameExpNode *nameExpNode)
                 }
                 else
                 {
-                    fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] INVALID FIELD, line: %d \n", nameExpNode->getExp()->getLine());//nameExpNode->exp->line
+                    fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] INVALID FIELD, line: %d, TypeLexeme: %s \n", nameExpNode->getExp()->getLine(), token_id_to_name(nameExpNode->getExp()->getType()));//nameExpNode->exp->line
                 }
             }
             else
             {
-                fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] UNKOWN TYPE, line: %d \n", nameExpNode->getExp()->getLine());//nameExpNode->exp->line
+                fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] UNKOWN TYPE, line: %d, TypeLexeme: %s \n", nameExpNode->getExp()->getLine(), token_id_to_name(nameExpNode->getExp()->getType()));//nameExpNode->exp->line
             }
         }
         else
         {
-            fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] STRUCT EXPECTED, line: %d \n", nameExpNode->getExp()->getLine());//nameExpNode->exp->line
+            fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] STRUCT EXPECTED, line: %d, TypeLexeme: %s \n", nameExpNode->getExp()->getLine(), token_id_to_name(nameExpNode->getExp()->getType()));//nameExpNode->exp->line
         }
     }
 }
@@ -824,7 +850,7 @@ void Semantic::visit(NotNode *notNode)
     }
     if (notNode->getExp()->getType()!=BOOL)
     {
-        fprintf(stderr, "[SEMANTIC ERROR - notNode] LOGICAL OP TYPE, line: %d \n", notNode->getLine());
+        fprintf(stderr, "[SEMANTIC ERROR - notNode] LOGICAL OP TYPE, line: %d, lexeme: %s \n", notNode->getLine(), notNode->getLexeme());
     }
     notNode->setType(BOOL);
     notNode->setTypeLexeme(token_id_to_name(BOOL));
@@ -861,7 +887,7 @@ void Semantic::visit(MultiplicationOPNode *multiplicationOPNode)
     if ((multiplicationOPNode->getExp1()->getType()!=INT && multiplicationOPNode->getExp1()->getType()!=FLOAT) &&
         (multiplicationOPNode->getExp2()->getType()==INT || multiplicationOPNode->getExp2()->getType()==FLOAT))
     {
-        fprintf(stderr, "[SEMANTIC ERROR - multiplicationOPNode] ARITHMETIC OP TYPE, line: %d \n", multiplicationOPNode->getLine());
+        fprintf(stderr, "[SEMANTIC ERROR - multiplicationOPNode] ARITHMETIC OP TYPE, line: %d, Exp1Lexeme: %s \n", multiplicationOPNode->getLine(), multiplicationOPNode->getExp1()->getLexeme());
     }
     else
     {
@@ -912,7 +938,6 @@ void Semantic::visit(FunctionListNode *functionListNode)
     {
         functionListNode->getFunction()->accept(this);
     }
-
 }
 
 void Semantic::visit(PointerExpNode *pointerExpNode)
@@ -960,23 +985,23 @@ void Semantic::visit(PointerExpNode *pointerExpNode)
                 }
                 else
                 {
-                    fprintf(stderr, "[SEMANTIC ERROR - pointerExpNode] INVALID FIELD, line: %d \n", pointerExpNode->getExp()->getLine());//pointerExpNode->exp->line
+                    fprintf(stderr, "[SEMANTIC ERROR - pointerExpNode] INVALID FIELD, line: %d, lexeme: %s \n", pointerExpNode->getExp()->getLine(), pointerExpNode->getExp()->getLexeme());//pointerExpNode->exp->line
                 }
             }
             else
             {
-                fprintf(stderr, "[SEMANTIC ERROR - pointerExpNode] UNKOWN TYPE, line: %d \n", pointerExpNode->getExp()->getLine());//pointerExpNode->exp->line
+                fprintf(stderr, "[SEMANTIC ERROR - pointerExpNode] UNKOWN TYPE, line: %d, lexeme: %s \n", pointerExpNode->getExp()->getLine(), pointerExpNode->getExp()->getLexeme());//pointerExpNode->exp->line
             }
         }
         else
         {
             if (pointerExpNode->getExp()->isPointer())
             {
-                fprintf(stderr, "[SEMANTIC ERROR - pointerExpNode] POINTER EXPECTED, line: %d \n", pointerExpNode->getExp()->getLine());//pointerExpNode->exp->line
+                fprintf(stderr, "[SEMANTIC ERROR - pointerExpNode] POINTER EXPECTED, line: %d, lexeme: %s \n", pointerExpNode->getExp()->getLine(), pointerExpNode->getExp()->getLexeme());//pointerExpNode->exp->line
             }
             if (pointerExpNode->getExp()->getTypeLexeme())
             {
-                fprintf(stderr, "[SEMANTIC ERROR - pointerExpNode] STRUCT EXPECTED, line: %d \n", pointerExpNode->getExp()->getLine());//pointerExpNode->exp->line
+                fprintf(stderr, "[SEMANTIC ERROR - pointerExpNode] STRUCT EXPECTED, line: %d, lexeme: %s \n", pointerExpNode->getExp()->getLine(), pointerExpNode->getExp()->getLexeme());//pointerExpNode->exp->line
             }
         }
 
@@ -987,7 +1012,7 @@ void Semantic::visit(CaseBlockNode *caseBlockNode)
 {
     if (caseBlockNode->getNum() && caseBlockNode->getNum()->getToken()!=NUMINT)
     {
-        fprintf(stderr, "[SEMANTIC ERROR - caseBlockNode] CASE WITH NON-INTEGER VALUE, line: %d \n", caseBlockNode->getNum()->getLine());//caseBlockNode->num->line
+        fprintf(stderr, "[SEMANTIC ERROR - caseBlockNode] CASE WITH NON-INTEGER VALUE, line: %d , lexeme: %s \n", caseBlockNode->getNum()->getLine(), caseBlockNode->getNum()->getLexeme());//caseBlockNode->num->line
     }
     if (caseBlockNode->getStmt())
     {
