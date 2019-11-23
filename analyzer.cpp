@@ -45,6 +45,10 @@ IdsTable get_identifiers_table()
     return identifiersTable;
 }
 
+int lexical_analyzer_getLine()
+{
+    return currentLine;
+}
 
 /**
  * Set the currentInput to the next char in input stream,

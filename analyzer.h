@@ -31,4 +31,5 @@ void lexical_analyzer_dispose();
 
 char const* token_id_to_name(int id);
 
+int lexical_analyzer_getLine();
 #endif //COMPILADOR_2019_3_ANALYZER_H

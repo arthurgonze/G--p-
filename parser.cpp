@@ -113,14 +113,20 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
             IdListNode *idList = IdList();
 
             EatOrSkip(SEMICOLON, programFollowSet);
+
             VarDeclNode *varListNode = new VarDeclNode(type, idList, VarDecl());
+            varListNode->setLine(lexical_analyzer_getLine());
 
             EatOrSkip(RBRACE, programFollowSet);
 
             TokenNode *id = new TokenNode(ID, EatOrSkip(ID, programFollowSet));
+            id->setLine(lexical_analyzer_getLine());
 
             EatOrSkip(SEMICOLON, programFollowSet);
+
             typeList = new TypeDeclNode(varListNode, id, typeList);
+            typeList->setLine(lexical_analyzer_getLine());
+
             typeList = TypeDecl(typeList);
             return Program(functionList, typeList, varList);
         }
@@ -134,12 +140,16 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
             PointerNode *pointer = Pointer();
 
             TokenNode *id = new TokenNode(ID, EatOrSkip(ID, programFollowSet));
+            id->setLine(lexical_analyzer_getLine());
 
             ASTNode *ast = ProgramAUX(type, pointer, id, varList);
             if (dynamic_cast<FunctionNode *>(ast))
             {
                 FunctionNode *f = (FunctionNode *) ast;
+
                 functionList = new FunctionListNode(f, functionList);
+                functionList->setLine(lexical_analyzer_getLine());
+
                 return ProgramList(functionList, typeList, varList);
             }
             varList = (VarDeclNode *) ast;
@@ -148,7 +158,11 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
         case ENDOFFILE:
         {
             Eat(ENDOFFILE);
-            return new ProgramNode(functionList, typeList, varList);
+
+            ProgramNode *programNode = new ProgramNode(functionList, typeList, varList);
+            programNode->setLine(lexical_analyzer_getLine());
+
+            return programNode;
         }
         default:
         {
@@ -156,7 +170,10 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
             return Program(functionList, typeList, varList);
         }
     }
-    return new ProgramNode(functionList, typeList, varList);
+    ProgramNode *programNode = new ProgramNode(functionList, typeList, varList);
+    programNode->setLine(lexical_analyzer_getLine());
+
+    return programNode;
 }
 
 int Parser::programAUXFollowSet[] = {ENDOFFILE, '\0'};
@@ -174,7 +191,9 @@ ASTNode *Parser::ProgramAUX(TypeNode *type, PointerNode *pointer, TokenNode *id,
             EatOrSkip(LBRACE, programAUXFollowSet);
 
             VarStmtNode *varStmtNode = VarStmt(nullptr);
+
             FunctionNode *func = new FunctionNode(type, pointer, id, parameters, varStmtNode->getDecl(), varStmtNode->getBody());
+            func->setLine(lexical_analyzer_getLine());
 
             EatOrSkip(RBRACE, programAUXFollowSet);
             return func;
@@ -184,11 +203,15 @@ ASTNode *Parser::ProgramAUX(TypeNode *type, PointerNode *pointer, TokenNode *id,
         case SEMICOLON: // PARA O CASO int a; no main
         {
             ArrayNode *array = Array();
+
             IdListNode *idList = new IdListNode(pointer, id, array, IdListAUX());
+            idList->setLine(lexical_analyzer_getLine());
 
             EatOrSkip(SEMICOLON, programAUXFollowSet);
 
             VarDeclNode *list = new VarDeclNode(type, idList, varFunc);
+            list->setLine(lexical_analyzer_getLine());
+
             return list;
         }
         default:
@@ -207,7 +230,11 @@ ProgramNode *Parser::ProgramList(FunctionListNode *functions, TypeDeclNode *type
         case ENDOFFILE:
         {
             Eat(ENDOFFILE);
-            return new ProgramNode(functions, typelist, varlist);
+
+            ProgramNode *programNode = new ProgramNode(functions, typelist, varlist);
+            programNode->setLine(lexical_analyzer_getLine());
+
+            return programNode;
         }
         default:
         {
@@ -233,13 +260,20 @@ TypeDeclNode *Parser::TypeDecl(TypeDeclNode *typeListNode)
             IdListNode *idListNode = IdList();
 
             EatOrSkip(SEMICOLON, typeDeclFollowSet);
+
             VarDeclNode *varListNode = new VarDeclNode(typeNode, idListNode, VarDecl());
+            varListNode->setLine(lexical_analyzer_getLine());
+
             EatOrSkip(RBRACE, typeDeclFollowSet);
 
             TokenNode *id = new TokenNode(ID, EatOrSkip(ID, typeDeclFollowSet));
+            id->setLine(lexical_analyzer_getLine());
 
             EatOrSkip(SEMICOLON, typeDeclFollowSet);
+
             typeListNode = new TypeDeclNode(varListNode, id, typeListNode);
+            typeListNode->setLine(lexical_analyzer_getLine());
+
             return TypeDecl(typeListNode);
         }
         default:
@@ -265,7 +299,10 @@ VarDeclNode *Parser::VarDecl()
             TypeNode *type = Type();
             IdListNode *idListNode = IdList();
             EatOrSkip(SEMICOLON, varDeclFollowSet);
+
             VarDeclNode *varList = new VarDeclNode(type, idListNode, VarDecl());
+            varList->setLine(lexical_analyzer_getLine());
+
             return varList;
         }
         default:
@@ -285,6 +322,8 @@ VarStmtNode *Parser::VarStmt(VarDeclNode *varList)
         case ID:
         {
             TokenNode *id = new TokenNode(ID,  EatOrSkip(ID, varStmtFollowSet));
+            id->setLine(lexical_analyzer_getLine());
+
             return VarStmtAux(id, varList);
         }
         case INT:
@@ -295,7 +334,10 @@ VarStmtNode *Parser::VarStmt(VarDeclNode *varList)
             TypeNode *type = TypeAux();
             IdListNode *idList = IdList();
             EatOrSkip(SEMICOLON, varStmtFollowSet);
+
             varList = new VarDeclNode(type, idList, varList);
+            varList->setLine(lexical_analyzer_getLine());
+
             return VarStmt(varList);
         }
 
@@ -321,12 +363,19 @@ VarStmtNode *Parser::VarStmt(VarDeclNode *varList)
         case TRUE:
         case FALSE:
         {
-            return new VarStmtNode(varList, StmtList());
+            VarStmtNode *varStmtNode = new VarStmtNode(varList, StmtList());
+            varStmtNode->setLine(lexical_analyzer_getLine());
+
+            return varStmtNode;
         }
         default:
         {
             fprintf(stderr, "[SYNTAX ERROR] error(VarStmt), Token error: %s \n", token_id_to_name(tok));
-            return new VarStmtNode(varList, nullptr);
+
+            VarStmtNode *varStmtNode = new VarStmtNode(varList, nullptr);
+            varStmtNode->setLine(lexical_analyzer_getLine());
+
+            return varStmtNode;
         }
     }
 }
@@ -342,7 +391,13 @@ VarStmtNode *Parser::VarStmtAux(TokenNode *id, VarDeclNode *varList)
         {
             IdListNode *idListNode = IdList();
             EatOrSkip(SEMICOLON, varStmtAuxFollowSet);
-            varList = new VarDeclNode(new TypeNode(id), idListNode, varList);
+
+            TypeNode *typeNode = new TypeNode(id);
+            typeNode->setLine(lexical_analyzer_getLine());
+
+            varList = new VarDeclNode(typeNode, idListNode, varList);
+            varList->setLine(lexical_analyzer_getLine());
+
             return VarStmt(varList);
         }
         case LPARENT:
@@ -380,8 +435,16 @@ VarStmtNode *Parser::VarStmtAux(TokenNode *id, VarDeclNode *varList)
             exp = ExprAssignAUX(exp);
 
             EatOrSkip(SEMICOLON, varStmtAuxFollowSet);
-            StmtListNode *stmtList = new StmtListNode(new StmtNode(exp), StmtListAUX());
+
+            StmtNode *stmtNode = new StmtNode(exp);
+            stmtNode->setLine(lexical_analyzer_getLine());
+
+            StmtListNode *stmtList = new StmtListNode(stmtNode, StmtListAUX());
+            stmtList->setLine(lexical_analyzer_getLine());
+
             VarStmtNode *varStmtNode = new VarStmtNode(varList, stmtList);
+            varStmtNode->setLine(lexical_analyzer_getLine());
+
             return varStmtNode;
         }
         default:
@@ -389,7 +452,10 @@ VarStmtNode *Parser::VarStmtAux(TokenNode *id, VarDeclNode *varList)
             Sync(tok, varStmtAuxFollowSet);
         }
     }
-    return new VarStmtNode(varList, nullptr);
+    VarStmtNode *varStmtNode = new VarStmtNode(varList, nullptr);
+    varStmtNode->setLine(lexical_analyzer_getLine());
+
+    return varStmtNode;
 }
 
 int Parser::idListFollowSet[] = {SEMICOLON, RPARENT, ENDOFFILE, '\0'};
@@ -402,8 +468,13 @@ IdListNode *Parser::IdList()
         case ID:
         {
             TokenNode *id = new TokenNode(ID, EatOrSkip(ID, idListFollowSet));
+            id->setLine(lexical_analyzer_getLine());
+
             ArrayNode *array = Array();
+
             IdListNode *idListNode = new IdListNode(pointer, id, array, IdListAUX());
+            idListNode->setLine(lexical_analyzer_getLine());
+
             return idListNode;
         }
         default:
@@ -425,9 +496,13 @@ IdListNode *Parser::IdListAUX()
             PointerNode *pointer = Pointer();
 
             TokenNode *id = new TokenNode(ID, EatOrSkip(ID, idListAUXFollowSet));
+            id->setLine(lexical_analyzer_getLine());
 
             ArrayNode *array = Array();
+
             IdListNode *idListNode = new IdListNode(pointer, id, array, IdListAUX());
+            idListNode->setLine(lexical_analyzer_getLine());
+
             return idListNode;
         }
         default:
@@ -446,7 +521,11 @@ PointerNode *Parser::Pointer()
         case STAR:
         {
             Eat(STAR);
-            return new PointerNode();
+
+            PointerNode *pointerNode = new PointerNode();
+            pointerNode->setLine(lexical_analyzer_getLine());
+
+            return pointerNode;
         }
         default:
         {
@@ -466,9 +545,14 @@ ArrayNode *Parser::Array()
             Eat(LBRACKET);
 
             TokenNode *numInt = new TokenNode(NUMINT, EatOrSkip(NUMINT, arrayFollowSet));
+            numInt->setLine(lexical_analyzer_getLine());
 
             EatOrSkip(RBRACKET, arrayFollowSet);
-            return new ArrayNode(numInt);
+
+            ArrayNode *arrayNode = new ArrayNode(numInt);
+            arrayNode->setLine(lexical_analyzer_getLine());
+
+            return arrayNode;
         }
         default:
         {
@@ -494,9 +578,13 @@ FormalListNode *Parser::FormalList()
             PointerNode *pointer = Pointer();
 
             TokenNode *id = new TokenNode(ID, EatOrSkip(ID, formalListFollowSet));
+            id->setLine(lexical_analyzer_getLine());
 
             ArrayNode *array = Array();
+
             FormalListNode *list = new FormalListNode(type, pointer, id, array, FormalRest());
+            list->setLine(lexical_analyzer_getLine());
+
             return list;
         }
         default:
@@ -519,9 +607,13 @@ FormalListNode *Parser::FormalRest()
             PointerNode *pointer = Pointer();
 
             TokenNode *id = new TokenNode(ID, EatOrSkip(ID, formalRestFollowSet));
+            id->setLine(lexical_analyzer_getLine());
 
             ArrayNode *array = Array();
+
             FormalListNode *formalList = new FormalListNode(typeNode, pointer, id, array, FormalRest());
+            formalList->setLine(lexical_analyzer_getLine());
+
             return formalList;
         }
         default:
@@ -540,32 +632,62 @@ TypeNode *Parser::Type()
         case INT:
         {
             TokenNode *type = new TokenNode(INT, nullptr);
+            type->setLine(lexical_analyzer_getLine());
+
             Eat(INT);
-            return new TypeNode(type);
+
+            TypeNode *typeNode = new TypeNode(type);
+            typeNode->setLine(lexical_analyzer_getLine());
+
+            return typeNode;
         }
         case FLOAT:
         {
             TokenNode *type = new TokenNode(FLOAT, nullptr);
+            type->setLine(lexical_analyzer_getLine());
+
             Eat(FLOAT);
-            return new TypeNode(type);
+
+            TypeNode *typeNode = new TypeNode(type);
+            typeNode->setLine(lexical_analyzer_getLine());
+
+            return typeNode;
         }
         case BOOL:
         {
             TokenNode *type = new TokenNode(BOOL, nullptr);
+            type->setLine(lexical_analyzer_getLine());
+
             Eat(BOOL);
-            return new TypeNode(type);
+
+            TypeNode *typeNode = new TypeNode(type);
+            typeNode->setLine(lexical_analyzer_getLine());
+
+            return typeNode;
         }
         case ID:
         {
             TokenNode *type = new TokenNode(ID, lexical_analyzer_last_lexeme());
+            type->setLine(lexical_analyzer_getLine());
+
             Eat(ID);
-            return new TypeNode(type);
+
+            TypeNode *typeNode = new TypeNode(type);
+            typeNode->setLine(lexical_analyzer_getLine());
+
+            return typeNode;
         }
         case CHAR:
         {
             TokenNode *type = new TokenNode(CHAR, nullptr);
+            type->setLine(lexical_analyzer_getLine());
+
             Eat(CHAR);
-            return new TypeNode(type);
+
+            TypeNode *typeNode = new TypeNode(type);
+            typeNode->setLine(lexical_analyzer_getLine());
+
+            return typeNode;
         }
         default:
         {
@@ -584,26 +706,50 @@ TypeNode *Parser::TypeAux()
         case INT:
         {
             TokenNode *type = new TokenNode(INT, nullptr);
+            type->setLine(lexical_analyzer_getLine());
+
             Eat(INT);
-            return new TypeNode(type);
+
+            TypeNode *typeNode = new TypeNode(type);
+            typeNode->setLine(lexical_analyzer_getLine());
+
+            return typeNode;
         }
         case FLOAT:
         {
             TokenNode *type = new TokenNode(FLOAT, nullptr);
+            type->setLine(lexical_analyzer_getLine());
+
             Eat(FLOAT);
-            return new TypeNode(type);
+
+            TypeNode *typeNode = new TypeNode(type);
+            typeNode->setLine(lexical_analyzer_getLine());
+
+            return typeNode;
         }
         case BOOL:
         {
             TokenNode *type = new TokenNode(BOOL, nullptr);
+            type->setLine(lexical_analyzer_getLine());
+
             Eat(BOOL);
-            return new TypeNode(type);
+
+            TypeNode *typeNode = new TypeNode(type);
+            typeNode->setLine(lexical_analyzer_getLine());
+
+            return typeNode;
         }
         case CHAR:
         {
             TokenNode *type = new TokenNode(CHAR, nullptr);
+            type->setLine(lexical_analyzer_getLine());
+
             Eat(CHAR);
-            return new TypeNode(type);
+
+            TypeNode *typeNode = new TypeNode(type);
+            typeNode->setLine(lexical_analyzer_getLine());
+
+            return typeNode;
         }
         default:
         {
@@ -644,6 +790,8 @@ StmtListNode *Parser::StmtList()
         case LPARENT:
         {
             StmtListNode *stmtListNode = new StmtListNode(Stmt(), StmtListAUX());
+            stmtListNode->setLine(lexical_analyzer_getLine());
+
             return stmtListNode;
         }
         default:
@@ -710,8 +858,14 @@ StmtNode *Parser::Stmt()
 
             StmtNode *ifStmt = Stmt();
             StmtNode *elseStmt = ElseStmt();
+
             IfNode *stmt = new IfNode(exp, ifStmt, elseStmt);
-            return new StmtNode(stmt);
+            stmt->setLine(lexical_analyzer_getLine());
+
+            StmtNode *stmtNode = new StmtNode(stmt);
+            stmtNode->setLine(lexical_analyzer_getLine());
+
+            return stmtNode;
         }
 
         case LITERALCHAR:
@@ -764,7 +918,12 @@ StmtNode *Parser::StmtAUX()
             EatOrSkip(RPARENT, stmtAUXFollowSet);
 
             WhileNode *aux = new WhileNode(exp, Stmt());
-            return new StmtNode(aux);
+            aux->setLine(lexical_analyzer_getLine());
+
+            StmtNode *stmtNode = new StmtNode(aux);
+            stmtNode->setLine(lexical_analyzer_getLine());
+
+            return stmtNode;
         }
         case SWITCH:
         {
@@ -779,14 +938,26 @@ StmtNode *Parser::StmtAUX()
             EatOrSkip(RBRACE, stmtAUXFollowSet) ;
 
             SwitchNode *aux = new SwitchNode(exp, cbNode);
-            return new StmtNode(aux);
+            aux->setLine(lexical_analyzer_getLine());
+
+            StmtNode *stmtNode = new StmtNode(aux);
+            stmtNode->setLine(lexical_analyzer_getLine());
+
+            return stmtNode;
         }
         case BREAK:
         {
             Eat(BREAK);
+
             BreakNode *breakNode = new BreakNode();
+            breakNode->setLine(lexical_analyzer_getLine());
+
             EatOrSkip(SEMICOLON, stmtAUXFollowSet);
-            return new StmtNode(breakNode);
+
+            StmtNode *stmtNode = new StmtNode(breakNode);
+            stmtNode->setLine(lexical_analyzer_getLine());
+
+            return stmtNode;
         }
         case PRINT:
         {
@@ -797,8 +968,14 @@ StmtNode *Parser::StmtAUX()
             EatOrSkip(RPARENT, stmtAUXFollowSet);
 
             EatOrSkip(SEMICOLON, stmtAUXFollowSet);
+
             PrintNode *print = new PrintNode(expList);
-            return new StmtNode(print);
+            print->setLine(lexical_analyzer_getLine());
+
+            StmtNode *stmtNode = new StmtNode(print);
+            stmtNode->setLine(lexical_analyzer_getLine());
+
+            return stmtNode;
         }
         case READLN:
         {
@@ -809,27 +986,52 @@ StmtNode *Parser::StmtAUX()
             EatOrSkip(RPARENT, stmtAUXFollowSet);
 
             EatOrSkip(SEMICOLON, stmtAUXFollowSet);
-            return new StmtNode(new ReadLnNode(exp));
+
+            ReadLnNode *readLnNode = new ReadLnNode(exp);
+            readLnNode->setLine(lexical_analyzer_getLine());
+
+            StmtNode *stmtNode = new StmtNode(readLnNode);
+            stmtNode->setLine(lexical_analyzer_getLine());
+
+            return stmtNode;
         }
         case RETURN:
         {
             Eat(RETURN);
             ExpNode *exp = ExprAssign();
             EatOrSkip(SEMICOLON, stmtAUXFollowSet);
-            return new StmtNode(new ReturnNode(exp));
+
+            ReturnNode *returnNode = new ReturnNode(exp);
+            returnNode->setLine(lexical_analyzer_getLine());
+
+            StmtNode *stmtNode = new StmtNode(returnNode);
+            stmtNode->setLine(lexical_analyzer_getLine());
+
+            return stmtNode;
         }
         case THROW:
         {
             Eat(THROW);
             EatOrSkip(SEMICOLON, stmtAUXFollowSet);
-            return new StmtNode(new ThrowNode);
+
+            ThrowNode *throwNode = new ThrowNode;
+            throwNode->setLine(lexical_analyzer_getLine());
+
+            StmtNode *stmtNode = new StmtNode(throwNode);
+            stmtNode->setLine(lexical_analyzer_getLine());
+
+            return stmtNode;
         }
         case LBRACE:
         {
             Eat(LBRACE);
             StmtListNode *stmtList = StmtList();
             EatOrSkip(RBRACE, stmtAUXFollowSet);
-            return new StmtNode(stmtList);
+
+            StmtNode *stmtNode = new StmtNode(stmtList);
+            stmtNode->setLine(lexical_analyzer_getLine());
+
+            return stmtNode;
         }
         case TRY:
         {
@@ -844,7 +1046,14 @@ StmtNode *Parser::StmtAUX()
 
             EatOrSkip(RPARENT, stmtAUXFollowSet);
             StmtNode *exception = Stmt();
-            return new StmtNode(new TryNode(tryStmt, exception));
+
+            TryNode *tryNode = new TryNode(tryStmt, exception);
+            tryNode->setLine(lexical_analyzer_getLine());
+
+            StmtNode *stmtNode = new StmtNode(tryNode);
+            stmtNode->setLine(lexical_analyzer_getLine());
+
+            return stmtNode;
         }
         case NOT:
         case PLUS:
@@ -862,7 +1071,11 @@ StmtNode *Parser::StmtAUX()
         {
             ExpNode *exp = ExprAssign();
             EatOrSkip(SEMICOLON, stmtAUXFollowSet);
-            return new StmtNode(exp);
+
+            StmtNode *stmtNode = new StmtNode(exp);
+            stmtNode->setLine(lexical_analyzer_getLine());
+
+            return stmtNode;
         }
         default:
         {
@@ -901,6 +1114,8 @@ CaseBlockNode *Parser::CaseBlock()
             Eat(CASE);
 
             TokenNode *token = new TokenNode(NUMINT, EatOrSkip(NUMINT, caseBlockFollowSet));
+            token->setLine(lexical_analyzer_getLine());
+
             EatOrSkip(COLON, caseBlockFollowSet);
             return CaseBlockAUX(token);
         }
@@ -924,7 +1139,10 @@ CaseBlockNode *Parser::CaseBlockAUX(TokenNode *num)
     {
         case CASE:
         {
-            return new CaseBlockNode(num, nullptr, CaseBlock());
+            CaseBlockNode *caseBlockNode = new CaseBlockNode(num, nullptr, CaseBlock());
+            caseBlockNode->setLine(lexical_analyzer_getLine());
+
+            return caseBlockNode;
         }
 
         case IF:
@@ -951,7 +1169,10 @@ CaseBlockNode *Parser::CaseBlockAUX(TokenNode *num)
         case FALSE:
         case LPARENT:
         {
-            return new CaseBlockNode(num, StmtList(), CaseBlock());
+            CaseBlockNode *caseBlockNode = new CaseBlockNode(num, StmtList(), CaseBlock());
+            caseBlockNode->setLine(lexical_analyzer_getLine());
+
+            return caseBlockNode;
         }
         default:
         {
@@ -1010,7 +1231,10 @@ ExpListNode *Parser::ExprListTail()
         case FALSE:
         case LPARENT:
         {
-            return new ExpListNode(ExprAssign(), ExprListTailAUX());
+            ExpListNode *expListNode = new ExpListNode(ExprAssign(), ExprListTailAUX());
+            expListNode->setLine(lexical_analyzer_getLine());
+
+            return expListNode;
         }
         default:
         {
@@ -1080,7 +1304,10 @@ ExpNode *Parser::ExprAssignAUX(ExpNode *expr)
         {
             Eat(ASSIGN);
             exp2 = ExprAssign();
+
             node = new AssignNode(expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
     }
@@ -1129,9 +1356,15 @@ ExpNode *Parser::ExprOrAUX(ExpNode *expr)
         case OR:
         {
             Eat(OR);
+
             token = new TokenNode(OR, nullptr);
+            token->setLine(lexical_analyzer_getLine());
+
             exp2 = ExprOr();
+
             node = new BooleanOPNode(token, expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
     }
@@ -1183,9 +1416,15 @@ ExpNode *Parser::ExprAndAUX(ExpNode *expr)
         case AND:
         {
             Eat(AND);
+
             token = new TokenNode(AND, nullptr);
+            token->setLine(lexical_analyzer_getLine());
+
             exp2 = ExprAnd();
+
             node = new BooleanOPNode(token, expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
     }
@@ -1236,17 +1475,29 @@ ExpNode *Parser::ExprEqualityAUX(ExpNode *expr)
         case EQ:
         {
             Eat(EQ);
+
             token = new TokenNode(EQ, nullptr);
+            token->setLine(lexical_analyzer_getLine());
+
             exp2 = ExprEquality();
+
             node = new BooleanOPNode(token, expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
         case NE:
         {
             Eat(NE);
+
             token = new TokenNode(NE, nullptr);
+            token->setLine(lexical_analyzer_getLine());
+
             exp2 = ExprEquality();
+
             node = new BooleanOPNode(token, expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
     }
@@ -1297,33 +1548,57 @@ ExpNode *Parser::ExprRelationalAUX(ExpNode *expr)
         case LT:
         {
             Eat(LT);
+
             token = new TokenNode(LT, nullptr);
+            token->setLine(lexical_analyzer_getLine());
+
             exp2 = ExprRelational();
+
             node = new BooleanOPNode(token, expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
         case GT:
         {
             Eat(GT);
+
             token = new TokenNode(GT, nullptr);
+            token->setLine(lexical_analyzer_getLine());
+
             exp2 = ExprRelational();
+
             node = new BooleanOPNode(token, expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
         case LE:
         {
             Eat(LE);
+
             token = new TokenNode(LE, nullptr);
+            token->setLine(lexical_analyzer_getLine());
+
             exp2 = ExprRelational();
+
             node = new BooleanOPNode(token, expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
         case GE:
         {
             Eat(GE);
+
             token = new TokenNode(GE, nullptr);
+            token->setLine(lexical_analyzer_getLine());
+
             exp2 = ExprRelational();
+
             node = new BooleanOPNode(token, expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
     }
@@ -1374,25 +1649,43 @@ ExpNode *Parser::ExprAdditiveAUX(ExpNode *expr)
         case PIPE:
         {
             Eat(PIPE);
+
             token = new TokenNode(PIPE, nullptr);
+            token->setLine(lexical_analyzer_getLine());
+
             exp2 = ExprAdditive();
+
             node = new AdditionOPNode(token, expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
         case PLUS:
         {
             Eat(PLUS);
+
             token = new TokenNode(PLUS, nullptr);
+            token->setLine(lexical_analyzer_getLine());
+
             exp2 = ExprAdditive();
+
             node = new AdditionOPNode(token, expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
         case MINUS:
         {
             Eat(MINUS);
+
             token = new TokenNode(MINUS, nullptr);
+            token->setLine(lexical_analyzer_getLine());
+
             exp2 = ExprAdditive();
+
             node = new AdditionOPNode(token, expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
     }
@@ -1443,33 +1736,57 @@ ExpNode *Parser::ExprMultiplicativeAUX(ExpNode *expr)
         case ADDRESS:
         {
             Eat(ADDRESS);
+
             token = new TokenNode(ADDRESS, nullptr);
+            token->setLine(lexical_analyzer_getLine());
+
             exp2 = ExprMultiplicative();
+
             node = new MultiplicationOPNode(token, expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
         case STAR:
         {
             Eat(STAR);
+
             token = new TokenNode(STAR, nullptr);
+            token->setLine(lexical_analyzer_getLine());
+
             exp2 = ExprMultiplicative();
+
             node = new MultiplicationOPNode(token, expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
         case SLASH:
         {
             Eat(SLASH);
+
             token = new TokenNode(SLASH, nullptr);
+            token->setLine(lexical_analyzer_getLine());
+
             exp2 = ExprMultiplicative();
+
             node = new MultiplicationOPNode(token, expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
         case PERCENT:
         {
             Eat(PERCENT);
+
             token = new TokenNode(PERCENT, nullptr);
+            token->setLine(lexical_analyzer_getLine());
+
             exp2 = ExprMultiplicative();
+
             node = new MultiplicationOPNode(token, expr, exp2);
+            node->setLine(lexical_analyzer_getLine());
+
             break;
         }
     }
@@ -1486,7 +1803,11 @@ ExpNode *Parser::ExprUnary()
         case NOT:
         {
             Eat(NOT);
-            return new SignNode(ExprUnary());
+
+            SignNode *signNode = new SignNode(ExprUnary());
+            signNode->setLine(lexical_analyzer_getLine());
+
+            return signNode;
         }
         case PLUS:
         {
@@ -1496,17 +1817,29 @@ ExpNode *Parser::ExprUnary()
         case MINUS:
         {
             Eat(MINUS);
-            return new SignNode(ExprUnary());
+
+            SignNode *signNode = new SignNode(ExprUnary());
+            signNode->setLine(lexical_analyzer_getLine());
+
+            return signNode;
         }
         case STAR:
         {
             Eat(STAR);
-            return new PointerValNode(ExprUnary());
+
+            PointerValNode *pointerValNode = new PointerValNode(ExprUnary());
+            pointerValNode->setLine(lexical_analyzer_getLine());
+
+            return pointerValNode;
         }
         case ADDRESS:
         {
             Eat(ADDRESS);
-            return new AddressValNode(ExprUnary());
+
+            AddressValNode *addressValNode = new AddressValNode(ExprUnary());
+            addressValNode->setLine(lexical_analyzer_getLine());
+
+            return addressValNode;
         }
         case ID:
         case NUMINT:
@@ -1537,18 +1870,24 @@ ExpNode *Parser::Primary()
         case ID:
         {
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
+            id->setLine(lexical_analyzer_getLine());
+
             Eat(ID);
             return PostFixExpr(id);
         }
         case NUMINT:
         {
             TokenNode *numInt = new TokenNode(NUMINT, lexical_analyzer_last_lexeme());
+            numInt->setLine(lexical_analyzer_getLine());
+
             Eat(NUMINT);
             return PostFixExprAUX(new PrimaryNode(numInt));
         }
         case NUMFLOAT:
         {
             TokenNode *numFloat = new TokenNode(NUMFLOAT, lexical_analyzer_last_lexeme());
+            numFloat->setLine(lexical_analyzer_getLine());
+
             Eat(NUMFLOAT);
             return PostFixExprAUX(new PrimaryNode(numFloat));
         }
@@ -1556,6 +1895,8 @@ ExpNode *Parser::Primary()
         {
 
             TokenNode *literalString = new TokenNode(LITERAL, lexical_analyzer_last_lexeme());
+            literalString->setLine(lexical_analyzer_getLine());
+
             Eat(LITERAL);
             return PostFixExprAUX(new PrimaryNode(literalString));
         }
@@ -1563,30 +1904,46 @@ ExpNode *Parser::Primary()
         {
 
             TokenNode *literalString = new TokenNode(LITERALCHAR, lexical_analyzer_last_lexeme());
+            literalString->setLine(lexical_analyzer_getLine());
+
             Eat(LITERALCHAR);
             return PostFixExprAUX(new PrimaryNode(literalString));
         }
         case TRUE:
         {
             Eat(TRUE);
+
             ExpNode *expNode = new PrimaryNode(new TokenNode(TRUE, nullptr));
+            expNode->setLine(lexical_analyzer_getLine());
+
             return PostFixExprAUX(expNode);
         }
         case FALSE:
         {
             Eat(FALSE);
+
             ExpNode *expNode = new PrimaryNode(new TokenNode(FALSE, nullptr));
+            expNode->setLine(lexical_analyzer_getLine());
+
             return PostFixExprAUX(expNode);
         }
         case STAR:
         {
             Eat(STAR);
-            return PostFixExprAUX(new PointerValNode(ExprAssign()));
+
+            PointerValNode *pointerValNode = new PointerValNode(ExprAssign());
+            pointerValNode->setLine(lexical_analyzer_getLine());
+
+            return PostFixExprAUX(pointerValNode);
         }
         case ADDRESS:
         {
             Eat(ADDRESS);
-            return PostFixExprAUX(new AddressValNode(ExprAssign()));
+
+            AddressValNode *addressValNode = new AddressValNode(ExprAssign());
+            addressValNode->setLine(lexical_analyzer_getLine());
+
+            return PostFixExprAUX(addressValNode);
         }
         case LPARENT:
         {
@@ -1614,21 +1971,34 @@ ExpNode *Parser::PostFixExprAUX(ExpNode *exp)
         case DOT:
         {
             Eat(DOT);
+
             TokenNode *id = new TokenNode(ID, EatOrSkip(ID, postFixExprAUXFollowSet));
+            id->setLine(lexical_analyzer_getLine());
+
             return PostFixExprAUX(new NameExpNode(exp, id));
         }
         case POINTER:
         {
             Eat(POINTER);
+
             TokenNode *id = new TokenNode(ID, EatOrSkip(ID, postFixExprAUXFollowSet));
-            return PostFixExprAUX(new PointerExpNode(exp, id));
+            id->setLine(lexical_analyzer_getLine());
+
+            PointerExpNode *pointerExpNode = new PointerExpNode(exp, id);
+            pointerExpNode->setLine(lexical_analyzer_getLine());
+
+            return PostFixExprAUX(pointerExpNode);
         }
         case LBRACKET:
         {
             Eat(LBRACKET);
             ExpNode *index = ExprAssign();
             EatOrSkip(RBRACKET, postFixExprAUXFollowSet);
-            return PostFixExprAUX(new ArrayCallNode(exp, index));
+
+            ArrayCallNode *arrayCallNode = new ArrayCallNode(exp, index);
+            arrayCallNode->setLine(lexical_analyzer_getLine());
+
+            return PostFixExprAUX(arrayCallNode);
         }
         default:
         {
@@ -1649,9 +2019,15 @@ ExpNode *Parser::PostFixExpr(TokenNode *id)
         {
             Eat(LPARENT);
             ExpListNode *expList = ExprList();
+            expList->setLine(lexical_analyzer_getLine());
             EatOrSkip(RPARENT, postFixExprFollowSet);
+
             CallNode *callNode = new CallNode(id, expList);
+            callNode->setLine(lexical_analyzer_getLine());
+
             PrimaryNode *primary = new PrimaryNode(PostFixExprAUX(callNode));
+            primary->setLine(lexical_analyzer_getLine());
+
             return primary;
         }
         case RPARENT:
@@ -1660,11 +2036,17 @@ ExpNode *Parser::PostFixExpr(TokenNode *id)
         case POINTER:
         case LBRACKET:
         {
-            return PostFixExprAUX(new PrimaryNode(id));
+            PrimaryNode *primaryNode = new PrimaryNode(id);
+            primaryNode->setLine(lexical_analyzer_getLine());
+
+            return PostFixExprAUX(primaryNode);
         }
         default:
         {
-            return new PrimaryNode(id);
+            PrimaryNode *primaryNode = new PrimaryNode(id);
+            primaryNode->setLine(lexical_analyzer_getLine());
+
+            return primaryNode;
         }
     }
 }

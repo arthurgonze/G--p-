@@ -222,7 +222,13 @@ void Semantic::visit(TypeDeclNode *typeDeclNode)
                 totalSizeAux += sizeAux;
                 idListAux = idListAux->getNext();
             }
-            varListAux = varListAux->getNext()->getNext();
+            if(varListAux->getNext())
+            {
+                varListAux = varListAux->getNext()->getNext();
+            }else
+            {
+                varListAux = NULL;
+            }
         }
         StructSymbol *structSymbol = structTable->cSearch(typeDeclNode->getId()->getLexeme());
         structSymbol->setSize(totalSizeAux);

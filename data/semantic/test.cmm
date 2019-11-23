@@ -1,0 +1,11 @@
+typedef struct {
+	int x;
+}main;
+
+int main;
+
+int main (int a, int b) {
+	int x[10];
+	x[200] = a*2 + b;
+	return x[1];
+}

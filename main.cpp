@@ -49,12 +49,12 @@ int main(int argc, char *argv[])
 
     Parser *parser = new Parser();
     ProgramNode *ast = parser->StartParser();
+    lexical_analyzer_dispose();
 
     startSemantic(ast);
-
-    lexical_analyzer_dispose();
     endSemantic();
 
+    delete(ast);
 	printf("\n");
 
     return returnCode;
