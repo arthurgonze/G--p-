@@ -450,7 +450,7 @@ void StructTable::print()
     cout << "\n*****************************" << endl;
     cout << "\t\t" << "STRUCTS" << endl;
     cout << "*****************************" << endl;
-    cout << "Lexeme" << "\t\t" << "Scope" << "\t\t" << "Scope Lexeme" << endl;
+    cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << endl;
     cout << "*****************************" << endl;
 
     for (int i = 0; i < TABLE_SIZE; i++)

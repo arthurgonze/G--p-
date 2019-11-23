@@ -1,11 +1,10 @@
 typedef struct {
-	int x;
-}main;
+	int z;
+}tipoEspecial;
 
-int main;
 
-int main (int a, int b) {
+int main (int a[4], tipoEspecial b) {
 	int x[10];
-	x[200] = a*2 + b;
+	x[200] = a*2 + b.z;
 	return x[1];
 }

@@ -18,11 +18,10 @@ void startSemantic(ProgramNode *ast)
 }
 void endSemantic()
 {
+    activeFunction = NULL;
     varTable->print();
     functionTable->print();
     structTable->print();
-
-    activeFunction = NULL;
     delete varTable;
     delete functionTable;
     delete structTable;
@@ -439,9 +438,9 @@ void Semantic::visit(PrimaryNode *primaryNode)
 
             }
         }
-        else if ((dynamic_cast<CallNode *>(primaryNode->getExp())->getId()->getToken()==NUMINT || dynamic_cast<CallNode *>(primaryNode->getExp())->getId()->getToken()==NUMFLOAT ||
-            dynamic_cast<CallNode *>(primaryNode->getExp())->getId()->getToken()==LITERALCHAR || dynamic_cast<CallNode *>(primaryNode->getExp())->getId()->getToken()==LITERAL ||
-            dynamic_cast<CallNode *>(primaryNode->getExp())->getId()->getToken()==TRUE || dynamic_cast<CallNode *>(primaryNode->getExp())->getId()->getToken()==FALSE))
+        else if ((typeid(primaryNode) == typeid(CallNode)) && (((CallNode *)primaryNode)->getId()->getToken()==NUMINT || ((CallNode *)primaryNode)->getId()->getToken()==NUMFLOAT ||
+            ((CallNode *)primaryNode)->getId()->getToken()==LITERALCHAR || ((CallNode *)primaryNode)->getId()->getToken()==LITERAL ||
+            ((CallNode *)primaryNode)->getId()->getToken()==TRUE || ((CallNode *)primaryNode)->getId()->getToken()==FALSE))
         {
             if (primaryNode->getExp()!=NULL)
             {
@@ -467,7 +466,7 @@ void Semantic::visit(PrimaryNode *primaryNode)
 
         primaryNode->setPointer(primaryNode->getExp()->isPointer());
         primaryNode->setArraySize(primaryNode->getExp()->getArraySize());
-        dynamic_cast<CallNode *>(primaryNode->getExp())->setLexeme(dynamic_cast<CallNode *>(primaryNode->getExp())->getLexeme());
+       ((CallNode *)primaryNode)->setLexeme(((CallNode *)primaryNode)->getLexeme());
     }
 }
 
@@ -540,7 +539,7 @@ void Semantic::visit(FunctionNode *functionNode)
             }
             else
             {
-                if (stmtListAux->getNext()==NULL)
+                if (stmtListAux->getStmt()==NULL)
                 {
                     fprintf(stderr, "[SEMANTIC ERROR - functionNode] MISSING RETURN STATEMENT, line: %d, lexeme: %s \n", functionNode->getLine(), functionNode->getId()->getLexeme());
                     break;
