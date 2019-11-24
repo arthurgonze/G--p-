@@ -1,0 +1,22 @@
+/* C Scope Rules - Local Variable Example */
+
+#include<stdio.h>
+#include<conio.h>
+
+void main()
+{
+	int a;
+	clrscr(); /* not declared function */
+
+	a = 10;
+	print("Outer (before) a : %d\n", a);
+	if(a==10)
+	{
+		int a;   /* this a hides the outer a */
+		a = 9;
+		print("Inner a : %d\n", a);
+	}
+	print("Outer (after) a : %d\n", a);
+
+	getch(); /* not declared function */
+}

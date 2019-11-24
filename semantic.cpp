@@ -749,11 +749,11 @@ void Semantic::visit(AssignNode *assignNode)
     {
         assignNode->getExp2()->accept(this);
     }
-    if (!assignNode->getExp1()->isLValue())
+    if (assignNode->getExp1() != NULL && !assignNode->getExp1()->isLValue())
     {
-        fprintf(stderr, "[SEMANTIC ERROR - assignNode] LVALUE EXPECTED, line: %d, lexeme Exp1: %s, lexeme Exp2: %s \n", assignNode->getLine(), assignNode->getExp1()->getLexeme(), assignNode->getExp2()->getLexeme());
+        fprintf(stderr, "[SEMANTIC ERROR - assignNode] LVALUE EXPECTED, line: %d, lexeme Exp1: %s\n", assignNode->getLine(), assignNode->getExp1()->getLexeme());
     }
-    if (assignNode->getExp1()->getType()!=assignNode->getExp2()->getType())
+    if (assignNode->getExp1() != NULL && assignNode->getExp2() != NULL && assignNode->getExp1()->getType()!=assignNode->getExp2()->getType())
     {
         fprintf(stderr, "[SEMANTIC ERROR - assignNode] CANNOT ASSIGN TO DIFFERENT TYPE, line: %d, lexeme Exp1: %s, lexeme Exp2: %s \n", assignNode->getLine(), assignNode->getExp1()->getLexeme(), assignNode->getExp2()->getLexeme());
     }

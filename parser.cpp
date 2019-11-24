@@ -2019,7 +2019,6 @@ ExpNode *Parser::PostFixExpr(TokenNode *id)
         {
             Eat(LPARENT);
             ExpListNode *expList = ExprList();
-            expList->setLine(lexical_analyzer_getLine());
             EatOrSkip(RPARENT, postFixExprFollowSet);
 
             CallNode *callNode = new CallNode(id, expList);

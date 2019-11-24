@@ -1,0 +1,46 @@
+/* C Structures - This program demonstrates the
+ * concept of structure assignments in C language.
+ */
+
+#include<stdio.h>
+#include<conio.h>
+
+typedef struct
+{
+	int x, y, z;
+	char ch;
+	char chs[20];
+} st1;
+
+typedef struct
+{
+	int a, b, c;
+	char ch2;
+	char chs2[20];
+} st2;
+
+void main()
+{
+	clrscr();   /* not declared function */
+
+	print("Enter your name: ");
+	gets(st1.chs);  /* not declared function */
+	print("Enter any three numbers: ");
+	scanf("%d%d%d", &st1.x, &st1.y, &st1.z);    /* not declared function */
+	print("Press y to see the sum: ");
+	fflush(stdin);  /* not declared function */
+	scanf("%c", &st1.ch);   /* not declared function */
+
+	st2 = st1;  /* assign one structure to another */
+
+	if(st2.ch2 == 'y' || st2.ch2 == 'Y')
+	{
+		print("%s, the sum of three numbers is %d", st2.chs2, st2.a+st2.b+st2.c);
+		print("\n\nPress any key to exit..\n");
+		getch();    /* not declared function */
+		exit(1);    /* not declared function */
+	}
+
+	getch();    /* not declared function */
+    /* RETURN TYPE NOT DEFINED */ 
+}

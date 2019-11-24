@@ -1,10 +1,334 @@
+/* C Linked Lists - A Complete Mailing List Example Program */
+
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+#include<string.h>
+
 typedef struct {
-	int z;
-}tipoEspecial;
+	char name[40];
+	char street[50];
+	char city[30];
+	char state[3];
+	char zip[11];
+	address *next;   /* pointer to the next entry */
+	address *prior;  /* pointer to the previous record */
+}address;
+
+address *start;     /* pointer to the first entry in the list */
+address *last;      /* pointer to the last entry */
+
+/* find an address */
+address *find(char *name)
+{
+	address *info;
+
+	info = start;
+	while(info)
+	{
+		if(!strcmp(name, info->name)) return info;
+		info = info->next;   /* get next address */
+	}
+	print("Name not found..!!\n");
+	return NULL;    /* not found */
+}
+
+/* now create a doubly linked list in the sorted order */
+void dlsStore(address *i, address *start, address *last)
+{
+	address *old;
+	address *p;
+
+	if(*last == NULL)
+	{
+		i->next = NULL;
+		i->prior = NULL;
+		*last = i;
+		*start = i;
+		return;
+	}
+	p = *start;    /* start at top of the list */
+
+	old = NULL;
+	while(p)
+	{
+		if(strcmp(p->name, i->name)<0)
+		{
+			old = p;
+			p = p->next;
+		}
+		else
+		{
+			if(p->prior)
+			{
+				p->prior->next = i;
+				i->next = p;
+				i->prior = p->prior;
+				p->prior = i;
+				return;
+			}
+			i->next = p;     /* new first element */
+			i->prior = NULL;
+			p->prior = i;
+			*start = i;
+			return;
+		}
+	}
+	old->next = i;    /* put on end */
+	i->next = NULL;
+	i->prior = old;
+	*last = i;
+}
+
+/* enter the names and addresses */
+void enter()
+{
+	address *info;
+
+	while(true)
+	{
+		info = malloc(sizeof(address));
+		if(!info)
+		{
+			print("\n out of memory..!!");
+			return;
+		}
+
+		inputs("Enter name: ", info->name, 40);
+		if(!info->name[0])  break;   /* stop entering */
+		inputs("Enter street: ", info->street, 40);
+		inputs("Enter city: ", info->city, 30);
+		inputs("Enter state: ", info->state, 3);
+		inputs("Enter zip: ", info->zip, 10);
+
+		dlsStore(info, &start, &last);
+	}  /* entry loop */
+}
+
+/* now this function prints the fields in each address */
+void display(address *info)
+{
+	print("%s\n", info->name);
+	print("%s\n", info->street);
+	print("%s\n", info->city);
+	print("%s\n", info->state);
+	print("%s\n", info->zip);
+	print("\n\n");
+}
+
+/* look or search for a name in the list */
+void search()
+{
+	char name[40];
+	address *info;
+
+	print("Enter name to find: ");
+	gets(name);
+	info = find(name);
+	if(!info)
+	{
+		print("Not found..!!\n");
+	}
+	else
+	{
+		display(info);
+	}
+}
+
+/* now save the file to the disk */
+void save()
+{
+	address *info;
+	FILE *fp;
+
+	fp = fopen("mlist", "wb");
+	if(!fp)
+	{
+		print("Cannot open file..!!\n");
+		exit(1);
+	}
+	print("\nSaving File..\n");
+
+	info = start;
+	while(info)
+	{
+		fwrite(info, sizeof(struct address), 1, fp);
+		info = info->next;      /* get next address */
+	}
+	fclose(fp);
+}
+
+/* load the address file */
+void load()
+{
+	address *info;
+	FILE *fp;
+
+	fp = fopen("mlist", "rb");
+	if(!fp)
+	{
+		printf("Cannot open file..!!\n");
+		exit(1);
+	}
+
+	/* now free any previously allocated memory */
+	while(start)
+	{
+		info = start->next;
+		free(info);
+		start = info;
+	}
+
+	/* reset top and bottom pointers */
+	start = last = NULL;
+
+	print("\nLoading file..\n");
+	while(!feof(fp))
+	{
+		info = (struct address *) malloc(sizeof(struct address));
+		if(!info)
+		{
+			print("Out of Memory..!!");
+			return;
+		}
+		if(1 != fread(info, sizeof(struct address), 1, fp)) break;
+		dls_store(info, &start, &last);
+	}
+	fclose(fp);
+}
+
+/* display the complete list */
+void list()
+{
+	address *info;
+
+	info = start;
+	while(info)
+	{
+		display(info);
+		info = info->next;   /* get next address */
+	}
+	print("\n\n");
+}
 
 
-int main (int a[4], tipoEspecial b) {
-	int x[10];
-	x[200] = a*2 + b.z;
-	return x[1];
+/* remove an element from the list */
+void mldelete(address *start, address *last)
+{
+	address *info;
+	char str[80];
+
+	inputs("Enter name: ", str, 40);
+	info = find(str);
+	if(info)
+	{
+		if(*start==info)
+		{
+			*start=info->next;
+			if(*start)
+			{
+				(*start)->prior = NULL;
+			}
+			else
+			{
+				*last = NULL;
+			}
+		}
+		else
+		{
+			info->prior->next = info->next;
+			if(info!=*last)
+			{
+				info->next->prior = info->prior;
+			}
+			else
+			{
+				*last = info->prior;
+			}
+		}
+		free(info);    // returned memory to system
+	}
+}
+
+
+/* this function will input a string up to the
+ * length in count and will prevent the string
+ * from being overrun. It will also display a
+ * prompting message
+ */
+void inputs(char *prompt, char *s, int count)
+{
+	char p[255];
+
+	while(strlen(p) > count)
+	{
+		print(prompt);
+		fgets(p, 254, stdin);
+		if(strlen(p) > count)
+		{
+			print("\n Too Long..!! \n");
+		}
+	}
+
+	p[strlen(p)-1] = 0;   /* remove newline character */
+	strcpy(s, p);
+}
+
+/* select an operation */
+int menu_select()
+{
+	char str[80];
+	int c;
+
+	print("1. Enter a name\n");
+	print("2. Delete a name\n");
+	print("3. List the file\n");
+	print("4. Search\n");
+	print("5. Save the file\n");
+	print("6. Load the file\n");
+	print("7. Quit\n");
+
+	while(c<0 || c>7)
+	{
+		print("\nEnter your choice : ");
+		gets(str);
+		c = atoi(str);
+	}
+
+	return c;
+}
+
+void main()
+{
+	clrscr();
+
+	start = last = NULL;     /* initialized start and end pointers */
+
+	while(true)
+	{
+		switch(menu_select())
+		{
+			case 1 :
+				enter();    /* to enter an address */
+				break;
+			case 2 :
+				mldelete(&start, &last);     /* to remove an address */
+				break;
+			case 3 :
+				list();     /* to display the list */
+				break;
+			case 4 :
+				search();   /* to find an address */
+				break;
+			case 5 :
+				save();     /* to save the list to disk */
+				break;
+			case 6 :
+				load();     /* to read from the disk */
+				break;
+			case 7 :
+				exit(0);
+		}
+	}
+	getch();
 }

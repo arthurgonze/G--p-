@@ -1,0 +1,38 @@
+/* C Recursion - This program find
+ * the Fibonacci series upto the
+ * given term using recursion
+ */
+
+#include<stdio.h>
+#include<conio.h>
+
+int fib(int i)
+{
+	if(i==0)
+	{
+		return 0;
+	}
+	if(i==1)
+	{
+		return 1;
+	}
+	return fib(i-1)+fib(i-2);
+}
+
+void main()
+{
+	int i, limit;
+	clrscr();/* not declared function */
+
+	print("Upto how many term ? ");
+	scanf("%d", &limit);/* not declared function */
+
+    i = 0;
+	while(i<limit)
+	{
+		print("%d  ", fib(i));
+        i = i + 1;
+	}
+
+	getch();/* not declared function */
+}
