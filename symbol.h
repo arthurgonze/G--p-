@@ -13,6 +13,7 @@ private:
     Symbol *nextSymbol;
 public:
     Symbol(const char *lexeme, int scope, const char *lexemeScope);
+    Symbol(const char *lexeme);
     virtual ~Symbol();
 
     bool isScope(const char *lexemeScope) { return this->lexemeScope==lexemeScope; }
@@ -42,25 +43,25 @@ public:
 class IdSymbol : public Symbol
 {
 public:
-    explicit IdSymbol(const char *lexeme) : Symbol(lexeme, NULL, NULL) {};
+    explicit IdSymbol(const char *lexeme) : Symbol(lexeme) {};
 };
 
 class LiteralSymbol : public Symbol
 {
 public:
-    explicit LiteralSymbol(const char *lexeme) : Symbol(lexeme, NULL, NULL) {};
+    explicit LiteralSymbol(const char *lexeme) : Symbol(lexeme) {};
 };
 
 class NumIntSymbol : public Symbol
 {
 public:
-    explicit NumIntSymbol(const char *lexeme) : Symbol(lexeme, NULL, NULL) {};
+    explicit NumIntSymbol(const char *lexeme) : Symbol(lexeme) {};
 };
 
 class NumFloatSymbol : public Symbol
 {
 public:
-    explicit NumFloatSymbol(const char *lexeme) : Symbol(lexeme, NULL, NULL) {};
+    explicit NumFloatSymbol(const char *lexeme) : Symbol(lexeme) {};
 };
 
 // new from here to the end

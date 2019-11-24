@@ -447,7 +447,7 @@ bool StructTable::cInsert(const char *lexeme, VarDeclNode *varDecl)
 
 void StructTable::print()
 {
-    cout << "\n*****************************" << endl;
+    cout << "\n*****************************" << endl ;
     cout << "\t\t" << "STRUCTS" << endl;
     cout << "*****************************" << endl;
     cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << endl;

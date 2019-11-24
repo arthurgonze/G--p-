@@ -12,8 +12,15 @@ Symbol::~Symbol()
     this->lexeme = nullptr;
     free(this->nextSymbol);
 }
+Symbol::Symbol(const char *lexeme)
+{
+    this->lexeme = lexeme;
+    this->lexemeScope = nullptr;
+    this->scope = -1;
+    this->nextSymbol = nullptr;
+}
 
-ReservedTokenSymbol::ReservedTokenSymbol(const char *lexeme, int tokenID) : Symbol(lexeme, NULL, NULL)
+ReservedTokenSymbol::ReservedTokenSymbol(const char *lexeme, int tokenID) : Symbol(lexeme)
 {
     this->tokenID = tokenID;
 }
