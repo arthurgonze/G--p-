@@ -17,7 +17,7 @@ typedef struct
 void display(stTime *time)
 {
 	print("%02d:", time->hours);
-	print("%02d:", time->minutes);
+	print("%02d:", time->minutes);assignNode->getExp1()
 	print("%02d\n", time->seconds);
 }
 

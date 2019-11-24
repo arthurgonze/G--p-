@@ -1,0 +1,19 @@
+int main () {
+
+	int vet[10],n;
+
+	vet[0] = 0;
+    vet[1] = 1.0;
+    vet[2] = 2;
+    vet[3] = 3.5;
+    vet[4] = 4;
+    vet[5] = 5.55;
+    vet[6] = 6;
+    vet[7] = 7;
+    vet[8] = 8;
+    vet[9] = 9;
+    vet[10] = 10; /* problem */
+    vet[11] = 11; /* problem */
+    vet[1.5] = 1.5; /* problem */
+	return 0;
+}
