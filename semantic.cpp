@@ -285,6 +285,7 @@ void Semantic::visit(FormalListNode *formalListNode)
                 formalListNode->getLine(), formalListNode->getId()->getLexeme());
     }
 
+
     if (formalListNode->getId()!=NULL && activeFunction!=NULL)
     {
         VarSymbol *var = varTable->searchInScope(formalListNode->getId()->getLexeme(), activeFunction->getLexeme());
@@ -333,13 +334,31 @@ void Semantic::visit(CallNode *callNode)
             callNode->getParameters()->accept(this);
             ExpListNode *exp = callNode->getParameters();
             FormalListNode *param = funcSymbol->getVarDecl();
+
             while (exp!=NULL && param!=NULL)
             {
                 if (exp->getExp()->getType()!=param->getType()->getId()->getToken() /*TODO||
                     exp->getExp()->getTypeLexeme()!=param->getType()->getId()->getLexeme()*/)
                 {
-                    fprintf(stderr, "[SEMANTIC ERROR - callNode] PARAMETER TYPE MISMATCH, line: %d, lexeme: %s \n",
-                            callNode->getLine(), callNode->getId()->getLexeme());
+                    PrimaryNode* node = (PrimaryNode*) exp->getExp();
+                    if(node->getTokenNode()->getToken() == ID)
+                    {
+                       VarSymbol* symbol =  varTable->cSearch(node->getTokenNode()->getLexeme());
+
+                       if(symbol->getType()->getId()->getType() != param->getType()->getId()->getToken() ||
+                       symbol->getType()->getId()->getToken() != param->getType()->getId()->getToken())
+                       {
+                            fprintf(stderr, "[SEMANTIC ERROR - callNode] ID %s DOES NOT MATCH WITH PARAMETER TYPE, GOT %s EXPECTED %s line: %d, lexeme: %s \n",
+                                    node->getTokenNode()->getLexeme(),
+                                   token_id_to_name(symbol->getType()->getId()->getType()), token_id_to_name(param->getType()->getId()->getToken()),
+                           callNode->getLine(), callNode->getId()->getLexeme());
+                       }
+                    }
+                    else {
+                        fprintf(stderr, "[SEMANTIC ERROR - callNode] PARAMETER TYPE MISMATCH, line: %d, lexeme: %s \n",
+                                callNode->getLine(), callNode->getId()->getLexeme());
+                    }
+
 
                     exp = exp->getNext();
                     param = param->getNext();
@@ -732,6 +751,7 @@ void Semantic::visit(AssignNode *assignNode)
     {
         assignNode->getExp2()->accept(this);
     }
+
     if (assignNode->getExp1() != NULL && !assignNode->getExp1()->isLValue())
     {
         fprintf(stderr, "[SEMANTIC ERROR - assignNode] LVALUE EXPECTED, line: %d, lexeme Exp1: %s\n", assignNode->getLine(), assignNode->getExp1()->getLexeme());
