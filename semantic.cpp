@@ -110,6 +110,7 @@ void Semantic::visit(VarDeclNode *varDeclNode)
             if (listAux->getArray()!=NULL)
             {
                 sizeAux *= atoi(listAux->getArray()->getNumInt()->getLexeme());
+
             }
             if (activeFunction!=NULL)
             {
@@ -912,6 +913,17 @@ void Semantic::visit(ArrayCallNode *arrayCallNode)
     if (arrayCallNode->getExp()!=NULL)
     {
         arrayCallNode->getExp()->accept(this);
+    }
+
+    PrimaryNode* aux = (PrimaryNode*)arrayCallNode->getIndex();
+//    VarSymbol* varSymbol = varTable->cSearch();
+//    if(varSymbol->getType()->getId()->getType()!=NUMINT)
+//    {
+//        fprintf(stderr, "[SEMANTIC ERROR - ArrayCallNode] ARRAY INDEX TYPE MISMATCH, INT EXPECTED, line: %d, Index Type: %s \n", arrayCallNode->getLine(), token_id_to_name(aux->getTokenNode()->getType()));
+//    }else
+        if(aux->getTokenNode()->getToken()!=NUMINT)
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - ArrayCallNode] ARRAY INDEX TYPE MISMATCH, INT EXPECTED, line: %d, Index Type: %s \n", arrayCallNode->getLine(), token_id_to_name(aux->getTokenNode()->getToken()));
     }
 }
 

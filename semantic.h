@@ -12,9 +12,9 @@
 #include "symboltable.h"
 #include "analyzer.h"
 
-#define BYTE_SIZE       4
-#define BOOL_TRUE 1
-#define BOOL_FALSE 0
+#define BYTE_SIZE   4
+#define BOOL_TRUE   1
+#define BOOL_FALSE  0
 
 void startSemantic(ProgramNode *ast);
 void endSemantic();

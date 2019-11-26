@@ -1881,6 +1881,9 @@ ExpNode *Parser::Primary()
             TokenNode *numInt = new TokenNode(NUMINT, lexical_analyzer_last_lexeme());
             numInt->setLine(lexical_analyzer_getLine());
 
+            numInt->setType(NUMINT);
+            numInt->setTypeLexeme("NUMINT");
+
             Eat(NUMINT);
             return PostFixExprAUX(new PrimaryNode(numInt));
         }
@@ -1888,6 +1891,9 @@ ExpNode *Parser::Primary()
         {
             TokenNode *numFloat = new TokenNode(NUMFLOAT, lexical_analyzer_last_lexeme());
             numFloat->setLine(lexical_analyzer_getLine());
+
+            numFloat->setType(NUMFLOAT);
+            numFloat->setTypeLexeme("NUMFLOAT");
 
             Eat(NUMFLOAT);
             return PostFixExprAUX(new PrimaryNode(numFloat));
