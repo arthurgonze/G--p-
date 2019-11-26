@@ -1872,7 +1872,7 @@ ExpNode *Parser::Primary()
         {
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
             id->setLine(lexical_analyzer_getLine());
-            id->setType(ID);
+            //id->setType(ID);
             Eat(ID);
             return PostFixExpr(id);
         }
@@ -1882,7 +1882,7 @@ ExpNode *Parser::Primary()
             numInt->setLine(lexical_analyzer_getLine());
             Eat(NUMINT);
             PrimaryNode* primaryNode = new PrimaryNode(numInt);
-            primaryNode->setType(INT);
+            //primaryNode->setType(INT);
             return PostFixExprAUX(primaryNode);
         }
         case NUMFLOAT:
@@ -1891,7 +1891,7 @@ ExpNode *Parser::Primary()
             numFloat->setLine(lexical_analyzer_getLine());
             Eat(NUMFLOAT);
             PrimaryNode *primaryNode = new PrimaryNode(numFloat);
-            primaryNode->setType(FLOAT);
+            //primaryNode->setType(FLOAT);
             return PostFixExprAUX(primaryNode);
         }
         case LITERAL:
@@ -1902,7 +1902,7 @@ ExpNode *Parser::Primary()
 
             Eat(LITERAL);
             PrimaryNode *node = new PrimaryNode(literalString);
-            node->setType(CHAR);
+            //node->setType(CHAR);
             node->setPointer(true);
             return PostFixExprAUX(node);
         }
@@ -1914,7 +1914,7 @@ ExpNode *Parser::Primary()
             
             Eat(LITERALCHAR);
             PrimaryNode *node = new PrimaryNode(literalString);
-            node->setType(CHAR);
+            //node->setType(CHAR);
             return PostFixExprAUX(node);
         }
         case TRUE:
@@ -1923,7 +1923,7 @@ ExpNode *Parser::Primary()
 
             ExpNode *expNode = new PrimaryNode(new TokenNode(TRUE, nullptr));
             expNode->setLine(lexical_analyzer_getLine());
-            expNode->setType(BOOL);
+            //expNode->setType(BOOL);
             return PostFixExprAUX(expNode);
         }
         case FALSE:
@@ -1932,7 +1932,7 @@ ExpNode *Parser::Primary()
 
             ExpNode *expNode = new PrimaryNode(new TokenNode(FALSE, nullptr));
             expNode->setLine(lexical_analyzer_getLine());
-            expNode->setType(BOOL);
+            //expNode->setType(BOOL);
             return PostFixExprAUX(expNode);
         }
         case STAR:
@@ -1950,6 +1950,7 @@ ExpNode *Parser::Primary()
 
             AddressValNode *addressValNode = new AddressValNode(ExprAssign());
             addressValNode->setLine(lexical_analyzer_getLine());
+//            addressValNode->setType(ADDRESS);
 
             return PostFixExprAUX(addressValNode);
         }
