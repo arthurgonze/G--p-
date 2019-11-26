@@ -89,7 +89,6 @@ void Semantic::visit(VarDeclNode *varDeclNode)
     }
     if (varDeclNode->getIdList()!=NULL)
     {
-        varDeclNode->getIdList()->accept(this);
         IdListNode *listAux = varDeclNode->getIdList();
         int totalSizeAux = 0;
         while (listAux!=NULL)
@@ -147,10 +146,6 @@ void Semantic::visit(IdListNode *idListNode)
     if (idListNode->getArray()!=NULL)
     {
         idListNode->getArray()->accept(this);
-    }
-    if (idListNode->getNext()!=NULL)
-    {
-        idListNode->getNext()->accept(this);
     }
     TypeNode *typeNode = new TypeNode(idListNode->getId(), idListNode->getId()->getTypeLexeme());
     typeNode->setLine(idListNode->getLine());
@@ -406,7 +401,6 @@ void Semantic::visit(PrimaryNode *primaryNode)
             if (primaryNode->getExp()!=NULL && typeid(*primaryNode->getExp())==typeid(CallNode))
             {
                 CallNode *functionCall = (CallNode *)(primaryNode->getExp());
-                primaryNode->getExp()->accept(this);
                 primaryNode->setType(primaryNode->getExp()->getType());
                 primaryNode->setTypeLexeme(primaryNode->getExp()->getTypeLexeme());
             }
@@ -508,7 +502,7 @@ void Semantic::visit(FunctionNode *functionNode)
     {
         if (functionNode->getType()->getId()->getToken()==ID)
         {
-            if (!structTable->cSearch(functionNode->getType()->getLexeme()))
+            if (!structTable->cSearch(functionNode->getType()->getId()->getLexeme()))
             {
                 fprintf(stderr, "[SEMANTIC ERROR - functionNode] RETURN TYPE NOT DEFINED, line: %d, lexeme: %s \n", functionNode->getLine(), functionNode->getId()->getLexeme());
             }
@@ -757,6 +751,7 @@ void Semantic::visit(AssignNode *assignNode)
     {
         fprintf(stderr, "[SEMANTIC ERROR - assignNode] LVALUE EXPECTED, line: %d, lexeme Exp1: %s\n", assignNode->getLine(), assignNode->getExp1()->getLexeme());
     }
+
     if (assignNode->getExp1() != NULL && assignNode->getExp2() != NULL && assignNode->getExp1()->getType()!=assignNode->getExp2()->getType())
     {
         fprintf(stderr, "[SEMANTIC ERROR - assignNode] CANNOT ASSIGN TO DIFFERENT TYPE, line: %d, lexeme Exp1: %s, lexeme Exp2: %s \n", assignNode->getLine(), assignNode->getExp1()->getLexeme(), assignNode->getExp2()->getLexeme());
@@ -775,7 +770,7 @@ void Semantic::visit(BooleanOPNode *booleanOPNode)
     }
     if (booleanOPNode->getExp1()->getType()!=BOOL || booleanOPNode->getExp2()->getType()!=BOOL)
     {
-        fprintf(stderr, "[SEMANTIC ERROR - booleanOPNode] LOGICAL OP TYPE, line: %d, OPLexeme: %s \n", booleanOPNode->getLine(), token_id_to_name(booleanOPNode->getOp()->getToken()));
+        // TODO fprintf(stderr, "[SEMANTIC ERROR - booleanOPNode] LOGICAL OP TYPE, line: %d, OPLexeme: %s \n", booleanOPNode->getLine(), token_id_to_name(booleanOPNode->getOp()->getToken()));
     }
     booleanOPNode->setType(BOOL);
     booleanOPNode->setTypeLexeme(token_id_to_name(BOOL));
@@ -936,11 +931,7 @@ void Semantic::visit(ArrayCallNode *arrayCallNode)
     }
 
     PrimaryNode* aux = (PrimaryNode*)arrayCallNode->getIndex();
-//    VarSymbol* varSymbol = varTable->cSearch();
-//    if(varSymbol->getType()->getId()->getType()!=NUMINT)
-//    {
-//        fprintf(stderr, "[SEMANTIC ERROR - ArrayCallNode] ARRAY INDEX TYPE MISMATCH, INT EXPECTED, line: %d, Index Type: %s \n", arrayCallNode->getLine(), token_id_to_name(aux->getTokenNode()->getType()));
-//    }else
+
     if(aux->getTokenNode()->getToken()==ID)
     {
         VarSymbol* varSymbol = varTable->cSearch(aux->getTokenNode()->getLexeme());
