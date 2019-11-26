@@ -921,7 +921,14 @@ void Semantic::visit(ArrayCallNode *arrayCallNode)
 //    {
 //        fprintf(stderr, "[SEMANTIC ERROR - ArrayCallNode] ARRAY INDEX TYPE MISMATCH, INT EXPECTED, line: %d, Index Type: %s \n", arrayCallNode->getLine(), token_id_to_name(aux->getTokenNode()->getType()));
 //    }else
-        if(aux->getTokenNode()->getToken()!=NUMINT)
+    if(aux->getTokenNode()->getToken()==ID)
+    {
+        VarSymbol* varSymbol = varTable->cSearch(aux->getTokenNode()->getLexeme());
+        if(varSymbol->getType()->getId()->getType() != INT)
+        {
+            fprintf(stderr, "[SEMANTIC ERROR - ArrayCallNode] ARRAY INDEX TYPE MISMATCH, INT EXPECTED, line: %d, Index Type: %s \n", arrayCallNode->getLine(), token_id_to_name(varSymbol->getType()->getId()->getType()));
+        }
+    }else if(aux->getTokenNode()->getToken()!=NUMINT)
     {
         fprintf(stderr, "[SEMANTIC ERROR - ArrayCallNode] ARRAY INDEX TYPE MISMATCH, INT EXPECTED, line: %d, Index Type: %s \n", arrayCallNode->getLine(), token_id_to_name(aux->getTokenNode()->getToken()));
     }
