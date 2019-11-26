@@ -51,7 +51,7 @@ void SymbolTable::cInsert(Symbol *symbol, const char *lexeme)
         unsigned long index = cHash(lexeme);
         symbol->setNextSymbol(block[index]);
         block[index] = symbol;
-        if (headIndex + strlen(lexeme) >= lexemeArraySize)
+        if (headIndex + strlen(lexeme) >= (unsigned) lexemeArraySize)
         {
             lexemeArraySize += (1 + strlen(lexeme)/LEXEME_ARRAY_SIZE)*LEXEME_ARRAY_SIZE;
             lexemeArray = (char *) realloc(lexemeArray, lexemeArraySize*sizeof(char));

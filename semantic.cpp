@@ -346,8 +346,7 @@ void Semantic::visit(CallNode *callNode)
                     {
                        VarSymbol* symbol =  varTable->cSearch(node->getTokenNode()->getLexeme());
 
-                       if(symbol->getType()->getId()->getType() != param->getType()->getId()->getToken() ||
-                       symbol->getType()->getId()->getToken() != param->getType()->getId()->getToken())
+                       if(symbol->getType()->getId()->getType() != param->getType()->getId()->getToken())
                        {
                             fprintf(stderr, "[SEMANTIC ERROR - callNode] ID %s DOES NOT MATCH WITH PARAMETER TYPE, GOT %s EXPECTED %s line: %d, lexeme: %s \n",
                                     node->getTokenNode()->getLexeme(),
@@ -405,7 +404,6 @@ void Semantic::visit(PrimaryNode *primaryNode)
             primaryNode->setLValue(BOOL_TRUE);
             if (primaryNode->getExp()!=NULL && typeid(*primaryNode->getExp())==typeid(CallNode))
             {
-                CallNode *functionCall = (CallNode *)(primaryNode->getExp());
                 primaryNode->getExp()->accept(this);
                 primaryNode->setType(primaryNode->getExp()->getType());
                 primaryNode->setTypeLexeme(primaryNode->getExp()->getTypeLexeme());
