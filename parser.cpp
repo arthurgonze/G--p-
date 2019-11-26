@@ -1903,7 +1903,7 @@ ExpNode *Parser::Primary()
             Eat(LITERAL);
             PrimaryNode *node = new PrimaryNode(literalString);
             //node->setType(CHAR);
-            //node->setPointer(true);
+            node->setPointer(true);
             return PostFixExprAUX(node);
         }
         case LITERALCHAR:
@@ -1950,6 +1950,7 @@ ExpNode *Parser::Primary()
 
             AddressValNode *addressValNode = new AddressValNode(ExprAssign());
             addressValNode->setLine(lexical_analyzer_getLine());
+//            addressValNode->setType(ADDRESS);
 
             return PostFixExprAUX(addressValNode);
         }
