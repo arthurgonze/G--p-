@@ -1889,7 +1889,6 @@ ExpNode *Parser::Primary()
             numFloat->setLine(lexical_analyzer_getLine());
             Eat(NUMFLOAT);
             PrimaryNode *primaryNode = new PrimaryNode(numFloat);
-            primaryNode->setType(FLOAT);
             return PostFixExprAUX(primaryNode);
         }
         case LITERAL:
