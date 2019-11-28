@@ -143,7 +143,7 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
             id->setLine(lexical_analyzer_getLine());
 
             ASTNode *ast = ProgramAUX(type, pointer, id, varList);
-            if ((FunctionNode *)(ast))
+            if (ast != NULL && typeid(ast) == typeid(FunctionNode*))
             {
                 FunctionNode *f = (FunctionNode *) ast;
 
