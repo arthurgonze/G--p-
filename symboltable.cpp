@@ -314,7 +314,7 @@ void VarTable::print()
     {
         for (VarSymbol *symbol = (VarSymbol *) block[i]; symbol!=NULL; symbol = (VarSymbol *) symbol->getNextSymbol())
         {
-            cout << symbol->getLexeme() << "\t\t" << symbol->getScope() << "\t\t" << symbol->getLexemeScope() <<"\t\t"<< token_id_to_name(symbol->getType()->getId()->getType()) << endl;
+            cout << symbol->getLexeme() << "\t\t" << symbol->getScope() << "\t\t" << symbol->getLexemeScope() <<"\t\t"<< token_id_to_name(symbol->getType()->getId()->getToken()) << endl;
         }
     }
     cout << "**********************************************************" << endl;
