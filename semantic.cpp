@@ -149,6 +149,7 @@ void Semantic::visit(IdListNode *idListNode)
     }
     TypeNode *typeNode = new TypeNode(idListNode->getId(), idListNode->getId()->getTypeLexeme());
     typeNode->setLine(idListNode->getLine());
+
     if (!varTable->cInsert(typeNode, idListNode->getId()->getLexeme(), idListNode->getId()->isPointer(),
                            idListNode->getId()->getArraySize(), BOOL_FALSE))
     {
@@ -394,7 +395,7 @@ void Semantic::visit(CallNode *callNode)
 
 void Semantic::visit(PrimaryNode *primaryNode)
 {
-    if (primaryNode->getExp()!=NULL)
+    if (primaryNode->getExp()!=NULL && primaryNode->getTokenNode()!=NULL)
     {
         primaryNode->getExp()->accept(this);
         if (TokenNode *id = (TokenNode *) (primaryNode->getExp()))
@@ -410,7 +411,7 @@ void Semantic::visit(PrimaryNode *primaryNode)
             {
                 VarSymbol *varSymbol = varTable->cSearch(id->getLexeme());
 
-                if (varSymbol!=NULL)
+                if (varSymbol!=nullptr)
                 {
                     id->setType(varSymbol->getType()->getId()->getToken());
                     id->setTypeLexeme(varSymbol->getType()->getId()->getLexeme());
@@ -517,7 +518,6 @@ void Semantic::visit(FunctionNode *functionNode)
     }
 
     activeFunction = functionTable->cSearch(functionLexeme);
-
     beginScope(functionLexeme);
 
     VarDeclNode *varStmtAux = functionNode->getLocal();
@@ -621,7 +621,7 @@ void Semantic::visit(WhileNode *whileNode)
     if (whileNode->getHead()!=NULL)
     {
         whileNode->getHead()->accept(this);
-        BooleanOPNode *booleanOPNode = (BooleanOPNode*)whileNode->getHead();
+        BooleanOPNode *booleanOPNode = (BooleanOPNode *) whileNode->getHead();
         if (!booleanOPNode->getOp())
         {
             fprintf(stderr, "[SEMANTIC ERROR - whileNode] BOOLEAN EXPRESSION REQUIRED, line: %d, Conditionlexeme: %s \n", whileNode->getLine(), whileNode->getHead()->getLexeme());
