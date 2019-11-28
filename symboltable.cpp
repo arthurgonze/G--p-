@@ -75,7 +75,7 @@ Symbol *SymbolTable::cSearch(const char *lexeme)
         Symbol *temp = block[pos];
         while (temp!=nullptr)
         {
-            if (strcmp(temp->getLexeme(), lexeme)==0)
+            if (strcmp(temp->getLexeme(), lexeme)==0)// TODO talvez otimizar comparacao de char
             {
                 return temp;
             }

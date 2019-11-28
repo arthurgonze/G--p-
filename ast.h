@@ -65,9 +65,9 @@ class ExpNode : public ASTNode
 {
 private:
     const char *lexeme;
-    bool lValue, pointer;
+    bool lValue, pointer;// TODO precisa saber se é array e pegar o tamanho?
     int type, arraySize;
-    const char *typeLexeme;
+    const char *typeLexeme; // id
 public:
     inline bool isLValue() const { return lValue; }
     inline bool isPointer() const { return pointer; }
@@ -224,9 +224,9 @@ private:
     bool returnAtt;
     ASTNode *stmt;
 public:
-    explicit StmtNode(StmtListNode *stmtList) { this->stmt = reinterpret_cast<ASTNode *>(stmtList); }
-    explicit StmtNode(IfNode *aux) { this->stmt = reinterpret_cast<ASTNode *>(aux); }
-    explicit StmtNode(WhileNode *aux) { this->stmt = reinterpret_cast<ASTNode *>(aux); }
+    explicit StmtNode(StmtListNode *stmtList) { this->stmt = (ASTNode *)(stmtList); }
+    explicit StmtNode(IfNode *aux) { this->stmt = (ASTNode *)(aux); }
+    explicit StmtNode(WhileNode *aux) { this->stmt = (ASTNode *)(aux); }
     explicit StmtNode(ExpNode *aux) { this->stmt = aux; }
     explicit StmtNode(BreakNode *aux) { this->stmt = aux; }
     explicit StmtNode(PrintNode *aux) { this->stmt = aux; }
@@ -234,7 +234,7 @@ public:
     explicit StmtNode(ReturnNode *aux) { this->stmt = aux; }
     explicit StmtNode(ThrowNode *aux) { this->stmt = aux; }
     explicit StmtNode(TryNode *aux) { this->stmt = aux; }
-    explicit StmtNode(SwitchNode *aux) { this->stmt = reinterpret_cast<ASTNode *>(aux); }
+    explicit StmtNode(SwitchNode *aux) { this->stmt = (ASTNode *)(aux); }
     ~StmtNode() override { delete this->stmt; }
 
     inline ASTNode *getStmt() { return stmt; }
