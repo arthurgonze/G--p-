@@ -355,7 +355,7 @@ class ArrayNode : public ExpNode
 private:
     TokenNode *numInt;
 public:
-    explicit ArrayNode(TokenNode *numInt) { this->numInt = numInt; }
+    explicit ArrayNode(TokenNode *numInt) { this->numInt = numInt; if(numInt) setLexeme(numInt->getLexeme());}
     ~ArrayNode() override { delete this->numInt; }
 
     inline TokenNode *getNumInt() { return numInt; }
