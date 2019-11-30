@@ -12,7 +12,7 @@ void startSemantic(ProgramNode *ast)
     varTable = new VarTable();
     functionTable = new FunctionTable();
     structTable = new StructTable();
-    Semantic semanticVisitor;
+    SemanticTables semanticVisitor;
     semanticVisitor.visit(ast);
     fprintf(stderr, "\n");
 
@@ -1052,5 +1052,300 @@ void Semantic::visit(CaseBlockNode *caseBlockNode)
 }
 
 Semantic::Semantic() {}
-void Semantic::visit(TypeNode *typeNode) {}
-void Semantic::visit(ThrowNode *throwNode) {}
+
+void SemanticTables::visit(ProgramNode *programNode) {
+    if (programNode->getTypeList())
+    {
+        programNode->getTypeList()->accept(this);
+    }
+    if (programNode->getVarList())
+    {
+        programNode->getVarList()->accept(this);
+    }
+    if (programNode->getFunctions())
+    {
+        programNode->getFunctions()->accept(this);
+    }
+}
+
+SemanticTables::SemanticTables() {
+
+}
+
+void SemanticTables::visit(TypeDeclNode *typeDeclNode) {
+
+    if (typeDeclNode->getNext()!=NULL)
+    {
+        typeDeclNode->getNext()->accept(this);
+    }
+
+    if(!typeDeclNode->getId()->getLexeme())
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - typeDeclNode] STRUCT WITHOUT A VALID NAME, line: %d",
+                typeDeclNode->getLine());
+        return;
+    }
+    if (structTable->cSearch(typeDeclNode->getId()->getLexeme()) || !structTable->cInsert(typeDeclNode->getId()->getLexeme(), typeDeclNode->getDecl()))
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - typeDeclNode] STRUCT ALREADY EXISTS, line: %d, lexeme: %s \n",
+                typeDeclNode->getLine(), typeDeclNode->getId()->getLexeme());
+        return;
+    }
+
+    beginScope(typeDeclNode->getId()->getLexeme());
+    if (typeDeclNode->getDecl()!=NULL)
+    {
+        typeDeclNode->getDecl()->accept(this);
+        VarDeclNode *varListAux = typeDeclNode->getDecl();
+        int totalSizeAux = 0;
+        while (varListAux!=NULL)
+        {
+            IdListNode *idListAux = varListAux->getIdList();
+            while (idListAux!=NULL)
+            {
+                VarSymbol *var = varTable->searchInScope(idListAux->getId()->getLexeme(), typeDeclNode->getId()->getLexeme());
+                int sizeAux = BYTE_SIZE;
+                if (idListAux->getArray()!=NULL)
+                {
+                    sizeAux *= atoi(idListAux->getArray()->getNumInt()->getLexeme());
+                }
+                var->setSize(sizeAux);
+                var->setOffset(totalSizeAux);
+                totalSizeAux += sizeAux;
+                idListAux = idListAux->getNext();
+            }
+            if (varListAux->getNext())
+            {
+                varListAux = varListAux->getNext()->getNext();
+            }
+            else
+            {
+                varListAux = NULL;
+            }
+        }
+        StructSymbol *structSymbol = structTable->cSearch(typeDeclNode->getId()->getLexeme());
+        structSymbol->setSize(totalSizeAux);
+    }
+    endScope();
+}
+
+void SemanticTables::visit(TokenNode *tokenNode) {
+
+}
+
+void SemanticTables::visit(TypeNode *typeNode) {
+
+}
+
+void SemanticTables::visit(IdListNode *idListNode) {
+    if (idListNode->getId()!=NULL)
+    {
+        idListNode->getId()->accept(this);
+        idListNode->getId()->setPointer(idListNode->getPointer()!=NULL);
+        if (idListNode->getArray()!=NULL)
+        {
+            idListNode->getArray()->accept(this);
+            idListNode->getId()->setArraySize(idListNode->getArray()->getArraySize());
+        }
+    }
+    if (idListNode->getNext()!=NULL)
+    {
+        idListNode->getNext()->accept(this);
+    }
+    if (idListNode->getArray()!=NULL)
+    {
+        idListNode->getArray()->accept(this);
+    }
+    TypeNode *typeNode = new TypeNode(idListNode->getId(), idListNode->getId()->getTypeLexeme());
+    typeNode->setLine(idListNode->getLine());
+
+    if (!varTable->cInsert(typeNode, idListNode->getId()->getLexeme(), idListNode->getId()->isPointer(),
+                           idListNode->getId()->getArraySize(), BOOL_FALSE))
+    {
+// TODO       fprintf(stderr, "[SEMANTIC ERROR - idListNode] VARIABLE ALREADY EXISTS, line: %d \n", idListNode->getLine());
+    }
+}
+
+void SemanticTables::visit(VarDeclNode *varDeclNode) {
+    if (varDeclNode->getIdList()!=NULL)
+    {
+        varDeclNode->getIdList()->accept(this);
+    }
+    if (varDeclNode->getNext()!=NULL)
+    {
+        varDeclNode->getNext()->accept(this);
+    }
+    IdListNode *idListAux = varDeclNode->getIdList();
+    while (idListAux!=NULL)
+    {
+        idListAux->getId()->setType(varDeclNode->getType()->getId()->getToken());
+        idListAux->getId()->setTypeLexeme(varDeclNode->getType()->getId()->getLexeme());
+        idListAux = idListAux->getNext();
+    }
+
+    if (varDeclNode->getType()!=NULL && varDeclNode->getIdList()!=NULL)
+    {
+        if (varDeclNode->getType()->getId()->getToken()==ID)
+        {
+            if (!structTable->cSearch(varDeclNode->getType()->getId()->getLexeme()))
+            {
+                fprintf(stderr, "[SEMANTIC ERROR - VarDeclNode] TYPE NOT DEFINED, line: %d, typeLexeme: %s \n",
+                        varDeclNode->getLine(), varDeclNode->getType()->getLexeme());
+            }
+        }
+    }
+    if (varDeclNode->getIdList()!=NULL) {
+        IdListNode *listAux = varDeclNode->getIdList();
+        int totalSizeAux = 0;
+        while (listAux != NULL) {
+            VarSymbol *var;
+            if (activeFunction != NULL) {
+                const char *aux1 = listAux->getId()->getLexeme();
+                const char *aux2 = activeFunction->getLexeme();
+                var = varTable->searchInScope(aux1, aux2);
+            } else {
+                const char *aux = listAux->getId()->getLexeme();
+                var = varTable->cSearch(aux);
+            }
+            int sizeAux = BYTE_SIZE;
+            if (listAux->getArray() != NULL) {
+                sizeAux *= atoi(listAux->getArray()->getNumInt()->getLexeme());
+
+            }
+            if (activeFunction != NULL) {
+                listAux->getId()->setOffset(activeFunction->getLocalSize() + totalSizeAux + sizeAux);
+            }
+            var->setSize(sizeAux);
+            var->setOffset(listAux->getId()->getOffset());
+            totalSizeAux += sizeAux;
+            listAux = listAux->getNext();
+        }
+        if (activeFunction != NULL) {
+            activeFunction->incrementLocalSize(totalSizeAux);
+        }
+    }
+}
+
+void SemanticTables::visit(FormalListNode *formalListNode) {
+
+}
+
+void SemanticTables::visit(ExpListNode *expListNode) {
+
+}
+
+void SemanticTables::visit(CallNode *callNode) {
+
+}
+
+void SemanticTables::visit(PrimaryNode *primaryNode) {
+
+}
+
+void SemanticTables::visit(FunctionNode *functionNode) {
+
+}
+
+void SemanticTables::visit(StmtNode *stmtNode) {
+
+}
+
+void SemanticTables::visit(StmtListNode *stmtListNode) {
+
+}
+
+void SemanticTables::visit(ReadLnNode *a) {
+
+}
+
+void SemanticTables::visit(PrintNode *a) {
+
+}
+
+void SemanticTables::visit(WhileNode *whileNode) {
+
+}
+
+void SemanticTables::visit(ReturnNode *returnNode) {
+
+}
+
+void SemanticTables::visit(TryNode *tryNode) {
+
+}
+
+void SemanticTables::visit(ThrowNode *throwNode) {
+
+}
+
+void SemanticTables::visit(BreakNode *breakNode) {
+
+}
+
+void SemanticTables::visit(IfNode *ifNode) {
+
+}
+
+void SemanticTables::visit(SwitchNode *switchNode) {
+
+}
+
+void SemanticTables::visit(CaseBlockNode *caseBlockNode) {
+
+}
+
+void SemanticTables::visit(AdditionOPNode *additionOPNode) {
+
+}
+
+void SemanticTables::visit(AddressValNode *addressValNode) {
+
+}
+
+void SemanticTables::visit(AssignNode *assignNode) {
+
+}
+
+void SemanticTables::visit(BooleanOPNode *booleanOPNode) {
+
+}
+
+void SemanticTables::visit(NameExpNode *nameExpNode) {
+
+}
+
+void SemanticTables::visit(NotNode *notNode) {
+
+}
+
+void SemanticTables::visit(PointerValNode *pointerValNode) {
+
+}
+
+void SemanticTables::visit(MultiplicationOPNode *multiplicationOPNode) {
+
+}
+
+void SemanticTables::visit(SignNode *signNode) {
+
+}
+
+void SemanticTables::visit(ArrayCallNode *arrayCallNode) {
+
+}
+
+void SemanticTables::visit(FunctionListNode *functionListNode) {
+    /// deixar na mesma ordem do codigo
+    if (functionListNode->getNext())
+    {
+        functionListNode->getNext()->accept(this);
+    }
+    if (functionListNode->getFunction())
+    {
+        functionListNode->getFunction()->accept(this);
+    }
+}
+
+void SemanticTables::visit(PointerExpNode *pointerExpNode) {
+
+}
