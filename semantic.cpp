@@ -57,75 +57,7 @@ void Semantic::visit(ProgramNode *programNode)
     }
 }
 
-void Semantic::visit(VarDeclNode *varDeclNode)
-{
-    if (varDeclNode->getIdList()!=NULL)
-    {
-        varDeclNode->getIdList()->accept(this);
-    }
-    if (varDeclNode->getNext()!=NULL)
-    {
-        varDeclNode->getNext()->accept(this);
-    }
 
-    IdListNode *idListAux = varDeclNode->getIdList();
-    while (idListAux!=NULL)
-    {
-        idListAux->getId()->setType(varDeclNode->getType()->getId()->getToken());
-        idListAux->getId()->setTypeLexeme(varDeclNode->getType()->getId()->getLexeme());
-        idListAux = idListAux->getNext();
-    }
-
-    if (varDeclNode->getType()!=NULL && varDeclNode->getIdList()!=NULL)
-    {
-        if (varDeclNode->getType()->getId()->getToken()==ID)
-        {
-            if (!structTable->cSearch(varDeclNode->getType()->getId()->getLexeme()))
-            {
-                fprintf(stderr, "[SEMANTIC ERROR - VarDeclNode] TYPE NOT DEFINED, line: %d, typeLexeme: %s \n",
-                        varDeclNode->getLine(), varDeclNode->getType()->getLexeme());
-            }
-        }
-    }
-    if (varDeclNode->getIdList()!=NULL)
-    {
-        IdListNode *listAux = varDeclNode->getIdList();
-        int totalSizeAux = 0;
-        while (listAux!=NULL)
-        {
-            VarSymbol *var;
-            if (activeFunction!=NULL)
-            {
-                const char *aux1 = listAux->getId()->getLexeme();
-                const char *aux2 = activeFunction->getLexeme();
-                var = varTable->searchInScope(aux1, aux2);
-            }
-            else
-            {
-                const char *aux = listAux->getId()->getLexeme();
-                var = varTable->cSearch(aux);
-            }
-            int sizeAux = BYTE_SIZE;
-            if (listAux->getArray()!=NULL)
-            {
-                sizeAux *= atoi(listAux->getArray()->getNumInt()->getLexeme());
-
-            }
-            if (activeFunction!=NULL)
-            {
-                listAux->getId()->setOffset(activeFunction->getLocalSize() + totalSizeAux + sizeAux);
-            }
-            var->setSize(sizeAux);
-            var->setOffset(listAux->getId()->getOffset());
-            totalSizeAux += sizeAux;
-            listAux = listAux->getNext();
-        }
-        if (activeFunction!=NULL)
-        {
-            activeFunction->incrementLocalSize(totalSizeAux);
-        }
-    }
-}
 
 void Semantic::visit(IdListNode *idListNode)
 {
@@ -1166,7 +1098,8 @@ void SemanticTables::visit(IdListNode *idListNode) {
     }
 }
 
-void SemanticTables::visit(VarDeclNode *varDeclNode) {
+void Semantic::visit(VarDeclNode *varDeclNode)
+{
     if (varDeclNode->getIdList()!=NULL)
     {
         varDeclNode->getIdList()->accept(this);
@@ -1175,6 +1108,78 @@ void SemanticTables::visit(VarDeclNode *varDeclNode) {
     {
         varDeclNode->getNext()->accept(this);
     }
+
+    IdListNode *idListAux = varDeclNode->getIdList();
+    while (idListAux!=NULL)
+    {
+        idListAux->getId()->setType(varDeclNode->getType()->getId()->getToken());
+        idListAux->getId()->setTypeLexeme(varDeclNode->getType()->getId()->getLexeme());
+        idListAux = idListAux->getNext();
+    }
+
+    if (varDeclNode->getType()!=NULL && varDeclNode->getIdList()!=NULL)
+    {
+        if (varDeclNode->getType()->getId()->getToken()==ID)
+        {
+            if (!structTable->cSearch(varDeclNode->getType()->getId()->getLexeme()))
+            {
+                fprintf(stderr, "[SEMANTIC ERROR - VarDeclNode] TYPE NOT DEFINED, line: %d, typeLexeme: %s \n",
+                        varDeclNode->getLine(), varDeclNode->getType()->getLexeme());
+            }
+        }
+    }
+    if (varDeclNode->getIdList()!=NULL)
+    {
+        IdListNode *listAux = varDeclNode->getIdList();
+        int totalSizeAux = 0;
+        while (listAux!=NULL)
+        {
+            VarSymbol *var;
+            if (activeFunction!=NULL)
+            {
+                const char *aux1 = listAux->getId()->getLexeme();
+                const char *aux2 = activeFunction->getLexeme();
+                var = varTable->searchInScope(aux1, aux2);
+            }
+            else
+            {
+                const char *aux = listAux->getId()->getLexeme();
+                var = varTable->cSearch(aux);
+            }
+            int sizeAux = BYTE_SIZE;
+            if (listAux->getArray()!=NULL)
+            {
+                sizeAux *= atoi(listAux->getArray()->getNumInt()->getLexeme());
+
+            }
+            if (activeFunction!=NULL)
+            {
+                listAux->getId()->setOffset(activeFunction->getLocalSize() + totalSizeAux + sizeAux);
+            }
+            var->setSize(sizeAux);
+            var->setOffset(listAux->getId()->getOffset());
+            totalSizeAux += sizeAux;
+            listAux = listAux->getNext();
+        }
+        if (activeFunction!=NULL)
+        {
+            activeFunction->incrementLocalSize(totalSizeAux);
+        }
+    }
+}
+
+void SemanticTables::visit(VarDeclNode *varDeclNode) {
+
+    if (varDeclNode->getNext()!=NULL)
+    {
+        varDeclNode->getNext()->accept(this);
+    }
+
+    if (varDeclNode->getIdList()!=NULL)
+    {
+        varDeclNode->getIdList()->accept(this);
+    }
+
     IdListNode *idListAux = varDeclNode->getIdList();
     while (idListAux!=NULL)
     {
