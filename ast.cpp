@@ -5,6 +5,14 @@ TokenNode::TokenNode(int tok, const char *lex)
 {
     this->token = tok;
     this->setLexeme(lex);
+
+    this->setLValue(false);
+    this->setPointer(false);
+    this->setType(-42);
+    this->setTypeLexeme("NotDefined");
+    this->setLine(-42);
+    this->setArraySize(-42);
+    this->setOffset(-42);
 }
 TokenNode::~TokenNode()
 {
@@ -154,6 +162,14 @@ CallNode::CallNode(TokenNode *id, ExpListNode *parameters)
 {
     this->id = id;
     this->parameters = parameters;
+
+    this->setLValue(false);
+    this->setPointer(false);
+    this->setType(-42);
+    this->setTypeLexeme("NotDefined");
+    this->setLine(-42);
+    this->setArraySize(-42);
+    this->setLexeme("NotDefined"); // TODO ID lexeme?
 }
 CallNode::~CallNode()
 {
@@ -164,16 +180,28 @@ PrimaryNode::PrimaryNode(TokenNode *token)
 {
     this->token = token;
     this->exp = nullptr;
+
+    this->setLValue(false);
+    this->setPointer(false);
+    this->setType(-42);
+    this->setTypeLexeme("NotDefined");
+    this->setLine(-42);
+    this->setArraySize(-42);
+    this->setLexeme("NotDefined");
 }
-PrimaryNode::PrimaryNode(CallNode *function)
-{
-    this->exp = function;
-    this->token = nullptr;
-}
+
 PrimaryNode::PrimaryNode(ExpNode *exp)
 {
     this->exp = exp;
     this->token = nullptr;
+
+    this->setLValue(false);
+    this->setPointer(false);
+    this->setType(-42);
+    this->setTypeLexeme("NotDefined");
+    this->setLine(-42);
+    this->setArraySize(-42);
+    this->setLexeme("NotDefined");
 }
 PrimaryNode::~PrimaryNode()
 {
@@ -184,6 +212,14 @@ AssignNode::AssignNode(ExpNode *exp1, ExpNode *exp2)
 {
     this->exp1 = exp1;
     this->exp2 = exp2;
+
+    this->setLValue(false);
+    this->setPointer(false);
+    this->setType(-42);
+    this->setTypeLexeme("NotDefined");
+    this->setLine(-42);
+    this->setArraySize(-42);
+    this->setLexeme("NotDefined");
 }
 AssignNode::~AssignNode()
 {
@@ -195,6 +231,13 @@ BooleanOPNode::BooleanOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2)
     this->op = op;
     this->exp1 = exp1;
     this->exp2 = exp2;
+
+    this->setLValue(false);
+    this->setPointer(false);
+    this->setTypeLexeme("NotDefined");
+    this->setLine(-42);
+    this->setArraySize(-42);
+    this->setLexeme("NotDefined");
 }
 BooleanOPNode::~BooleanOPNode()
 {
@@ -206,6 +249,14 @@ NameExpNode::NameExpNode(ExpNode *exp, TokenNode *id)
 {
     this->exp = exp;
     this->id = id;
+
+    this->setLValue(false);
+    this->setPointer(false);
+    this->setType(-42);
+    this->setTypeLexeme("NotDefined");
+    this->setLine(-42);
+    this->setArraySize(-42);
+    this->setLexeme("NotDefined");
 }
 NameExpNode::~NameExpNode()
 {
@@ -216,6 +267,14 @@ PointerExpNode::PointerExpNode(ExpNode *exp, TokenNode *id)
 {
     this->exp = exp;
     this->id = id;
+
+    this->setLValue(false);
+    this->setPointer(false);
+    this->setType(-42);
+    this->setTypeLexeme("NotDefined");
+    this->setLine(-42);
+    this->setArraySize(-42);
+    this->setLexeme("NotDefined");
 }
 PointerExpNode::~PointerExpNode()
 {
@@ -226,6 +285,14 @@ ArrayCallNode::ArrayCallNode(ExpNode *exp, ExpNode *index)
 {
     this->exp = exp;
     this->index = index;
+
+    this->setLValue(false);
+    this->setPointer(false);
+    this->setType(-42);
+    this->setTypeLexeme("NotDefined");
+    this->setLine(-42);
+    this->setArraySize(-42);
+    this->setLexeme("NotDefined");
 }
 ArrayCallNode::~ArrayCallNode()
 {
@@ -237,6 +304,14 @@ AdditionOPNode::AdditionOPNode(TokenNode *op, ExpNode *exp1, ExpNode *exp2)
     this->op = op;
     this->exp1 = exp1;
     this->exp2 = exp2;
+
+    this->setLValue(false);
+    this->setPointer(false);
+    this->setType(-42);
+    this->setTypeLexeme("NotDefined");
+    this->setLine(-42);
+    this->setArraySize(-42);
+    this->setLexeme("NotDefined");
 }
 AdditionOPNode::~AdditionOPNode()
 {
@@ -249,6 +324,14 @@ MultiplicationOPNode::MultiplicationOPNode(TokenNode *op, ExpNode *exp1, ExpNode
     this->op = op;
     this->exp1 = exp1;
     this->exp2 = exp2;
+
+    this->setLValue(false);
+    this->setPointer(false);
+    this->setType(-42);
+    this->setTypeLexeme("NotDefined");
+    this->setLine(-42);
+    this->setArraySize(-42);
+    this->setLexeme("NotDefined");
 }
 MultiplicationOPNode::~MultiplicationOPNode()
 {
@@ -293,4 +376,52 @@ FunctionListNode::~FunctionListNode()
 {
     delete this->function;
     delete this->next;
+}
+SignNode::SignNode(ExpNode *exp)
+{
+    this->exp = exp;
+
+    this->setLValue(false);
+    this->setPointer(false);
+    this->setType(-42);
+    this->setTypeLexeme("NotDefined");
+    this->setLine(-42);
+    this->setArraySize(-42);
+    this->setLexeme("NotDefined");
+}
+AddressValNode::AddressValNode(ExpNode *exp)
+{
+    this->exp = exp;
+
+    this->setLValue(false);
+    this->setPointer(false);
+    this->setType(-42);
+    this->setTypeLexeme("NotDefined");
+    this->setLine(-42);
+    this->setArraySize(-42);
+    this->setLexeme("NotDefined");
+}
+PointerValNode::PointerValNode(ExpNode *exp)
+{
+    this->exp = exp;
+
+    this->setLValue(false);
+    this->setPointer(false);
+    this->setType(-42);
+    this->setTypeLexeme("NotDefined");
+    this->setLine(-42);
+    this->setArraySize(-42);
+    this->setLexeme("NotDefined");
+}
+NotNode::NotNode(ExpNode *exp)
+{
+    this->exp = exp;
+
+    this->setLValue(false);
+    this->setPointer(false);
+    this->setType(-42);
+    this->setTypeLexeme("NotDefined");
+    this->setLine(-42);
+    this->setArraySize(-42);
+    this->setLexeme("NotDefined");
 }
