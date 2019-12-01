@@ -1,5 +1,7 @@
 #include "semantic.h"
 
+#define SCOPE_NON_LOCAL "nonLocal"
+
 VarTable *varTable;
 FunctionTable *functionTable;
 StructTable *structTable;
@@ -1062,7 +1064,8 @@ void SemanticTables::visit(TypeDeclNode *typeDeclNode) {
 }
 
 void SemanticTables::visit(TokenNode *tokenNode) {
-
+    if(tokenNode->getToken() != ID)
+        tokenNode->setTypeLexeme(token_id_to_name(tokenNode->getToken()));
 }
 
 void SemanticTables::visit(TypeNode *typeNode) {
@@ -1186,13 +1189,13 @@ void SemanticTables::visit(VarDeclNode *varDeclNode) {
         idListAux->getId()->setType(varDeclNode->getType()->getId()->getToken());
         idListAux->getId()->setTypeLexeme(varDeclNode->getType()->getId()->getLexeme());
         idListAux->getId()->setPointer(varDeclNode->getType()->getId()->isPointer());
-
+        idListAux->getId()->setArraySize(varDeclNode->getType()->getId()->getArraySize());
         if(varDeclNode->getType()->getType() == ID)
         {
-            if (!structTable->cSearch(varDeclNode->getType()->getId()->getTypeLexeme()))
+            if (!structTable->cSearch(idListAux->getId()->getTypeLexeme()))
             {
                 fprintf(stderr, "[SEMANTIC ERROR - VarDeclNode] UNKNOWN VARIABLE TYPE line: %d type: %s \n",
-                        idListAux->getLine(), varDeclNode->getType()->getId()->getTypeLexeme());
+                        idListAux->getLine(), idListAux->getId()->getTypeLexeme());
 
                 return;
             }
@@ -1222,6 +1225,34 @@ void SemanticTables::visit(VarDeclNode *varDeclNode) {
 
 void SemanticTables::visit(FormalListNode *formalListNode) {
 
+    if (formalListNode->getId()!=NULL)
+    {
+        formalListNode->getId()->accept(this);
+    }
+
+    if(!formalListNode->getId() || !formalListNode->getId()->getLexeme() )
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - formalListNode] FUNCTION PARAMETER WITHOUT A NAME, line: %d\n",
+                formalListNode->getLine());
+    }
+
+    const char* parameterName = formalListNode->getId()->getLexeme();
+    int arraySize = -1;
+
+    if(formalListNode->getArray())
+        arraySize = formalListNode->getArray()->getArraySize();
+
+    if (!varTable->cInsert(formalListNode->getType(), parameterName, formalListNode->getPointer()!=NULL, arraySize, BOOL_TRUE))
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - formalListNode] VARIABLE ALREADY EXISTS, line: %d, lexeme: %s \n",
+                formalListNode->getLine(), formalListNode->getId()->getLexeme());
+    }
+
+
+    if (formalListNode->getNext()!=NULL)
+    {
+        formalListNode->getNext()->accept(this);
+    }
 }
 
 void SemanticTables::visit(ExpListNode *expListNode) {
@@ -1238,6 +1269,47 @@ void SemanticTables::visit(PrimaryNode *primaryNode) {
 
 void SemanticTables::visit(FunctionNode *functionNode) {
 
+    if (functionNode->getId()!=NULL)
+    {
+        functionNode->getId()->accept(this);
+    }
+
+
+    if(!functionNode->getId() || !functionNode->getId()->getLexeme())
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - functionNode] FUNCTION WITHOUT A VALID NAME, line: %d",
+                functionNode->getLine());
+        return;
+    }
+    const char *functionLexeme = functionNode->getId()->getLexeme();
+
+    if(varTable->searchInScope(functionLexeme, SCOPE_NON_LOCAL) || structTable->cSearch(functionLexeme))
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - functionNode] FUNCTION NAME ALREADY ASSIGNED TO STRUCT OR NON LOCAL VAR, line: %d",
+                functionNode->getLine());
+        return;
+    }
+
+    if(!functionTable->cInsert(functionNode->getType(), functionLexeme,
+                               functionNode->getParameters(), functionNode->getPointer())){
+        fprintf(stderr, "[SEMANTIC ERROR - functionNode] FUNCTION NAME ALREADY ASSIGNED BEFORE, line: %d",
+                functionNode->getLine());
+        return;
+    }
+
+    activeFunction = functionTable->cSearch(functionLexeme);
+    beginScope(functionLexeme);
+
+    if (functionNode->getParameters()!=NULL)
+    {
+        functionNode->getParameters()->accept(this);
+    }
+    if (functionNode->getLocal()!=NULL)
+    {
+        functionNode->getLocal()->accept(this);
+    }
+
+    endScope();
 }
 
 void SemanticTables::visit(StmtNode *stmtNode) {

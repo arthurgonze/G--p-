@@ -16,7 +16,7 @@ public:
     Symbol(const char *lexeme);
     virtual ~Symbol();
 
-    bool isScope(const char *lexemeScope) { return this->lexemeScope==lexemeScope; }
+    bool isScope(const char *lexemeScope) { return !strcmp(this->lexemeScope, lexemeScope); }
 
     inline const char *getLexeme() { return this->lexeme; }
     inline Symbol *getNextSymbol() { return this->nextSymbol; }

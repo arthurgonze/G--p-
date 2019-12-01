@@ -143,7 +143,7 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
             id->setLine(lexical_analyzer_getLine());
 
             ASTNode *ast = ProgramAUX(type, pointer, id, varList);
-            if (ast != NULL && typeid(ast) == typeid(FunctionNode*))
+            if (ast != NULL && typeid(*ast) == typeid(FunctionNode))
             {
                 FunctionNode *f = (FunctionNode *) ast;
 
@@ -392,6 +392,7 @@ VarStmtNode *Parser::VarStmtAux(TokenNode *id, VarDeclNode *varList)
             IdListNode *idListNode = IdList();
             EatOrSkip(SEMICOLON, varStmtAuxFollowSet);
 
+            id->setTypeLexeme(id->getLexeme());
             TypeNode *typeNode = new TypeNode(id);
             typeNode->setLine(lexical_analyzer_getLine());
 
@@ -469,6 +470,8 @@ IdListNode *Parser::IdList()
         {
             TokenNode *id = new TokenNode(ID, EatOrSkip(ID, idListFollowSet));
             id->setLine(lexical_analyzer_getLine());
+            id->setType(ID);
+            id->setTypeLexeme(lexical_analyzer_last_lexeme());
 
             ArrayNode *array = Array();
 

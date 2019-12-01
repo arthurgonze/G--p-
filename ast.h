@@ -341,7 +341,7 @@ public:
 
     inline TokenNode *getId() { return id; }
     const char *getLexeme() const { return lexeme; }
-    inline int getType() { id->getType(); }// para tipos primitivos
+    inline int getType() { id->getToken(); }// para tipos primitivos
     inline const char *getTypeLexeme() { id->getTypeLexeme(); }// quando id for um tipo, struct
 
     void setId(TokenNode *id) { this->id = id; }
