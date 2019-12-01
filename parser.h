@@ -2,6 +2,7 @@
 #define COMPILADOR_2019_3_PARSER_H
 
 #include <cstdio>
+#include <typeinfo>
 #include "token.h"
 #include "analyzer.h"
 #include "ast.h"

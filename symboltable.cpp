@@ -75,7 +75,7 @@ Symbol *SymbolTable::cSearch(const char *lexeme)
         Symbol *temp = block[pos];
         while (temp!=nullptr)
         {
-            if (strcmp(temp->getLexeme(), lexeme)==0)
+            if (strcmp(temp->getLexeme(), lexeme)==0)// TODO talvez otimizar comparacao de char
             {
                 return temp;
             }
@@ -261,7 +261,7 @@ VarSymbol *VarTable::cSearch(const char *lexeme)
         VarSymbol *varSymbol = (VarSymbol *) SymbolTable::cSearch(lexeme);
         while (varSymbol!=NULL && varSymbol->getScope() <= currentScope)
         {
-            if ((varSymbol->getLexeme()==lexeme && varSymbol->isScope(currentScopeLexeme)) ||
+            if ((!strcmp(varSymbol->getLexeme(),lexeme) && varSymbol->isScope(currentScopeLexeme)) ||
                 varSymbol->isScope(previousScopeLexeme) || varSymbol->isScope("nonLocal"))
             {
                 return varSymbol;
@@ -279,7 +279,7 @@ VarSymbol *VarTable::searchInScope(const char *lexeme, const char *scopeLexeme)
         VarSymbol *varSymbol = (VarSymbol *) SymbolTable::cSearch(lexeme);
         while (varSymbol!=NULL)
         {
-            if (varSymbol->getLexeme()==lexeme && varSymbol->isScope(scopeLexeme))
+            if (!strcmp(varSymbol->getLexeme(),lexeme) && varSymbol->isScope(scopeLexeme))
             {
                 return varSymbol;
             }
@@ -314,7 +314,19 @@ void VarTable::print()
     {
         for (VarSymbol *symbol = (VarSymbol *) block[i]; symbol!=NULL; symbol = (VarSymbol *) symbol->getNextSymbol())
         {
-            cout << symbol->getLexeme() << "\t\t" << symbol->getScope() << "\t\t" << symbol->getLexemeScope() <<"\t\t"<< token_id_to_name(symbol->getType()->getId()->getToken()) << endl;
+            cout << symbol->getLexeme() << "\t\t" << symbol->getScope() << "\t\t" << symbol->getLexemeScope() <<"\t\t"<< token_id_to_name(symbol->getType()->getType()/*symbol->getType()->getId()->getToken()*/);
+
+            if(symbol->getType()->getType() == ID)
+                cout << " " << symbol->getType()->getTypeLexeme();
+
+            if(symbol->isPointer())
+                cout << " POINTER";
+
+            //TODO array de tamanho 0 é array tbm???
+            if(symbol->getArraySize() > 0)
+                cout << " ARRAY";
+
+            cout << endl;
         }
     }
     cout << "**********************************************************" << endl;
@@ -343,7 +355,7 @@ FunctionSymbol *FunctionTable::cSearch(const char *lexeme)
         FunctionSymbol *funcSymbol = (FunctionSymbol *) SymbolTable::cSearch(lexeme);
         while (funcSymbol!=NULL && funcSymbol->getScope() <= currentScope)
         {
-            if ((funcSymbol->getLexeme()==lexeme && funcSymbol->isScope(currentScopeLexeme)) ||
+            if ((!strcmp(funcSymbol->getLexeme(),lexeme) && funcSymbol->isScope(currentScopeLexeme)) ||
                 funcSymbol->isScope(previousScopeLexeme) || funcSymbol->isScope("nonLocal"))
             {
                 return funcSymbol;
@@ -361,7 +373,7 @@ FunctionSymbol *FunctionTable::searchInScope(const char *lexeme, const char *sco
         FunctionSymbol *funcSymbol = (FunctionSymbol *) SymbolTable::cSearch(lexeme);
         while (funcSymbol!=NULL)
         {
-            if (funcSymbol->getLexeme()==lexeme && funcSymbol->isScope(scopeLexeme))
+            if (!strcmp(funcSymbol->getLexeme(),lexeme) && funcSymbol->isScope(scopeLexeme))
             {
                 return funcSymbol;
             }
@@ -422,7 +434,7 @@ StructSymbol *StructTable::cSearch(const char *lexeme)
         StructSymbol *structSymbol = (StructSymbol *) SymbolTable::cSearch(lexeme);
         while (structSymbol!=NULL && structSymbol->getScope() <= currentScope)
         {
-            if ((structSymbol->getLexeme()==lexeme && structSymbol->isScope(currentScopeLexeme)) ||
+            if ((!strcmp(structSymbol->getLexeme(),lexeme) && structSymbol->isScope(currentScopeLexeme)) ||
                 structSymbol->isScope(previousScopeLexeme) || structSymbol->isScope("nonLocal"))
             {
                 return structSymbol;
