@@ -49,6 +49,7 @@ void endScope()
 }
 
 bool _match_exp_types(ExpNode *exp1, ExpNode *exp2) {
+
     bool isSameType = exp1->getType() == exp2->getType();
     bool isSamePointer = exp1->isPointer() == exp2->isPointer();
     bool isArray = (exp1->getArraySize() >= 0) == (exp2->getArraySize() >= 0);
@@ -1028,7 +1029,7 @@ void SemanticTables::visit(TypeDeclNode *typeDeclNode) {
 
     if(!typeDeclNode->getId()->getLexeme())
     {
-        fprintf(stderr, "[SEMANTIC ERROR - typeDeclNode] STRUCT WITHOUT A VALID NAME, line: %d",
+        fprintf(stderr, "[SEMANTIC ERROR - typeDeclNode] STRUCT WITHOUT A VALID NAME, line: %d\n",
                 typeDeclNode->getLine());
         return;
     }
@@ -1274,7 +1275,7 @@ void SemanticTables::visit(FunctionNode *functionNode) {
 
     if(!functionNode->getId() || !functionNode->getId()->getLexeme())
     {
-        fprintf(stderr, "[SEMANTIC ERROR - functionNode] FUNCTION WITHOUT A VALID NAME, line: %d",
+        fprintf(stderr, "[SEMANTIC ERROR - functionNode] FUNCTION WITHOUT A VALID NAME, line: %d\n",
                 functionNode->getLine());
         return;
     }
@@ -1282,14 +1283,14 @@ void SemanticTables::visit(FunctionNode *functionNode) {
 
     if(varTable->searchInScope(functionLexeme, SCOPE_NON_LOCAL) || structTable->cSearch(functionLexeme))
     {
-        fprintf(stderr, "[SEMANTIC ERROR - functionNode] FUNCTION NAME ALREADY ASSIGNED TO STRUCT OR NON LOCAL VAR, line: %d",
+        fprintf(stderr, "[SEMANTIC ERROR - functionNode] FUNCTION NAME ALREADY ASSIGNED TO STRUCT OR NON LOCAL VAR, line: %d\n",
                 functionNode->getLine());
         return;
     }
 
     if(!functionTable->cInsert(functionNode->getType(), functionLexeme,
                                functionNode->getParameters(), functionNode->getPointer())){
-        fprintf(stderr, "[SEMANTIC ERROR - functionNode] FUNCTION NAME ALREADY ASSIGNED BEFORE, line: %d",
+        fprintf(stderr, "[SEMANTIC ERROR - functionNode] FUNCTION NAME ALREADY ASSIGNED BEFORE, line: %d\n",
                 functionNode->getLine());
         return;
     }
@@ -1376,10 +1377,42 @@ void SemanticTypes::visit(StmtListNode *stmtListNode)
     }
 }
 
+void SemanticTypes::visit(ReturnNode *returnNode)
+{
+    if(returnNode->getExp())
+        returnNode->getExp()->accept(this);
+
+    if(!activeFunction)
+    {
+        fprintf(stderr,
+                "[SEMANTIC ERROR - returnNode] RETURN STATEMENT OUTSIDE A FUNCTION, line: %d\n",
+                returnNode->getLine());
+        return;
+    }
+
+    bool isSameType = returnNode->getExp()->getType() == activeFunction->getReturnType()->getType();
+    bool isSameArray = returnNode->getExp()->getArraySize() < 0; //TODO função retornar array
+    bool isSamePointer = returnNode->getExp()->isPointer() == activeFunction->isPointer();
+    bool isSameTypeLexeme = true;
+    if(returnNode->getExp()->getType() == ID)
+        isSameTypeLexeme = !strcmp(returnNode->getExp()->getTypeLexeme(), activeFunction->getReturnType()->getTypeLexeme());
+
+    if(!(isSameArray && isSameType && isSamePointer && isSameTypeLexeme))
+    {
+        fprintf(stderr,
+                "[SEMANTIC ERROR - returnNode] RETURN TYPE DOES NOT MATCH WITH FUNCTION RETURN TYPE, line: %d\n",
+                returnNode->getLine());
+        return;
+    }
+
+}
+
+//TODO Tá MUUUUUUITO ERRADO ISSO, "se tiver que usar typeof no visitor é pq ta errado"
 void SemanticTypes::visit(StmtNode *stmtNode)
 {
     if (stmtNode->getStmt())
     {
+
         stmtNode->getStmt()->accept(this);
         if (typeid(*stmtNode->getStmt())==typeid(ReturnNode))
         {
@@ -1574,6 +1607,50 @@ void SemanticTypes::visit(ArrayCallNode *arrayCallNode)
     arrayCallNode->setArraySize(-1);
 }
 
+void SemanticTypes::visit(MultiplicationOPNode *multiplicationOpNode) {
+
+    if(multiplicationOpNode->getExp1())
+        multiplicationOpNode->getExp1()->accept(this);
+    else {
+        fprintf(stderr,
+                "[SEMANTIC ERROR - multiplicationOpNode] NO EXPRESSION TO BE ASSIGNED, line: %d\n",
+                multiplicationOpNode->getLine());
+        return;
+    }
+
+    if(multiplicationOpNode->getExp2())
+        multiplicationOpNode->getExp2()->accept(this);
+    else {
+        fprintf(stderr,
+                "[SEMANTIC ERROR - multiplicationOpNode] NO EXPRESSION TO ASSIGN, line: %d\n",
+                multiplicationOpNode->getLine());
+        return;
+    }
+
+
+    if(!_match_exp_types(multiplicationOpNode->getExp1(), multiplicationOpNode->getExp2()))
+    {
+        fprintf(stderr,
+                "[SEMANTIC ERROR - multiplicationOpNode] CANNOT ASSIGN AN EXPRESSION TO A DIFFERENT TYPE, line: %d\n",
+                multiplicationOpNode->getLine());
+        return;
+    }
+
+    if(multiplicationOpNode->getExp1()->getType() != INT && multiplicationOpNode->getExp1()->getType() != FLOAT)
+    {
+        fprintf(stderr,
+                "[SEMANTIC ERROR - multiplicationOpNode] CANNOT OPERATE WITH NON NUMERIC VALUES, line: %d\n",
+                multiplicationOpNode->getLine());
+        return;
+    }
+
+    multiplicationOpNode->setType(multiplicationOpNode->getExp1()->getType());
+    multiplicationOpNode->setTypeLexeme(multiplicationOpNode->getExp1()->getTypeLexeme());
+    multiplicationOpNode->setPointer(multiplicationOpNode->getExp1()->isPointer());
+    multiplicationOpNode->setArraySize(multiplicationOpNode->getExp1()->getArraySize());
+    multiplicationOpNode->setLValue(false);
+}
+
 void SemanticTypes::visit(AdditionOPNode *additionOpNode) {
 
     if(additionOpNode->getExp1())
@@ -1603,6 +1680,14 @@ void SemanticTypes::visit(AdditionOPNode *additionOpNode) {
         return;
     }
 
+    if(additionOpNode->getExp1()->getType() != INT && additionOpNode->getExp1()->getType() != FLOAT)
+    {
+        fprintf(stderr,
+                "[SEMANTIC ERROR - additionOpNode] CANNOT OPERATE WITH NON NUMERIC VALUES, line: %d\n",
+                additionOpNode->getLine());
+        return;
+    }
+
     additionOpNode->setType(additionOpNode->getExp1()->getType());
     additionOpNode->setTypeLexeme(additionOpNode->getExp1()->getTypeLexeme());
     additionOpNode->setPointer(additionOpNode->getExp1()->isPointer());
@@ -1614,10 +1699,106 @@ void SemanticTypes::visit(ArrayNode *arrayNode) {
 
     if(!arrayNode->getNumInt())
     {
-        fprintf(stderr, "[SEMANTIC ERROR - arrayNode] INVALID ARRAY SIZE, line: %d", arrayNode->getLine());
+        fprintf(stderr, "[SEMANTIC ERROR - arrayNode] INVALID ARRAY SIZE, line: %d\n", arrayNode->getLine());
         return;
     }
 
+}
+
+void SemanticTypes::visit(NotNode *notNode){
+
+    notNode->setLValue(false);
+    notNode->setArraySize(-1);
+    notNode->setPointer(false);
+    notNode->setType(BOOL);
+
+    if(notNode->getExp())
+    {
+        notNode->getExp()->accept(this);
+    } else {
+        fprintf(stderr, "[SEMANTIC ERROR - signNode] INVALID EXPRESSION, line %d\n", notNode->getLine());
+        return;
+    }
+
+    bool isArray = notNode->getExp()->getArraySize() > -1;
+    if(notNode->getExp()->getType() != BOOL || isArray || notNode->getExp()->isPointer())
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - signNode] CANNOT NEGATIVE A NON BOOLEAN VALUE, line %d\n", notNode->getLine());
+        return;
+    }
+
+}
+
+void SemanticTypes::visit(BooleanOPNode *booleanOpNode)
+{
+
+    booleanOpNode->setType(BOOL);
+    booleanOpNode->setLValue(false);
+    booleanOpNode->setPointer(false);
+    booleanOpNode->setArraySize(-1);
+
+    if(booleanOpNode->getExp1())
+    {
+        booleanOpNode->getExp1()->accept(this);
+    } else {
+        fprintf(stderr, "[SEMANTIC ERROR - booleanOpNode] INVALID EXPRESSION 1, line %d\n", booleanOpNode->getLine());
+        return;
+    }
+
+    if(booleanOpNode->getExp2())
+    {
+        booleanOpNode->getExp2()->accept(this);
+    } else {
+        fprintf(stderr, "[SEMANTIC ERROR - booleanOpNode] INVALID EXPRESSION 2, line %d\n", booleanOpNode->getLine());
+        return;
+    }
+
+    if(booleanOpNode->getOp())
+    {
+        booleanOpNode->getOp()->accept(this);
+    } else {
+        fprintf(stderr, "[SEMANTIC ERROR - booleanOpNode] INVALID OPERATOR, line %d\n", booleanOpNode->getLine());
+        return;
+    }
+
+    if(!_match_exp_types(booleanOpNode->getExp1(), booleanOpNode->getExp2()))
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - booleanOpNode] CANNOT COMPARE DIFFERENT TYPES, line %d\n", booleanOpNode->getLine());
+        return;
+    }
+
+    bool isArray = booleanOpNode->getExp1()->getArraySize() > -1;
+    if(booleanOpNode->getOp()->getToken() != NE && booleanOpNode->getOp()->getToken() != EQ)
+        if((booleanOpNode->getExp1()->getType() != INT && booleanOpNode->getExp1()->getType() != FLOAT) || isArray || booleanOpNode->getExp1()->isPointer())
+        {
+            fprintf(stderr, "[SEMANTIC ERROR - booleanOpNode] CANNOT COMPARE WITH NON NUMERIC TYPES, line %d\n", booleanOpNode->getLine());
+            return;
+        }
+
+}
+
+void SemanticTypes::visit(SignNode *signNode)
+{
+    if(signNode->getExp())
+    {
+        signNode->getExp()->accept(this);
+    } else {
+        fprintf(stderr, "[SEMANTIC ERROR - signNode] INVALID EXPRESSION, line %d\n", signNode->getLine());
+        return;
+    }
+
+    bool isArray = signNode->getExp()->getArraySize() > -1;
+    if((signNode->getExp()->getType() != INT && signNode->getExp()->getType() != FLOAT) || isArray || signNode->getExp()->isPointer())
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - signNode] CANNOT NEGATIVE A NON NUMERIC VALUE, line %d\n", signNode->getLine());
+        return;
+    }
+
+    signNode->setType(signNode->getExp()->getType());
+    signNode->setTypeLexeme(signNode->getExp()->getTypeLexeme());
+    signNode->setPointer(false);
+    signNode->setArraySize(-1);
+    signNode->setLValue(false);
 }
 
 void SemanticTypes::visit(CallNode *callNode)
@@ -1629,7 +1810,7 @@ void SemanticTypes::visit(CallNode *callNode)
     }
     else
     {
-        fprintf(stderr, "[SEMANTIC ERROR - callNode] INVALID FUNCTION CALL, line %d", callNode->getLine());
+        fprintf(stderr, "[SEMANTIC ERROR - callNode] INVALID FUNCTION CALL, line %d\n", callNode->getLine());
         return;
     }
 
@@ -1643,7 +1824,7 @@ void SemanticTypes::visit(CallNode *callNode)
 
     if(!func)
     {
-        fprintf(stderr, "[SEMANTIC ERROR - callNode] CALL TO UNDEFINED FUNCTION, line: %d lexeme: %s", callNode->getLine(), callNode->getId()->getLexeme());
+        fprintf(stderr, "[SEMANTIC ERROR - callNode] CALL TO UNDEFINED FUNCTION, line: %d lexeme: %s\n", callNode->getLine(), callNode->getId()->getLexeme());
         return;
     }
 
@@ -1664,7 +1845,7 @@ void SemanticTypes::visit(CallNode *callNode)
 
         if(!(isSameArray && isSamePointer && isSameType && isSameTypeLexeme))
         {
-            fprintf(stderr, "[SEMANTIC ERROR - callNode] PARAMETER TYPE MISMATCH, line: %d parameter: %s", parameter->getLine(), expectedParameter->getId()->getLexeme());
+            fprintf(stderr, "[SEMANTIC ERROR - callNode] PARAMETER TYPE MISMATCH, line: %d parameter: %s\n", parameter->getLine(), expectedParameter->getId()->getLexeme());
             return;
         }
 
@@ -1674,7 +1855,7 @@ void SemanticTypes::visit(CallNode *callNode)
 
     if(expectedParameter || parameter)
     {
-        fprintf(stderr, "[SEMANTIC ERROR - callNode] PARAMETER COUNT MISMATCH, line: %d lexeme: %s", parameter->getLine(), callNode->getId()->getLexeme());
+        fprintf(stderr, "[SEMANTIC ERROR - callNode] PARAMETER COUNT MISMATCH, line: %d lexeme: %s\n", parameter->getLine(), callNode->getId()->getLexeme());
         return;
     }
 

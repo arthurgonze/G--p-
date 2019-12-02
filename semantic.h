@@ -39,7 +39,7 @@ public:
     void visit(ReadLnNode *a) override {};
     void visit(PrintNode *a) override {};
     void visit(WhileNode *whileNode) override {};
-    void visit(ReturnNode *returnNode) override {};
+    void visit(ReturnNode *returnNode) override;
     void visit(TryNode *tryNode) override {};
     void visit(ThrowNode *throwNode) override {};
     void visit(BreakNode *breakNode) override {};
@@ -49,12 +49,12 @@ public:
     void visit(AdditionOPNode *additionOPNode) override;
     void visit(AddressValNode *addressValNode) override;
     void visit(AssignNode *assignNode) override;
-    void visit(BooleanOPNode *booleanOPNode) override {};
+    void visit(BooleanOPNode *booleanOPNode) override;
     void visit(NameExpNode *nameExpNode) override;
-    void visit(NotNode *notNode) override {};
+    void visit(NotNode *notNode) override;
     void visit(PointerValNode *pointerValNode) override;
-    void visit(MultiplicationOPNode *multiplicationOPNode) override {};
-    void visit(SignNode *signNode) override {};
+    void visit(MultiplicationOPNode *multiplicationOpNode) override;
+    void visit(SignNode *signNode) override;
     void visit(ArrayCallNode *arrayCallNode) override;
     void visit(FunctionListNode *functionListNode) override;
     void visit(PointerExpNode *pointerExpNode) override {};
