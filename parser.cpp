@@ -143,7 +143,7 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
             id->setLine(lexical_analyzer_getLine());
 
             ASTNode *ast = ProgramAUX(type, pointer, id, varList);
-            if (ast != NULL && typeid(ast) == typeid(FunctionNode*))
+            if (ast != NULL && typeid(*ast) == typeid(FunctionNode))
             {
                 FunctionNode *f = (FunctionNode *) ast;
 
@@ -392,6 +392,7 @@ VarStmtNode *Parser::VarStmtAux(TokenNode *id, VarDeclNode *varList)
             IdListNode *idListNode = IdList();
             EatOrSkip(SEMICOLON, varStmtAuxFollowSet);
 
+            id->setTypeLexeme(id->getLexeme());
             TypeNode *typeNode = new TypeNode(id);
             typeNode->setLine(lexical_analyzer_getLine());
 
@@ -469,6 +470,8 @@ IdListNode *Parser::IdList()
         {
             TokenNode *id = new TokenNode(ID, EatOrSkip(ID, idListFollowSet));
             id->setLine(lexical_analyzer_getLine());
+            id->setType(ID);
+            id->setTypeLexeme(lexical_analyzer_last_lexeme());
 
             ArrayNode *array = Array();
 
@@ -633,6 +636,7 @@ TypeNode *Parser::Type()
         {
             TokenNode *type = new TokenNode(INT, nullptr);
             type->setLine(lexical_analyzer_getLine());
+            type->setType(INT);
 
             Eat(INT);
 
@@ -645,6 +649,7 @@ TypeNode *Parser::Type()
         {
             TokenNode *type = new TokenNode(FLOAT, nullptr);
             type->setLine(lexical_analyzer_getLine());
+            type->setType(FLOAT);
 
             Eat(FLOAT);
 
@@ -657,6 +662,7 @@ TypeNode *Parser::Type()
         {
             TokenNode *type = new TokenNode(BOOL, nullptr);
             type->setLine(lexical_analyzer_getLine());
+            type->setType(BOOL);
 
             Eat(BOOL);
 
@@ -669,10 +675,13 @@ TypeNode *Parser::Type()
         {
             TokenNode *type = new TokenNode(ID, lexical_analyzer_last_lexeme());
             type->setLine(lexical_analyzer_getLine());
+            type->setType(ID);
+            type->setTypeLexeme(lexical_analyzer_last_lexeme());
 
             Eat(ID);
 
             TypeNode *typeNode = new TypeNode(type);
+            typeNode->getId()->getLexeme();
             typeNode->setLine(lexical_analyzer_getLine());
 
             return typeNode;
@@ -681,6 +690,7 @@ TypeNode *Parser::Type()
         {
             TokenNode *type = new TokenNode(CHAR, nullptr);
             type->setLine(lexical_analyzer_getLine());
+            type->setType(CHAR);
 
             Eat(CHAR);
 
@@ -1365,6 +1375,7 @@ ExpNode *Parser::ExprOrAUX(ExpNode *expr)
 
             node = new BooleanOPNode(token, expr, exp2);
             node->setLine(lexical_analyzer_getLine());
+            node->setType(BOOL);
 
             break;
         }
@@ -1425,6 +1436,7 @@ ExpNode *Parser::ExprAndAUX(ExpNode *expr)
 
             node = new BooleanOPNode(token, expr, exp2);
             node->setLine(lexical_analyzer_getLine());
+            node->setType(BOOL);
 
             break;
         }
@@ -1484,6 +1496,7 @@ ExpNode *Parser::ExprEqualityAUX(ExpNode *expr)
 
             node = new BooleanOPNode(token, expr, exp2);
             node->setLine(lexical_analyzer_getLine());
+            node->setType(BOOL);
 
             break;
         }
@@ -1498,6 +1511,7 @@ ExpNode *Parser::ExprEqualityAUX(ExpNode *expr)
 
             node = new BooleanOPNode(token, expr, exp2);
             node->setLine(lexical_analyzer_getLine());
+            node->setType(BOOL);
 
             break;
         }
@@ -1557,6 +1571,7 @@ ExpNode *Parser::ExprRelationalAUX(ExpNode *expr)
 
             node = new BooleanOPNode(token, expr, exp2);
             node->setLine(lexical_analyzer_getLine());
+            node->setType(BOOL);
 
             break;
         }
@@ -1571,6 +1586,7 @@ ExpNode *Parser::ExprRelationalAUX(ExpNode *expr)
 
             node = new BooleanOPNode(token, expr, exp2);
             node->setLine(lexical_analyzer_getLine());
+            node->setType(BOOL);
 
             break;
         }
@@ -1585,6 +1601,7 @@ ExpNode *Parser::ExprRelationalAUX(ExpNode *expr)
 
             node = new BooleanOPNode(token, expr, exp2);
             node->setLine(lexical_analyzer_getLine());
+            node->setType(BOOL);
 
             break;
         }
@@ -1599,6 +1616,7 @@ ExpNode *Parser::ExprRelationalAUX(ExpNode *expr)
 
             node = new BooleanOPNode(token, expr, exp2);
             node->setLine(lexical_analyzer_getLine());
+            node->setType(BOOL);
 
             break;
         }
@@ -1734,7 +1752,7 @@ ExpNode *Parser::ExprMultiplicativeAUX(ExpNode *expr)
     ExpNode *node = expr;
     switch (tok)
     {
-        case ADDRESS:
+        case ADDRESS:// e bit a bit
         {
             Eat(ADDRESS);
 
@@ -1745,10 +1763,10 @@ ExpNode *Parser::ExprMultiplicativeAUX(ExpNode *expr)
 
             node = new MultiplicationOPNode(token, expr, exp2);
             node->setLine(lexical_analyzer_getLine());
-
+            //TODO definir o tipo das operacoes no semantico
             break;
         }
-        case STAR:
+        case STAR:// multiplicacao
         {
             Eat(STAR);
 
@@ -1762,7 +1780,7 @@ ExpNode *Parser::ExprMultiplicativeAUX(ExpNode *expr)
 
             break;
         }
-        case SLASH:
+        case SLASH:// divisao
         {
             Eat(SLASH);
 
@@ -1776,7 +1794,7 @@ ExpNode *Parser::ExprMultiplicativeAUX(ExpNode *expr)
 
             break;
         }
-        case PERCENT:
+        case PERCENT://mod
         {
             Eat(PERCENT);
 
@@ -1805,10 +1823,10 @@ ExpNode *Parser::ExprUnary()
         {
             Eat(NOT);
 
-            SignNode *signNode = new SignNode(ExprUnary());
-            signNode->setLine(lexical_analyzer_getLine());
-
-            return signNode;
+            NotNode *notNode = new NotNode(ExprUnary());
+            notNode->setLine(lexical_analyzer_getLine());
+            notNode->setType(BOOL);
+            return notNode;
         }
         case PLUS:
         {
@@ -1829,6 +1847,7 @@ ExpNode *Parser::ExprUnary()
             Eat(STAR);
 
             PointerValNode *pointerValNode = new PointerValNode(ExprUnary());
+            pointerValNode->setPointer(false); // TODO sem confianca
             pointerValNode->setLine(lexical_analyzer_getLine());
 
             return pointerValNode;
@@ -1838,6 +1857,7 @@ ExpNode *Parser::ExprUnary()
             Eat(ADDRESS);
 
             AddressValNode *addressValNode = new AddressValNode(ExprUnary());
+            addressValNode->setPointer(true); // TODO sem confianca
             addressValNode->setLine(lexical_analyzer_getLine());
 
             return addressValNode;
@@ -1871,24 +1891,35 @@ ExpNode *Parser::Primary()
         case ID:
         {
             TokenNode *id = new TokenNode(ID, lexical_analyzer_last_lexeme());
+            id->setType(ID);
             id->setLine(lexical_analyzer_getLine());
+
             Eat(ID);
+
             return PostFixExpr(id);
         }
         case NUMINT:
         {
             TokenNode *numInt = new TokenNode(NUMINT, lexical_analyzer_last_lexeme());
             numInt->setLine(lexical_analyzer_getLine());
+            numInt->setType(INT);
+
             Eat(NUMINT);
+
             PrimaryNode* primaryNode = new PrimaryNode(numInt);
+            primaryNode->setType(INT);
             return PostFixExprAUX(primaryNode);
         }
         case NUMFLOAT:
         {
             TokenNode *numFloat = new TokenNode(NUMFLOAT, lexical_analyzer_last_lexeme());
             numFloat->setLine(lexical_analyzer_getLine());
+            numFloat->setType(FLOAT);
+
             Eat(NUMFLOAT);
+
             PrimaryNode *primaryNode = new PrimaryNode(numFloat);
+            primaryNode->setType(FLOAT);
             return PostFixExprAUX(primaryNode);
         }
         case LITERAL:
@@ -1896,9 +1927,15 @@ ExpNode *Parser::Primary()
 
             TokenNode *literalString = new TokenNode(LITERAL, lexical_analyzer_last_lexeme());
             literalString->setLine(lexical_analyzer_getLine());
+            literalString->setType(CHAR);
+            literalString->setPointer(true);
 
             Eat(LITERAL);
+
             PrimaryNode *node = new PrimaryNode(literalString);
+            node->setType(CHAR);
+            node->setPointer(true); // TODO eh ponteiro ou array?
+
             return PostFixExprAUX(node);
         }
         case LITERALCHAR:
@@ -1906,24 +1943,38 @@ ExpNode *Parser::Primary()
 
             TokenNode *literalString = new TokenNode(LITERALCHAR, lexical_analyzer_last_lexeme());
             literalString->setLine(lexical_analyzer_getLine());
+            literalString->setType(CHAR);
             
             Eat(LITERALCHAR);
+
             PrimaryNode *node = new PrimaryNode(literalString);
+            node->setType(CHAR);
+
             return PostFixExprAUX(node);
         }
         case TRUE:
         {
+            TokenNode *token = new TokenNode(TRUE, nullptr);
+            token->setType(BOOL);
+            token->setLexeme(lexical_analyzer_last_lexeme());
+
             Eat(TRUE);
 
-            ExpNode *expNode = new PrimaryNode(new TokenNode(TRUE, nullptr));
+            ExpNode *expNode = new PrimaryNode(token);
+            expNode->setType(BOOL);
             expNode->setLine(lexical_analyzer_getLine());
             return PostFixExprAUX(expNode);
         }
         case FALSE:
         {
+            TokenNode *token = new TokenNode(FALSE, nullptr);
+            token->setType(BOOL);
+            token->setLexeme(lexical_analyzer_last_lexeme());
+
             Eat(FALSE);
 
-            ExpNode *expNode = new PrimaryNode(new TokenNode(FALSE, nullptr));
+            ExpNode *expNode = new PrimaryNode(token);
+            expNode->setType(BOOL);
             expNode->setLine(lexical_analyzer_getLine());
             return PostFixExprAUX(expNode);
         }
@@ -2030,19 +2081,21 @@ ExpNode *Parser::PostFixExpr(TokenNode *id)
             return primary;
         }
         case RPARENT:
-        case SEMICOLON:
         case DOT:
         case POINTER:
         case LBRACKET:
         {
             PrimaryNode *primaryNode = new PrimaryNode(id);
+
             primaryNode->setLine(lexical_analyzer_getLine());
 
             return PostFixExprAUX(primaryNode);
         }
+        case SEMICOLON:
         default:
         {
             PrimaryNode *primaryNode = new PrimaryNode(id);
+
             primaryNode->setLine(lexical_analyzer_getLine());
 
             return primaryNode;

@@ -65,9 +65,9 @@ class ExpNode : public ASTNode
 {
 private:
     const char *lexeme;
-    bool lValue, pointer;
+    bool lValue, pointer;// TODO precisa saber se é array e pegar o tamanho?
     int type, arraySize;
-    const char *typeLexeme;
+    const char *typeLexeme; // id
 public:
     inline bool isLValue() const { return lValue; }
     inline bool isPointer() const { return pointer; }
@@ -122,11 +122,9 @@ public:
     ~TokenNode() override;
 
     inline int getToken() { return token; }
-    //inline const char *getLexeme() { return lexeme; }
     inline int getOffset() const { return offset; }
 
     inline void setToken(int token) { this->token = token; }
-    //inline void setLexeme(const char *lexeme) { this->lexeme = lexeme; }
     inline void setOffset(int offset) { this->offset = offset; }
 
     void accept(Visitor *visitor) override { visitor->visit(this); }
@@ -224,9 +222,9 @@ private:
     bool returnAtt;
     ASTNode *stmt;
 public:
-    explicit StmtNode(StmtListNode *stmtList) { this->stmt = reinterpret_cast<ASTNode *>(stmtList); }
-    explicit StmtNode(IfNode *aux) { this->stmt = reinterpret_cast<ASTNode *>(aux); }
-    explicit StmtNode(WhileNode *aux) { this->stmt = reinterpret_cast<ASTNode *>(aux); }
+    explicit StmtNode(StmtListNode *stmtList) { this->stmt = (ASTNode *) (stmtList); }
+    explicit StmtNode(IfNode *aux) { this->stmt = (ASTNode *) (aux); }
+    explicit StmtNode(WhileNode *aux) { this->stmt = (ASTNode *) (aux); }
     explicit StmtNode(ExpNode *aux) { this->stmt = aux; }
     explicit StmtNode(BreakNode *aux) { this->stmt = aux; }
     explicit StmtNode(PrintNode *aux) { this->stmt = aux; }
@@ -234,7 +232,7 @@ public:
     explicit StmtNode(ReturnNode *aux) { this->stmt = aux; }
     explicit StmtNode(ThrowNode *aux) { this->stmt = aux; }
     explicit StmtNode(TryNode *aux) { this->stmt = aux; }
-    explicit StmtNode(SwitchNode *aux) { this->stmt = reinterpret_cast<ASTNode *>(aux); }
+    explicit StmtNode(SwitchNode *aux) { this->stmt = (ASTNode *) (aux); }
     ~StmtNode() override { delete this->stmt; }
 
     inline ASTNode *getStmt() { return stmt; }
@@ -343,6 +341,8 @@ public:
 
     inline TokenNode *getId() { return id; }
     const char *getLexeme() const { return lexeme; }
+    inline int getType() { id->getToken(); }// para tipos primitivos
+    inline const char *getTypeLexeme() { id->getTypeLexeme(); }// quando id for um tipo, struct
 
     void setId(TokenNode *id) { this->id = id; }
     void setLexeme(const char *lexeme) { this->lexeme = lexeme; }
@@ -355,7 +355,7 @@ class ArrayNode : public ExpNode
 private:
     TokenNode *numInt;
 public:
-    explicit ArrayNode(TokenNode *numInt) { this->numInt = numInt; }
+    explicit ArrayNode(TokenNode *numInt) { this->numInt = numInt; if(numInt) setLexeme(numInt->getLexeme());}
     ~ArrayNode() override { delete this->numInt; }
 
     inline TokenNode *getNumInt() { return numInt; }
@@ -432,6 +432,8 @@ public:
     inline TokenNode *getId() { return id; }
     inline ArrayNode *getArray() { return array; }
     inline FormalListNode *getNext() { return next; }
+    inline int getParameterType() { return type->getType(); }
+    inline const char *getParameterTypeLexeme() { return type->getTypeLexeme(); }
 
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
@@ -458,7 +460,6 @@ private:
     ExpNode *exp;
 public:
     explicit PrimaryNode(TokenNode *token);
-    explicit PrimaryNode(CallNode *function);
     explicit PrimaryNode(ExpNode *exp);
     ~PrimaryNode() override;
 
@@ -505,7 +506,7 @@ class SignNode : public ExpNode
 private:
     ExpNode *exp;
 public:
-    explicit SignNode(ExpNode *exp) { this->exp = exp; }
+    explicit SignNode(ExpNode *exp);
     ~SignNode() override { delete this->exp; }
 
     inline ExpNode *getExp() { return exp; }
@@ -518,7 +519,7 @@ class AddressValNode : public ExpNode
 private:
     ExpNode *exp;
 public:
-    explicit AddressValNode(ExpNode *exp) { this->exp = exp; }
+    explicit AddressValNode(ExpNode *exp);
     ~AddressValNode() override { delete this->exp; }
 
     inline ExpNode *getExp() { return exp; }
@@ -531,7 +532,7 @@ class PointerValNode : public ExpNode
 private:
     ExpNode *exp;
 public:
-    explicit PointerValNode(ExpNode *exp) { this->exp = exp; }
+    explicit PointerValNode(ExpNode *exp);
     ~PointerValNode() override { delete this->exp; }
 
     inline ExpNode *getExp() { return exp; }
@@ -544,7 +545,7 @@ class NotNode : public ExpNode
 private:
     ExpNode *exp;
 public:
-    explicit NotNode(ExpNode *exp) { this->exp = exp; }
+    explicit NotNode(ExpNode *exp);
     ~NotNode() override { delete this->exp; }
 
     inline ExpNode *getExp() { return exp; }
@@ -665,6 +666,8 @@ public:
     inline FormalListNode *getParameters() { return parameters; }
     inline VarDeclNode *getLocal() { return local; }
     inline StmtListNode *getBody() { return body; }
+    inline int getReturnType() { return type->getType(); }
+    inline const char* getReturnTypeLexeme() { return type->getTypeLexeme(); }
 
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
