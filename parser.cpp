@@ -142,6 +142,7 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
             TokenNode *id = new TokenNode(ID, EatOrSkip(ID, programFollowSet));
             id->setLine(lexical_analyzer_getLine());
 
+
             ASTNode *ast = ProgramAUX(type, pointer, id, varList);
             if (ast != NULL && typeid(*ast) == typeid(FunctionNode))
             {
@@ -199,7 +200,7 @@ ASTNode *Parser::ProgramAUX(TypeNode *type, PointerNode *pointer, TokenNode *id,
             return func;
         }
         case COMMA:
-        case LBRACE:
+        case LBRACKET:
         case SEMICOLON: // PARA O CASO int a; no main
         {
             ArrayNode *array = Array();
@@ -370,8 +371,6 @@ VarStmtNode *Parser::VarStmt(VarDeclNode *varList)
         }
         default:
         {
-            fprintf(stderr, "[SYNTAX ERROR] error(VarStmt), Token error: %s \n", token_id_to_name(tok));
-
             VarStmtNode *varStmtNode = new VarStmtNode(varList, nullptr);
             varStmtNode->setLine(lexical_analyzer_getLine());
 
