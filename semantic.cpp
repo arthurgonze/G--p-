@@ -1497,8 +1497,8 @@ void SemanticTypes::visit(NameExpNode *nameExpNode)
     if(nameExpNode->getId()) {
         nameExpNode->getId()->accept(this);
     }else {
-        fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] INVALID RECORD ACCESS EXPRESSION, line %d\n",
-                nameExpNode->getLine());
+        fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] NO RECORD ACCESS EXPRESSION, line %d\n",
+                nameExpNode->getExp()->getLine());
         return;
     }
 
@@ -1506,17 +1506,22 @@ void SemanticTypes::visit(NameExpNode *nameExpNode)
         nameExpNode->getExp()->accept(this);
     }else {
         fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] NO STRUCT ACCESS FIELD, line %d\n",
-                nameExpNode->getLine());
+                nameExpNode->getExp()->getLine());
         return;
     }
 
-
+    if(nameExpNode->getExp()->isPointer() || nameExpNode->getExp()->getArraySize() > 0)
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] INCORRECT ACCESS TO A STRUCT, line %d\n",
+                nameExpNode->getExp()->getLine());
+        return;
+    }
     VarSymbol *recordField = varTable->searchInScope(nameExpNode->getId()->getLexeme(), nameExpNode->getExp()->getTypeLexeme());
 
     if(!recordField)
     {
         fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] UNKNOWN FIELD IN STRUCT, line: %d field: %s type: %s\n",
-                nameExpNode->getLine(), nameExpNode->getId()->getLexeme(), nameExpNode->getExp()->getTypeLexeme());
+                nameExpNode->getExp()->getLine(), nameExpNode->getId()->getLexeme(), nameExpNode->getExp()->getTypeLexeme());
         return;
     }
 
@@ -1605,6 +1610,82 @@ void SemanticTypes::visit(AdditionOPNode *additionOpNode) {
     additionOpNode->setLValue(false);
 }
 
+void SemanticTypes::visit(ArrayNode *arrayNode) {
+
+    if(!arrayNode->getNumInt())
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - arrayNode] INVALID ARRAY SIZE, line: %d", arrayNode->getLine());
+        return;
+    }
+
+}
+
+void SemanticTypes::visit(CallNode *callNode)
+{
+
+    if(callNode->getId())
+    {
+        callNode->getId()->accept(this);
+    }
+    else
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - callNode] INVALID FUNCTION CALL, line %d", callNode->getLine());
+        return;
+    }
+
+    if(callNode->getParameters())
+    {
+        callNode->getParameters()->accept(this);
+    }
+
+    FunctionSymbol *func = functionTable->cSearch(callNode->getId()->getLexeme());
+
+
+    if(!func)
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - callNode] CALL TO UNDEFINED FUNCTION, line: %d lexeme: %s", callNode->getLine(), callNode->getId()->getLexeme());
+        return;
+    }
+
+    FormalListNode* expectedParameter = func->getVarDecl();
+    ExpListNode* parameter = callNode->getParameters();
+
+    while(expectedParameter && parameter) {
+
+        parameter->accept(this);
+
+        bool isSameType = expectedParameter->getParameterType() == parameter->getExp()->getType();
+        bool isSameArray = (expectedParameter->getArray()!= NULL) == (parameter->getExp()->getArraySize() > 0);
+        bool isSamePointer = (expectedParameter->getPointer() != NULL) == parameter->getExp()->isPointer();
+        bool isSameTypeLexeme = true;
+
+        if(expectedParameter->getParameterType() == ID)
+            isSameTypeLexeme = !strcmp(expectedParameter->getParameterTypeLexeme(), parameter->getExp()->getTypeLexeme());
+
+        if(!(isSameArray && isSamePointer && isSameType && isSameTypeLexeme))
+        {
+            fprintf(stderr, "[SEMANTIC ERROR - callNode] PARAMETER TYPE MISMATCH, line: %d parameter: %s", parameter->getLine(), expectedParameter->getId()->getLexeme());
+            return;
+        }
+
+        parameter = parameter->getNext();
+        expectedParameter = expectedParameter->getNext();
+    }
+
+    if(expectedParameter || parameter)
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - callNode] PARAMETER COUNT MISMATCH, line: %d lexeme: %s", parameter->getLine(), callNode->getId()->getLexeme());
+        return;
+    }
+
+    callNode->setLexeme(callNode->getId()->getLexeme());
+    callNode->setType(func->getReturnType()->getType());
+    callNode->setTypeLexeme(func->getReturnType()->getTypeLexeme());
+    callNode->setPointer(func->isPointer());
+    callNode->setArraySize(-1); //TODO funcao retornar array
+    callNode->setLValue(false);
+}
+
 void SemanticTypes::visit(PrimaryNode *primaryNode) {
 
     //TODO pq eu preciso de um token node e um exp node se eh td exp???
@@ -1664,4 +1745,16 @@ void SemanticTypes::visit(TokenNode *tokenNode)
         tokenNode->setArraySize(-1); //TODO funcao pode retornar array?
     }
 
+}
+
+void SemanticTypes::visit(ExpListNode *expListNode)
+{
+    if (expListNode->getExp())
+    {
+        expListNode->getExp()->accept(this);
+    }
+    if (expListNode->getNext())
+    {
+        expListNode->getNext()->accept(this);
+    }
 }

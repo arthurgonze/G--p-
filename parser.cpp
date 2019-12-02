@@ -1954,17 +1954,27 @@ ExpNode *Parser::Primary()
         }
         case TRUE:
         {
+            TokenNode *token = new TokenNode(TRUE, nullptr);
+            token->setType(BOOL);
+            token->setLexeme(lexical_analyzer_last_lexeme());
+
             Eat(TRUE);
 
-            ExpNode *expNode = new PrimaryNode(new TokenNode(TRUE, nullptr));
+            ExpNode *expNode = new PrimaryNode(token);
+            expNode->setType(BOOL);
             expNode->setLine(lexical_analyzer_getLine());
             return PostFixExprAUX(expNode);
         }
         case FALSE:
         {
+            TokenNode *token = new TokenNode(FALSE, nullptr);
+            token->setType(BOOL);
+            token->setLexeme(lexical_analyzer_last_lexeme());
+
             Eat(FALSE);
 
-            ExpNode *expNode = new PrimaryNode(new TokenNode(FALSE, nullptr));
+            ExpNode *expNode = new PrimaryNode(token);
+            expNode->setType(BOOL);
             expNode->setLine(lexical_analyzer_getLine());
             return PostFixExprAUX(expNode);
         }

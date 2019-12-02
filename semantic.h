@@ -30,8 +30,8 @@ public:
     void visit(VarDeclNode *varDeclNode) override {};
     void visit(TypeDeclNode *typeDeclNode) override {};
     void visit(FormalListNode *formalListNode) override {};
-    void visit(ExpListNode *expListNode) override {};
-    void visit(CallNode *callNode) override {};
+    void visit(ExpListNode *expListNode) override;
+    void visit(CallNode *callNode);
     void visit(PrimaryNode *primaryNode) override;
     void visit(FunctionNode *functionNode) override;
     void visit(StmtNode *stmtNode) override;
@@ -59,7 +59,7 @@ public:
     void visit(FunctionListNode *functionListNode) override;
     void visit(PointerExpNode *pointerExpNode) override {};
     void visit(PointerNode *node) override {}
-    void visit(ArrayNode *node) override {}
+    void visit(ArrayNode *node) override;
     void visit(VarStmtNode *node) override {}
 };
 
