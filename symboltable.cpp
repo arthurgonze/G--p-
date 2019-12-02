@@ -53,11 +53,13 @@ void SymbolTable::cInsert(Symbol *symbol, const char *lexeme)
         block[index] = symbol;
         if (headIndex + strlen(lexeme) >= (unsigned) lexemeArraySize)
         {
-            lexemeArraySize += (1 + strlen(lexeme)/LEXEME_ARRAY_SIZE)*LEXEME_ARRAY_SIZE;
+            while(headIndex + strlen(lexeme) >= lexemeArraySize)
+                lexemeArraySize += LEXEME_ARRAY_SIZE;
+//            lexemeArraySize += (1 + strlen(lexeme)/LEXEME_ARRAY_SIZE)*LEXEME_ARRAY_SIZE;
             lexemeArray = (char *) realloc(lexemeArray, lexemeArraySize*sizeof(char));
         }
-        strcpy(&lexemeArray[headIndex], lexeme);
-        headIndex += strlen(lexeme) + 1;
+        strcpy(lexemeArray +headIndex, lexeme);
+        headIndex += (int) strlen(lexeme) + 1;
     }
 }
 
@@ -75,7 +77,8 @@ Symbol *SymbolTable::cSearch(const char *lexeme)
         Symbol *temp = block[pos];
         while (temp!=nullptr)
         {
-            if (strcmp(temp->getLexeme(), lexeme)==0)// TODO talvez otimizar comparacao de char
+
+            if (strcmp(temp->getLexeme(), lexeme)==0)
             {
                 return temp;
             }
@@ -322,8 +325,7 @@ void VarTable::print()
             if(symbol->isPointer())
                 cout << " POINTER";
 
-            //TODO array de tamanho 0 é array tbm???
-            if(symbol->getArraySize() > 0)
+            if(symbol->getArraySize() >= 0)
                 cout << " ARRAY";
 
             cout << endl;

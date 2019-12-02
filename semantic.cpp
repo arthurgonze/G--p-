@@ -289,7 +289,7 @@ void Semantic::visit(CallNode *callNode)
 
             while (exp!=NULL && param!=NULL)
             {
-                if (exp->getExp()->getType()!=param->getType()->getId()->getToken() /*TODO||
+                if (exp->getExp()->getType()!=param->getType()->getId()->getToken() /*
                     exp->getExp()->getTypeLexeme()!=param->getType()->getId()->getLexeme()*/)
                 {
                     PrimaryNode *node = (PrimaryNode *) exp->getExp();
@@ -1195,7 +1195,6 @@ void SemanticTables::visit(VarDeclNode *varDeclNode) {
     IdListNode *idListAux = varDeclNode->getIdList();
     while (idListAux!=NULL)
     {
-        //TODO isso eh realmente necessario?
         idListAux->getId()->setType(varDeclNode->getType()->getId()->getToken());
         idListAux->getId()->setTypeLexeme(varDeclNode->getType()->getId()->getLexeme());
         idListAux->getId()->setPointer(varDeclNode->getType()->getId()->isPointer());
@@ -1220,7 +1219,6 @@ void SemanticTables::visit(VarDeclNode *varDeclNode) {
             arraySize = atoi(idListAux->getArray()->getLexeme());
         }
 
-        //TODO conferir se o isPointer e array Size possuem o valor correto
         if (!varTable->cInsert(varDeclNode->getType(), idListAux->getId()->getLexeme(), isPointer,
                                arraySize, BOOL_FALSE))
         {
@@ -1391,7 +1389,7 @@ void SemanticTypes::visit(ReturnNode *returnNode)
     }
 
     bool isSameType = returnNode->getExp()->getType() == activeFunction->getReturnType()->getType();
-    bool isSameArray = returnNode->getExp()->getArraySize() < 0; //TODO função retornar array
+    bool isSameArray = returnNode->getExp()->getArraySize() < 0;
     bool isSamePointer = returnNode->getExp()->isPointer() == activeFunction->isPointer();
     bool isSameTypeLexeme = true;
     if(returnNode->getExp()->getType() == ID)
@@ -1404,6 +1402,7 @@ void SemanticTypes::visit(ReturnNode *returnNode)
                 returnNode->getLine());
         return;
     }
+
 
 }
 
@@ -1863,7 +1862,7 @@ void SemanticTypes::visit(CallNode *callNode)
     callNode->setType(func->getReturnType()->getType());
     callNode->setTypeLexeme(func->getReturnType()->getTypeLexeme());
     callNode->setPointer(func->isPointer());
-    callNode->setArraySize(-1); //TODO funcao retornar array
+    callNode->setArraySize(-1);
     callNode->setLValue(false);
 }
 
@@ -1923,7 +1922,7 @@ void SemanticTypes::visit(TokenNode *tokenNode)
         tokenNode->setType(func->getReturnType()->getType());
         tokenNode->setTypeLexeme(func->getReturnType()->getTypeLexeme());
         tokenNode->setPointer(func->isPointer());
-        tokenNode->setArraySize(-1); //TODO funcao pode retornar array?
+        tokenNode->setArraySize(-1);
     }
 
 }

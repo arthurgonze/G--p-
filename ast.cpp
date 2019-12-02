@@ -169,7 +169,7 @@ CallNode::CallNode(TokenNode *id, ExpListNode *parameters)
     this->setTypeLexeme("NotDefined");
     this->setLine(-42);
     this->setArraySize(-42);
-    this->setLexeme("NotDefined"); // TODO ID lexeme?
+    this->setLexeme("NotDefined");
 }
 CallNode::~CallNode()
 {

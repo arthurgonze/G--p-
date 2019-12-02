@@ -7,7 +7,7 @@
 class Symbol
 {
 private:
-    const char *lexeme;
+    int lexemeIndex;
     const char *lexemeScope;// new
     int scope;// new
     Symbol *nextSymbol;
@@ -18,7 +18,7 @@ public:
 
     bool isScope(const char *lexemeScope) { return !strcmp(this->lexemeScope, lexemeScope); }
 
-    inline const char *getLexeme() { return this->lexeme; }
+    inline int getLexemeIndex() { return this->lexemeIndex; }
     inline Symbol *getNextSymbol() { return this->nextSymbol; }
     inline const char *getLexemeScope() const { return lexemeScope; }
     inline int getScope() const { return scope; }

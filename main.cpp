@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
     endSemantic();
 
     delete(ast);
+    delete(parser);
 	printf("\n");
 
     return returnCode;

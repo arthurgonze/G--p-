@@ -7,7 +7,6 @@ ProgramNode *program;
 ProgramNode *Parser::StartParser()
 {
     Advance();
-    // TODO fprintf(stdout, "PROGRAM\n");
     program = Program(nullptr, nullptr, nullptr);
     visitor = new PrintAST();
     program->accept(visitor);
@@ -80,14 +79,6 @@ void Parser::Eat(int t)
 {
     if (tok==t)
     {
-        if (t==ID || t==NUMINT || t==NUMFLOAT|| t == LITERALCHAR || t == LITERAL)
-        {
-            // TODO fprintf(stdout, "MATCH - %s.%s\n", token_id_to_name(t), lexical_analyzer_last_lexeme());
-        }
-        else
-        {
-            // TODO fprintf(stdout, "MATCH - %s\n", token_id_to_name(t));
-        }
         Advance();
     }
     else
@@ -179,7 +170,7 @@ ProgramNode *Parser::Program(FunctionListNode *functionList, TypeDeclNode *typeL
 int Parser::programAUXFollowSet[] = {ENDOFFILE, '\0'};
 ASTNode *Parser::ProgramAUX(TypeNode *type, PointerNode *pointer, TokenNode *id, VarDeclNode *varFunc)
 {
-    // TODO fprintf(stdout,"PROGRAM_AUX\n");
+
     switch (tok)
     {
         case LPARENT:
@@ -224,7 +215,7 @@ ASTNode *Parser::ProgramAUX(TypeNode *type, PointerNode *pointer, TokenNode *id,
 int Parser::programListFollowSet[] = {ENDOFFILE, '\0'};
 ProgramNode *Parser::ProgramList(FunctionListNode *functions, TypeDeclNode *typelist, VarDeclNode *varlist)// OK
 {
-    // TODO fprintf(stdout,"PROGRAM_LIST\n");
+
     switch (tok)
     {
         case ENDOFFILE:
@@ -246,7 +237,6 @@ ProgramNode *Parser::ProgramList(FunctionListNode *functions, TypeDeclNode *type
 int Parser::typeDeclFollowSet[] = {INT, FLOAT, BOOL, ID, CHAR, TYPEDEF, ENDOFFILE, '\0'};
 TypeDeclNode *Parser::TypeDecl(TypeDeclNode *typeListNode)
 {
-    // TODO fprintf(stdout,"TYPE_DECL\n");
     switch (tok)
     {
         case TYPEDEF:
@@ -287,7 +277,6 @@ int Parser::varDeclFollowSet[] = {IF, WHILE, SWITCH, BREAK, PRINT, READLN, RETUR
                                   ID, NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, TRUE, FALSE, LPARENT, RBRACE, ENDOFFILE, '\0'};
 VarDeclNode *Parser::VarDecl()
 {
-    // TODO fprintf(stdout,"VAR_DECL\n");
     switch (tok)
     {
         case INT:
@@ -316,7 +305,7 @@ int Parser::varStmtFollowSet[] = {INT, FLOAT, BOOL, ID, CHAR, IF, WHILE, SWITCH,
                                   ID, NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, LPARENT, ADDRESS, STAR, TRUE, FALSE, RBRACE, ENDOFFILE, '\0'};
 VarStmtNode *Parser::VarStmt(VarDeclNode *varList)
 {
-    // TODO fprintf(stdout,"VAR_STMT\n");
+
     switch (tok)
     {
         case ID:
@@ -383,7 +372,6 @@ VarStmtNode *Parser::VarStmt(VarDeclNode *varList)
 int Parser::varStmtAuxFollowSet[] = {RBRACE, ENDOFFILE, '\0'};
 VarStmtNode *Parser::VarStmtAux(TokenNode *id, VarDeclNode *varList)
 {
-    // TODO fprintf(stdout,"VAR_STMT_AUX\n");
     switch (tok)
     {
         case STAR:
@@ -462,7 +450,6 @@ VarStmtNode *Parser::VarStmtAux(TokenNode *id, VarDeclNode *varList)
 int Parser::idListFollowSet[] = {SEMICOLON, RPARENT, ENDOFFILE, '\0'};
 IdListNode *Parser::IdList()
 {
-    // TODO fprintf(stdout,"ID_LIST\n");
     PointerNode *pointer = Pointer();
     switch (tok)
     {
@@ -490,7 +477,6 @@ IdListNode *Parser::IdList()
 int Parser::idListAUXFollowSet[] = {SEMICOLON, RPARENT, ENDOFFILE, '\0'};
 IdListNode *Parser::IdListAUX()
 {
-    // TODO fprintf(stdout,"ID_LIST_AUX\n");
     switch (tok)
     {
         case COMMA:
@@ -518,7 +504,6 @@ IdListNode *Parser::IdListAUX()
 int Parser::pointerFollowSet[] = {RPARENT, ID, LBRACE, COMMA, ENDOFFILE, '\0'};
 PointerNode *Parser::Pointer()
 {
-    // TODO fprintf(stdout,"POINTER\n");
     switch (tok)
     {
         case STAR:
@@ -540,7 +525,6 @@ PointerNode *Parser::Pointer()
 int Parser::arrayFollowSet[] = {SEMICOLON, COMMA, RPARENT, ENDOFFILE, '\0'};
 ArrayNode *Parser::Array()
 {
-    // TODO fprintf(stdout,"ARRAY\n");
     switch (tok)
     {
         case LBRACKET:
@@ -567,8 +551,6 @@ ArrayNode *Parser::Array()
 int Parser::formalListFollowSet[] = {RPARENT, COMMA, ENDOFFILE, '\0'};
 FormalListNode *Parser::FormalList()
 {
-    // TODO fprintf(stdout, "FORMAL_LIST\n");
-
     switch (tok)
     {
         case INT:
@@ -600,7 +582,6 @@ FormalListNode *Parser::FormalList()
 int Parser::formalRestFollowSet[] = {RPARENT, ENDOFFILE, '\0'};
 FormalListNode *Parser::FormalRest()
 {
-    // TODO fprintf(stdout,"FORMAL_REST\n");
     switch (tok)
     {
         case COMMA:
@@ -629,7 +610,6 @@ FormalListNode *Parser::FormalRest()
 int Parser::typeFollowSet[] = {LPARENT, STAR, ID, ENDOFFILE, '\0'};
 TypeNode *Parser::Type()
 {
-    // TODO fprintf(stdout,"TYPE\n");
     switch (tok)
     {
         case INT:
@@ -710,7 +690,6 @@ TypeNode *Parser::Type()
 int Parser::typeAuxFollowSet[] = {LPARENT, STAR, ID, ENDOFFILE, '\0'};
 TypeNode *Parser::TypeAux()
 {
-    // TODO fprintf(stdout,"TYPE_AUX\n");
     switch (tok)
     {
         case INT:
@@ -772,7 +751,6 @@ TypeNode *Parser::TypeAux()
 int Parser::stmtListFollowSet[] = {RBRACE, CASE, ENDOFFILE, '\0'};
 StmtListNode *Parser::StmtList()
 {
-    // TODO fprintf(stdout,"STMT_LIST\n");
     switch (tok)
     {
         case LITERALCHAR:
@@ -815,7 +793,6 @@ StmtListNode *Parser::StmtList()
 int Parser::stmtListAUXFollowSet[] = {RBRACKET, CASE, ENDOFFILE, '\0'};
 StmtListNode *Parser::StmtListAUX()
 {
-    // TODO fprintf(stdout,"STMT_LIST_AUX\n");
     switch (tok)
     {
         case LITERALCHAR:
@@ -855,7 +832,6 @@ int Parser::stmtFollowSet[] = {CATCH, ELSE, IF, WHILE, SWITCH, BREAK, PRINT, REA
                                NUMINT, NUMFLOAT, LITERAL, LITERALCHAR, LPARENT,  ADDRESS, STAR, TRUE, FALSE, RBRACE, CASE, ENDOFFILE, '\0'};
 StmtNode *Parser::Stmt()
 {
-    // TODO fprintf(stdout,"STMT\n");
     switch (tok)
     {
         case IF:
@@ -916,7 +892,6 @@ int Parser::stmtAUXFollowSet[] = {CATCH, ELSE, IF, WHILE, SWITCH, BREAK, PRINT, 
                                   NUMFLOAT, LITERAL, LITERALCHAR, LPARENT, ADDRESS, STAR, TRUE, FALSE, RBRACE, CASE, ENDOFFILE, '\0'};
 StmtNode *Parser::StmtAUX()
 {
-    // TODO fprintf(stdout,"STMT_AUX\n");
     switch (tok)
     {
         case WHILE:
@@ -1098,7 +1073,6 @@ StmtNode *Parser::StmtAUX()
 int Parser::elseStmtFollowSet[] = {RBRACKET, ENDOFFILE, '\0'};
 StmtNode *Parser::ElseStmt()
 {
-    // TODO fprintf(stdout,"ELSE_STMT\n");
     switch (tok)
     {
         case ELSE:
@@ -1116,7 +1090,6 @@ StmtNode *Parser::ElseStmt()
 int Parser::caseBlockFollowSet[] = {RBRACE, ENDOFFILE, '\0'};
 CaseBlockNode *Parser::CaseBlock()
 {
-    // TODO fprintf(stdout,"CASE_BLOCK\n");
     switch (tok)
     {
         case CASE:
@@ -1144,7 +1117,6 @@ CaseBlockNode *Parser::CaseBlock()
 int Parser::caseBlockAUXFollowSet[] = {RBRACE, ENDOFFILE, '\0'};
 CaseBlockNode *Parser::CaseBlockAUX(TokenNode *num)
 {
-    // TODO fprintf(stdout,"CASE_BLOCK_AUX\n");
     switch (tok)
     {
         case CASE:
@@ -1194,8 +1166,6 @@ CaseBlockNode *Parser::CaseBlockAUX(TokenNode *num)
 int Parser::exprListFollowSet[] = {RPARENT, ENDOFFILE, '\0'};
 ExpListNode *Parser::ExprList()
 {
-    // TODO fprintf(stdout,"EXPR_LIST\n");
-
     switch (tok)
     {
         case NOT:
@@ -1224,7 +1194,6 @@ ExpListNode *Parser::ExprList()
 int Parser::exprListTailFollowSet[] = {RPARENT, ENDOFFILE, '\0'};
 ExpListNode *Parser::ExprListTail()
 {
-    // TODO fprintf(stdout,"EXPR_LIST_TAIL\n");
     switch (tok)
     {
         case NOT:
@@ -1257,7 +1226,6 @@ ExpListNode *Parser::ExprListTail()
 int Parser::exprListTailAUXFollowSet[] = {RPARENT, ENDOFFILE, '\0'};
 ExpListNode *Parser::ExprListTailAUX()
 {
-    // TODO fprintf(stdout,"EXPR_LIST_AUX\n");
     switch (tok)
     {
         case COMMA:
@@ -1275,7 +1243,6 @@ ExpListNode *Parser::ExprListTailAUX()
 int Parser::exprAssignFollowSet[] = {SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::ExprAssign()
 {
-    // TODO fprintf(stdout,"EXPR_ASSING\n");
     switch (tok)
     {
         case NOT:
@@ -1305,7 +1272,6 @@ ExpNode *Parser::ExprAssign()
 int Parser::exprAssignAUXFollowSet[] = {SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::ExprAssignAUX(ExpNode *expr)
 {
-    // TODO fprintf(stdout,"EXPR_ASSING_AUX\n");
     ExpNode *exp2 = nullptr;
     ExpNode *node = expr;
     switch (tok)
@@ -1328,8 +1294,6 @@ ExpNode *Parser::ExprAssignAUX(ExpNode *expr)
 int Parser::exprOrFollowSet[] = {EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::ExprOr()
 {
-    // TODO fprintf(stdout,"EXPR_OR\n");
-
     switch (tok)
     {
         case NOT:
@@ -1388,7 +1352,6 @@ ExpNode *Parser::ExprOrAUX(ExpNode *expr)
 int Parser::exprAndFollowSet[] = {OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::ExprAnd()
 {
-    // TODO fprintf(stdout,"EXPR_AND\n");
     switch (tok)
     {
         case NOT:
@@ -1418,8 +1381,6 @@ ExpNode *Parser::ExprAnd()
 int Parser::exprAndAUXFollowSet[] = {OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::ExprAndAUX(ExpNode *expr)
 {
-    // TODO fprintf(stdout,"EXPR_AND_AUX\n");
-
     TokenNode *token = nullptr;
     ExpNode *exp2 = nullptr;
     ExpNode *node = expr;
@@ -1447,8 +1408,6 @@ ExpNode *Parser::ExprAndAUX(ExpNode *expr)
 int Parser::exprEqualityFollowSet[] = {AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::ExprEquality()
 {
-    // TODO fprintf(stdout,"EXPR_EQUALITY\n");
-
     switch (tok)
     {
         case NOT:
@@ -1478,8 +1437,6 @@ ExpNode *Parser::ExprEquality()
 int Parser::exprEqualityAUXFollowSet[] = {AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::ExprEqualityAUX(ExpNode *expr)
 {
-    // TODO fprintf(stdout,"EXPR_EQUALITY_AUX\n");
-
     TokenNode *token = nullptr;
     ExpNode *exp2 = nullptr;
     ExpNode *node = expr;
@@ -1522,8 +1479,6 @@ ExpNode *Parser::ExprEqualityAUX(ExpNode *expr)
 int Parser::exprRelationalFollowSet[] = {EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::ExprRelational()
 {
-    // TODO fprintf(stdout,"EXPR_RELATIONAL\n");
-
     switch (tok)
     {
         case NOT:
@@ -1553,8 +1508,6 @@ ExpNode *Parser::ExprRelational()
 int Parser::exprRelationalAUXFollowSet[] = {EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::ExprRelationalAUX(ExpNode *expr)
 {
-    // TODO fprintf(stdout,"EXPR_RELATIONAL_AUX\n");
-
     TokenNode *token = nullptr;
     ExpNode *exp2 = nullptr;
     ExpNode *node = expr;
@@ -1627,8 +1580,6 @@ ExpNode *Parser::ExprRelationalAUX(ExpNode *expr)
 int Parser::exprAdditiveFollowSet[] = {LT, GT, LE, GE, EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::ExprAdditive()
 {
-    // TODO fprintf(stdout,"EXPR_ADDITIVE\n");
-
     switch (tok)
     {
         case NOT:
@@ -1658,8 +1609,6 @@ ExpNode *Parser::ExprAdditive()
 int Parser::exprAdditiveAUXFollowSet[] = {LT, GT, LE, GE, EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::ExprAdditiveAUX(ExpNode *expr)
 {
-    // TODO fprintf(stdout,"EXPR_ADDITIVE_AUX\n");
-
     TokenNode *token = nullptr;
     ExpNode *exp2 = nullptr;
     ExpNode *node = expr;
@@ -1714,8 +1663,6 @@ ExpNode *Parser::ExprAdditiveAUX(ExpNode *expr)
 int Parser::exprMultiplicativeFollowSet[] = {PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::ExprMultiplicative()
 {
-    // TODO fprintf(stdout,"EXPR_MULTIPLICATIVE\n");
-
     switch (tok)
     {
         case NOT:
@@ -1745,8 +1692,6 @@ ExpNode *Parser::ExprMultiplicative()
 int Parser::exprMultiplicativeAUXFollowSet[] = {PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::ExprMultiplicativeAUX(ExpNode *expr)
 {
-    // TODO fprintf(stdout,"EXPR_MULTIPLICATIVE_AUX\n");
-
     TokenNode *token = nullptr;
     ExpNode *exp2 = nullptr;
     ExpNode *node = expr;
@@ -1763,7 +1708,6 @@ ExpNode *Parser::ExprMultiplicativeAUX(ExpNode *expr)
 
             node = new MultiplicationOPNode(token, expr, exp2);
             node->setLine(lexical_analyzer_getLine());
-            //TODO definir o tipo das operacoes no semantico
             break;
         }
         case STAR:// multiplicacao
@@ -1815,8 +1759,6 @@ ExpNode *Parser::ExprMultiplicativeAUX(ExpNode *expr)
 int Parser::exprUnaryFollowSet[] = {ADDRESS, STAR, SLASH, PIPE, PLUS, MINUS, LT, GT, LE, GE, EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::ExprUnary()
 {
-    // TODO fprintf(stdout,"EXPR_UNARY\n");
-
     switch (tok)
     {
         case NOT:
@@ -1847,7 +1789,7 @@ ExpNode *Parser::ExprUnary()
             Eat(STAR);
 
             PointerValNode *pointerValNode = new PointerValNode(ExprUnary());
-            pointerValNode->setPointer(false); // TODO sem confianca
+            pointerValNode->setPointer(false);
             pointerValNode->setLine(lexical_analyzer_getLine());
 
             return pointerValNode;
@@ -1857,7 +1799,7 @@ ExpNode *Parser::ExprUnary()
             Eat(ADDRESS);
 
             AddressValNode *addressValNode = new AddressValNode(ExprUnary());
-            addressValNode->setPointer(true); // TODO sem confianca
+            addressValNode->setPointer(true);
             addressValNode->setLine(lexical_analyzer_getLine());
 
             return addressValNode;
@@ -1885,7 +1827,6 @@ int Parser::primaryFollowSet[] = {DOT, POINTER, LBRACE, LPARENT, ADDRESS, STAR, 
                                   EQ, NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::Primary()
 {
-    // TODO fprintf(stdout,"PRIMARY\n");
     switch (tok)
     {
         case ID:
@@ -2015,8 +1956,6 @@ int Parser::postFixExprAUXFollowSet[] = {ADDRESS, STAR, SLASH, PIPE, PLUS, MINUS
                                          NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::PostFixExprAUX(ExpNode *exp)
 {
-    // TODO fprintf(stdout,"POST_FIX_EXPR_AUX\n");
-
     switch (tok)
     {
         case DOT:
@@ -2062,8 +2001,6 @@ int Parser::postFixExprFollowSet[] = {ADDRESS, STAR, SLASH, PIPE, PLUS, MINUS, L
                                       NE, AND, OR, EQ, SEMICOLON, COMMA, RPARENT, RBRACE, ENDOFFILE, '\0'};
 ExpNode *Parser::PostFixExpr(TokenNode *id)
 {
-    // TODO fprintf(stdout,"POST_FIX_EXPR\n");
-
     switch (tok)
     {
         case LPARENT:

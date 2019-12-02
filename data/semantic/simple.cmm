@@ -1,0 +1,56 @@
+/*typedef struct {
+
+    int id;
+    char* nome;
+    int nota;
+} aluno;
+
+
+int* arrayFunc() {
+
+    int a;
+
+    a = 0;
+
+    return &a;
+}
+
+int main() {
+
+    aluno aluno1, aluno2;
+    bool maior;
+    int *array[2];
+
+    aluno1.id = 0;
+    aluno1.nome = "Jao";
+    aluno1.nota = 100;
+
+    aluno2.id = -aluno1.id;
+    aluno2.nome = "Vito";
+    aluno2.nota = 85;
+
+    maior = !("a" != "caraio");
+
+    return aluno2.id + aluno1.id;
+}
+
+void idaa(){
+
+    int i;
+
+    i = 0;
+}*/
+
+typedef struct {
+
+    int m11;
+    int m12;
+} m1;
+
+m1* k, c[2];
+
+int main() {
+
+    *c[1].m11;
+
+}
