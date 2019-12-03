@@ -1487,8 +1487,8 @@ void SemanticTypes::visit(PointerValNode *pointerValNode) {
     }
 
     if(!pointerValNode->getExp()->isPointer()) {
-        fprintf(stderr, "[SEMANTIC ERROR - pointerValNode] CANNOT ACCESS VALUE OF A NON POINTER TYPE, line %d lexeme: %s\n",
-                pointerValNode->getLine(), pointerValNode->getLexeme());
+        fprintf(stderr, "[SEMANTIC ERROR - pointerValNode] CANNOT ACCESS VALUE OF A NON POINTER TYPE, line %d\n",
+                pointerValNode->getLine());
         return;
     }
 

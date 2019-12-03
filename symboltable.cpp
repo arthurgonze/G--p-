@@ -59,6 +59,7 @@ void SymbolTable::cInsert(Symbol *symbol, const char *lexeme)
             lexemeArray = (char *) realloc(lexemeArray, lexemeArraySize*sizeof(char));
         }
         strcpy(lexemeArray +headIndex, lexeme);
+        symbol->setLexemeIndex(headIndex);
         headIndex += (int) strlen(lexeme) + 1;
     }
 }
@@ -78,8 +79,9 @@ Symbol *SymbolTable::cSearch(const char *lexeme)
         while (temp!=nullptr)
         {
 
-            if (strcmp(temp->getLexeme(), lexeme)==0)
+            if (strcmp(lexemeArray + temp->getLexemeIndex(), lexeme)==0)
             {
+                temp->setLexeme(lexemeArray + temp->getLexemeIndex());
                 return temp;
             }
             temp = temp->getNextSymbol();
@@ -109,7 +111,7 @@ void LiteralsTable::cInsert(const char *lexeme)
 {
     if (cSearch(lexeme)==NULL)
     {
-        SymbolTable::cInsert(new LiteralSymbol(&lexemeArray[headIndex]), lexeme);
+        SymbolTable::cInsert(new LiteralSymbol(0), lexeme);
     }
 }
 
@@ -149,7 +151,7 @@ void IdsTable::cInsert(const char *lexeme)
 {
     if (cSearch(lexeme)==NULL)
     {
-        SymbolTable::cInsert(new IdSymbol(&lexemeArray[headIndex]), lexeme);
+        SymbolTable::cInsert(new IdSymbol(), lexeme);
     }
 }
 
@@ -192,7 +194,7 @@ void ReservedWordsTable::cInsert(int tokenID, const char *lexeme)
 {
     if (cSearch(lexeme)==NULL)
     {
-        SymbolTable::cInsert(new ReservedTokenSymbol(lexeme, tokenID), lexeme);
+        SymbolTable::cInsert(new ReservedTokenSymbol(0, tokenID), lexeme);
     }
 }
 
@@ -205,7 +207,7 @@ void ReservedWordsTable::print()
     {
         for (ReservedTokenSymbol *sym = (ReservedTokenSymbol *) block[i]; sym!=NULL; sym = (ReservedTokenSymbol *) sym->getNextSymbol())
         {
-            std::cout << sym->getLexeme() << "\t" << token_id_to_name(sym->getTokenID()) << std::endl;
+            std::cout << lexemeArray + sym->getLexemeIndex() << "\t" << token_id_to_name(sym->getTokenID()) << std::endl;
         }
     }
 }
@@ -218,7 +220,7 @@ void NumIntTable::cInsert(const char *lexeme)
 {
     if (cSearch(lexeme)==NULL)
     {
-        SymbolTable::cInsert(new NumIntSymbol(&lexemeArray[headIndex]), lexeme);
+        SymbolTable::cInsert(new NumIntSymbol(0), lexeme);
     }
 }
 void NumIntTable::print()
@@ -234,7 +236,7 @@ void NumFloatTable::cInsert(const char *lexeme)
 {
     if (cSearch(lexeme)==NULL)
     {
-        SymbolTable::cInsert(new NumFloatSymbol(&lexemeArray[headIndex]), lexeme);
+        SymbolTable::cInsert(new NumFloatSymbol(0), lexeme);
     }
 }
 void NumFloatTable::print()
@@ -264,7 +266,7 @@ VarSymbol *VarTable::cSearch(const char *lexeme)
         VarSymbol *varSymbol = (VarSymbol *) SymbolTable::cSearch(lexeme);
         while (varSymbol!=NULL && varSymbol->getScope() <= currentScope)
         {
-            if ((!strcmp(varSymbol->getLexeme(),lexeme) && varSymbol->isScope(currentScopeLexeme)) ||
+            if ((!strcmp(lexemeArray + varSymbol->getLexemeIndex(),lexeme) && varSymbol->isScope(currentScopeLexeme)) ||
                 varSymbol->isScope(previousScopeLexeme) || varSymbol->isScope("nonLocal"))
             {
                 return varSymbol;
@@ -282,7 +284,7 @@ VarSymbol *VarTable::searchInScope(const char *lexeme, const char *scopeLexeme)
         VarSymbol *varSymbol = (VarSymbol *) SymbolTable::cSearch(lexeme);
         while (varSymbol!=NULL)
         {
-            if (!strcmp(varSymbol->getLexeme(),lexeme) && varSymbol->isScope(scopeLexeme))
+            if (!strcmp(lexemeArray + varSymbol->getLexemeIndex(),lexeme) && varSymbol->isScope(scopeLexeme))
             {
                 return varSymbol;
             }
@@ -300,7 +302,7 @@ bool VarTable::cInsert(TypeNode *type, const char *lexeme, bool pointer, int arr
     VarSymbol *varSymbol = cSearch(lexeme);
     if (varSymbol==NULL || varSymbol->getScope() < currentScope || !varSymbol->isScope(currentScopeLexeme))
     {
-        SymbolTable::cInsert(new VarSymbol(lexeme, currentScope, currentScopeLexeme, type, pointer, arraySize, parameter), lexeme);
+        SymbolTable::cInsert(new VarSymbol(0, currentScope, currentScopeLexeme, type, pointer, arraySize, parameter), lexeme);
         return true;
     }
     return false;
@@ -317,7 +319,7 @@ void VarTable::print()
     {
         for (VarSymbol *symbol = (VarSymbol *) block[i]; symbol!=NULL; symbol = (VarSymbol *) symbol->getNextSymbol())
         {
-            cout << symbol->getLexeme() << "\t\t" << symbol->getScope() << "\t\t" << symbol->getLexemeScope() <<"\t\t"<< token_id_to_name(symbol->getType()->getType()/*symbol->getType()->getId()->getToken()*/);
+            cout << lexemeArray + symbol->getLexemeIndex() << "\t\t" << symbol->getScope() << "\t\t" << symbol->getLexemeScope() <<"\t\t"<< token_id_to_name(symbol->getType()->getType()/*symbol->getType()->getId()->getToken()*/);
 
             if(symbol->getType()->getType() == ID)
                 cout << " " << symbol->getType()->getTypeLexeme();
@@ -357,7 +359,7 @@ FunctionSymbol *FunctionTable::cSearch(const char *lexeme)
         FunctionSymbol *funcSymbol = (FunctionSymbol *) SymbolTable::cSearch(lexeme);
         while (funcSymbol!=NULL && funcSymbol->getScope() <= currentScope)
         {
-            if ((!strcmp(funcSymbol->getLexeme(),lexeme) && funcSymbol->isScope(currentScopeLexeme)) ||
+            if ((!strcmp(lexemeArray + funcSymbol->getLexemeIndex(),lexeme) && funcSymbol->isScope(currentScopeLexeme)) ||
                 funcSymbol->isScope(previousScopeLexeme) || funcSymbol->isScope("nonLocal"))
             {
                 return funcSymbol;
@@ -375,7 +377,7 @@ FunctionSymbol *FunctionTable::searchInScope(const char *lexeme, const char *sco
         FunctionSymbol *funcSymbol = (FunctionSymbol *) SymbolTable::cSearch(lexeme);
         while (funcSymbol!=NULL)
         {
-            if (!strcmp(funcSymbol->getLexeme(),lexeme) && funcSymbol->isScope(scopeLexeme))
+            if (!strcmp(lexemeArray + funcSymbol->getLexemeIndex(),lexeme) && funcSymbol->isScope(scopeLexeme))
             {
                 return funcSymbol;
             }
@@ -390,7 +392,7 @@ bool FunctionTable::cInsert(TypeNode *returnType, const char *lexeme, FormalList
     FunctionSymbol *funcSymbol = cSearch(lexeme);
     if (funcSymbol==NULL || funcSymbol->getScope() < currentScope || !funcSymbol->isScope(currentScopeLexeme))
     {
-        SymbolTable::cInsert(new FunctionSymbol(lexeme, currentScope, currentScopeLexeme, returnType, pointer, varDecl), lexeme);
+        SymbolTable::cInsert(new FunctionSymbol(0, currentScope, currentScopeLexeme, returnType, pointer, varDecl), lexeme);
         return true;
     }
     return false;
@@ -407,7 +409,7 @@ void FunctionTable::print()
     {
         for (FunctionSymbol *symbol = (FunctionSymbol *) block[i]; symbol!=NULL; symbol = (FunctionSymbol *) symbol->getNextSymbol())
         {
-            cout << symbol->getLexeme() << "\t\t" << symbol->getScope() << "\t\t" << symbol->getLexemeScope() <<"\t\t" << token_id_to_name(symbol->getReturnType()->getId()->getToken()) << endl;
+            cout << lexemeArray + symbol->getLexemeIndex() << "\t\t" << symbol->getScope() << "\t\t" << symbol->getLexemeScope() <<"\t\t" << token_id_to_name(symbol->getReturnType()->getId()->getToken()) << endl;
         }
     }
     cout << "**********************************************************" << endl;
@@ -436,7 +438,7 @@ StructSymbol *StructTable::cSearch(const char *lexeme)
         StructSymbol *structSymbol = (StructSymbol *) SymbolTable::cSearch(lexeme);
         while (structSymbol!=NULL && structSymbol->getScope() <= currentScope)
         {
-            if ((!strcmp(structSymbol->getLexeme(),lexeme) && structSymbol->isScope(currentScopeLexeme)) ||
+            if ((!strcmp(lexemeArray + structSymbol->getLexemeIndex(),lexeme) && structSymbol->isScope(currentScopeLexeme)) ||
                 structSymbol->isScope(previousScopeLexeme) || structSymbol->isScope("nonLocal"))
             {
                 return structSymbol;
@@ -453,7 +455,7 @@ bool StructTable::cInsert(const char *lexeme, VarDeclNode *varDecl)
     if (structSymbol==NULL || structSymbol->getScope() < currentScope || !structSymbol->isScope(currentScopeLexeme))
     {
         //StructSymbol(const char *lexeme, int scope, const char *lexemeScope, VarDeclNode *varDecl)
-        SymbolTable::cInsert(new StructSymbol(lexeme, currentScope, currentScopeLexeme, varDecl), lexeme);
+        SymbolTable::cInsert(new StructSymbol(0, currentScope, currentScopeLexeme, varDecl), lexeme);
         return true;
     }
     return false;
@@ -471,7 +473,7 @@ void StructTable::print()
     {
         for (StructSymbol *symbol = (StructSymbol *) block[i]; symbol!=NULL; symbol = (StructSymbol *) symbol->getNextSymbol())
         {
-            cout << symbol->getLexeme() << "\t" << symbol->getScope() << "\t" << symbol->getLexemeScope() << endl;
+            cout << lexemeArray + symbol->getLexemeIndex() << "\t" << symbol->getScope() << "\t" << symbol->getLexemeScope() << endl;
         }
     }
     cout << "*****************************" << endl;

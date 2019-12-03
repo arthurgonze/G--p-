@@ -11,9 +11,11 @@ private:
     const char *lexemeScope;// new
     int scope;// new
     Symbol *nextSymbol;
+    const char* lexeme;
 public:
-    Symbol(const char *lexeme, int scope, const char *lexemeScope);
-    Symbol(const char *lexeme);
+    Symbol(int lexemeIndex, int scope, const char *lexemeScope);
+    Symbol(int lexemeIndex);
+    Symbol();
     virtual ~Symbol();
 
     bool isScope(const char *lexemeScope) { return !strcmp(this->lexemeScope, lexemeScope); }
@@ -24,9 +26,12 @@ public:
     inline int getScope() const { return scope; }
 
     inline void setNextSymbol(Symbol *nextSymbol) { this->nextSymbol = nextSymbol; }
-    inline void setLexeme(const char *lexeme) { this->lexeme = lexeme; }
+    inline void setLexeme(const char * lexeme) {this->lexeme = lexeme;}
+    inline void setLexemeIndex(int lexemeIndex) { this->lexemeIndex = lexemeIndex; }
     inline void setLexemeScope(const char *LexemeScope) { this->lexemeScope = LexemeScope; }
     inline void setScope(int scope) { this->scope = scope; }
+    inline const char* getLexeme() {return this->lexeme;}
+
 };
 
 class ReservedTokenSymbol : public Symbol
@@ -34,7 +39,7 @@ class ReservedTokenSymbol : public Symbol
 private:
     int tokenID;
 public:
-    ReservedTokenSymbol(const char *lexeme, int tokenID);
+    ReservedTokenSymbol(int lexemeIndex, int tokenID);
     inline int getTokenID() { return this->tokenID; }
     inline void setTokenID(int tokenID) { this->tokenID = tokenID; }
 
@@ -43,25 +48,29 @@ public:
 class IdSymbol : public Symbol
 {
 public:
-    explicit IdSymbol(const char *lexeme) : Symbol(lexeme) {};
+    explicit IdSymbol(int lexemeIndex) : Symbol(lexemeIndex) {};
+    explicit IdSymbol() : Symbol(){};
 };
 
 class LiteralSymbol : public Symbol
 {
 public:
-    explicit LiteralSymbol(const char *lexeme) : Symbol(lexeme) {};
+    explicit LiteralSymbol(int lexemeIndex) : Symbol(lexemeIndex) {};
+    explicit LiteralSymbol() : Symbol() {};
 };
 
 class NumIntSymbol : public Symbol
 {
 public:
-    explicit NumIntSymbol(const char *lexeme) : Symbol(lexeme) {};
+    explicit NumIntSymbol(int lexemeIndex) : Symbol(lexemeIndex) {};
+    explicit NumIntSymbol() : Symbol() {};
 };
 
 class NumFloatSymbol : public Symbol
 {
 public:
-    explicit NumFloatSymbol(const char *lexeme) : Symbol(lexeme) {};
+    explicit NumFloatSymbol(int lexemeIndex) : Symbol(lexemeIndex) {};
+    explicit NumFloatSymbol() : Symbol() {};
 };
 
 // new from here to the end
@@ -75,7 +84,7 @@ private:
     int offset;
     int size;
 public:
-    VarSymbol(const char *lexeme, int scope, const char *lexemeScope, TypeNode *type, bool pointer, int arraySize, bool parameter);
+    VarSymbol(int lexemeIndex, int scope, const char *lexemeScope, TypeNode *type, bool pointer, int arraySize, bool parameter);
     ~VarSymbol() override;
 
     inline bool isPointer() { return pointer; }
@@ -103,7 +112,7 @@ private:
     int paramSize;
     int callSize;
 public:
-    FunctionSymbol(const char *lexeme, int scope, const char *lexemeScope, TypeNode *returnType, bool pointer, FormalListNode *varDecl);
+    FunctionSymbol(int lexemeIndex, int scope, const char *lexemeScope, TypeNode *returnType, bool pointer, FormalListNode *varDecl);
     ~FunctionSymbol() override;
 
     inline void incrementLocalSize(int size) { this->localSize += size; }
@@ -130,7 +139,8 @@ private:
     VarDeclNode *varDecl;
     int size;
 public:
-    StructSymbol(const char *lexeme, int scope, const char *lexemeScope, VarDeclNode *varDecl);
+    StructSymbol(int lexemeIndex, int scope, const char *lexemeScope, VarDeclNode *varDecl);
+    StructSymbol(int scope, const char *lexemeScope, VarDeclNode *varDecl);
     ~StructSymbol() override;
 
     inline VarDeclNode *getVarDecl() { return this->varDecl; }
