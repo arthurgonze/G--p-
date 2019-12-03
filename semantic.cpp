@@ -8,7 +8,7 @@ FunctionTable *functionTable;
 StructTable *structTable;
 FunctionSymbol *activeFunction = NULL;
 
-int breakEnabled = BOOL_FALSE;
+int breakDepth = 0;
 
 void startSemantic(ProgramNode *ast)
 {
@@ -579,12 +579,12 @@ void Semantic::visit(WhileNode *whileNode)
             fprintf(stderr, "[SEMANTIC ERROR - whileNode] BOOLEAN EXPRESSION REQUIRED, line: %d, Conditionlexeme: %s \n", whileNode->getLine(), whileNode->getHead()->getLexeme());
         }
     }
-    breakEnabled = BOOL_TRUE;
+    breakDepth += 1;
     if (whileNode->getBody()!=NULL)
     {
         whileNode->getBody()->accept(this);
     }
-    breakEnabled = BOOL_FALSE;
+    breakDepth -= 1;
 }
 
 void Semantic::visit(ReturnNode *returnNode)
@@ -609,7 +609,7 @@ void Semantic::visit(TryNode *tryNode)
 
 void Semantic::visit(BreakNode *breakNode)
 {
-    if (breakEnabled!=BOOL_TRUE)
+    if (!breakDepth)
     {
         fprintf(stderr, "[SEMANTIC ERROR - breakNode] UNEXPECTED BREAK, line: %d \n", breakNode->getLine());
     }
@@ -647,9 +647,9 @@ void Semantic::visit(SwitchNode *switchNode)
     }
     if (switchNode->getBlock()!=NULL)
     {
-        breakEnabled = BOOL_TRUE;
+        breakDepth += 1;
         switchNode->getBlock()->accept(this);
-        breakEnabled = BOOL_FALSE;
+        breakDepth -= 1;
     }
     else
     {
@@ -1195,6 +1195,7 @@ void SemanticTables::visit(VarDeclNode *varDeclNode) {
     IdListNode *idListAux = varDeclNode->getIdList();
     while (idListAux!=NULL)
     {
+        //TODO verificar
         bool isPointer = varDeclNode->getType()->getId()->isPointer() || (varDeclNode->getIdList()->getPointer() != NULL);
 
         idListAux->getId()->setType(varDeclNode->getType()->getId()->getToken());
@@ -1364,15 +1365,154 @@ void SemanticTypes::visit(FunctionListNode *functionListNode) {
     }
 }
 
+void SemanticTypes::visit(BreakNode *breakNode)
+{
+    if (!breakDepth)
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - breakNode] UNEXPECTED BREAK, line: %d \n", breakNode->getLine());
+    }
+}
+
+
+void SemanticTypes::visit(WhileNode *whileNode)
+{
+    if(whileNode->getHead())
+    {
+        whileNode->getHead()->accept(this);
+    } else {
+        fprintf(stderr,
+                "[SEMANTIC ERROR - whileNode] IF WITHOUT A VALID CONDITION, line: %d\n",
+                whileNode->getLine());
+        return;
+    }
+
+    if(whileNode->getBody())
+    {
+        breakDepth += 1;
+        whileNode->getBody()->accept(this);
+        breakDepth -= 1;
+    }
+
+    if(whileNode->getHead()->getType() != BOOL) {
+        fprintf(stderr,
+                "[SEMANTIC ERROR - whileNode] CONDITION EXPRESSION MUST BE BOOLEAN, line: %d\n",
+                whileNode->getLine());
+    }
+
+    whileNode->setReturn(whileNode->getBody() && whileNode->getBody()->isReturn());
+
+}
+
+void SemanticTypes::visit(PrintNode *printNode) {
+
+    if(printNode->getExpList())
+        printNode->getExpList()->accept(this);
+
+    printNode->setReturn(false);
+}
+
+void SemanticTypes::visit(ThrowNode *throwNode) {
+
+}
+
+void SemanticTypes::visit(SwitchNode *switchNode) {
+
+    if (switchNode->getExp()!=NULL)
+    {
+        switchNode->getExp()->accept(this);
+        if (switchNode->getExp()->getType()!=INT)
+        {
+            fprintf(stderr, "[SEMANTIC ERROR - switchNode] CONDITION MUST BE INT, line: %d\n", switchNode->getLine());
+        }
+
+        switchNode->setLine(switchNode->getExp()->getLine());
+    } else {
+        fprintf(stderr, "[SEMANTIC ERROR - switchNode] NO VALID CONDITION, line: %d\n", switchNode->getLine());
+    }
+    if (switchNode->getBlock()!=NULL)
+    {
+        breakDepth += 1;
+        switchNode->getBlock()->accept(this);
+        breakDepth -= 1;
+    }
+    else
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - switchNode] CASE STATEMENT REQUIRED, line: %d\n", switchNode->getLine());
+    }
+}
+
+void SemanticTypes::visit(TryNode *tryNode) {
+
+    if(tryNode->getTry())
+    {
+        tryNode->getTry()->accept(this);
+    }
+
+    if(tryNode->getCatch())
+    {
+        tryNode->getCatch()->accept(this);
+    }
+
+}
+
+
+void SemanticTypes::visit(ReadLnNode *readLnNode) {
+
+    if(readLnNode->getExp())
+    {
+        readLnNode->getExp()->accept(this);
+    }
+
+}
+void SemanticTypes::visit(IfNode *ifNode)
+{
+    if(ifNode->getHead())
+    {
+        ifNode->getHead()->accept(this);
+    } else {
+        fprintf(stderr,
+                "[SEMANTIC ERROR - ifNode] IF WITHOUT A VALID CONDITION, line: %d\n",
+                ifNode->getLine());
+        return;
+    }
+
+    if(ifNode->getTrueStmt())
+    {
+        ifNode->getTrueStmt()->accept(this);
+    }
+
+    if(ifNode->getFalseStmt())
+    {
+        ifNode->getFalseStmt()->accept(this);
+    }
+
+    if(ifNode->getHead()->getType() != BOOL) {
+        fprintf(stderr,
+                "[SEMANTIC ERROR - ifNode] CONDITION EXPRESSION MUST BE BOOLEAN, line: %d\n",
+                ifNode->getLine());
+    }
+
+    ifNode->setReturn(ifNode->getFalseStmt() && ifNode->getTrueStmt() && ifNode->getTrueStmt()->isReturn() && ifNode->getFalseStmt()->isReturn());
+}
+
 void SemanticTypes::visit(StmtListNode *stmtListNode)
 {
-    if (stmtListNode->getStmt())
-    {
-        stmtListNode->getStmt()->accept(this);
-    }
+
+    bool isNextReturn = false;
+
+    //TODO implementar checagem de retorno
     if (stmtListNode->getNext())
     {
         stmtListNode->getNext()->accept(this);
+        isNextReturn = stmtListNode->getNext()->isReturn();
+    }
+
+    if (stmtListNode->getStmt())
+    {
+        stmtListNode->getStmt()->accept(this);
+        stmtListNode->setReturn(stmtListNode->getStmt()->isReturn());
+
+
     }
 }
 
@@ -1404,7 +1544,7 @@ void SemanticTypes::visit(ReturnNode *returnNode)
         return;
     }
 
-
+    returnNode->setReturn(true);
 }
 
 //TODO Tá MUUUUUUITO ERRADO ISSO, "se tiver que usar typeof no visitor é pq ta errado"
