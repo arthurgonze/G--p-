@@ -31,7 +31,7 @@ public:
     void visit(TypeDeclNode *typeDeclNode) override {};
     void visit(FormalListNode *formalListNode) override {};
     void visit(ExpListNode *expListNode) override;
-    void visit(CallNode *callNode);
+    void visit(CallNode *callNode) override;
     void visit(PrimaryNode *primaryNode) override;
     void visit(FunctionNode *functionNode) override;
     void visit(StmtNode *stmtNode) override;
