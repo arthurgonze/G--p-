@@ -1,18 +1,17 @@
 #include "symbol.h"
 
-Symbol::Symbol(int lexemeIndex, int scope, const char *lexemeScope)
-{
+Symbol::Symbol(int lexemeIndex, int scope, const char *lexemeScope) {
     this->lexemeIndex = lexemeIndex;
     this->lexemeScope = lexemeScope;
     this->scope = scope;
     this->nextSymbol = nullptr;
 }
-Symbol::~Symbol()
-{
+
+Symbol::~Symbol() {
     free(this->nextSymbol);
 }
-Symbol::Symbol(int lexemeIndex)
-{
+
+Symbol::Symbol(int lexemeIndex) {
     this->lexemeIndex = lexemeIndex;
     this->lexemeScope = nullptr;
     this->scope = -1;
@@ -26,14 +25,12 @@ Symbol::Symbol() {
     this->nextSymbol = nullptr;
 }
 
-ReservedTokenSymbol::ReservedTokenSymbol(int lexemeIndex, int tokenID) : Symbol(lexemeIndex)
-{
+ReservedTokenSymbol::ReservedTokenSymbol(int lexemeIndex, int tokenID) : Symbol(lexemeIndex) {
     this->tokenID = tokenID;
 }
 
 VarSymbol::VarSymbol(int lexemeIndex, int scope, const char *lexemeScope, TypeNode *type,
-                     bool pointer, int arraySize, bool parameter) : Symbol(lexemeIndex, scope, lexemeScope)
-{
+                     bool pointer, int arraySize, bool parameter) : Symbol(lexemeIndex, scope, lexemeScope) {
     this->type = type;
     this->pointer = pointer;
     this->arraySize = arraySize;
@@ -42,14 +39,13 @@ VarSymbol::VarSymbol(int lexemeIndex, int scope, const char *lexemeScope, TypeNo
     this->offset = 0;
     this->size = 0;
 }
-VarSymbol::~VarSymbol()
-{
+
+VarSymbol::~VarSymbol() {
     this->type = nullptr;
 }
 
 FunctionSymbol::FunctionSymbol(int lexemeIndex, int scope, const char *lexemeScope, TypeNode *returnType,
-                               bool pointer, FormalListNode *varDecl) : Symbol(lexemeIndex, scope, lexemeScope)
-{
+                               bool pointer, FormalListNode *varDecl) : Symbol(lexemeIndex, scope, lexemeScope) {
     this->returnType = returnType;
     this->pointer = pointer;
     this->varDecl = varDecl;
@@ -58,19 +54,18 @@ FunctionSymbol::FunctionSymbol(int lexemeIndex, int scope, const char *lexemeSco
     this->paramSize = 0;
     this->callSize = 0;
 }
-FunctionSymbol::~FunctionSymbol()
-{
+
+FunctionSymbol::~FunctionSymbol() {
     this->returnType = nullptr;
     this->varDecl = nullptr;
 }
 
 StructSymbol::StructSymbol(int lexemeIndex, int scope, const char *lexemeScope, VarDeclNode *varDecl)
-    : Symbol(lexemeIndex, scope, lexemeScope)
-{
+        : Symbol(lexemeIndex, scope, lexemeScope) {
     this->varDecl = varDecl;
 }
-StructSymbol::~StructSymbol()
-{
+
+StructSymbol::~StructSymbol() {
     this->varDecl = nullptr;
 }
 

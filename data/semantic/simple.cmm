@@ -6,24 +6,33 @@ typedef struct {
 } m1;
 
 
-m1* c[2], k;
+m1 *c[2];
+m1 *k;
 m1  d, b;
 
+int ma() {
+
+    int b;
+
+}
 int main() {
 
-
+    int b;
     char nome[50];
+
     k->a = k;
     d.m11 = 3;
     k->a->a->a->b.m11 = 1;
+
 
     if(k->a->a->a->b.m11 != 0)
     {
 
         if(k->a->a->a->b.m11 == 0) {
-            return 0;
 
             k->m11 = 11;
+
+            return 1;
         }
 
         while(k->a->b.m11 == 1) {

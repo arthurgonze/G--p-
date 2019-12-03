@@ -12,17 +12,24 @@ using namespace std;
 #define LEXEME_ARRAY_SIZE 4096 // A memory block size
 
 class Symbol;
+
 class StructSymbol;
+
 class FunctionSymbol;
+
 class VarSymbol;
+
 class ReservedTokenSymbol;
+
 class LiteralSymbol;
+
 class IdSymbol;
+
 class NumIntSymbol;
+
 class NumFloatSymbol;
 
-class SymbolTable
-{
+class SymbolTable {
 protected:
     int headIndex = 0; // A variable to store the first free position in the lexeme array
     int lexemeArraySize = 0; // Actual size of the lexeme array
@@ -35,8 +42,10 @@ protected:
     Symbol *auxInsert(Symbol *root, const char *lexeme);
 
     virtual void print();
+
 public:
     SymbolTable();
+
     virtual ~SymbolTable() = default;
 
     Symbol **block; // Table
@@ -52,47 +61,55 @@ public:
 };
 
 //Extend Symbol Table to create the Reserved words table, Literals table and Identifiers table
-class ReservedWordsTable : public SymbolTable
-{
+class ReservedWordsTable : public SymbolTable {
 public:
     void cInsert(int tokenID, const char *lexeme);
+
     void print() override;
+
     ReservedTokenSymbol *cSearch(const char *lexeme) { return (ReservedTokenSymbol *) SymbolTable::cSearch(lexeme); }
 };
-class LiteralsTable : public SymbolTable
-{
+
+class LiteralsTable : public SymbolTable {
 public:
     void cInsert(const char *lexeme);
+
     void print() override;
 
     LiteralSymbol *cSearch(const char *lexeme) { return (LiteralSymbol *) SymbolTable::cSearch(lexeme); }
 };
-class IdsTable : public SymbolTable
-{
+
+class IdsTable : public SymbolTable {
 public:
     void cInsert(const char *lexeme);
+
     void print() override;
+
     IdSymbol *cSearch(const char *lexeme) { return (IdSymbol *) SymbolTable::cSearch(lexeme); }
 };
-class NumIntTable : public SymbolTable
-{
+
+class NumIntTable : public SymbolTable {
 public:
     void cInsert(const char *lexeme);
+
     void print() override;
+
     NumIntSymbol *cSearch(const char *lexeme) { return (NumIntSymbol *) SymbolTable::cSearch(lexeme); }
 };
-class NumFloatTable : public SymbolTable
-{
+
+class NumFloatTable : public SymbolTable {
 public:
     void cInsert(const char *lexeme);
+
     void print() override;
+
     NumFloatSymbol *cSearch(const char *lexeme) { return (NumFloatSymbol *) SymbolTable::cSearch(lexeme); }
 };
 
-class StructTable : public SymbolTable
-{
+class StructTable : public SymbolTable {
 public:
     StructTable();
+
     ~StructTable() override;
 
     bool cInsert(const char *lexeme, VarDeclNode *varDecl);
@@ -102,10 +119,10 @@ public:
     void print() override;
 };
 
-class FunctionTable : public SymbolTable
-{
+class FunctionTable : public SymbolTable {
 public:
     FunctionTable();
+
     ~FunctionTable() override;
 
     bool cInsert(TypeNode *returnType, const char *lexeme, FormalListNode *varDecl, bool pointer);
@@ -117,15 +134,16 @@ public:
     void print() override;
 };
 
-class VarTable : public SymbolTable
-{
+class VarTable : public SymbolTable {
 public:
     VarTable();
+
     ~VarTable() override;
 
     bool cInsert(TypeNode *type, const char *lexeme, bool pointer, int arraySize, bool parameter);
 
     VarSymbol *cSearch(const char *lexeme);
+
     VarSymbol *searchInScope(const char *lexeme, const char *LexemeScope);
 
     void print() override;
