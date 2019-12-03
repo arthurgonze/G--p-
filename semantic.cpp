@@ -861,14 +861,24 @@ void SemanticTypes::visit(BooleanOPNode *booleanOpNode) {
     }
 
     bool isArray = booleanOpNode->getExp1()->getArraySize() > -1;
-    if (booleanOpNode->getOp()->getToken() != NE && booleanOpNode->getOp()->getToken() != EQ)
+    if (booleanOpNode->getOp()->getToken() != NE && booleanOpNode->getOp()->getToken() != EQ && booleanOpNode->getOp()
+        && booleanOpNode->getOp()->getToken() != LT && booleanOpNode->getOp()->getToken() != LE && booleanOpNode->getOp()->getToken() != GE
+            && booleanOpNode->getOp()->getToken() != GT)
+    { //Pode sendo igual
+    
+        if(booleanOpNode->getExp1()->getType() != BOOL ||isArray || booleanOpNode->getExp1()->isPointer()) {
+            fprintf(stderr, "[SEMANTIC ERROR - booleanOpNode] CANNOT COMPARE WITH NON BOOLEAN TYPES, line %d\n",
+                    booleanOpNode->getLine());
+            return;
+        }
+    } else {
         if ((booleanOpNode->getExp1()->getType() != INT && booleanOpNode->getExp1()->getType() != FLOAT) || isArray ||
             booleanOpNode->getExp1()->isPointer()) {
             fprintf(stderr, "[SEMANTIC ERROR - booleanOpNode] CANNOT COMPARE WITH NON NUMERIC TYPES, line %d\n",
                     booleanOpNode->getLine());
             return;
         }
-
+    }
 }
 
 void SemanticTypes::visit(SignNode *signNode) {
