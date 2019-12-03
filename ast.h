@@ -104,25 +104,11 @@ private:
     bool returnAtt;
     ASTNode *stmt;
 public:
-//    explicit StmtNode(StmtListNode *stmtList) { this->stmt = (ASTNode *) (stmtList); }
-//    explicit StmtNode(IfNode *aux) { this->stmt = (ASTNode *) (aux); }
-////    explicit StmtNode(WhileNode *aux) { this->stmt = (ASTNode *) (aux); }
-//    explicit StmtNode(ExpNode *aux) { this->stmt = aux; }
-////    explicit StmtNode(BreakNode *aux) { this->stmt = aux; }
-//    explicit StmtNode(PrintNode *aux) { this->stmt = aux; }
-//    explicit StmtNode(ReadLnNode *aux) { this->stmt = aux; }
-//    explicit StmtNode(ReturnNode *aux) { this->stmt = aux; }
-//    explicit StmtNode(ThrowNode *aux) { this->stmt = aux; }
-//    explicit StmtNode(TryNode *aux) { this->stmt = aux; }
-//    explicit StmtNode(SwitchNode *aux) { this->stmt = (ASTNode *) (aux); }
-//    ~StmtNode() override { delete this->stmt; }
-
     inline ASTNode *getStmt() { return stmt; }
 
     inline bool isReturn() const { return returnAtt; }
 
     inline void setReturn(bool returnAtt) { this->returnAtt = returnAtt; }
-//    inline void setStmt(ASTNode *stmt) { this->stmt = stmt; }
 
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
@@ -131,9 +117,9 @@ public:
 class ExpNode : public StmtNode {
 private:
     const char *lexeme;
-    bool lValue, pointer;// TODO precisa saber se é array e pegar o tamanho?
+    bool lValue, pointer;
     int type, arraySize;
-    const char *typeLexeme; // id
+    const char *typeLexeme;
 public:
     inline bool isLValue() const { return lValue; }
 
@@ -196,8 +182,6 @@ private:
     int offset;
 public:
     TokenNode(int tok, const char *lex);
-
-    ~TokenNode() override;
 
     inline int getToken() { return token; }
 
@@ -412,8 +396,8 @@ public:
 
     const char *getLexeme() const { return lexeme; }
 
-    inline int getType() { return id->getToken(); }// para tipos primitivos
-    inline const char *getTypeLexeme() { return id->getTypeLexeme(); }// quando id for um tipo, struct
+    inline int getType() { return id->getToken(); }
+    inline const char *getTypeLexeme() { return id->getTypeLexeme(); }
 
     void setId(TokenNode *id) { this->id = id; }
 

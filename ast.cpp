@@ -14,10 +14,6 @@ TokenNode::TokenNode(int tok, const char *lex) {
     this->setOffset(-42);
 }
 
-TokenNode::~TokenNode() {
-    //delete this->token;
-}
-
 ProgramNode::ProgramNode(FunctionListNode *functions, TypeDeclNode *typelist, VarDeclNode *varlist) {
     this->functions = functions;
     this->typelist = typelist;

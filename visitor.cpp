@@ -1,6 +1,3 @@
-//
-// Created by jorao on 17/10/2019.
-//
 
 #include <iostream>
 #include "visitor.h"
