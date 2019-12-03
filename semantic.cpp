@@ -273,7 +273,6 @@ void SemanticTables::visit(FunctionNode *functionNode) {
 }
 
 void SemanticTables::visit(FunctionListNode *functionListNode) {
-    /// deixar na mesma ordem do codigo
     if (functionListNode->getNext()) {
         functionListNode->getNext()->accept(this);
     }
@@ -482,7 +481,7 @@ void SemanticTypes::visit(ReturnNode *returnNode) {
 
 
     bool isSameType = returnNode->getExp()->getType() ==
-                      activeFunction->getReturnType()->getType();// TODO SEGMENTATION FAULT quando eh void
+                      activeFunction->getReturnType()->getType();
 
     bool isSameArray = returnNode->getExp()->getArraySize() < 0;
     bool isSamePointer = returnNode->getExp()->isPointer() == activeFunction->isPointer();
@@ -542,9 +541,6 @@ void SemanticTypes::visit(AssignNode *assignNode) {
         return;
     }
 
-
-
-    //TODO verificar se precisa checar rvalue
 }
 
 void SemanticTypes::visit(PointerValNode *pointerValNode) {
@@ -565,11 +561,15 @@ void SemanticTypes::visit(PointerValNode *pointerValNode) {
 
     pointerValNode->setType(pointerValNode->getExp()->getType());
     pointerValNode->setTypeLexeme(pointerValNode->getExp()->getTypeLexeme());
-    pointerValNode->setLValue(true);//pointerValNode->setLValue(pointerValNode->getExp()->isLValue());
+    pointerValNode->setLValue(true);
     pointerValNode->setArraySize(pointerValNode->getExp()->getArraySize());
     pointerValNode->setPointer(false);
 
 }
+
+/*
+ * Address verification
+ */
 
 void SemanticTypes::visit(AddressValNode *addressValNode) {
 
@@ -590,10 +590,14 @@ void SemanticTypes::visit(AddressValNode *addressValNode) {
 
     addressValNode->setType(addressValNode->getExp()->getType());
     addressValNode->setTypeLexeme(addressValNode->getExp()->getTypeLexeme());
-    addressValNode->setLValue(true);//pointerValNode->setLValue(pointerValNode->getExp()->isLValue());
+    addressValNode->setLValue(true);
     addressValNode->setArraySize(addressValNode->getExp()->getArraySize());
     addressValNode->setPointer(true);
 }
+
+/*
+ * Pointer access verification
+ */
 
 void SemanticTypes::visit(PointerExpNode *pointerExpNode) {
     if (pointerExpNode->getId()) {
@@ -634,6 +638,9 @@ void SemanticTypes::visit(PointerExpNode *pointerExpNode) {
     pointerExpNode->setLValue(true);
 }
 
+/*
+ * Name access verification
+ */
 void SemanticTypes::visit(NameExpNode *nameExpNode) {
     if (nameExpNode->getId()) {
         nameExpNode->getId()->accept(this);
@@ -673,12 +680,16 @@ void SemanticTypes::visit(NameExpNode *nameExpNode) {
     nameExpNode->setLValue(true);
 }
 
+/*
+ * Check if the array call is okay or if have error on array access
+ */
+
 void SemanticTypes::visit(ArrayCallNode *arrayCallNode) {
     if (arrayCallNode->getExp()) {
         arrayCallNode->getExp()->accept(this);
     } else {
         fprintf(stderr, "[SEMANTIC ERROR - arrayCallNode] INVALID ARRAY ACCESS EXPRESSION, line %d\n",
-                arrayCallNode->getLine());//TODO , arrayCallNode->getLexeme());
+                arrayCallNode->getLine());
         return;
     }
 
@@ -686,13 +697,13 @@ void SemanticTypes::visit(ArrayCallNode *arrayCallNode) {
         arrayCallNode->getIndex()->accept(this);
     } else {
         fprintf(stderr, "[SEMANTIC ERROR - arrayCallNode] INVALID ARRAY INDEX EXPRESSION, line %d\n",
-                arrayCallNode->getLine()); //TODO , arrayCallNode->getLexeme());
+                arrayCallNode->getLine());
         return;
     }
 
     if (arrayCallNode->getExp()->getArraySize() < 0) {
         fprintf(stderr, "[SEMANTIC ERROR - arrayCallNode] ARRAY ACCESS TO A NON ARRAY TYPE, line %d\n",
-                arrayCallNode->getLine()); //TODO warning, arrayCallNode->getTypeLexeme());
+                arrayCallNode->getLine());
         return;
     }
 
@@ -709,6 +720,10 @@ void SemanticTypes::visit(ArrayCallNode *arrayCallNode) {
     arrayCallNode->setPointer(arrayCallNode->getExp()->isPointer());
     arrayCallNode->setArraySize(-1);
 }
+
+/*
+ * Assing Multiplication Expression verification
+ */
 
 void SemanticTypes::visit(MultiplicationOPNode *multiplicationOpNode) {
 
@@ -752,6 +767,10 @@ void SemanticTypes::visit(MultiplicationOPNode *multiplicationOpNode) {
     multiplicationOpNode->setLValue(false);
 }
 
+/*
+ * Assing Addition Expression verification
+ */
+
 void SemanticTypes::visit(AdditionOPNode *additionOpNode) {
 
     if (additionOpNode->getExp1())
@@ -794,6 +813,11 @@ void SemanticTypes::visit(AdditionOPNode *additionOpNode) {
     additionOpNode->setLValue(false);
 }
 
+/*
+ * Array Node Size verification
+ */
+
+
 void SemanticTypes::visit(ArrayNode *arrayNode) {
 
     if (!arrayNode->getNumInt()) {
@@ -802,6 +826,10 @@ void SemanticTypes::visit(ArrayNode *arrayNode) {
     }
 
 }
+
+/*
+ * Not Expression verification
+ */
 
 void SemanticTypes::visit(NotNode *notNode) {
 
@@ -825,6 +853,10 @@ void SemanticTypes::visit(NotNode *notNode) {
     }
 
 }
+
+/*
+ * Boolean verification
+ */
 
 void SemanticTypes::visit(BooleanOPNode *booleanOpNode) {
 
@@ -871,6 +903,10 @@ void SemanticTypes::visit(BooleanOPNode *booleanOpNode) {
 
 }
 
+/*
+ * Sign type verification
+ */
+
 void SemanticTypes::visit(SignNode *signNode) {
     if (signNode->getExp()) {
         signNode->getExp()->accept(this);
@@ -893,6 +929,10 @@ void SemanticTypes::visit(SignNode *signNode) {
     signNode->setArraySize(-1);
     signNode->setLValue(false);
 }
+
+/*
+ * Funtion Call Type verification
+ */
 
 void SemanticTypes::visit(CallNode *callNode) {
 
@@ -956,6 +996,10 @@ void SemanticTypes::visit(CallNode *callNode) {
     callNode->setLValue(false);
 }
 
+/*
+ * Primary type attribution
+ */
+
 void SemanticTypes::visit(PrimaryNode *primaryNode) {
 
     ExpNode *expNode = primaryNode->getExp();
@@ -1003,6 +1047,10 @@ void SemanticTypes::visit(PrimaryNode *primaryNode) {
 
 
 }
+
+/*
+ * Token type attribution
+ */
 
 void SemanticTypes::visit(TokenNode *tokenNode) {
     VarSymbol *var = varTable->cSearch(tokenNode->getLexeme());

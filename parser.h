@@ -138,10 +138,10 @@ class Parser
     ExpNode *Primary();
 
     static int postFixExprAUXFollowSet[];
-    ExpNode *PostFixExprAUX(ExpNode *ex);/// +/- PrimaryAux
+    ExpNode *PostFixExprAUX(ExpNode *ex);
 
     static int postFixExprFollowSet[];
-    ExpNode *PostFixExpr(TokenNode *id); // +/- PrimaryFAT
+    ExpNode *PostFixExpr(TokenNode *id);
 public:
     ProgramNode *StartParser();
 };
