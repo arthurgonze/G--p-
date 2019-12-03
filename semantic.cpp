@@ -541,6 +541,12 @@ void SemanticTypes::visit(AssignNode *assignNode) {
         return;
     }
 
+    assignNode->setType(assignNode->getExp1()->getType());
+    assignNode->setTypeLexeme(assignNode->getTypeLexeme());
+    assignNode->setArraySize(assignNode->getArraySize());
+    assignNode->setPointer(assignNode->getExp1()->isPointer());
+    assignNode->setLValue(false);
+    
 }
 
 void SemanticTypes::visit(PointerValNode *pointerValNode) {

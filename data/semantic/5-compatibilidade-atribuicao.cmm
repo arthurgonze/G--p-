@@ -1,0 +1,34 @@
+float geraFloat() {
+
+    return 10.03;
+}
+
+int geraInt() {
+    return 10;
+}
+
+int main() {
+
+    char c;
+    int i, i2;
+    bool b, b2;
+    float f;
+
+    i = i2 = i = 10;
+
+    i = 1 + 3;
+    i = i + i;
+    i = i * 2;
+    i = i / geraInt();
+
+    f = geraFloat();
+
+    f = geraFloat() + f;
+
+    f = f+1; /*Erro*/
+
+    b = f < 0; /*Erro*/
+    b = f < 0.0;
+
+    return 0;
+}
