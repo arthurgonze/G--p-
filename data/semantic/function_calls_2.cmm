@@ -1,0 +1,24 @@
+int k(int* m)
+{
+    return m;
+}
+
+float l(float n) {
+    return n;
+}
+
+int main() {
+    int i1, vet[2];
+    float i2;
+
+    i1 = 0;
+    i2 = 0.0;
+
+    vet[0] = 1;
+
+    i1 = k(1);
+    i2 = l(i2);
+
+    
+    return 0;
+}

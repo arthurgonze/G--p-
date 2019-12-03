@@ -1,0 +1,33 @@
+int c, *pointerC;
+
+
+int func1() {
+
+    int c, *pointerC;
+
+    c = 0;
+    pointerC = &c;
+    *pointerC = 0;
+
+    return 0;
+}
+
+int func2() {
+
+    int *pointerC;
+
+    c = 0;
+    pointerC = &c;
+    *pointerC = 1;
+
+    return 0;
+}
+
+int func3() {
+
+    c = 0;
+    pointerC = &c;
+    *pointerC = 0;
+
+    return 0;
+}

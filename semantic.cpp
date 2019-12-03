@@ -160,7 +160,7 @@ void SemanticTables::visit(VarDeclNode *varDeclNode) {
     IdListNode *idListAux = varDeclNode->getIdList();
     while (idListAux != NULL) {
 
-        bool isPointer = varDeclNode->getType()->getId()->isPointer() || (idListAux->getPointer() != NULL);
+        bool isPointer = idListAux->getId()->isPointer() || (idListAux->getPointer() != NULL);
 
         idListAux->getId()->setType(varDeclNode->getType()->getId()->getToken());
         idListAux->getId()->setTypeLexeme(varDeclNode->getType()->getId()->getLexeme());
