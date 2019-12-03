@@ -57,7 +57,7 @@ public:
     void visit(SignNode *signNode) override;
     void visit(ArrayCallNode *arrayCallNode) override;
     void visit(FunctionListNode *functionListNode) override;
-    void visit(PointerExpNode *pointerExpNode) override {};
+    void visit(PointerExpNode *pointerExpNode) override;
     void visit(PointerNode *node) override {}
     void visit(ArrayNode *node) override;
     void visit(VarStmtNode *node) override {}

@@ -1197,7 +1197,7 @@ void SemanticTables::visit(VarDeclNode *varDeclNode) {
     {
         idListAux->getId()->setType(varDeclNode->getType()->getId()->getToken());
         idListAux->getId()->setTypeLexeme(varDeclNode->getType()->getId()->getLexeme());
-        idListAux->getId()->setPointer(varDeclNode->getType()->getId()->isPointer());
+        idListAux->getId()->setPointer(varDeclNode->getType()->getId()->isPointer() || varDeclNode->getIdList()->getPointer() != NULL);
         idListAux->getId()->setArraySize(varDeclNode->getType()->getId()->getArraySize());
         if(varDeclNode->getType()->getType() == ID)
         {
@@ -1506,13 +1506,13 @@ void SemanticTypes::visit(AddressValNode *addressValNode) {
     {
         addressValNode->getExp()->accept(this);
     } else {
-        fprintf(stderr, "[SEMANTIC ERROR - nameExpNode] INVALID VALUE EXPRESSION, line %d\n",
+        fprintf(stderr, "[SEMANTIC ERROR - addressValNode] INVALID VALUE EXPRESSION, line %d\n",
                 addressValNode->getLine());
         return;
     }
 
     if(addressValNode->getExp()->isPointer()) {
-        fprintf(stderr, "[SEMANTIC ERROR - pointerValNode] CANNOT ACCESS ADDRESS OF A POINTER TYPE, line %d lexeme: %s\n",
+        fprintf(stderr, "[SEMANTIC ERROR - addressValNode] CANNOT ACCESS ADDRESS OF A POINTER TYPE, line %d lexeme: %s\n",
                 addressValNode->getLine(), addressValNode->getLexeme());
         return;
     }
@@ -1522,6 +1522,46 @@ void SemanticTypes::visit(AddressValNode *addressValNode) {
     addressValNode->setLValue(true);//pointerValNode->setLValue(pointerValNode->getExp()->isLValue());
     addressValNode->setArraySize(addressValNode->getExp()->getArraySize());
     addressValNode->setPointer(true);
+}
+
+void SemanticTypes::visit(PointerExpNode *pointerExpNode)
+{
+    if(pointerExpNode->getId()) {
+        pointerExpNode->getId()->accept(this);
+    }else {
+        fprintf(stderr, "[SEMANTIC ERROR - pointerExpNode] NO RECORD ACCESS EXPRESSION, line %d\n",
+                pointerExpNode->getExp()->getLine());
+        return;
+    }
+
+    if(pointerExpNode->getExp()) {
+        pointerExpNode->getExp()->accept(this);
+    }else {
+        fprintf(stderr, "[SEMANTIC ERROR - pointerExpNode] NO STRUCT ACCESS FIELD, line %d\n",
+                pointerExpNode->getExp()->getLine());
+        return;
+    }
+
+    if(!pointerExpNode->getExp()->isPointer() || pointerExpNode->getExp()->getArraySize() > 0)
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - pointerExpNode] INCORRECT ACCESS TO A STRUCT POINTER, line %d\n",
+                pointerExpNode->getExp()->getLine());
+        return;
+    }
+    VarSymbol *recordField = varTable->searchInScope(pointerExpNode->getId()->getLexeme(), pointerExpNode->getExp()->getTypeLexeme());
+
+    if(!recordField)
+    {
+        fprintf(stderr, "[SEMANTIC ERROR - pointerExpNode] UNKNOWN FIELD IN STRUCT, line: %d field: %s type: %s\n",
+                pointerExpNode->getExp()->getLine(), pointerExpNode->getId()->getLexeme(), pointerExpNode->getExp()->getTypeLexeme());
+        return;
+    }
+
+    pointerExpNode->setType(recordField->getType()->getType());
+    pointerExpNode->setTypeLexeme(recordField->getType()->getTypeLexeme());
+    pointerExpNode->setPointer(recordField->isPointer());
+    pointerExpNode->setArraySize(recordField->getArraySize());
+    pointerExpNode->setLValue(true);
 }
 
 void SemanticTypes::visit(NameExpNode *nameExpNode)
