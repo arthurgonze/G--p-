@@ -19,7 +19,7 @@ typedef struct
 	char chs2[20];
 } st2;
 
-void main()
+int main()
 {
 	clrscr();   /* not declared function */
 

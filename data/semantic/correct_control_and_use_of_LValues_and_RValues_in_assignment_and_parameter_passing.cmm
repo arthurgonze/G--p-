@@ -1,0 +1,14 @@
+bool arthurReprovou()
+{
+	return true;
+}
+
+int main()
+{
+	bool nadaDeSurpresaNaReprovacaoDoArthur, t1, t2, t3;
+
+	t1 = t2 = t3 = nadaDeSurpresaNaReprovacaoDoArthur = true;
+	
+
+	return 0;
+}

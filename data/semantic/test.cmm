@@ -291,7 +291,7 @@ int menu_select()
 	return c;
 }
 
-void main()
+int main()
 {
 	clrscr();
 
@@ -324,4 +324,5 @@ void main()
 		}
 	}
 	getch();
+	return 0;
 }

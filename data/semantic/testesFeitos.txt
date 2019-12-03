@@ -1,0 +1,10 @@
+Escopo de ID ok
+Compatibilidade de tipo em expressões ok
+Acesso correto a campo de classes/registros ok
+Compatibilidade de tipos em atribuições ok
+Compatibilidade de tipos em passagem de parametros ok
+Compatibilidade de tipos em retorno de funções ok
+Expressões inteiras em acesso a elementos de arranjo +/-
+Uso indevido de indentificadores de vetor em expressões e passagem de parametros
+Controle de L-Values e R-Values
+Uso incorreto de literais em expressões numéricas

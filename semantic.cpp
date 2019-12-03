@@ -1000,7 +1000,7 @@ void SemanticTypes::visit(CallNode *callNode) {
 
     if (expectedParameter || parameter) {
         fprintf(stderr, "[SEMANTIC ERROR - callNode] PARAMETER COUNT MISMATCH, line: %d lexeme: %s\n",
-                parameter->getLine(), callNode->getId()->getLexeme());
+                callNode->getLine(), callNode->getId()->getLexeme());
         return;
     }
 
