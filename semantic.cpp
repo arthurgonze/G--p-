@@ -1195,9 +1195,11 @@ void SemanticTables::visit(VarDeclNode *varDeclNode) {
     IdListNode *idListAux = varDeclNode->getIdList();
     while (idListAux!=NULL)
     {
+        bool isPointer = varDeclNode->getType()->getId()->isPointer() || (varDeclNode->getIdList()->getPointer() != NULL);
+
         idListAux->getId()->setType(varDeclNode->getType()->getId()->getToken());
         idListAux->getId()->setTypeLexeme(varDeclNode->getType()->getId()->getLexeme());
-        idListAux->getId()->setPointer(varDeclNode->getType()->getId()->isPointer() || varDeclNode->getIdList()->getPointer() != NULL);
+        idListAux->getId()->setPointer(isPointer);
         idListAux->getId()->setArraySize(varDeclNode->getType()->getId()->getArraySize());
         if(varDeclNode->getType()->getType() == ID)
         {
@@ -1211,7 +1213,6 @@ void SemanticTables::visit(VarDeclNode *varDeclNode) {
 
         }
 
-        bool isPointer = (bool) idListAux->getPointer();
         int arraySize = -1;
 
         if(idListAux->getArray())
@@ -1926,11 +1927,23 @@ void SemanticTypes::visit(PrimaryNode *primaryNode) {
     if(tokenNode) {
         tokenNode->accept(this);
 
+        VarSymbol *varSymbol = varTable->cSearch(tokenNode->getLexeme());
+
         //if token is a variable, check if it exists
-        if((tokenNode->getType() == ID || tokenNode->getType() == UNASSIGNED_TOKEN) && !varTable->cSearch(tokenNode->getLexeme()))
+        if((tokenNode->getType() == ID || tokenNode->getType() == UNASSIGNED_TOKEN))
         {
-            fprintf(stderr, "[SEMANTIC ERROR - primaryNode] UNDEFINED SYMBOL, line %d lexeme: %s\n",
-                    primaryNode->getLine(), tokenNode->getLexeme());
+            if(varSymbol) {
+
+                primaryNode->setType(varSymbol->getType()->getType());
+                primaryNode->setTypeLexeme(varSymbol->getType()->getTypeLexeme());
+                primaryNode->setPointer(varSymbol->isPointer());
+                primaryNode->setArraySize(varSymbol->getArraySize());
+                primaryNode->setLValue(true);
+            } else {
+                fprintf(stderr, "[SEMANTIC ERROR - primaryNode] UNDEFINED SYMBOL, line %d lexeme: %s\n",
+                        primaryNode->getLine(), tokenNode->getLexeme());
+            }
+
             return;
         }
 

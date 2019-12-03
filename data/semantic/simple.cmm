@@ -45,12 +45,15 @@ typedef struct {
 
     int m11;
     int m12;
+    m1* a;
+    m1  b;
 } m1;
 
-m1* k, c[2];
-
+m1* c[2], k;
+m1  d, b;
 int main() {
 
-    *c[1].m11;
-
+    k->a = k;
+    d.m11 = 3;
+    k->a->a->a->b.m11 = 1;
 }
