@@ -1999,7 +1999,7 @@ ExpNode *Parser::Primary()
         {
             Eat(LPARENT);
             ExpNode *exp = ExprAssign();
-            EatOrSkip(RPARENT, stmtAUXFollowSet); // TODO @arthur dá uma olhada se eu fiz certo aqui
+            EatOrSkip(RPARENT, primaryFollowSet); // TODO @arthur dá uma olhada se eu fiz certo aqui
             return  exp;
         }
         default:
