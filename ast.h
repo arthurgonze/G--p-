@@ -61,7 +61,36 @@ public:
     virtual void accept(Visitor *visitor)= 0;
 };
 
-class ExpNode : public ASTNode
+class StmtNode : public ASTNode
+{
+private:
+    bool returnAtt;
+    ASTNode *stmt;
+public:
+//    explicit StmtNode(StmtListNode *stmtList) { this->stmt = (ASTNode *) (stmtList); }
+//    explicit StmtNode(IfNode *aux) { this->stmt = (ASTNode *) (aux); }
+////    explicit StmtNode(WhileNode *aux) { this->stmt = (ASTNode *) (aux); }
+//    explicit StmtNode(ExpNode *aux) { this->stmt = aux; }
+////    explicit StmtNode(BreakNode *aux) { this->stmt = aux; }
+//    explicit StmtNode(PrintNode *aux) { this->stmt = aux; }
+//    explicit StmtNode(ReadLnNode *aux) { this->stmt = aux; }
+//    explicit StmtNode(ReturnNode *aux) { this->stmt = aux; }
+//    explicit StmtNode(ThrowNode *aux) { this->stmt = aux; }
+//    explicit StmtNode(TryNode *aux) { this->stmt = aux; }
+//    explicit StmtNode(SwitchNode *aux) { this->stmt = (ASTNode *) (aux); }
+//    ~StmtNode() override { delete this->stmt; }
+
+    inline ASTNode *getStmt() { return stmt; }
+    inline bool isReturn() const { return returnAtt; }
+
+    inline void setReturn(bool returnAtt) { this->returnAtt = returnAtt; }
+//    inline void setStmt(ASTNode *stmt) { this->stmt = stmt; }
+
+    void accept(Visitor *visitor) override { visitor->visit(this); }
+};
+
+
+class ExpNode : public StmtNode
 {
 private:
     const char *lexeme;
@@ -86,7 +115,7 @@ public:
     void accept(Visitor *visitor) override = 0;
 };
 
-class BreakNode : public ASTNode
+class BreakNode : public StmtNode
 {
 private:
 public:
@@ -96,7 +125,7 @@ public:
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-class ThrowNode : public ASTNode
+class ThrowNode : public StmtNode
 {
 public:
     ThrowNode() = default;
@@ -162,7 +191,7 @@ public:
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-class PrintNode : public ASTNode
+class PrintNode : public StmtNode
 {
 private:
     ExpListNode *list;
@@ -175,7 +204,7 @@ public:
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-class ReadLnNode : public ASTNode
+class ReadLnNode : public StmtNode
 {
 private:
     ExpNode *exp;
@@ -188,20 +217,8 @@ public:
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-class ReturnNode : public ASTNode
-{
-private:
-    ExpNode *exp;
-public:
-    explicit ReturnNode(ExpNode *exp) { this->exp = exp; }
-    ~ReturnNode() override { delete this->exp; }
 
-    inline ExpNode *getExp() { return exp; }
-
-    void accept(Visitor *visitor) override { visitor->visit(this); }
-};
-
-class TryNode : public ASTNode
+class TryNode : public StmtNode
 {
 private:
     StmtNode *tryStmt;
@@ -216,35 +233,21 @@ public:
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-class StmtNode : public ASTNode
+
+class ReturnNode : public StmtNode
 {
 private:
-    bool returnAtt;
-    ASTNode *stmt;
+    ExpNode *exp;
 public:
-    explicit StmtNode(StmtListNode *stmtList) { this->stmt = (ASTNode *) (stmtList); }
-    explicit StmtNode(IfNode *aux) { this->stmt = (ASTNode *) (aux); }
-    explicit StmtNode(WhileNode *aux) { this->stmt = (ASTNode *) (aux); }
-    explicit StmtNode(ExpNode *aux) { this->stmt = aux; }
-    explicit StmtNode(BreakNode *aux) { this->stmt = aux; }
-    explicit StmtNode(PrintNode *aux) { this->stmt = aux; }
-    explicit StmtNode(ReadLnNode *aux) { this->stmt = aux; }
-    explicit StmtNode(ReturnNode *aux) { this->stmt = aux; }
-    explicit StmtNode(ThrowNode *aux) { this->stmt = aux; }
-    explicit StmtNode(TryNode *aux) { this->stmt = aux; }
-    explicit StmtNode(SwitchNode *aux) { this->stmt = (ASTNode *) (aux); }
-    ~StmtNode() override { delete this->stmt; }
+    explicit ReturnNode(ExpNode *exp) { this->exp = exp; }
+    ~ReturnNode() override { delete this->exp; }
 
-    inline ASTNode *getStmt() { return stmt; }
-    inline bool isReturn() const { return returnAtt; }
-
-    inline void setReturn(bool returnAtt) { this->returnAtt = returnAtt; }
-    inline void setStmt(ASTNode *stmt) { this->stmt = stmt; }
+    inline ExpNode *getExp() { return exp; }
 
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-class StmtListNode : public ASTNode
+class StmtListNode : public StmtNode
 {
 private:
     bool returnAtt;
@@ -265,7 +268,7 @@ public :
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-class WhileNode : public ASTNode
+class WhileNode : public StmtNode
 {
 private:
     ExpNode *head;
@@ -280,7 +283,7 @@ public:
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-class IfNode : public ASTNode
+class IfNode : public StmtNode
 {
 private:
     ExpNode *head;
@@ -314,7 +317,7 @@ public:
     void accept(Visitor *visitor) override { visitor->visit(this); }
 };
 
-class SwitchNode : public ASTNode
+class SwitchNode : public StmtNode
 {
 private:
     ExpNode *exp;
