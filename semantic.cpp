@@ -1508,21 +1508,19 @@ void SemanticTypes::visit(IfNode *ifNode)
 void SemanticTypes::visit(StmtListNode *stmtListNode)
 {
 
-    bool isNextReturn = false;
+    //TODO nunca foi usadabool isNextReturn;// = false;
 
     //TODO implementar checagem de retorno
     if (stmtListNode->getNext())
     {
         stmtListNode->getNext()->accept(this);
-        isNextReturn = stmtListNode->getNext()->isReturn();
+        /* TODO nunca foi usada isNextReturn = */stmtListNode->getNext()->isReturn();
     }
 
     if (stmtListNode->getStmt())
     {
         stmtListNode->getStmt()->accept(this);
         stmtListNode->setReturn(stmtListNode->getStmt()->isReturn());
-
-
     }
 }
 
@@ -1548,21 +1546,28 @@ void SemanticTypes::visit(ReturnNode *returnNode)
         return;
     }
 
-    bool isSameType = returnNode->getExp()->getType() == activeFunction->getReturnType()->getType();
-    bool isSameArray = returnNode->getExp()->getArraySize() < 0;
-    bool isSamePointer = returnNode->getExp()->isPointer() == activeFunction->isPointer();
-    bool isSameTypeLexeme = true;
-    if(returnNode->getExp()->getType() == ID)
-        isSameTypeLexeme = !strcmp(returnNode->getExp()->getTypeLexeme(), activeFunction->getReturnType()->getTypeLexeme());
-
-    if(!(isSameArray && isSameType && isSamePointer && isSameTypeLexeme))
+    if(returnNode->getExp() != NULL)// TODO SEGFAULT TEMPORARY SOLUTION
     {
-        fprintf(stderr,
-                "[SEMANTIC ERROR - returnNode] RETURN TYPE DOES NOT MATCH WITH FUNCTION RETURN TYPE, line: %d\n",
-                returnNode->getLine());
-        return;
-    }
+        bool isSameType = returnNode->getExp()->getType()==activeFunction->getReturnType()->getType();// TODO SEGMENTATION FAULT quando eh void
 
+        bool isSameArray = returnNode->getExp()->getArraySize() < 0;
+        bool isSamePointer = returnNode->getExp()->isPointer()==activeFunction->isPointer();
+        bool isSameTypeLexeme = true;
+        if (returnNode->getExp()->getType()==ID)
+            isSameTypeLexeme = !strcmp(returnNode->getExp()->getTypeLexeme(), activeFunction->getReturnType()->getTypeLexeme());
+
+        if (!(isSameArray && isSameType && isSamePointer && isSameTypeLexeme))
+        {
+            fprintf(stderr,
+                    "[SEMANTIC ERROR - returnNode] RETURN TYPE DOES NOT MATCH WITH FUNCTION RETURN TYPE, line: %d\n",
+                    returnNode->getLine());
+            return;
+        }
+    }
+    else
+    {
+        fprintf(stderr, "DEU ERRO PORRA: %d\n", returnNode->getLine());
+    }
     returnNode->setReturn(true);
 }
 
@@ -1771,7 +1776,7 @@ void SemanticTypes::visit(ArrayCallNode *arrayCallNode)
         arrayCallNode->getExp()->accept(this);
     } else {
         fprintf(stderr, "[SEMANTIC ERROR - arrayCallNode] INVALID ARRAY ACCESS EXPRESSION, line %d\n",
-                arrayCallNode->getLine(), arrayCallNode->getLexeme());
+                arrayCallNode->getLine());//TODO , arrayCallNode->getLexeme());
         return;
     }
 
@@ -1780,14 +1785,14 @@ void SemanticTypes::visit(ArrayCallNode *arrayCallNode)
         arrayCallNode->getIndex()->accept(this);
     } else {
         fprintf(stderr, "[SEMANTIC ERROR - arrayCallNode] INVALID ARRAY INDEX EXPRESSION, line %d\n",
-                arrayCallNode->getLine(), arrayCallNode->getLexeme());
+                arrayCallNode->getLine()); //TODO , arrayCallNode->getLexeme());
         return;
     }
 
     if(arrayCallNode->getExp()->getArraySize() < 0)
     {
         fprintf(stderr, "[SEMANTIC ERROR - arrayCallNode] ARRAY ACCESS TO A NON ARRAY TYPE, line %d\n",
-                arrayCallNode->getLine(), arrayCallNode->getTypeLexeme());
+                arrayCallNode->getLine()); //TODO warning, arrayCallNode->getTypeLexeme());
         return;
     }
 
