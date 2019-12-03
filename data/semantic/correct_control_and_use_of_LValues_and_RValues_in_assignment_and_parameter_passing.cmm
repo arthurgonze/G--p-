@@ -3,12 +3,20 @@ bool arthurReprovou()
 	return true;
 }
 
+int t(int a)
+{
+	return 0;
+}
+
 int main()
 {
 	bool nadaDeSurpresaNaReprovacaoDoArthur, t1, t2, t3;
 
+	int a,b,c;
+
 	t1 = t2 = t3 = nadaDeSurpresaNaReprovacaoDoArthur = true;
 	
+	t(a+b+c);
 
 	return 0;
 }
