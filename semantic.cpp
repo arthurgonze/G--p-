@@ -1288,6 +1288,16 @@ void SemanticTables::visit(FunctionNode *functionNode) {
         return;
     }
 
+    if(functionNode->getReturnType() == ID) {
+
+        if(!structTable->cSearch(functionNode->getReturnTypeLexeme()))
+        {
+            fprintf(stderr, "[SEMANTIC ERROR - functionNode] UNDEFINED RETURN TYPE, line: %d type: %s\n",
+                    functionNode->getLine(), functionNode->getReturnTypeLexeme());
+
+        }
+    }
+
     if(!functionTable->cInsert(functionNode->getType(), functionLexeme,
                                functionNode->getParameters(), functionNode->getPointer())){
         fprintf(stderr, "[SEMANTIC ERROR - functionNode] FUNCTION NAME ALREADY ASSIGNED BEFORE, line: %d\n",
@@ -1518,8 +1528,17 @@ void SemanticTypes::visit(StmtListNode *stmtListNode)
 
 void SemanticTypes::visit(ReturnNode *returnNode)
 {
-    if(returnNode->getExp())
+    if(returnNode->getExp()) { //Check the return expression
         returnNode->getExp()->accept(this);
+    } else { //No expression means void return
+
+        fprintf(stderr,
+                "[SEMANTIC ERROR - returnNode] VOID RETURN STATEMENT NOT ALLOWED, line: %d\n",
+                returnNode->getLine());
+
+
+        return;
+    }
 
     if(!activeFunction)
     {
