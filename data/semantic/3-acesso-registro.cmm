@@ -1,0 +1,22 @@
+typedef struct {
+
+    int i1;
+    float i2;
+    char c2;
+    s1* next;
+} s1;
+
+int main() {
+
+    int local;
+    s1 registro;
+
+    registro.next = &registro;
+    local = registro.next->next->next->i1;
+    local = registro.next->next->next->i2;/*Erro*/
+    local = registro.next->next->next->c2;/*Erro*/
+
+    registro.next->next->next->i1 = 20 * registro.i1;
+    
+    /*Return expected*/
+}

@@ -1,0 +1,36 @@
+/* C Scope Rules - Global Variable Example */
+
+#include<stdio.h>
+#include<conio.h>
+
+int count;     /* this count variable is global */
+
+int fun2()
+{
+	int count;   /* this is local variable having first priority */
+    count = 1;
+    while(count<5)
+	{
+		count = count + 1;
+	}
+    return count;
+}
+
+int fun1()
+{
+	fun2();
+	print("count is %d", count);   /* this will print 10 */
+    
+    /* don't have return stmt */
+}
+
+
+int main()
+{
+	clrscr(); /* not declared function */
+
+	count = 10;
+	fun1();
+
+	getch(); /* not declared function */
+}

@@ -1,0 +1,81 @@
+/* C Structures - This program demonstrates
+ * the concept of structure pointer in C */
+
+#include<stdio.h>
+#include<conio.h>
+
+#define DELAY 128000
+#define TEMP_DELAY 59
+
+typedef struct
+{
+	int hours;
+	int minutes;
+	int seconds;
+} stTime;
+
+void display(stTime *time)
+{
+	print("%02d:", time->hours);
+	print("%02d:", time->minutes);assignNode->getExp1()
+	print("%02d\n", time->seconds);
+}
+
+void delay()
+{
+	int time, temp;
+    temp = 0;    
+	while(temp<TEMP_DELAY)
+	{
+        time = 1;
+		while(time<DELAY)
+        {
+            time = time + 1;
+        }
+
+        temp = temp + 1;
+	}
+}
+
+void update(stTime *time)
+{
+	time->seconds = time->seconds + 1;
+	if(time->seconds == 60)
+	{
+		time->seconds = 0;
+		time->minutes = time->minutes + 1;
+	}
+
+	if(time->minutes == 60)
+	{
+		time->minutes = 0;
+		time->hours = time->hours + 1;
+	}
+
+	if(time->hours == 24)
+	{
+		time->hours = 0;
+	}
+
+	delay();
+}
+
+int main()
+{
+	stTime systime;
+
+	systime.hours = 0;
+	systime.minutes = 0;
+	systime.seconds = 0;
+
+	while(true)
+	{
+		update(&systime);
+		display(&systime);
+	}
+
+	getch();/* not declared function */
+    return 0;
+}
+
+

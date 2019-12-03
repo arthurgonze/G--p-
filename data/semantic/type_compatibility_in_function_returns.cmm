@@ -1,0 +1,82 @@
+typedef struct 
+{
+	int a;	
+}st1;
+
+bool fudeuJoaoReprovou()
+{
+	return true;
+}
+
+bool boolErrado()
+{
+	return "errado bool";
+}
+
+int intCerto()
+{
+	return 42;	
+}
+
+int intErrado()
+{
+	return 42.0;
+}
+
+float floatCerto()
+{
+	return 42.0;
+}
+
+float floatErrado()
+{
+	return 42;
+}
+
+char charCerto()
+{
+	return 'c';
+}
+
+char charErrado()
+{
+	return "errado char";
+}
+
+char* stringCerto()
+{
+	return "certo";
+}
+
+char* stringErrado()
+{
+	return 42;
+}
+
+st1 idCerto()
+{
+	st1 a;
+	return a;
+}
+
+st1 idErrado()
+{
+	return "errado id";
+}
+
+int main()
+{
+	fudeuJoaoReprovou();
+	boolErrado();
+	intCerto();
+	intErrado();
+	floatCerto();
+	floatErrado();
+	charCerto();
+	charErrado();
+	idCerto();
+	idErrado();
+	stringCerto();
+	stringErrado();
+	return 0;
+}

@@ -248,8 +248,8 @@ Mail subject headers can be searched with leading :'s. . .such as:
 :Afghanistan Communications
 :Afghanistan Defense Forces
 
-To find the beginning of any country, search for :country
-To find internal information, search for :country section, as above.
+To find the beginning of any country, cSearch for :country
+To find internal information, cSearch for :country section, as above.
 
 
 THE WORLD FACTBOOK 1992
@@ -435,7 +435,7 @@ Overview:
     is lower than 12 years ago because of the loss of labor and capital and the
     disruption of trade and transport.
 GDP:
-    exchange rate conversion - $3 billion, per capita $200; real growth rate 0%
+    exchange rate conversion - $3 billion, per capita $200; numFloat growth rate 0%
     (1989 est.)
 Inflation rate (consumer prices):
     over 90% (1991 est.)
@@ -697,7 +697,7 @@ Overview:
     supplies. Available statistics on Albanian economic activity are rudimentary
     and subject to an especially wide margin of error.
 GNP:
-    purchasing power equivalent - $2.7 billion, per capita $820; real growth
+    purchasing power equivalent - $2.7 billion, per capita $820; numFloat growth
     rate --35% (1991 est.)
 Inflation rate (consumer prices):
     100% (1991 est.)
@@ -949,7 +949,7 @@ Overview:
     overhaul of the banking and financial systems, but to date it has made only
     limited progress.
 GDP:
-    exchange rate conversion - $54 billion, per capita $2,130; real growth rate
+    exchange rate conversion - $54 billion, per capita $2,130; numFloat growth rate
     2.5% (1990 est.)
 Inflation rate (consumer prices):
     30% (1991 est.)
@@ -1192,7 +1192,7 @@ Overview:
     largest employers. Other economic activities include a slowly developing
     tourist industry.
 GNP:
-    purchasing power equivalent - $128 million, per capita $2,500; real growth
+    purchasing power equivalent - $128 million, per capita $2,500; numFloat growth
     rate NA% (1990)
 Inflation rate (consumer prices):
     4.3% (1989)
@@ -1403,7 +1403,7 @@ Overview:
     cigars, and furniture. The rapid pace of European economic integration is a
     potential threat to Andorra's advantages from its duty-free status.
 GDP:
-    purchasing power equivalent - $727 million, per capita $14,000; real growth
+    purchasing power equivalent - $727 million, per capita $14,000; numFloat growth
     rate NA% (1990 est.)
 Inflation rate (consumer prices):
     NA%
@@ -1607,7 +1607,7 @@ Overview:
     but also must reform government policies that have led to distortions and
     imbalances throughout the economy.
 GDP:
-    exchange rate conversion - $8.3 billion, per capita $950; real growth rate
+    exchange rate conversion - $8.3 billion, per capita $950; numFloat growth rate
     1.7% (1991 est.)
 Inflation rate (consumer prices):
     6.1% (1990 est.)
@@ -1825,7 +1825,7 @@ Overview:
     Development plans center around the improvement of the infrastructure,
     particularly transport and tourist facilities, and also light industry.
 GDP:
-    exchange rate conversion - $23 million, per capita $3,300; real growth rate
+    exchange rate conversion - $23 million, per capita $3,300; numFloat growth rate
     8.2% (1988 est.)
 Inflation rate (consumer prices):
     4.5% (1988 est.)
@@ -2198,7 +2198,7 @@ Flag:
 
 Overview:
     The economy is primarily service oriented, with tourism the most important
-    determinant of economic performance. During the period 1987-90, real GDP
+    determinant of economic performance. During the period 1987-90, numFloat GDP
     expanded at an annual average rate of about 6%. Tourism makes a direct
     contribution to GDP of about 13% and also affects growth in other sectors -
     particularly in construction, communications, and public utilities. Although
@@ -2206,7 +2206,7 @@ Overview:
     labor shortage in some sectors of the economy, it was hurt in 1991 by a
     downturn in tourism caused by the Persian Gulf war and the US recession.
 GDP:
-    exchange rate conversion - $418 million, per capita $6,500 (1989); real
+    exchange rate conversion - $418 million, per capita $6,500 (1989); numFloat
     growth rate 4.2% (1990 est.)
 Inflation rate (consumer prices):
     7% (1990 est.)
@@ -2536,7 +2536,7 @@ Overview:
     Argentina's economic decline and putting it on a path of stable, sustainable
     growth.
 GDP:
-    exchange rate conversion - $101.2 billion, per capita $3,100; real growth
+    exchange rate conversion - $101.2 billion, per capita $3,100; numFloat growth
     rate 5.5% (1991 est.)
 Inflation rate (consumer prices):
     83.8% (1991)
@@ -2781,7 +2781,7 @@ Overview:
     Azerbaijani railroads and expensive airlifts of supplies to beleagured
     Armenians in Nagorno-Karabakh. An earthquake in December 1988 destroyed
     about one-tenth of industrial capacity and housing, the repair of which has
-    not been possible because the supply of funds and real resources has been
+    not been possible because the supply of funds and numFloat resources has been
     disrupted by the reorganization and subsequent dismantling of the central
     USSR administrative apparatus. Among facilities made unserviceable by the
     earthquake are the Yerevan nuclear power plant, which had supplied 40% of
@@ -2793,7 +2793,7 @@ Overview:
     dependence on outside areas, themselves in a chaotic state of
     transformation.
 GDP:
-    $NA, per capita $NA; real growth rate --10% (1991)
+    $NA, per capita $NA; numFloat growth rate --10% (1991)
 Inflation rate (consumer prices):
     91%
 Unemployment rate:
@@ -3017,7 +3017,7 @@ Overview:
     of the local oil refinery, once a major source of employment and foreign
     exchange earnings, promises to give the economy an additional boost.
 GDP:
-    exchange rate conversion - $854 million, per capita $13,600; real growth
+    exchange rate conversion - $854 million, per capita $13,600; numFloat growth
     rate l0% (1990 est.)
 Inflation rate (consumer prices):
     8% (1990 est.)
@@ -3405,7 +3405,7 @@ Overview:
     pushing for increased exports of manufactured goods, but competition in
     international markets continues to be severe.
 GDP:
-    purchasing power equivalent - $280.8 billion, per capita $16,200; real
+    purchasing power equivalent - $280.8 billion, per capita $16,200; numFloat
     growth rate --0.6% (1991 est.)
 Inflation rate (consumer prices):
     3.3% (September 1991)
@@ -3679,7 +3679,7 @@ Overview:
     Area and will have to adapt its economy to achieve freer interchange of
     goods, services, capital, and labor within the EC.
 GDP:
-    purchasing power equivalent - $164.1 billion, per capita $20,985; real
+    purchasing power equivalent - $164.1 billion, per capita $20,985; numFloat
     growth rate 3% (1991)
 Inflation rate (consumer prices):
     3.3% (1991, annual rate)
@@ -3938,7 +3938,7 @@ Overview:
     economic performance was the best of all former Soviet republics in 1991
     largely because of its reliance on domestic resources for industrial output.
 GDP:
-    $NA, per capita $NA; real growth rate --0.7% (1991)
+    $NA, per capita $NA; numFloat growth rate --0.7% (1991)
 Inflation rate (consumer prices):
     87% (1991)
 Unemployment rate:
@@ -4169,7 +4169,7 @@ Overview:
     the annual increase in the number of tourists slowed. Nonetheless, the per
     capita GDP of $9,900 is one of the highest in the region.
 GDP:
-    purchasing power equivalent--$2.5 billion, per capita $9,900; real growth
+    purchasing power equivalent--$2.5 billion, per capita $9,900; numFloat growth
     rate 1.0% (1990 est.)
     *** No entry for this item ***
 Inflation rate (consumer prices):
@@ -4399,7 +4399,7 @@ Overview:
     Gulf. A large share of exports is petroleum products made from imported
     crude.
 GDP:
-    exchange rate conversion - $4.0 billion, per capita $7,500 (1990); real
+    exchange rate conversion - $4.0 billion, per capita $7,500 (1990); numFloat
     growth rate 6.7% (1988)
 Inflation rate (consumer prices):
     1.5% (1989)
@@ -4722,13 +4722,13 @@ Overview:
     Bangladesh is hampered by a relative lack of natural resources, population
     growth of more than 2% a year, large-scale unemployment, and a limited
     infrastructure; furthermore, it is highly vulnerable to natural disasters.
-    Despite these constraints, real GDP growth averaged about 3.5% annually
+    Despite these constraints, numFloat GDP growth averaged about 3.5% annually
     during 1985-89. A strong agricultural performance in FY90 pushed the growth
     rate up to 6.2%, and FY91 saw further, though smaller, increases in output.
     Alleviation of poverty remains the cornerstone of the government's
     development strategy.
 GDP:
-    exchange rate conversion - $23.1 billion, per capita $200; real growth rate
+    exchange rate conversion - $23.1 billion, per capita $200; numFloat growth rate
     3.2% (FY91)
 Inflation rate (consumer prices):
     8.9% (FY91 est.)
@@ -4962,7 +4962,7 @@ Overview:
     reserves and inability to finance its deficits have caused it to adopt an
     austere economic reform program.
 GDP:
-    purchasing power equivalent - $1.7 billion, per capita $6,500; real growth
+    purchasing power equivalent - $1.7 billion, per capita $6,500; numFloat growth
     rate--3.1% (1990)
 Inflation rate (consumer prices):
     3.4% (1990)
@@ -5252,7 +5252,7 @@ Overview:
     electric power stations and in the production of chemicals. The potash
     supports fertilizer production.
 GDP:
-    NA - $NA, per capita $NA; real growth rate --2% (1991)
+    NA - $NA, per capita $NA; numFloat growth rate --2% (1991)
 Inflation rate (consumer prices):
     81% (1991)
 Unemployment rate:
@@ -5523,7 +5523,7 @@ Overview:
     marked by 4% average growth, moderate inflation, and a substantial external
     surplus. Growth fell to 1.4% in 1991.
 GDP:
-    purchasing power equivalent - $171.8 billion, per capita $17,300; real
+    purchasing power equivalent - $171.8 billion, per capita $17,300; numFloat
     growth rate 1.4% (1991 est.)
 Inflation rate (consumer prices):
     3.2% (1991 est.)
@@ -5768,7 +5768,7 @@ Overview:
     efforts to reduce dependency on sugar with an agricultural diversification
     program.
 GDP:
-    exchange rate conversion - $373 million, per capita $1,635; real growth rate
+    exchange rate conversion - $373 million, per capita $1,635; numFloat growth rate
     10% (1990 est.)
 Inflation rate (consumer prices):
     3.5% (1990 est.)
@@ -6008,7 +6008,7 @@ Overview:
     prices in recent years have kept down hard currency earnings from Benin's
     major exports of agricultural products and crude oil.
 GDP:
-    exchange rate conversion - $2.0 billion, per capita $410; real growth rate
+    exchange rate conversion - $2.0 billion, per capita $410; numFloat growth rate
     3% (1991)
 Inflation rate (consumer prices):
     3.0% (1990)
@@ -6228,7 +6228,7 @@ Overview:
     is severely limited by a lack of suitable land. About 80% of food needs are
     imported.
 GDP:
-    purchasing power equivalent - $1.3 billion, per capita $22,400; real growth
+    purchasing power equivalent - $1.3 billion, per capita $22,400; numFloat growth
     rate 2.0% (1989 est.)
 Inflation rate (consumer prices):
     5.8% (June 1989, annual rate)
@@ -6432,7 +6432,7 @@ Overview:
     Indian migrant labor. Bhutan's hydropower potential and its attraction for
     tourists are its most important natural resources.
 GDP:
-    exchange rate conversion - $320 million, per capita $200; real growth rate
+    exchange rate conversion - $320 million, per capita $200; numFloat growth rate
     3.1% (1991 est.)
 Inflation rate (consumer prices):
     12% (FY90)
@@ -6676,7 +6676,7 @@ Overview:
     Moreover, for many farmers, who constitute half of the country's work force,
     the main cash crop is coca, which is sold for cocaine processing.
 GDP:
-    exchange rate conversion - $4.6 billion, per capita $630; real growth rate
+    exchange rate conversion - $4.6 billion, per capita $630; numFloat growth rate
     4% (1991)
 Inflation rate (consumer prices):
     15% (1991)
@@ -6918,7 +6918,7 @@ Overview:
     markets for its primary products. In these circumstances, other Muslim
     countries might offer assistance.
 GDP:
-    $14 billion; real growth rate --37% (1991)
+    $14 billion; numFloat growth rate --37% (1991)
 Inflation rate (consumer prices):
     80% per month (1991)
 Unemployment rate:
@@ -7155,7 +7155,7 @@ Overview:
     production remained level in FY91, substantial gains in coal output and
     manufacturing helped boost the economy
 GDP:
-    purchasing power equivalent - $3.6 billion, per capita $2,800; real growth
+    purchasing power equivalent - $3.6 billion, per capita $2,800; numFloat growth
     rate 6.3% (1991 est.)
 Inflation rate (consumer prices):
     12.6% (1991)
@@ -7467,7 +7467,7 @@ Flag:
 
 Overview:
     The economy, with large agrarian, mining, and manufacturing sectors, entered
-    the 1990s with declining real growth, runaway inflation, an unserviceable
+    the 1990s with declining numFloat growth, runaway inflation, an unserviceable
     foreign debt of $122 billion, and a lack of policy direction. In addition,
     the economy remained highly regulated, inward-looking, and protected by
     substantial trade and investment barriers. Ownership of major industrial and
@@ -7486,7 +7486,7 @@ Overview:
     payments and on the elimination of remaining interest arrears. A major
     long-run strength is Brazil's vast natural resources.
 GDP:
-    exchange rate conversion - $358 billion, per capita $2,300; real growth rate
+    exchange rate conversion - $358 billion, per capita $2,300; numFloat growth rate
     1.2% (1991)
 Inflation rate (consumer prices):
     478.5% (December 1991, annual rate)
@@ -7801,7 +7801,7 @@ Overview:
     significant agricultural activity. The islands' crops, limited by poor
     soils, are unable to meet food requirements.
 GDP:
-    purchasing power equivalent - $130 million, per capita $10,600; real growth
+    purchasing power equivalent - $130 million, per capita $10,600; numFloat growth
     rate 6.3% (1990)
 Inflation rate (consumer prices):
     2.5% (1990 est.)
@@ -8001,7 +8001,7 @@ Overview:
     The government provides for all medical services and subsidizes food and
     housing.
 GDP:
-    exchange rate conversion - $3.5 billion, per capita $8,800; real growth rate
+    exchange rate conversion - $3.5 billion, per capita $8,800; numFloat growth rate
     1% (1990 est.)
 Inflation rate (consumer prices):
     1.3% (1989)
@@ -8268,7 +8268,7 @@ Overview:
     large state-owned enterprises and reform the banking system. Negotiations on
     an association agreement with the EC began in late 1991.
 GNP:
-    purchasing power equivalent - $36.4 billion, per capita $4,100; real growth
+    purchasing power equivalent - $36.4 billion, per capita $4,100; numFloat growth
     rate --22% (1991 est.)
 Inflation rate (consumer prices):
     420% (1991 est.)
@@ -8520,7 +8520,7 @@ Overview:
     subsistence nature. Industry, dominated by unprofitable
     government-controlled corporations, accounts for about 15% of GDP.
 GDP:
-    exchange rate conversion - $2.9 billion, per capita $320 (1988); real growth
+    exchange rate conversion - $2.9 billion, per capita $320 (1988); numFloat growth
     rate 1.3% (1990 est.)
 Inflation rate (consumer prices):
     --0.5% (1989)
@@ -8761,7 +8761,7 @@ Overview:
     and has been trying to encourage foreign investment, so far with little
     success.
 GDP:
-    exchange rate conversion - $22.2 billion, per capita $530; real growth rate
+    exchange rate conversion - $22.2 billion, per capita $530; numFloat growth rate
     5.6% (1991)
 Inflation rate (consumer prices):
     40% (1991)
@@ -9020,7 +9020,7 @@ Overview:
     investment in industry. Several state-owned coffee companies were privatized
     via public auction in September 1991.
 GDP:
-    exchange rate conversion - $1.13 billion, per capita $200; real growth rate
+    exchange rate conversion - $1.13 billion, per capita $200; numFloat growth rate
     3.4% (1990 est.)
 Inflation rate (consumer prices):
     7.1% (1990 est.)
@@ -9044,7 +9044,7 @@ Imports:
 External debt:
     $1.0 billion (1990 est.)
 Industrial production:
-    real growth rate 5.1% (1986); accounts for about 10% of GDP
+    numFloat growth rate 5.1% (1986); accounts for about 10% of GDP
 Electricity:
     55,000 kW capacity; 105 million kWh produced, 20 kWh per capita (1991)
 Industries:
@@ -9263,7 +9263,7 @@ Overview:
     USSR. Statistical data on the economy continue to be sparse and unreliable.
     Foreign aid from the former USSR and Eastern Europe has virtually stopped.
 GDP:
-    exchange rate conversion - $930 million, per capita $130; real growth rate
+    exchange rate conversion - $930 million, per capita $130; numFloat growth rate
     NA (1991 est.)
 Inflation rate (consumer prices):
     53% (1990 est.)
@@ -9504,7 +9504,7 @@ Overview:
     and recapitalize the nation's banks. Nationwide strikes organized by
     opposition parties in 1991, however, undermined these efforts.
 GDP:
-    exchange rate conversion - $11.5 billion, per capita $1,040; real growth
+    exchange rate conversion - $11.5 billion, per capita $1,040; numFloat growth
     rate 0.7% (1990 est.)
 Inflation rate (consumer prices):
     8.6% (FY88)
@@ -9748,14 +9748,14 @@ Overview:
     production. Since World War II the impressive growth of the manufacturing,
     mining, and service sectors has transformed the nation from a largely rural
     economy into one primarily industrial and urban. In the 1980s, Canada
-    registered one of the highest rates of real growth among the OECD nations,
+    registered one of the highest rates of numFloat growth among the OECD nations,
     averaging about 3.2%. With its great natural resources, skilled labor force,
     and modern capital plant, Canada has excellent economic prospects. However,
     the continuing constitutional impasse between English- and French-speaking
     areas has observers discussing a possible split in the confederation;
     foreign investors are becoming edgy.
 GDP:
-    purchasing power equivalent - $521.5 billion, per capita $19,400; real
+    purchasing power equivalent - $521.5 billion, per capita $19,400; numFloat
     growth rate -1.1% (1991 est.)
 Inflation rate (consumer prices):
     4.2% (November 1991, annual rate)
@@ -10011,7 +10011,7 @@ Overview:
     new democratic government in February 1991 are aimed at developing the
     private sector and attracting foreign investment to diversify the economy.
 GDP:
-    exchange rate conversion - $310 million, per capita $800; real growth rate
+    exchange rate conversion - $310 million, per capita $800; numFloat growth rate
     4% (1990 est.)
 Inflation rate (consumer prices):
     10% (1990 est.)
@@ -10223,7 +10223,7 @@ Overview:
     About 90% of the islands' food and consumer goods needs must be imported.
     The Caymanians enjoy one of the highest standards of living in the region.
 GDP:
-    exchange rate conversion - $384 million, per capita $14,500 (1989); real
+    exchange rate conversion - $384 million, per capita $14,500 (1989); numFloat
     growth rate 8% (1990)
 Inflation rate (consumer prices):
     8% (1990 est.)
@@ -10447,7 +10447,7 @@ Overview:
     particularly from France, plays a major role in providing capital for new
     investment.
 GDP:
-    exchange rate conversion - $1.3 billion, per capita $440; real growth rate -
+    exchange rate conversion - $1.3 billion, per capita $440; numFloat growth rate -
     3.0% (1990 est.)
 Inflation rate (consumer prices):
     -3.0% (1990 est.)
@@ -10685,7 +10685,7 @@ Overview:
     The climate, geographic location, and lack of infrastructure and natural
     resources potential make Chad one of the most underdeveloped countries in
     the world. Its economy is burdened by the ravages of civil war, conflict
-    with Libya, drought, and food shortages. In 1986 real GDP returned to its
+    with Libya, drought, and food shortages. In 1986 numFloat GDP returned to its
     1977 level, with cotton, the major cash crop, accounting for 48% of exports.
     Over 80% of the work force is employed in subsistence farming and fishing.
     Industry is based almost entirely on the processing of agricultural
@@ -10695,7 +10695,7 @@ Overview:
     Doba basin in the south. Since coming to power in December 1990, the Deby
     government has experienced a year of economic chaos.
 GDP:
-    exchange rate conversion - $1.0 billion, per capita $205; real growth rate
+    exchange rate conversion - $1.0 billion, per capita $205; numFloat growth rate
     0.9% (1989 est.)
 Inflation rate (consumer prices):
     --4.9% (1989)
@@ -10955,7 +10955,7 @@ Overview:
     Inflationary pressures are not expected to ease much in 1992, and economic
     growth is likely to approach 7%.
 GDP:
-    exchange rate conversion - $30.5 billion, per capita $2,300; real growth
+    exchange rate conversion - $30.5 billion, per capita $2,300; numFloat growth
     rate 5.5% (1991 est.)
 Inflation rate (consumer prices):
     18.7% (1991)
@@ -11260,7 +11260,7 @@ Overview:
     have weakened China's population control program, which is essential to the
     nation's long-term economic viability.
 GNP:
-    $NA, per capita $NA; real growth rate 6% (1991)
+    $NA, per capita $NA; numFloat growth rate 6% (1991)
 Inflation rate (consumer prices):
     2.1% (1991)
 Unemployment rate:
@@ -11483,7 +11483,7 @@ Overview:
     to build a casino and hotel to develop tourism, with a possible opening date
     during the first half of 1992.
 GDP:
-    NA - $NA, per capita $NA; real growth rate NA%
+    NA - $NA, per capita $NA; numFloat growth rate NA%
 Inflation rate (consumer prices):
     NA%
 Unemployment rate:
@@ -11716,7 +11716,7 @@ Overview:
     contribute to the food supply, but additional food and most other
     necessities must be imported from Australia.
 GDP:
-    $NA, per capita $NA; real growth rate NA%
+    $NA, per capita $NA; numFloat growth rate NA%
 Inflation rate (consumer prices):
     NA%
 Budget:
@@ -11954,7 +11954,7 @@ Overview:
     fiscal restraint, trade liberalization, and privatization of state utilities
     and commercial banks.
 GDP:
-    exchange rate conversion - $45 billion, per capita $1,300; real growth rate
+    exchange rate conversion - $45 billion, per capita $1,300; numFloat growth rate
     3.7% (1990 est.)
 Inflation rate (consumer prices):
     26.8% (1991)
@@ -12199,7 +12199,7 @@ Overview:
     moderate increase in the growth rate based on increased exports, tourism,
     and government investment outlays.
 GDP:
-    exchange rate conversion - $260 million, per capita $540; real growth rate
+    exchange rate conversion - $260 million, per capita $540; numFloat growth rate
     2.7% (1991 est.)
 Inflation rate (consumer prices):
     4.0% (1991 est.)
@@ -12436,7 +12436,7 @@ Overview:
     growth has slowed to an average of roughly 1.5% annually, only half the
     population growth rate.
 GDP:
-    exchange rate conversion - $2.4 billion, per capita $1,070; real growth rate
+    exchange rate conversion - $2.4 billion, per capita $1,070; numFloat growth rate
     0.5% (1990 est.)
 Inflation rate (consumer prices):
     4.6% (1989 est.)
@@ -12662,7 +12662,7 @@ Overview:
     and expanding the fishing industry.
 GDP:
     exchange rate conversion - $40.0 million, per capita $2,200 (1988 est.);
-    real growth rate 5.3% (1986-88 est.)
+    numFloat growth rate 5.3% (1986-88 est.)
 Inflation rate (consumer prices):
     8.0% (1988)
 Unemployment rate:
@@ -12958,7 +12958,7 @@ Overview:
     underemployment remains. External debt, on a per capita basis, is among the
     world's highest.
 GDP:
-    exchange rate conversion - $5.9 billion, per capita $1,900; real growth rate
+    exchange rate conversion - $5.9 billion, per capita $1,900; numFloat growth rate
     2.5% (1991 est.)
 Inflation rate (consumer prices):
     27% (1991 est.)
@@ -13206,7 +13206,7 @@ Overview:
     desperate economic situation. However, peace and political stability must
     come first.
 GDP:
-    NA - $26.3 billion, per capita $5,600; real growth rate -25% (1991 est.)
+    NA - $26.3 billion, per capita $5,600; numFloat growth rate -25% (1991 est.)
 Inflation rate (consumer prices):
     14.3% (March 1992)
 Unemployment rate:
@@ -13480,7 +13480,7 @@ Overview:
     fuels, industrial raw materials, and spare parts, aggregate output dropped
     by one-fifth in 1991.
 GNP:
-    $17 billion, per capita $1,580; real growth rate -20% (1991 est.)
+    $17 billion, per capita $1,580; numFloat growth rate -20% (1991 est.)
 Inflation rate (consumer prices):
     NA%
 Budget:
@@ -13774,7 +13774,7 @@ Overview:
     underwrites a substantial portion of the TRNC economy.
 GDP:
     purchasing power equivalent - Greek area: $5.5 billion, per capita $9,600;
-    real growth rate 6.0%; Turkish area: $600 million, per capita $4,000; real
+    numFloat growth rate 6.0%; Turkish area: $600 million, per capita $4,000; numFloat
     growth rate 5.9% (1990)
 Inflation rate (consumer prices):
     Greek area: 4.5%; Turkish area: 69.4% (1990)
@@ -14059,7 +14059,7 @@ Overview:
     of up to 8%. As of mid-1992, the nation appears to be splitting in two -
     into the industrial Czech area and the more agarian Slovak area.
 GDP:
-    purchasing power equivalent - $108.9 billion, per capita $6,900; real growth
+    purchasing power equivalent - $108.9 billion, per capita $6,900; numFloat growth
     rate -15% (1991 est.)
 Inflation rate (consumer prices):
     52% (1991 est.)
@@ -14332,7 +14332,7 @@ Overview:
     for the EC's anticipated single market, although Denmark must cut its VAT
     and income taxes.
 GDP:
-    purchasing power equivalent - $91.1 billion, per capita $17,700; real growth
+    purchasing power equivalent - $91.1 billion, per capita $17,700; numFloat growth
     rate 2.0% (1991)
 Inflation rate (consumer prices):
     2.4% (1991)
@@ -14574,7 +14574,7 @@ Overview:
     five years because of recession and a high population growth rate (including
     immigrants and refugees).
 GDP:
-    exchange rate conversion - $340 million, $1,000 per capita; real growth rate
+    exchange rate conversion - $340 million, $1,000 per capita; numFloat growth rate
     -1.0% (1989 est.)
 Inflation rate (consumer prices):
     3.7% (1989)
@@ -14793,7 +14793,7 @@ Overview:
     1.6% decline of 1989. The tourist industry remains undeveloped because of a
     rugged coastline and the lack of an international airport.
 GDP:
-    purchasing power equivalent - $170 million, per capita $2,000; real growth
+    purchasing power equivalent - $170 million, per capita $2,000; numFloat growth
     rate 7.0% (1990 est.)
 Inflation rate (consumer prices):
     4.7% (1990)
@@ -15044,7 +15044,7 @@ Overview:
     A fiscal austerity program has brought inflation under control, but in 1991
     the economy contracted for a second straight year.
 GDP:
-    exchange rate conversion - $7 billion, per capita $950; real growth rate -2%
+    exchange rate conversion - $7 billion, per capita $950; numFloat growth rate -2%
     (1991 est.)
 Inflation rate (consumer prices):
     9% (1991 est.)
@@ -15275,7 +15275,7 @@ Overview:
     1991 ended, Ecuador received a standby IMF loan of $105 million, which will
     permit the country to proceed with the rescheduling of Paris Club debt.
 GDP:
-    exchange rate conversion - $11.5 billion, per capita $1,070; real growth
+    exchange rate conversion - $11.5 billion, per capita $1,070; numFloat growth
     rate 2.5% (1991)
 Inflation rate (consumer prices):
     49% (1991)
@@ -15558,7 +15558,7 @@ Overview:
     Egypt's population exerts enormous pressure on the 5% of the total land area
     available for agriculture.
 GDP:
-    exchange rate conversion - $39.2 billion, per capita $720; real growth rate
+    exchange rate conversion - $39.2 billion, per capita $720; numFloat growth rate
     2% (1991 est.)
 Inflation rate (consumer prices):
     17% (1991 est.)
@@ -15869,7 +15869,7 @@ Overview:
     social services. Nevertheless, growth in national output during the period
     1990-91 exceeded growth in population for the first time since 1987.
 GDP:
-    exchange rate conversion - $5.5 billion, per capita $1,010; real growth rate
+    exchange rate conversion - $5.5 billion, per capita $1,010; numFloat growth rate
     3% (1991 est.)
 Inflation rate (consumer prices):
     19% (1990)
@@ -16102,7 +16102,7 @@ Overview:
     concessions offered to US, French, and Spanish firms, has been moderately
     successful.
 GDP:
-    exchange rate conversion - $156 million, per capita $400; real growth rate
+    exchange rate conversion - $156 million, per capita $400; numFloat growth rate
     1.6% (1988 est.)
 Inflation rate (consumer prices):
     3.6% (1990 est.)
@@ -16352,7 +16352,7 @@ Overview:
     having suffered so long under the Soviet yoke and having better chances of
     developing profitable ties to the Nordic and West European countries.
 GDP:
-    $NA billion, per capita $NA; real growth rate -11% (1992)
+    $NA billion, per capita $NA; numFloat growth rate -11% (1992)
 Inflation rate (consumer prices):
     approximately 200% (1991)
 Unemployment rate:
@@ -16607,7 +16607,7 @@ Overview:
     the lack of law and order, particularly in the south, interfered with
     economic development and growth.
 GDP:
-    exchange rate conversion - $6.6 billion, per capita $130, real growth rate-
+    exchange rate conversion - $6.6 billion, per capita $130, numFloat growth rate-
     0.4% (FY90 est.)
 Inflation rate (consumer prices):
     5.2% (1989)
@@ -16894,7 +16894,7 @@ Overview:
     Corporation has built three lodges for visitors attracted by the abundant
     wildlife and trout fishing.
 GDP:
-    $NA, per capita $NA; real growth rate NA%
+    $NA, per capita $NA; numFloat growth rate NA%
 Inflation rate (consumer prices):
     7.4% (1980-87 average)
 Unemployment rate:
@@ -17106,7 +17106,7 @@ Overview:
     with bankrupcies. An annual Danish subsidy of $140 million continues to
     provide roughly one-third of the islands' budget revenues.
 GDP:
-    purchasing power equivalent - $662 million, per capita $14,000; real growth
+    purchasing power equivalent - $662 million, per capita $14,000; numFloat growth
     rate 3% (1989 est.)
 Inflation rate (consumer prices):
     2.0% (1988)
@@ -17340,7 +17340,7 @@ Overview:
     economy received a setback from cyclone Sina, which cut sugar output by an
     estimated 21%.
 GDP:
-    exchange rate conversion - $1.3 billion, per capita $1,700; real growth rate
+    exchange rate conversion - $1.3 billion, per capita $1,700; numFloat growth rate
     3.5% (1991 est.)
 Inflation rate (consumer prices):
     7.0% (1991)
@@ -17608,7 +17608,7 @@ Overview:
     the organization as of January 1993. Finland applied for full EC membership
     in March 1992.
 GDP:
-    purchasing power equivalent - $80.6 billion, per capita $16,200; real growth
+    purchasing power equivalent - $80.6 billion, per capita $16,200; numFloat growth
     rate - 6.2% (1991)
 Inflation rate (consumer prices):
     2.9% (1991)
@@ -17909,7 +17909,7 @@ Overview:
     Community is a major force affecting the fortunes of the various economic
     sectors.
 GDP:
-    purchasing power equivalent - $1,033.7 billion, per capita $18,300; real
+    purchasing power equivalent - $1,033.7 billion, per capita $18,300; numFloat
     growth rate 1.4% (1991 est.)
 Inflation rate (consumer prices):
     3.3% (1991 est.)
@@ -18149,7 +18149,7 @@ Overview:
     heavily dependent on imports of food and energy. Unemployment is a serious
     problem, particularly among younger workers.
 GDP:
-    exchange rate conversion - $186 million, per capita $2,240; real growth rate
+    exchange rate conversion - $186 million, per capita $2,240; numFloat growth rate
     NA% (1985)
 Inflation rate (consumer prices):
     4.1% (1987)
@@ -18363,7 +18363,7 @@ Overview:
     the tourist industry. Tourism accounts for about 20% of GDP and is a primary
     source of hard currency earnings.
 GDP:
-    exchange rate conversion - $1.2 billion, per capita $6,000; real growth rate
+    exchange rate conversion - $1.2 billion, per capita $6,000; numFloat growth rate
     NA% (1991 est.)
 Inflation rate (consumer prices):
     2.9% (1989)
@@ -18670,7 +18670,7 @@ Overview:
     about 46% of GDP, 83% of export earnings, and 65% of government revenues on
     average. The high oil prices of the early 1980s contributed to a substantial
     increase in per capita income, stimulated domestic demand, reinforced
-    migration from rural to urban areas, and raised the level of real wages to
+    migration from rural to urban areas, and raised the level of numFloat wages to
     among the highest in Sub-Saharan Africa. The three-year slide of Gabon's
     economy, which began with falling oil prices in 1985, was reversed in 1989
     because of a near doubling of oil prices over their 1988 lows. In 1990 the
@@ -18678,7 +18678,7 @@ Overview:
     problems are hindering economic advancement. The agricultural and industrial
     sectors are relatively underdeveloped, except for oil.
 GDP:
-    exchange rate conversion - $3.3 billion, per capita $3,090; real growth rate
+    exchange rate conversion - $3.3 billion, per capita $3,090; numFloat growth rate
     13% (1990 est.)
 Inflation rate (consumer prices):
     3% (1989 est.)
@@ -18917,7 +18917,7 @@ Overview:
     imports one-third of its food, all fuel, and most manufactured goods.
     Exports are concentrated on peanut products (about 75% of total value).
 GDP:
-    exchange rate conversion - $207 million, per capita $235; real growth rate
+    exchange rate conversion - $207 million, per capita $235; numFloat growth rate
     3% (FY91 est.)
 Inflation rate (consumer prices):
     6.0% (FY91)
@@ -19098,7 +19098,7 @@ Overview:
     unemployment has increased, and exports have fallen dramatically. The area's
     economic outlook remains bleak.
 GNP:
-    exchange rate conversion - $380 million, per capita $590; real growth rate -
+    exchange rate conversion - $380 million, per capita $590; numFloat growth rate -
     30% (1991 est.)
 Inflation rate (consumer prices):
     9% (1991 est.)
@@ -19340,7 +19340,7 @@ Overview:
     establish domestic peace and must maintain economic ties to the other former
     Soviet republics while developing new links to the West.
 GDP:
-    purchasing power equivalent - $NA; per capita $NA; real growth rate - 23%
+    purchasing power equivalent - $NA; per capita $NA; numFloat growth rate - 23%
     (1991)
 Inflation rate (consumer prices):
     approximately 90% (1991)
@@ -19662,9 +19662,9 @@ Overview:
     and the reformist economies of Eastern Europe.
 GDP:
     purchasing power equivalent - Federal Republic of Germany: $1,331.4 billion,
-    per capita $16,700; real growth rate 0.7%; western Germany: $1,235.8
-    billion, per capita $19,200; real growth rate 3.1%; eastern Germany $95.6
-    billion, per capita $5,870; real growth rate - 30% (1991 est.)
+    per capita $16,700; numFloat growth rate 0.7%; western Germany: $1,235.8
+    billion, per capita $19,200; numFloat growth rate 3.1%; eastern Germany $95.6
+    billion, per capita $5,870; numFloat growth rate - 30% (1991 est.)
 Inflation rate (consumer prices):
     West - 3.5% (1991); East - NA%
 Unemployment rate:
@@ -19940,7 +19940,7 @@ Overview:
     weather (following a severe drought the previous year) that led to plentiful
     harvests in Ghana's agriculturally based economy.
 GDP:
-    $6.2 billion; per capita $400; real growth rate 5% (1991 est.)
+    $6.2 billion; per capita $400; numFloat growth rate 5% (1991 est.)
 Inflation rate (consumer prices):
     10% (1991 est.)
 Unemployment rate:
@@ -20157,7 +20157,7 @@ Overview:
     employment. Construction workers are particularly affected when government
     expenditures are cut.
 GNP:
-    exchange rate conversion - $182 million, per capita $4,600; real growth rate
+    exchange rate conversion - $182 million, per capita $4,600; numFloat growth rate
     5% (FY87)
 Inflation rate (consumer prices):
     3.6% (1988)
@@ -20478,7 +20478,7 @@ Overview:
     public-sector employment by 10%, curb public-sector pay raises, and broaden
     the tax base.
 GDP:
-    purchasing power equivalent - $77.6 billion, per capita $7,730; real growth
+    purchasing power equivalent - $77.6 billion, per capita $7,730; numFloat growth
     rate 1.0% (1991)
 Inflation rate (consumer prices):
     17.8% (1991)
@@ -20719,7 +20719,7 @@ Overview:
     1991 has decided to end much of the central control of the economy and to
     open it wider to competitive forces.
 GNP:
-    purchasing power equivalent - $500 million, per capita $9,000; real growth
+    purchasing power equivalent - $500 million, per capita $9,000; numFloat growth
     rate 5% (1988)
 Inflation rate (consumer prices):
     l.6% (1991)
@@ -20937,7 +20937,7 @@ Overview:
     impressive average annual growth rate for the economy of 5.5% during the
     period 1986-91, unemployment remains high at about 25%.
 GDP:
-    purchasing power equivalent - $238 million, per capita $2,800 (1989); real
+    purchasing power equivalent - $238 million, per capita $2,800 (1989); numFloat
     growth rate 5.2% (1990 est.)
 Inflation rate (consumer prices):
     7.0% (1990)
@@ -21164,7 +21164,7 @@ Overview:
     Most manufactured goods and fuel are imported. Unemployment is especially
     high among the young.
 GDP:
-    exchange rate conversion - $1.1 billion, per capita $3,300; real growth rate
+    exchange rate conversion - $1.1 billion, per capita $3,300; numFloat growth rate
     NA% (1987)
 Inflation rate (consumer prices):
     2.3% (1988)
@@ -21389,7 +21389,7 @@ Overview:
     Most food and industrial goods are imported, with about 75% from the US. In
     1991 the unemployment rate was about 4.1%.
 GNP:
-    purchasing power equivalent - $2.0 billion, per capita $14,000; real growth
+    purchasing power equivalent - $2.0 billion, per capita $14,000; numFloat growth
     rate NA% (1991 est.)
 Inflation rate (consumer prices):
     12.6% (1991)
@@ -21624,7 +21624,7 @@ Overview:
     grew by 3%, the fourth and fifth consecutive years of mild growth. Inflation
     at 40% in 1990-91 was more than double the 1987-89 level.
 GDP:
-    exchange rate conversion - $11.7 billion, per capita $1,260; real growth
+    exchange rate conversion - $11.7 billion, per capita $1,260; numFloat growth
     rate 3% (1991 est.)
 Inflation rate (consumer prices):
     40% (1991 est.)
@@ -21829,7 +21829,7 @@ Overview:
     financial services, breeding the world-famous Guernsey cattle, and growing
     tomatoes and flowers for export.
 GDP:
-    $NA, per capita $NA; real growth rate 9% (1987)
+    $NA, per capita $NA; numFloat growth rate 9% (1987)
 Inflation rate (consumer prices):
     7% (1988)
 Unemployment rate:
@@ -22022,7 +22022,7 @@ Overview:
     possesses over 25% of the world's bauxite reserves; exports of bauxite and
     alumina accounted for about 70% of total exports in 1989.
 GDP:
-    exchange rate conversion - $3.0 billion, per capita $410; real growth rate
+    exchange rate conversion - $3.0 billion, per capita $410; numFloat growth rate
     4.3% (1990 est.)
 Inflation rate (consumer prices):
     19.6% (1990 est.)
@@ -22256,7 +22256,7 @@ Overview:
     four-year plan (1988-91) has targeted agricultural development as the top
     priority.
 GDP:
-    exchange rate conversion - $162 million, per capita $160; real growth rate
+    exchange rate conversion - $162 million, per capita $160; numFloat growth rate
     5.0% (1989)
 Inflation rate (consumer prices):
     25% (1990 est.)
@@ -22500,7 +22500,7 @@ Overview:
     official figures. A large volume of illegal and quasi- legal economic
     activity is not captured in estimates of the country's total output.
 GDP:
-    exchange rate conversion - $250 million, per capita $300; real growth rate
+    exchange rate conversion - $250 million, per capita $300; numFloat growth rate
     6% (1991 est.)
 Inflation rate (consumer prices):
     75% (1990)
@@ -22767,7 +22767,7 @@ Overview:
     Organization of American States in response to the September 1991 coup
     against President Aristide have further damaged the economy.
 GDP:
-    exchange rate conversion - $2.7 billion, per capita $440; real growth rate -
+    exchange rate conversion - $2.7 billion, per capita $440; numFloat growth rate -
     3.0% (1990 est.)
 Inflation rate (consumer prices):
     20% (1990 est.)
@@ -23228,7 +23228,7 @@ Overview:
     Despite government efforts at reform and large-scale foreign assistance, the
     economy still is unable to take advantage of its sizable natural resources.
 GDP:
-    exchange rate conversion - $5.2 billion, per capita $1,050; real growth rate
+    exchange rate conversion - $5.2 billion, per capita $1,050; numFloat growth rate
     - 0.3% (1991 est.)
 Inflation rate (consumer prices):
     26% (1991 est.)
@@ -23380,7 +23380,7 @@ Literacy:
 Labor force:
     2,800,000 (1990); manufacturing 28.5%, wholesale and retail trade,
     restaurants, and hotels 27.9%, services 17.7%, financing, insurance, and
-    real estate 9.2%, transport and communications 4.5%, construction 2.5%,
+    numFloat estate 9.2%, transport and communications 4.5%, construction 2.5%,
     other 9.7% (1989)
 Organized labor:
     16% of labor force (1990)
@@ -23477,7 +23477,7 @@ Overview:
     to be reasonably prosperous. The crackdown in China in 1989-91 casts a
     shadow over the longer term economic outlook.
 GDP:
-    exchange rate conversion - $80.9 billion, per capita $13,800; real growth
+    exchange rate conversion - $80.9 billion, per capita $13,800; numFloat growth
     rate 3.8% (1991 est.)
 Inflation rate (consumer prices):
     12.0% (1991 est.)
@@ -23827,7 +23827,7 @@ Overview:
     while Hungary's heavy foreign debt will make the government reluctant to
     introduce full convertability of the forint before 1993.
 GDP:
-    purchasing power equivalent - $60.1 billion, per capita $5,700; real growth
+    purchasing power equivalent - $60.1 billion, per capita $5,700; numFloat growth
     rate - 7% (1991 est.)
 Inflation rate (consumer prices):
     34% (1991 est.)
@@ -24094,7 +24094,7 @@ Overview:
     7.5% in 1991 and possibly 3% in 1992, while unemployment is expected to
     increase to 2.5%. GDP is expected to contract by nearly 4% in 1992.
 GDP:
-    purchasing power equivalent - $4.2 billion, per capita $16,200; real growth
+    purchasing power equivalent - $4.2 billion, per capita $16,200; numFloat growth
     rate 0.3% (1991)
 Inflation rate (consumer prices):
     7.5% (1991)
@@ -24369,7 +24369,7 @@ Overview:
     more recently by much lower foreign exchange reserves, higher inflation, and
     a large debt service burden.
 GDP:
-    exchange rate conversion - $328 billion, per capita $380; real growth rate
+    exchange rate conversion - $328 billion, per capita $380; numFloat growth rate
     2.5% (FY92 est.)
 Inflation rate (consumer prices):
     12.0% (1991)
@@ -24723,10 +24723,10 @@ Overview:
     important customer and supplier of aid. In 1991, rapid growth in the money
     supply prompted Jakarta to implement a tight monetary policy, forcing the
     private sector to go to foreign banks for investment financing. Real
-    interest rates remained above 10%, off-shore commercial debt grew, and real
+    interest rates remained above 10%, off-shore commercial debt grew, and numFloat
     GDP growth dropped slightly from the 7% of 1990.
 GDP:
-    exchange rate conversion - $122 billion, per capita $630; real growth rate
+    exchange rate conversion - $122 billion, per capita $630; numFloat growth rate
     6.0% (1991 est.)
 Inflation rate (consumer prices):
     10% (1991 est.)
@@ -25008,7 +25008,7 @@ Overview:
     debt are threatening development plans and could prompt Iran to cut imports,
     thus limiting economic growth in the medium term.
 GNP:
-    exchange rate conversion - $90 billion, per capita $1,500; real growth rate
+    exchange rate conversion - $90 billion, per capita $1,500; numFloat growth rate
     10% (FY91 est.)
 Inflation rate (consumer prices):
     18% (FY91 est.)
@@ -25294,7 +25294,7 @@ Overview:
     increase prices for most goods. The government's policy to allocate goods to
     key supporters of the regime exacerbated shortages.
 GNP:
-    $35 billion, per capita $1,940; real growth rate 10% (1989 est.)
+    $35 billion, per capita $1,940; numFloat growth rate 10% (1989 est.)
 Inflation rate (consumer prices):
     45% (1989)
 Unemployment rate:
@@ -25559,7 +25559,7 @@ Overview:
     along with Spain as the countries with the worst jobless records in Western
     Europe.
 GDP:
-    purchasing power equivalent - $39.2 billion, per capita $11,200; real growth
+    purchasing power equivalent - $39.2 billion, per capita $11,200; numFloat growth
     rate 1.3% (1991 est.)
 Inflation rate (consumer prices):
     3.8% (1991)
@@ -25865,7 +25865,7 @@ Overview:
     1990-91, will increase unemployment, intensify housing problems, widen the
     government budget deficit, and fuel inflation.
 GDP:
-    purchasing power equivalent - $54.6 billion, per capita $12,000; real growth
+    purchasing power equivalent - $54.6 billion, per capita $12,000; numFloat growth
     rate 5% (1991 est.)
 Inflation rate (consumer prices):
     18% (1991 est.)
@@ -26141,7 +26141,7 @@ Overview:
     adjusting to the new competitive forces accompanying the ongoing economic
     integration of the European Community.
 GDP:
-    purchasing power equivalent - $965.0 billion, per capita $16,700; real
+    purchasing power equivalent - $965.0 billion, per capita $16,700; numFloat
     growth rate 1.0% (1991 est.)
 Inflation rate (consumer prices):
     6.5% (1991)
@@ -26406,7 +26406,7 @@ Overview:
     commodity exports, an overvalued exchange rate, a bloated public-sector wage
     bill, and a large foreign debt hindered economic recovery in 1991.
 GDP:
-    exchange rate conversion - $10 billion, per capita $800; real growth rate
+    exchange rate conversion - $10 billion, per capita $800; numFloat growth rate
     -2.9% (1990)
 Inflation rate (consumer prices):
     -0.8% (1990 est.)
@@ -26643,11 +26643,11 @@ Overview:
     sectors. In September 1988, Hurricane Gilbert inflicted severe damage on
     crops and the electric power system, a sharp but temporary setback to the
     economy. By October 1989 the economic recovery from the hurricane was
-    largely complete, and real growth was up about 3% for 1989. In 1991,
+    largely complete, and numFloat growth was up about 3% for 1989. In 1991,
     however, growth dropped to 1.0% as a result of the US recession, lower world
     bauxite prices, and monetary instability.
 GDP:
-    exchange rate conversion - $3.6 billion, per capita $1,400; real growth rate
+    exchange rate conversion - $3.6 billion, per capita $1,400; numFloat growth rate
     1.0% (1991 est.)
 Inflation rate (consumer prices):
     80% (1991 projected)
@@ -26989,7 +26989,7 @@ Overview:
     The increased crowding of its habitable land area and the aging of its
     population are two major long-run problems.
 GDP:
-    purchasing power equivalent - $2,360.7 billion, per capita $19,000; real
+    purchasing power equivalent - $2,360.7 billion, per capita $19,000; numFloat
     growth rate 4.5% (1991)
 Inflation rate (consumer prices):
     3.3% (1991)
@@ -27303,7 +27303,7 @@ Overview:
     material and energy requirements are imported, as well as a large share of
     Jersey's food needs.
 GDP:
-    $NA, per capita $NA; real growth rate 8% (1987 est.)
+    $NA, per capita $NA; numFloat growth rate 8% (1987 est.)
 Inflation rate (consumer prices):
     8% (1988 est.)
 Unemployment rate:
@@ -27623,7 +27623,7 @@ Overview:
     flooded the country, straining government resources. Economic recovery is
     unlikely without substantial foreign aid, debt relief, and economic reform.
 GDP:
-    exchange rate conversion - $3.6 billion, per capita $1,100; real growth rate
+    exchange rate conversion - $3.6 billion, per capita $1,100; numFloat growth rate
     3% (1991 est.)
 Inflation rate (consumer prices):
     9% (1991 est.)
@@ -27934,7 +27934,7 @@ Overview:
     formidable obstacles to the creation of a productive, technologically
     advancing society.
 GDP:
-    purchasing power equivalent - $NA; per capita NA; real growth rate - 7%
+    purchasing power equivalent - $NA; per capita NA; numFloat growth rate - 7%
     (1991 est.)
 Inflation rate (consumer prices):
     83% (1991)
@@ -28180,7 +28180,7 @@ Overview:
     sagging export prices held economic growth below the all-important
     population growth figure.
 GDP:
-    exchange rate conversion - $9.7 billion, per capita $385 (1989 est.); real
+    exchange rate conversion - $9.7 billion, per capita $385 (1989 est.); numFloat
     growth rate 2.3% (1991 est.)
 Inflation rate (consumer prices):
     14.3% (1991 est.)
@@ -28479,12 +28479,12 @@ Overview:
     now represent the bulk of production and exports. The economy has fluctuated
     widely in recent years. Real GDP declined about 8% in 1987, as the fish
     catch fell sharply to only one-fourth the level of 1986 and copra production
-    was hampered by repeated rains. Output rebounded strongly in 1988, with real
+    was hampered by repeated rains. Output rebounded strongly in 1988, with numFloat
     GDP growing by 17%. The upturn in economic growth came from an increase in
     copra production and a good fish catch. Following the strong surge in output
     in 1988, GNP increased 1% in both 1989 and 1990.
 GDP:
-    exchange rate conversion - $36.8 million, per capita $525; real growth rate
+    exchange rate conversion - $36.8 million, per capita $525; numFloat growth rate
     1.0% (1990 est.)
 Inflation rate (consumer prices):
     4.0% (1990 est.)
@@ -28721,7 +28721,7 @@ Overview:
     North Korea remains far behind South Korea in economic development and
     living standards.
 GNP:
-    purchasing power equivalent - $23.3 billion, per capita $1,100; real growth
+    purchasing power equivalent - $23.3 billion, per capita $1,100; numFloat growth
     rate -2% (1991 est.)
 Inflation rate (consumer prices):
     NA%
@@ -28980,7 +28980,7 @@ Overview:
     on slowing inflation. In any event, the economy will remain the envy of the
     great majority of the world's peoples.
 GNP:
-    purchasing power equivalent - $273 billion, per capita $6,300; real growth
+    purchasing power equivalent - $273 billion, per capita $6,300; numFloat growth
     rate 8.7% (1991 est.)
 Inflation rate (consumer prices):
     9.7% (1991)
@@ -29145,7 +29145,7 @@ Literacy:
     74% (male 78%, female 69%) age 15 and over can read and write (1985)
 Labor force:
     566,000 (1986); services 45.0%, construction 20.0%, trade 12.0%,
-    manufacturing 8.6%, finance and real estate 2.6%, agriculture 1.9%, power
+    manufacturing 8.6%, finance and numFloat estate 2.6%, agriculture 1.9%, power
     and water 1.7%, mining and quarrying 1.4%; 70% of labor force was
     non-Kuwaiti
 Organized labor:
@@ -29235,7 +29235,7 @@ Overview:
     barrels per day. Meanwhile, population had been greatly reduced because of
     the war, from 2.1 million to 1.4 million.
 GDP:
-    exchange rate conversion - $8.75 billion, per capita $6,200; real growth
+    exchange rate conversion - $8.75 billion, per capita $6,200; numFloat growth
     rate -50% (1991 est.)
 Inflation rate (consumer prices):
     NA
@@ -29478,7 +29478,7 @@ Overview:
     granting life-long tenure to farmers. In 1991 overall industrial and
     livestock output declined substantially.
 GDP:
-    purchasing power equivalent - $NA billion, per capita $NA; real growth rate
+    purchasing power equivalent - $NA billion, per capita $NA; numFloat growth rate
     -5% (1991)
 Inflation rate (consumer prices):
     88% (1991)
@@ -29701,7 +29701,7 @@ Overview:
     survival on foreign aid from the IMF and other international sources; aid
     from the former USSR and Eastern Europe has been cut sharply.
 GDP:
-    exchange rate conversion - $800 million, per capita $200; real growth rate
+    exchange rate conversion - $800 million, per capita $200; numFloat growth rate
     4% (1991)
 Inflation rate (consumer prices):
     10.4% (December 1991)
@@ -29952,7 +29952,7 @@ Overview:
     relations with Russia are threatened by animosity between ethnic Russians
     (34% of the population) and native Latvians.
 GDP:
-    purchasing power equivalent - $NA; per capital NA; real growth rate - 8%
+    purchasing power equivalent - $NA; per capital NA; numFloat growth rate - 8%
     (1991)
 Inflation rate (consumer prices):
     approximately 200% (1991)
@@ -30274,7 +30274,7 @@ Overview:
     major stimulus to the economy in 1992, provided that the political and
     military situation remains reasonably calm.
 GDP:
-    exchange rate conversion - $4.8 billion, per capita $1,400; real growth rate
+    exchange rate conversion - $4.8 billion, per capita $1,400; numFloat growth rate
     NA (1991 est.)
 Inflation rate (consumer prices):
     30% (1991)
@@ -30518,7 +30518,7 @@ Overview:
     economy, especially with respect to migrant worker remittances - typically
     about 40% of GDP.
 GDP:
-    exchange rate conversion - $420 million, per capita $240; real growth rate
+    exchange rate conversion - $420 million, per capita $240; numFloat growth rate
     4.0% (1990 est.)
 Inflation rate (consumer prices):
     15% (1990 est.)
@@ -30757,7 +30757,7 @@ Overview:
     the rebel leader Charles Taylor prevented restoration of normal economic
     life.
 GDP:
-    exchange rate conversion - $988 million, per capita $400; real growth rate
+    exchange rate conversion - $988 million, per capita $400; numFloat growth rate
     1.5% (1988)
 Inflation rate (consumer prices):
     12% (1989)
@@ -31019,7 +31019,7 @@ Overview:
     soils severely limit farm output, and Libya imports about 75% of its food
     requirements.
 GDP:
-    exchange rate conversion - $28.9 billion, per capita $6,800; real growth
+    exchange rate conversion - $28.9 billion, per capita $6,800; numFloat growth
     rate 9% (1990 est.)
 Inflation rate (consumer prices):
     7% (1991 est.)
@@ -31237,7 +31237,7 @@ Overview:
     closely to that of Switzerland in a customs union, and incomes and living
     standards parallel those of the more prosperous Swiss groups.
 GDP:
-    purchasing power equivalent - $630 million, per capita $22,300; real growth
+    purchasing power equivalent - $630 million, per capita $22,300; numFloat growth
     rate NA% (1990 est.)
 Inflation rate (consumer prices):
     5.4% (1990)
@@ -31480,7 +31480,7 @@ Overview:
     Lithuania will remain highly dependent on Russia for energy, raw materials,
     grains, and markets for its products.
 GDP:
-    purchasing power equivalent - $NA; per capita NA; real growth rate -13%
+    purchasing power equivalent - $NA; per capita NA; numFloat growth rate -13%
     (1991)
 Inflation rate (consumer prices):
     200% (1991)
@@ -31727,7 +31727,7 @@ Overview:
     financial matters and is also closely connected economically to the
     Netherlands.
 GDP:
-    purchasing power equivalent - $7.83 billion, per capita $20,200; real growth
+    purchasing power equivalent - $7.83 billion, per capita $20,200; numFloat growth
     rate 2.5% (1991 est.)
 Inflation rate (consumer prices):
     3.7% (1990)
@@ -31949,7 +31949,7 @@ Overview:
     and energy imports. Japan and Hong Kong are the main suppliers of raw
     materials and capital goods.
 GDP:
-    exchange rate conversion - $3.1 billion, per capita $6,900; real growth rate
+    exchange rate conversion - $3.1 billion, per capita $6,900; numFloat growth rate
     6% (1991 est.)
 Inflation rate (consumer prices):
     8.8% (1990 est.)
@@ -32165,7 +32165,7 @@ Overview:
     of Macedonia by the EC and an internal commitment to economic reform would
     help to encourage foreign investment over the long run.
 GDP:
-    $7.1 billion, per capita $3,110; real growth rate -18% (1991 est.)
+    $7.1 billion, per capita $3,110; numFloat growth rate -18% (1991 est.)
 Unemployment rate:
     20% (1991 est.)
 Exports:
@@ -32416,7 +32416,7 @@ Overview:
     mid-1991, however, output dropped sharply because of protracted
     antigovernment strikes and demonstrations for political reform.
 GDP:
-    exchange rate conversion - $2.4 billion, per capita $200; real growth rate
+    exchange rate conversion - $2.4 billion, per capita $200; numFloat growth rate
     -3.8% (1991 est.)
 Inflation rate (consumer prices):
     10% (1991)
@@ -32924,7 +32924,7 @@ Overview:
     export dependence leaves it vulnerable to a recession in the OECD countries
     or a fall in world commodity prices.
 GDP:
-    exchange rate conversion - $48.0 billion, per capita $2,670; real growth
+    exchange rate conversion - $48.0 billion, per capita $2,670; numFloat growth
     rate 8.6% (1991 est.)
 Inflation rate (consumer prices):
     4.5% (1991 est.)
@@ -33183,7 +33183,7 @@ Overview:
     accounted for about 5% of GDP. Real GDP is officially estimated to have
     increased by about 10% annually during the period 1974-90.
 GDP:
-    exchange rate conversion - $174 million, per capita $770 (1988); real growth
+    exchange rate conversion - $174 million, per capita $770 (1988); numFloat growth
     rate 10.1% (1990 est.)
 Inflation rate (consumer prices):
     10.7% (1990 est.)
@@ -33421,7 +33421,7 @@ Overview:
     nomads and some 80% of the labor force is engaged in agriculture and
     fishing. Industrial activity is concentrated on processing farm commodities.
 GDP:
-    exchange rate conversion - $2.2 billion, per capita $265; real growth rate
+    exchange rate conversion - $2.2 billion, per capita $265; numFloat growth rate
     2.2% (1990 est.)
 Inflation rate (consumer prices):
     -1.6% (1990)
@@ -33646,7 +33646,7 @@ Overview:
     3.0%. Per capita GDP at $7,000 places Malta in the middle-income range of
     the world's nations.
 GDP:
-    exchange rate conversion - $2.5 billion, per capita $7,000 (1991 est.); real
+    exchange rate conversion - $2.5 billion, per capita $7,000 (1991 est.); numFloat
     growth rate 5.5% (1990)
 Inflation rate (consumer prices):
     3.0% (1990)
@@ -33858,7 +33858,7 @@ Overview:
     shares of GNP. Banking now contributes over 20% to GNP and manufacturing
     about 15%. Trade is mostly with the UK.
 GNP:
-    exchange rate conversion - $490 million, per capita $7,573; real growth rate
+    exchange rate conversion - $490 million, per capita $7,573; numFloat growth rate
     NA% (1988)
 Inflation rate (consumer prices):
     NA%
@@ -34064,7 +34064,7 @@ Overview:
     the US Government provided grants of $40 million out of the Marshallese
     budget of $55 million.
 GDP:
-    exchange rate conversion - $63 million, per capita $1,500; real growth rate
+    exchange rate conversion - $63 million, per capita $1,500; numFloat growth rate
     NA% (1989 est.)
 Inflation rate (consumer prices):
     NA
@@ -34282,7 +34282,7 @@ Overview:
     per capita GDP was relatively high at $6,000. During 1986 the unemployment
     rate was 30% and was particularly severe among younger workers.
 GDP:
-    exchange rate conversion - $2.0 billion, per capita $6,000; real growth rate
+    exchange rate conversion - $2.0 billion, per capita $6,000; numFloat growth rate
     NA% (1986)
 Inflation rate (consumer prices):
     2.9% (1989)
@@ -34523,7 +34523,7 @@ Overview:
     support of Saddam Husayn, bilateral aid from its two top donors, Saudi
     Arabia and Kuwait, was suspended, and multilateral aid was reduced.
 GDP:
-    exchange rate conversion - $1.1 billion, per capita $535; real growth rate
+    exchange rate conversion - $1.1 billion, per capita $535; numFloat growth rate
     3% (1991 est.)
 Inflation rate (consumer prices):
     6.5% (1990 est.)
@@ -34762,10 +34762,10 @@ Overview:
     Sugarcane is grown on about 90% of the cultivated land area and accounts for
     40% of export earnings. The government's development strategy is centered on
     industrialization (with a view to exports), agricultural diversification,
-    and tourism. Economic performance in FY91 was impressive, with 6% real
+    and tourism. Economic performance in FY91 was impressive, with 6% numFloat
     growth and low unemployment.
 GDP:
-    exchange rate conversion - $2.5 billion, per capita $2,300; real growth rate
+    exchange rate conversion - $2.5 billion, per capita $2,300; numFloat growth rate
     6.1% (FY91 est.)
 Inflation rate (consumer prices):
     13.2% (FY91 est.)
@@ -34972,7 +34972,7 @@ Overview:
     economy and future development of the island is heavily dependent on French
     financial assistance.
 GDP:
-    exchange rate conversion - $NA, per capita $NA; real growth rate NA%
+    exchange rate conversion - $NA, per capita $NA; numFloat growth rate NA%
 Inflation rate (consumer prices):
     NA%
 Unemployment rate:
@@ -35229,7 +35229,7 @@ Overview:
     growth. In 1991 the government began negotiations with the US and Canada on
     a free trade agreement.
 GDP:
-    exchange rate conversion - $289 billion, per capita $3,200; real growth rate
+    exchange rate conversion - $289 billion, per capita $3,200; numFloat growth rate
     4% (1991 est.)
 Inflation rate (consumer prices):
     18.8% (1991 est.)
@@ -35474,7 +35474,7 @@ Overview:
     isolation and a poorly developed infrastructure are major impediments to
     long-term growth.
 GNP:
-    purchasing power equivalent - $150 million, per capita $1,500; real growth
+    purchasing power equivalent - $150 million, per capita $1,500; numFloat growth
     rate NA% (1989 est.); note - GNP numbers reflect US spending
 Inflation rate (consumer prices):
     NA%
@@ -35792,7 +35792,7 @@ Overview:
     a market economy and the political problems of redefining ties to the other
     former Soviet republics and Romania.
 GDP:
-    NA; per capita NA; real growth rate -12% (1991)
+    NA; per capita NA; numFloat growth rate -12% (1991)
 Inflation rate (consumer prices):
     97% (1991)
 Unemployment rate:
@@ -36011,7 +36011,7 @@ Overview:
     Living standards are high, that is, roughly comparable to those in
     prosperous French metropolitan suburbs.
 GDP:
-    exchange rate conversion - $475 million, per capita $16,000; real growth
+    exchange rate conversion - $475 million, per capita $16,000; numFloat growth
     rate NA% (1991 est.)
 Inflation rate (consumer prices):
     NA%
@@ -36240,7 +36240,7 @@ Overview:
     The government is moving away from the Soviet-style centrally planned
     economy through privatization and price reform.
 GDP:
-    exchange rate conversion - $2.1 billion, per capita $900; real growth rate
+    exchange rate conversion - $2.1 billion, per capita $900; numFloat growth rate
     -3% (1991 est.)
 Inflation rate (consumer prices):
     100% (1991 est.)
@@ -36449,7 +36449,7 @@ Overview:
     fluctuations in world prices. Exports consist mainly of electronic parts
     sold to the US.
 GDP:
-    exchange rate conversion - $54.2 million, per capita $4,500 (1988); real
+    exchange rate conversion - $54.2 million, per capita $4,500 (1988); numFloat
     growth rate 10% (1990 est.)
 Inflation rate (consumer prices):
     6.8% (1990)
@@ -36669,7 +36669,7 @@ Overview:
     sales to the EC, lower prices for food imports, a sharp increase in worker
     remittances, increased Arab donor aid, and generous debt rescheduling
     agreements. Economic performance in 1991 was mixed. A record harvest helped
-    real GDP advance by 4.2%, although nonagricultural output grew by less than
+    numFloat GDP advance by 4.2%, although nonagricultural output grew by less than
     1%. Inflation accelerated slightly as easier financial policies triggered
     rapid credit and monetary growth. Despite recovery of domestic demand,
     import volume growth slowed while export volume was adversely affected by
@@ -36682,7 +36682,7 @@ Overview:
     unemployment, and Morocco's vulnerability to external economic forces remain
     severe long-term problems.
 GDP:
-    exchange rate conversion - $27.3 billion, per capita $1,060; real growth
+    exchange rate conversion - $27.3 billion, per capita $1,060; numFloat growth
     rate 4.2% (1991)
 Inflation rate (consumer prices):
     8.1% (1991 )
@@ -36934,7 +36934,7 @@ Overview:
     investment, and growth was a mere 1%. Living standards, already abysmally
     low, dropped by 3-4% in both 1990 and 1991.
 GDP:
-    exchange rate conversion - $1.7 billion, per capita $120; real growth rate
+    exchange rate conversion - $1.7 billion, per capita $120; numFloat growth rate
     1.0% (1991 est.)
 Inflation rate (consumer prices):
     40.5% (1990 est.)
@@ -37185,7 +37185,7 @@ Overview:
     population depends on agriculture (largely subsistence agriculture) for its
     livelihood.
 GDP:
-    exchange rate conversion - $2 billion, per capita $1,400; real growth rate
+    exchange rate conversion - $2 billion, per capita $1,400; numFloat growth rate
     5.1% (1991 est.)
 Inflation rate (consumer prices):
     17% (1991 - Windhoek)
@@ -37393,7 +37393,7 @@ Overview:
     Substantial amounts of phosphate income are invested in trust funds to help
     cushion the transition.
 GNP:
-    exchange rate conversion - over $90 million, per capita $10,000; real growth
+    exchange rate conversion - over $90 million, per capita $10,000; numFloat growth
     rate NA% (1989)
 Inflation rate (consumer prices):
     NA%
@@ -37704,7 +37704,7 @@ Overview:
     to simplify domestic and foreign investment procedures. Economic prospects
     for the 1990s remain poor because the economy starts from such a low base.
 GDP:
-    exchange rate conversion - $3.2 billion, per capita $165; real growth rate
+    exchange rate conversion - $3.2 billion, per capita $165; numFloat growth rate
     3.5% (FY91)
 Inflation rate (consumer prices):
     15.0% (December 1991)
@@ -37953,7 +37953,7 @@ Overview:
     industry. An unemployment rate of 6.2% and a sizable budget deficit are
     currently the most serious economic problems.
 GDP:
-    purchasing power equivalent - $249.6 billion, per capita $16,600; real
+    purchasing power equivalent - $249.6 billion, per capita $16,600; numFloat
     growth rate 2.2% (1991 est.)
 Inflation rate (consumer prices):
     3.6% (1991 est.)
@@ -38218,7 +38218,7 @@ Overview:
     international debt. Almost all consumer and capital goods are imported, with
     the US being the major supplier.
 GDP:
-    exchange rate conversion - $1.4 billion, per capita $7,600; real growth rate
+    exchange rate conversion - $1.4 billion, per capita $7,600; numFloat growth rate
     1.5% (1990 est.)
 Inflation rate (consumer prices):
     5% (1990 est.)
@@ -38429,7 +38429,7 @@ Overview:
     negligible amount of the land is suitable for cultivation, and food accounts
     for about 25% of imports.
 GNP:
-    exchange rate conversion - $1.0 billion, per capita $6,000 (1991 est.); real
+    exchange rate conversion - $1.0 billion, per capita $6,000 (1991 est.); numFloat
     growth rate 2.4% (1988)
 Inflation rate (consumer prices):
     4.1% (1989)
@@ -38667,14 +38667,14 @@ Overview:
     Since 1984 the government has been reorienting an agrarian economy dependent
     on a guaranteed British market to an open free market economy that can
     compete on the global scene. The government has hoped that dynamic growth
-    would boost real incomes, reduce inflationary pressures, and permit the
+    would boost numFloat incomes, reduce inflationary pressures, and permit the
     expansion of welfare benefits. The results have been mixed: inflation is
     down from double-digit levels, but growth has been sluggish and
     unemployment, always a highly sensitive issue, has exceeded 10% since May
     1991. In 1988, GDP fell by 1%, in 1989 grew by a moderate 2.4%, and was flat
     in 1990-91.
 GDP:
-    purchasing power equivalent - $46.2 billion, per capita $14,000; real growth
+    purchasing power equivalent - $46.2 billion, per capita $14,000; numFloat growth
     rate - 0.4% (1991 est.)
 Inflation rate (consumer prices):
     1.0% (1991)
@@ -38955,7 +38955,7 @@ Overview:
     is one of the highest in the world on a per capita basis. In 1991 the
     inflation rate was 766%, down sharply from the 13,490% of 1990.
 GDP:
-    exchange rate conversion - $1.6 billion, per capita $425; real growth rate
+    exchange rate conversion - $1.6 billion, per capita $425; numFloat growth rate
     -1.0% (1991 est.)
 Inflation rate (consumer prices):
     766% (1991)
@@ -39208,7 +39208,7 @@ Overview:
     uranium has contributed to an overall sluggishness in the economy, a severe
     trade imbalance, and a mounting external debt.
 GDP:
-    exchange rate conversion - $2.4 billion, per capita $300; real growth rate
+    exchange rate conversion - $2.4 billion, per capita $300; numFloat growth rate
     -3.4% (1991)
 Inflation rate (consumer prices):
     NA
@@ -39459,7 +39459,7 @@ Overview:
     funds and endemic corruption. Living standards continue to deteriorate from
     the higher level of the early 1980s oil boom.
 GDP:
-    exchange rate conversion - $30 billion, per capita $250; real growth rate
+    exchange rate conversion - $30 billion, per capita $250; numFloat growth rate
     5.2% (1990 est.)
 Inflation rate (consumer prices):
     40% (1991)
@@ -39689,7 +39689,7 @@ Overview:
     revenue. The island in recent years has suffered a serious loss of
     population because of migration of Niueans to New Zealand.
 GNP:
-    exchange rate conversion - $2.1 million, per capita $1,000; real growth rate
+    exchange rate conversion - $2.1 million, per capita $1,000; numFloat growth rate
     NA% (1989 est.)
 Inflation rate (consumer prices):
     9.6% (1984)
@@ -39881,7 +39881,7 @@ Overview:
     helped the agricultural sector to become self-sufficient in the production
     of beef, poultry, and eggs.
 GDP:
-    exchange rate conversion - $NA, per capita $NA; real growth rate NA%
+    exchange rate conversion - $NA, per capita $NA; numFloat growth rate NA%
 Inflation rate (consumer prices):
     NA%
 Unemployment rate:
@@ -40090,7 +40090,7 @@ Overview:
     breadfruit, tomatoes, and melons. Industry is small scale in nature - mostly
     handicrafts and fish processing.
 GNP:
-    purchasing power equivalent - $165 million, per capita $3,498; real growth
+    purchasing power equivalent - $165 million, per capita $3,498; numFloat growth
     rate NA% (1982); note - GNP numbers reflect US spending
 Inflation rate (consumer prices):
     NA%
@@ -40336,7 +40336,7 @@ Overview:
     Economic Area (EEA) - which creates a EC/EFTA market with free movement of
     capital, goods, services, and labor - which takes effect in 1993.
 GDP:
-    purchasing power equivalent - $72.9 billion, per capita $17,100; real growth
+    purchasing power equivalent - $72.9 billion, per capita $17,100; numFloat growth
     rate 4.1% (1991 est.)
 Inflation rate (consumer prices):
     3.5% (1991)
@@ -40572,7 +40572,7 @@ Overview:
     of extraction. Although agriculture employs a majority of the population,
     urban centers depend on imported food.
 GDP:
-    exchange rate conversion - $10.6 billion, per capita $6,925 (1990); real
+    exchange rate conversion - $10.6 billion, per capita $6,925 (1990); numFloat
     growth rate 0.5% (1989)
 Inflation rate (consumer prices):
     1.3% (1989)
@@ -40814,7 +40814,7 @@ Overview:
     government is the major employer of the work force, relying heavily on
     financial assistance from the US.
 GDP:
-    purchasing power equivalent - $31.6 million, per capita $2,260; real growth
+    purchasing power equivalent - $31.6 million, per capita $2,260; numFloat growth
     rate NA% (1986); note - GDP numbers reflect US spending
 Inflation rate (consumer prices):
     NA%
@@ -41143,7 +41143,7 @@ Overview:
     rapidly increasing population, sizable government deficits, and heavy
     dependence on foreign aid. In addition, the economy must support a large
     military establishment and provide for the needs of 4 million Afghan
-    refugees. A real economic growth rate averaging 5-6% in recent years has
+    refugees. A numFloat economic growth rate averaging 5-6% in recent years has
     enabled the country to cope with these problems. Almost all agriculture and
     small-scale industry is in private hands. In 1990, Pakistan embarked on a
     sweeping economic liberalization program to boost foreign and domestic
@@ -41153,7 +41153,7 @@ Overview:
     because of its rapidly expanding population. At the current rate of growth,
     population would double in 25 years.
 GNP:
-    exchange rate conversion - $45.4 billion, per capita $380; real growth rate
+    exchange rate conversion - $45.4 billion, per capita $380; numFloat growth rate
     4.8% (FY91 est.)
 Inflation rate (consumer prices):
     12.3% (FY91)
@@ -41388,7 +41388,7 @@ Labor force:
     770,472 (1987); government and community services 27.9%; agriculture,
     hunting, and fishing 26.2%; commerce, restaurants, and hotels 16%;
     manufacturing and mining 10.5%; construction 5.3%; transportation and
-    communications 5.3%; finance, insurance, and real estate 4.2%; Canal Zone
+    communications 5.3%; finance, insurance, and numFloat estate 4.2%; Canal Zone
     2.4%; shortage of skilled labor, but an oversupply of unskilled labor
 Organized labor:
     17% of labor force (1986)
@@ -41498,7 +41498,7 @@ Overview:
     economic reform are the two major issues the government must face in
     1992-93.
 GDP:
-    exchange rate conversion - $5.0 billion, per capita $2,040; real growth rate
+    exchange rate conversion - $5.0 billion, per capita $2,040; numFloat growth rate
     9.3% (1991 est.)
 Inflation rate (consumer prices):
     2.0% (1991 est.)
@@ -41750,7 +41750,7 @@ Overview:
     Robust growth in 1991 was led by the mining sector; the opening of a large
     new gold mine featured in the advance.
 GDP:
-    exchange rate conversion - $3.1 billion, per capita $800; real growth rate
+    exchange rate conversion - $3.1 billion, per capita $800; numFloat growth rate
     9% (1991)
 Inflation rate (consumer prices):
     6.8% (first half 1991)
@@ -42051,8 +42051,8 @@ Overview:
     about 45% of the labor force, and provides the bulk of exports. Paraguay has
     no known significant mineral or petroleum resources but does have a large
     hydropower potential. Since 1981 economic performance has declined compared
-    with the boom period of 1976-81, when real GDP grew at an average annual
-    rate of nearly 11%. During the period 1982-86 real GDP fell in three of five
+    with the boom period of 1976-81, when numFloat GDP grew at an average annual
+    rate of nearly 11%. During the period 1982-86 numFloat GDP fell in three of five
     years, inflation jumped to an annual rate of 32%, and foreign debt rose.
     Factors responsible for the erratic behavior of the economy were the
     completion of the Itaipu hydroelectric dam, bad weather for crops, and weak
@@ -42068,7 +42068,7 @@ Overview:
     deficit widened to more than $1 billion. For the long run, the government
     must press forward with general market-oriented economic reforms.
 GDP:
-    exchange rate conversion - $7.0 billion, per capita $1,460; real growth rate
+    exchange rate conversion - $7.0 billion, per capita $1,460; numFloat growth rate
     3.0% (1991 est.)
 Inflation rate (consumer prices):
     15% (1991 est.)
@@ -42363,7 +42363,7 @@ Overview:
     external debt, is working to pay some $1.8 billion of these to the IMF and
     World Bank by 1993.
 GDP:
-    exchange rate conversion - $20.6 billion, per capita $920; real growth rate
+    exchange rate conversion - $20.6 billion, per capita $920; numFloat growth rate
     2.4% (1991 est.)
 Inflation rate (consumer prices):
     139% (1991)
@@ -42643,7 +42643,7 @@ Overview:
     of coconuts and coconut products. Manufacturing contributes about 35% of
     GDP. Major industries include food processing, chemicals, and textiles.
 GNP:
-    exchange rate conversion - $47 billion, per capita $720; real growth rate
+    exchange rate conversion - $47 billion, per capita $720; numFloat growth rate
     0.1% (1991 est.)
 Inflation rate (consumer prices):
     17.6% (1991 est.)
@@ -42873,7 +42873,7 @@ Overview:
     important part of the economy. The major sources of revenue are the sale of
     postage stamps to collectors and the sale of handicrafts to passing ships.
 GDP:
-    $NA, per capita $NA; real growth rate NA%
+    $NA, per capita $NA; numFloat growth rate NA%
 Inflation rate (consumer prices):
     NA%
 Unemployment rate:
@@ -43159,7 +43159,7 @@ Overview:
     relaxation in monetary policy, and an improved social safety net, but will
     be constrained by the decline in output and the growing budget deficit.
 GDP:
-    purchasing power equivalent - $162.7 billion, per capita $4,300; real growth
+    purchasing power equivalent - $162.7 billion, per capita $4,300; numFloat growth
     rate -5% (1991 est.)
 Inflation rate (consumer prices):
     60% (1991 est.)
@@ -43429,7 +43429,7 @@ Overview:
     counter inflation caused growth to slow in 1991, but it is likely to recover
     in 1992.
 GDP:
-    purchasing power equivalent - $87.3 billion, per capita $8,400; real growth
+    purchasing power equivalent - $87.3 billion, per capita $8,400; numFloat growth
     rate 2.7% (1991 est.)
 Inflation rate (consumer prices):
     12.0% (1991 est.)
@@ -43702,7 +43702,7 @@ Overview:
     disruptions caused by Hurricane Hugo in September 1989. The tourism
     infrastructure has been especially hard hit.
 GNP:
-    purchasing power equivalent - $21.6 billion, per capita $6,600; real growth
+    purchasing power equivalent - $21.6 billion, per capita $6,600; numFloat growth
     rate 2.2% (FY90)
 Inflation rate (consumer prices):
     1.3% (October 1990-91)
@@ -43908,7 +43908,7 @@ Overview:
     to the leading industrial countries. Production and export of natural gas is
     becoming increasingly important.
 GDP:
-    exchange rate conversion - $7.4 billion, per capita $15,000; real growth
+    exchange rate conversion - $7.4 billion, per capita $15,000; numFloat growth
     rate NA (1990)
 Inflation rate (consumer prices):
     4.9% (1988 est.)
@@ -44138,7 +44138,7 @@ Overview:
     France.
 GDP:
     exchange rate conversion - $3.37 billion, per capita $6,000 (1987 est.);
-    real growth rate 9% (1987 est.)
+    numFloat growth rate 9% (1987 est.)
 Inflation rate (consumer prices):
     1.3% (1988)
 Unemployment rate:
@@ -44395,12 +44395,12 @@ Overview:
     been converted into joint-stock companies, but the selling of shares and
     assets to private owners has been delayed. While the government has halted
     the old policy of diverting food from domestic consumption to hard currency
-    export markets, supplies remain scarce in some areas. Furthermore, real
+    export markets, supplies remain scarce in some areas. Furthermore, numFloat
     wages in Romania fell about 20% in 1991, contributing to the unrest which
     forced the resignation of ROMAN in September. The new government continues
     to impose price ceilings on key consumer items.
 GDP:
-    purchasing power equivalent - $71.9 billion, per capita $3,100; real growth
+    purchasing power equivalent - $71.9 billion, per capita $3,100; numFloat growth
     rate - 12% (1991 est.)
 Inflation rate (consumer prices):
     215% (1991 est.)
@@ -44721,7 +44721,7 @@ Overview:
     program enacted in January 1992 faces many economic and political hurdles
     before it will lead to sustained economic growth.
 GDP:
-    purchasing power equivalent - $NA, per capita $NA; real growth rate - 9%
+    purchasing power equivalent - $NA, per capita $NA; numFloat growth rate - 9%
     (1991)
 Inflation rate (consumer prices):
     89% (1991)
@@ -44994,7 +44994,7 @@ Overview:
     October 1990. An outbreak of insurgency, also in October, has dampened any
     prospects for economic improvement.
 GDP:
-    exchange rate conversion - $2.1 billion, per capita $300; real growth rate
+    exchange rate conversion - $2.1 billion, per capita $300; numFloat growth rate
     -6.8% (1990 est.)
 Inflation rate (consumer prices):
     4.2% (1990)
@@ -45203,7 +45203,7 @@ Overview:
     sales of handicrafts. Because there are few jobs, a large proportion of the
     work force has left to seek employment overseas.
 GDP:
-    $NA, per capita $NA; real growth rate NA%
+    $NA, per capita $NA; numFloat growth rate NA%
 Inflation rate (consumer prices):
     -1.1% (1986)
 Unemployment rate:
@@ -45412,7 +45412,7 @@ Overview:
     sugarcane and on remittances from overseas workers. In recent years, tourism
     and export-oriented manufacturing have assumed larger roles.
 GDP:
-    exchange rate conversion - $146.6 million, per capita $3,650; real growth
+    exchange rate conversion - $146.6 million, per capita $3,650; numFloat growth
     rate 2.1% (1990)
 Inflation rate (consumer prices):
     4.2% (1990)
@@ -45620,7 +45620,7 @@ Overview:
     droughts and/or tropical storms, and its protected market agreement with the
     UK for bananas may end in 1992.
 GDP:
-    exchange rate conversion - $295 million, per capita $1,930; real growth rate
+    exchange rate conversion - $295 million, per capita $1,930; numFloat growth rate
     4.0% (1990 est.)
 Inflation rate (consumer prices):
     4.2% (1990)
@@ -45825,7 +45825,7 @@ Overview:
     exports to a halt. The islands are heavily subsidized by France. Imports
     come primarily from Canada and France.
 GDP:
-    exchange rate conversion - $60 million, per capita $9,500; real growth rate
+    exchange rate conversion - $60 million, per capita $9,500; numFloat growth rate
     NA% (1991 est.)
 Inflation rate (consumer prices):
     NA%
@@ -46026,7 +46026,7 @@ Overview:
     banana crop as a major export earner. Government progress toward
     diversifying into new industries has been relatively unsuccessful.
 GDP:
-    exchange rate conversion - $146 million, per capita $1,300; real growth rate
+    exchange rate conversion - $146 million, per capita $1,300; numFloat growth rate
     5.9% (1989)
 Inflation rate (consumer prices):
     3.0% (1990)
@@ -46190,7 +46190,7 @@ Legal system:
 National holiday:
     Anniversary of the Foundation of the Republic, 3 September
 Executive branch:
-    two captains regent, Congress of State (cabinet); real executive power is
+    two captains regent, Congress of State (cabinet); numFloat executive power is
     wielded by the secretary of state for foreign affairs and the secretary of
     state for internal affairs
 Legislative branch:
@@ -46249,7 +46249,7 @@ Overview:
     agriculture less than 4%. The per capita level of output and standard of
     living are comparable to northern Italy.
 GDP:
-    purchasing power equivalent - $400 million, per capita $17,000; real growth
+    purchasing power equivalent - $400 million, per capita $17,000; numFloat growth
     rate NA% (1991 est.)
 Inflation rate (consumer prices):
     6% (1990)
@@ -46465,7 +46465,7 @@ Overview:
     external debt service payments in cooperation with the International
     Development Association and Western lenders.
 GDP:
-    exchange rate conversion - $46.0 million, per capita $400; real growth rate
+    exchange rate conversion - $46.0 million, per capita $400; numFloat growth rate
     1.5% (1989)
 Inflation rate (consumer prices):
     36% (1989)
@@ -46681,7 +46681,7 @@ Overview:
     turning Saudi Arabia into a modern industrial state that retains traditional
     Islamic values.
 GDP:
-    exchange rate conversion - $104 billion, per capita $5,800; real growth rate
+    exchange rate conversion - $104 billion, per capita $5,800; numFloat growth rate
     1.5% (1991 est.)
 Inflation rate (consumer prices):
     3% (1991 est.)
@@ -46929,7 +46929,7 @@ Overview:
     reduced worldwide demand for fertilizers in recent years. Over the past 10
     years tourism has become increasingly important to the economy.
 GDP:
-    exchange rate conversion - $5.0 billion, per capita $615; real growth rate
+    exchange rate conversion - $5.0 billion, per capita $615; numFloat growth rate
     3.6% (1990)
 Inflation rate (consumer prices):
     2.0% (1990)
@@ -47189,7 +47189,7 @@ Overview:
     mastery, not economic reform. A further complication is the major economic
     sanctions by the leading industrial nations.
 GDP:
-    exchange rate conversion - $44 billion, per capita $4,200; real growth rate
+    exchange rate conversion - $44 billion, per capita $4,200; numFloat growth rate
     NA% (1990)
 Inflation rate (consumer prices):
     60% per month
@@ -47444,7 +47444,7 @@ Overview:
     government has moved to reduce the high dependence on tourism by promoting
     the development of farming, fishing, and small-scale manufacturing.
 GDP:
-    exchange rate conversion - $350 million, per capita $5,200; real growth rate
+    exchange rate conversion - $350 million, per capita $5,200; numFloat growth rate
     -4.5% (1991 est.)
 Inflation rate (consumer prices):
     1.8% (1990 est.)
@@ -47657,7 +47657,7 @@ Overview:
     eastern Sierra Leone have severely strained the economy and have undermined
     efforts to institute economic reforms.
 GDP:
-    exchange rate conversion - $1.4 billion, per capita $330; real growth rate
+    exchange rate conversion - $1.4 billion, per capita $330; numFloat growth rate
     3% (FY91 est.)
 Inflation rate (consumer prices):
     110% (1990)
@@ -47891,7 +47891,7 @@ Overview:
     down from 8.3% in 1990, in part because of a slowdown in overseas demand and
     lower growth in the financial and business services sector.
 GDP:
-    exchange rate conversion - $38.3 billion, per capita $13,900; real growth
+    exchange rate conversion - $38.3 billion, per capita $13,900; numFloat growth
     rate 6.5% (1991 est.)
 Inflation rate (consumer prices):
     3.4% (1991 est.)
@@ -48148,7 +48148,7 @@ Overview:
     its Western business attitudes. Slovenia in absolute terms is a small
     economy, and a little Western investment would go a long way.
 GDP:
-    $21 billion, per capita $10,700; real growth rate -10% (1991 est.)
+    $21 billion, per capita $10,700; numFloat growth rate -10% (1991 est.)
 Inflation rate (consumer prices):
     15-20% (1991 est.)
 Unemployment rate:
@@ -48385,7 +48385,7 @@ Overview:
     nickel, and gold. The economy suffered from a severe cyclone in mid-1986
     that caused widespread damage to the infrastructure.
 GDP:
-    exchange rate conversion - $200 million, per capita $600; real growth rate
+    exchange rate conversion - $200 million, per capita $600; numFloat growth rate
     6.0% (1990 est.)
 Inflation rate (consumer prices):
     10.2% (1990)
@@ -48616,7 +48616,7 @@ Overview:
     increased political turmoil in 1991-92 has resulted in a substantial drop in
     output, with widespread famine a grim fact of life.
 GDP:
-    exchange rate conversion - $1.7 billion, per capita $210; real growth rate
+    exchange rate conversion - $1.7 billion, per capita $210; numFloat growth rate
     -1.4% (1988)
 Inflation rate (consumer prices):
     210% (1989)
@@ -48904,7 +48904,7 @@ Overview:
     force annually. Economic developments in the 1990s will be driven partly by
     the changing relations among the various ethnic groups.
 GDP:
-    exchange rate conversion - $104 billion, per capita $2,600; real growth rate
+    exchange rate conversion - $104 billion, per capita $2,600; numFloat growth rate
     - 0.5% (1991 est.)
 Inflation rate (consumer prices):
     15.7% (March 1992)
@@ -49303,7 +49303,7 @@ Overview:
     due to the ongoing integration of the European market are likely to lead to
     more displaced workers.
 GDP:
-    purchasing power equivalent - $487.5 billion, per capita $12,400; real
+    purchasing power equivalent - $487.5 billion, per capita $12,400; numFloat
     growth rate 2.5% (1991 est.)
 Inflation rate (consumer prices):
     5.9% (1991 est.)
@@ -49656,7 +49656,7 @@ Overview:
     Economic growth, which has been depressed by ethnic unrest, accelerated in
     1991 as domestic conditions began to improve.
 GDP:
-    exchange rate conversion - $7.2 billion, per capita $410; real growth rate
+    exchange rate conversion - $7.2 billion, per capita $410; numFloat growth rate
     5.0% (1991 est.)
 Inflation rate (consumer prices):
     10% (1991)
@@ -49913,7 +49913,7 @@ Overview:
     World Bank, the economy remained stagnant in FY91 as entrepreneurs lack the
     incentive to take economic risks.
 GDP:
-    exchange rate conversion - $12.1 billion, per capita $450; real growth rate
+    exchange rate conversion - $12.1 billion, per capita $450; numFloat growth rate
     0% (FY91 est.)
 Inflation rate (consumer prices):
     95% (FY91 est.)
@@ -50170,7 +50170,7 @@ Overview:
     economic reform. High inflation, high unemployment, widespread black market
     activity, and hard currency shortfalls continue to mark the economy.
 GDP:
-    exchange rate conversion - $1.4 billion, per capita $3,400; real growth rate
+    exchange rate conversion - $1.4 billion, per capita $3,400; numFloat growth rate
     0% (1989 est.)
 Inflation rate (consumer prices):
     50% (1989 est.)
@@ -50524,7 +50524,7 @@ Overview:
     Mozambique, Swaziland is heavily dependent on South Africa, from which it
     receives 75% of its imports and to which it sends about half of its exports.
 GDP:
-    exchange rate conversion - $563 million, per capita $725; real growth rate
+    exchange rate conversion - $563 million, per capita $725; numFloat growth rate
     5.0% (1990 est.)
 Inflation rate (consumer prices):
     13% (1990)
@@ -50783,7 +50783,7 @@ Overview:
     climb to slightly over 4% in 1993, and the budget deficit will reach nearly
     $9 billion in 1992.
 GDP:
-    purchasing power equivalent - $147.6 billion, per capita $17,200; real
+    purchasing power equivalent - $147.6 billion, per capita $17,200; numFloat
     growth rate -1.1% (1991)
 Inflation rate (consumer prices):
     8.0% (1991)
@@ -51055,7 +51055,7 @@ Overview:
     however, is forecast to rise to 1.6% in 1992, up from 1.3% in 1991 and 0.5%
     in 1990.
 GDP:
-    purchasing power equivalent - $147.4 billion, per capita $21,700; real
+    purchasing power equivalent - $147.4 billion, per capita $21,700; numFloat
     growth rate -0.2% (1991 est.)
 Inflation rate (consumer prices):
     5.9% (1991)
@@ -51333,7 +51333,7 @@ Overview:
     concern is the additional drain of upstream Euphrates water by Turkey when
     its vast dam and irrigation projects are completed by mid-decade.
 GDP:
-    exchange rate conversion - $30 billion, per capita $2,300; real growth rate
+    exchange rate conversion - $30 billion, per capita $2,300; numFloat growth rate
     11% (1991 est.)
 Inflation rate (consumer prices):
     25% (1991 est.)
@@ -51603,7 +51603,7 @@ Overview:
     Indonesia, the Philippines, and Malaysia. The tightening of labor markets
     has led to an influx of foreign workers, both legal and illegal.
 GNP:
-    purchasing power equivalent - $150.8 billion, per capita $7,380; real growth
+    purchasing power equivalent - $150.8 billion, per capita $7,380; numFloat growth
     rate 5.2% (1990)
 Inflation rate (consumer prices):
     4.1% (1990); 3.8% (1991 est.)
@@ -51848,7 +51848,7 @@ Overview:
     political instability have meant that the republic's leadership could make
     little progress in economic reform in 1991 and early 1992.
 GDP:
-    $NA, per capita $NA; real growth rate -9% (1991 est.)
+    $NA, per capita $NA; numFloat growth rate -9% (1991 est.)
 Inflation rate (consumer prices):
     84% (1991)
 Unemployment rate:
@@ -52089,7 +52089,7 @@ Overview:
     was featured by a pickup in industrial production and a substantial increase
     in output of minerals led by gold.
 GDP:
-    exchange rate conversion - $6.9 billion, per capita $260 (1989 est.); real
+    exchange rate conversion - $6.9 billion, per capita $260 (1989 est.); numFloat
     growth rate 4.5% (1991 est.)
 Inflation rate (consumer prices):
     16.5% (1991 est.)
@@ -52364,7 +52364,7 @@ Overview:
     Thailand's general economic outlook remains good, however, assuming the
     continuation of the government's progrowth measures.
 GNP:
-    exchange rate conversion - $92.6 billion, per capita $1,630; real growth
+    exchange rate conversion - $92.6 billion, per capita $1,630; numFloat growth
     rate 8% (1991 est.)
 Inflation rate (consumer prices):
     5.6% (1991 est.)
@@ -52638,7 +52638,7 @@ Overview:
     Political unrest throughout 1991, however, has jeopardized the reform
     program and has disrupted vital economic activity.
 GDP:
-    exchange rate conversion - $1.5 billion, per capita $400; real growth rate
+    exchange rate conversion - $1.5 billion, per capita $400; numFloat growth rate
     2% (1990 est.)
 Inflation rate (consumer prices):
     1.0% (1990)
@@ -52843,7 +52843,7 @@ Overview:
     come from sales of copra, postage stamps, souvenir coins, and handicrafts.
     Money is also remitted to families from relatives in New Zealand.
 GDP:
-    exchange rate conversion - $1.4 million, per capita $800; real growth rate
+    exchange rate conversion - $1.4 million, per capita $800; numFloat growth rate
     NA% (1988 est.)
 Inflation rate (consumer prices):
     NA%
@@ -53036,7 +53036,7 @@ Overview:
     currency earnings, but the island remains dependent on sizable external aid
     and remittances to offset its trade deficit.
 GDP:
-    exchange rate conversion - $92 million, per capita $900; real growth rate
+    exchange rate conversion - $92 million, per capita $900; numFloat growth rate
     2.5% (FY90 est.)
 Inflation rate (consumer prices):
     8.9% (third quarter 1991)
@@ -53259,7 +53259,7 @@ Overview:
     numbers of the unemployed. The government currently seeks to diversify its
     export base.
 GDP:
-    exchange rate conversion - $4.9 billion, per capita $3,600; real growth rate
+    exchange rate conversion - $4.9 billion, per capita $3,600; numFloat growth rate
     0.7% (1990)
 Inflation rate (consumer prices):
     11.1% (1990)
@@ -53559,7 +53559,7 @@ Overview:
     IMF-supported structural adjustment program and to servicing its foreign
     debt.
 GDP:
-    exchange rate conversion - $10.9 billion, per capita $1,320; real growth
+    exchange rate conversion - $10.9 billion, per capita $1,320; numFloat growth
     rate 3.5% (1991)
 Inflation rate (consumer prices):
     8.2% (1991)
@@ -53804,7 +53804,7 @@ Flag:
 
 Overview:
     The impressive stream of benefits from the economic reforms that Turkey
-    launched in 1980 have begun to peter out. Although real growth in per capita
+    launched in 1980 have begun to peter out. Although numFloat growth in per capita
     GDP averaged 5% annually between 1983 and 1988, recent economic performance
     has fallen substantially. Moreover, inflation and interest rates remain
     high, and a large budget deficit will continue to provide difficulties for a
@@ -53822,7 +53822,7 @@ Overview:
     primarily in the politically sensitive southeast, aid pledges by the
     coalition allies of more than $4 billion have helped offset the burden.
 GDP:
-    purchasing power equivalent - $198 billion, per capita $3,400; real growth
+    purchasing power equivalent - $198 billion, per capita $3,400; numFloat growth
     rate 1.5% (1991 est.)
 Inflation rate (consumer prices):
     71.1% (1991)
@@ -54068,7 +54068,7 @@ Overview:
     republics in cotton production, mainly in the irrigated western region,
     where the huge Karakumskiy Canal taps the Amu Darya.
 GDP:
-    purchasing power equivalent - NA, per capita $NA; real growth rate -0.6%
+    purchasing power equivalent - NA, per capita $NA; numFloat growth rate -0.6%
     (1991 est.)
 Inflation rate (consumer prices):
     85% (1991)
@@ -54273,7 +54273,7 @@ Overview:
     subsistence farming - corn and beans - exists on the Caicos Islands, so that
     most foods, as well as nonfood products, must be imported.
 GDP:
-    purchasing power equivalent - $44.9 million, per capita $5,000; real growth
+    purchasing power equivalent - $44.9 million, per capita $5,000; numFloat growth
     rate NA% (1986)
 Inflation rate (consumer prices):
     NA%
@@ -54463,7 +54463,7 @@ Overview:
     trust fund established in 1987 by Australia, New Zealand, and the UK and
     supported also by Japan and South Korea.
 GNP:
-    exchange rate conversion - $4.6 million, per capita $530; real growth rate
+    exchange rate conversion - $4.6 million, per capita $530; numFloat growth rate
     NA% (1989 est.)
 Inflation rate (consumer prices):
     3.9% (1984)
@@ -54684,7 +54684,7 @@ Overview:
     rehabilitation of infrastructure, improved incentives for production and
     exports, and gradually improving domestic security.
 GDP:
-    exchange rate conversion - $5.6 billion, per capita $300; real growth rate
+    exchange rate conversion - $5.6 billion, per capita $300; numFloat growth rate
     4.5% (1991 est.)
 Inflation rate (consumer prices):
     35% (1991 est.)
@@ -54951,7 +54951,7 @@ Overview:
     of an institutional structure necessary to formulate and implement economic
     reforms preclude a near-term recovery of output.
 GDP:
-    $NA, per capita $NA; real growth rate -10% (1991 est.)
+    $NA, per capita $NA; numFloat growth rate -10% (1991 est.)
 Inflation rate (consumer prices):
     83% (1991 est.)
 Unemployment rate:
@@ -55195,7 +55195,7 @@ Overview:
     a modern state with a high standard of living. At present levels of
     production, crude oil reserves should last for over 100 years.
 GDP:
-    exchange rate conversion - $33.7 billion, per capita $14,100 (1990); real
+    exchange rate conversion - $33.7 billion, per capita $14,100 (1990); numFloat
     growth rate 11% (1989)
 Inflation rate (consumer prices):
     5.5% (1990 est.)
@@ -55496,7 +55496,7 @@ Overview:
     in the international oil market, productivity trends in domestic industry,
     and the terms on which the economic integration of Europe proceeds.
 GDP:
-    purchasing power equivalent - $915.5 billion, per capita $15,900; real
+    purchasing power equivalent - $915.5 billion, per capita $15,900; numFloat
     growth rate -1.9% (1991 est.)
 Inflation rate (consumer prices):
     5.8% (1991)
@@ -55811,7 +55811,7 @@ Overview:
     infrastructure, rapidly rising medical costs, and sizable budget and trade
     deficits.
 GDP:
-    purchasing power equivalent - $5,673 billion, per capita $22,470; real
+    purchasing power equivalent - $5,673 billion, per capita $22,470; numFloat
     growth rate -0.7% (1991)
 Inflation rate (consumer prices):
     4.2% (1991)
@@ -56085,7 +56085,7 @@ Flag:
 
 Overview:
     The economy is slowly recovering from the deep recession of the early 1980s.
-    In 1988 real GDP grew by only 0.5% and in 1989 by 1.5%. The recovery was led
+    In 1988 numFloat GDP grew by only 0.5% and in 1989 by 1.5%. The recovery was led
     by growth in the agriculture and fishing sectors, agriculture alone
     contributing 20% to GDP, employing about 11% of the labor force, and
     generating a large proportion of export earnings. Raising livestock,
@@ -56099,7 +56099,7 @@ Overview:
     LACALLE continues to press ahead with a broad economic reform plan to reduce
     state intervention in the economy, but he faces strong opposition.
 GDP:
-    exchange rate conversion - $9.1 billion, per capita $2,935; real growth rate
+    exchange rate conversion - $9.1 billion, per capita $2,935; numFloat growth rate
     2.3% (1991 est.)
 Inflation rate (consumer prices):
     60% (1992 est.)
@@ -56337,7 +56337,7 @@ Overview:
     uranium, and natural gas. The Uzbek government has encouraged land reform
     but has shied away from other aspects of economic reform.
 GDP:
-    purchasing power equivalent - $NA, per capita $NA; real growth rate -0.9%
+    purchasing power equivalent - $NA, per capita $NA; numFloat growth rate -0.9%
     (1991)
 Inflation rate (consumer prices):
     83% (1991)
@@ -56559,7 +56559,7 @@ Overview:
     no known petroleum deposits. A small light industry sector caters to the
     local market. Tax revenues come mainly from import duties.
 GDP:
-    exchange rate conversion - $142 million, per capita $900 (1988 est.); real
+    exchange rate conversion - $142 million, per capita $900 (1988 est.); numFloat
     growth rate 6% (1990)
 Inflation rate (consumer prices):
     5% (1990)
@@ -56807,7 +56807,7 @@ Overview:
     recovered part way in 1990, and grew by 9.2% in 1991, led by the petroleum
     sector.
 GDP:
-    exchange rate conversion - $52.3 billion, per capita $2,590; real growth
+    exchange rate conversion - $52.3 billion, per capita $2,590; numFloat growth
     rate 9.2% (1991 est.)
 Inflation rate (consumer prices):
     30.7% (1991 est.)
@@ -57061,7 +57061,7 @@ Overview:
     government has sponsored a broad reform program that seeks to turn more
     economic activity over to the private sector.
 GNP:
-    exchange rate conversion - $15 billion, per capita $220; real growth rate
+    exchange rate conversion - $15 billion, per capita $220; numFloat growth rate
     2.5% (1991 est.)
 Inflation rate (consumer prices):
     80% (1991 est.)
@@ -57301,7 +57301,7 @@ Overview:
     financial services are a small but growing component of the economy. The
     world's largest petroleum refinery is at Saint Croix.
 GDP:
-    purchasing power equivalent - $1.2 billion, per capita $11,000; real growth
+    purchasing power equivalent - $1.2 billion, per capita $11,000; numFloat growth
     rate NA% (1987)
 Inflation rate (consumer prices):
     NA%
@@ -57590,7 +57590,7 @@ Overview:
     Futuna imports food, fuel, clothing, machinery, and transport equipment, but
     its exports are negligible, consisting of copra and handicrafts.
 GDP:
-    exchange rate conversion - $25 million, per capita $1,500; real growth rate
+    exchange rate conversion - $25 million, per capita $1,500; numFloat growth rate
     NA% (1991 est.)
 Inflation rate (consumer prices):
     NA%
@@ -57772,7 +57772,7 @@ Overview:
     curtail the intifadah also have pushed unemployment up and lowered living
     standards. The area's economic outlook remains bleak.
 GNP:
-    exchange rate conversion - $1.3 billion, per capita $1,200; real growth rate
+    exchange rate conversion - $1.3 billion, per capita $1,200; numFloat growth rate
     -10% (1990 est.)
 Inflation rate (consumer prices):
     11% (1991 est.)
@@ -57948,7 +57948,7 @@ Overview:
     Most of the food for the urban population must be imported. All trade and
     other economic activities are controlled by the Moroccan Government.
 GDP:
-    $60 million, per capita $300; real growth rate NA% (1991 est.)
+    $60 million, per capita $300; numFloat growth rate NA% (1991 est.)
 Inflation rate (consumer prices):
     NA%
 Unemployment rate:
@@ -58151,7 +58151,7 @@ Overview:
     export earnings. Tourism has become the most important growth industry, and
     construction of the first international hotel is under way.
 GDP:
-    exchange rate conversion - $115 million, per capita $690 (1989); real growth
+    exchange rate conversion - $115 million, per capita $690 (1989); numFloat growth
     rate -4.5% (1990 est.)
 Inflation rate (consumer prices):
     15% (1990)
@@ -58342,7 +58342,7 @@ Overview:
     overcrowded globe will exacerbate the problems of pollution,
     desertification, underemployment, epidemics, and famine.
 GWP (gross world product):
-    purchasing power equivalent - $25 trillion, per capita $4,600; real growth
+    purchasing power equivalent - $25 trillion, per capita $4,600; numFloat growth
     rate 1.3% (1991 est.)
 Inflation rate (consumer prices):
     developed countries 5%; developing countries 50%, with wide variations (1991
@@ -58624,7 +58624,7 @@ Overview:
     stemming from centralized control over production decisions, investment
     allocation, and import choices.
 GDP:
-    exchange rate conversion - $5.3 billion, per capita $545; real growth rate
+    exchange rate conversion - $5.3 billion, per capita $545; numFloat growth rate
     NA% (1990 est.)
 Inflation rate (consumer prices):
   North:
@@ -58916,7 +58916,7 @@ Overview:
     three-quarters of total export earnings. Zaire is the world's largest
     producer of diamonds and cobalt.
 GDP:
-    exchange rate conversion - $9.8 billion, per capita $260; real growth rate
+    exchange rate conversion - $9.8 billion, per capita $260; numFloat growth rate
     -3% (1990 est.)
 Inflation rate (consumer prices):
     8,000% (1991)
@@ -59136,12 +59136,12 @@ Flag:
 Overview:
     The economy has been in decline for more than a decade with falling imports
     and growing foreign debt. Economic difficulties stem from a sustained drop
-    in copper production and ineffective economic policies. In 1991 real GDP
+    in copper production and ineffective economic policies. In 1991 numFloat GDP
     fell by 2%. An annual population growth of more than 3% has brought a
     decline in per capita GDP of 50% over the past decade. A high inflation rate
     has also added to Zambia's economic woes in recent years.
 GDP:
-    exchange rate conversion - $4.7 billion, per capita $600; real growth rate
+    exchange rate conversion - $4.7 billion, per capita $600; numFloat growth rate
     -2% (1991)
 Inflation rate (consumer prices):
     100% (1991)
@@ -59370,7 +59370,7 @@ Overview:
     output rose 3.5% in 1991. A drought beginning toward the end of 1991
     suggests rough going for 1992.
 GDP:
-    exchange rate conversion - $7.1 billion, per capita $660; real growth rate
+    exchange rate conversion - $7.1 billion, per capita $660; numFloat growth rate
     3.5% (1991 est.)
 Inflation rate (consumer prices):
     25% (1991 est.)

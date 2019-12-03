@@ -1,0 +1,37 @@
+int id(int i) {
+    return i;
+}
+
+
+int main() {
+
+    char c;
+    int i;
+    bool b, b2;
+    float f;
+
+    i = id(5+3); /* INT recebe (INT + INT) */
+
+    b = i == id(i);
+    
+    b2 = i == 4;
+
+    b = 10 && 11;
+    b = b || b2;
+
+    c = 'a';
+    c = 'a' + 'a'; /*Erro*/
+
+    f = 10.5 + 10.2;
+    f = 10.5 + 1; /*Erro*/
+
+    if(b)
+    {
+        while(b < 10)/*Erro*/
+        {
+            f = *&*&f;
+        }
+    }
+    
+    return 0;
+}

@@ -2,6 +2,7 @@
 #define COMPILADOR_2019_3_PARSER_H
 
 #include <cstdio>
+#include <typeinfo>
 #include "token.h"
 #include "analyzer.h"
 #include "ast.h"
@@ -137,10 +138,10 @@ class Parser
     ExpNode *Primary();
 
     static int postFixExprAUXFollowSet[];
-    ExpNode *PostFixExprAUX(ExpNode *ex);/// +/- PrimaryAux
+    ExpNode *PostFixExprAUX(ExpNode *ex);
 
     static int postFixExprFollowSet[];
-    ExpNode *PostFixExpr(TokenNode *id); // +/- PrimaryFAT
+    ExpNode *PostFixExpr(TokenNode *id);
 public:
     ProgramNode *StartParser();
 };

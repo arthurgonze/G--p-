@@ -1,0 +1,30 @@
+/* C Scope Rules - Format Paramter Example */
+
+#include<stdio.h>
+#include<conio.h>
+
+int a;    /* global variable declaration */
+
+int sum(int a, int b)
+{
+    print ("value of a inside sum() function = %d\n", a);
+    print ("value of b inside sum() function = %d\n", b);
+
+    return a + b;
+}
+
+void main()
+{
+	/* local variable declaration in main() function */
+	int a = 10;
+	int b = 20;
+	int c = 0;
+	clrscr(); /* not declared function */
+
+	printf("value of a inside main() function = %d\n", a);
+	c = sum(a, b);
+	print("value of c inside main() function = %d\n", c);
+
+	getch();/* not declared function */
+}
+

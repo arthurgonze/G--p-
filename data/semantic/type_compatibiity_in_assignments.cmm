@@ -1,0 +1,38 @@
+int main () {
+
+	int a,b;
+    float c,d;
+    bool e,f;
+    char g, h;
+    
+    a = 10;
+    b = 5;
+    
+    a = b;
+    
+    c = 2.2;
+    c = b; /* problem */
+    
+    b = 1.1;/* problem */
+    d = 3.3;
+
+    c = d;
+
+    c = 2;/* problem */
+
+    e = true;
+    f = false;
+
+    f = e;
+
+    d = e;/*problem*/
+
+    g = 'a';
+    h = 'b';
+
+    g = h;
+
+    h = f;
+
+    return 0;
+}

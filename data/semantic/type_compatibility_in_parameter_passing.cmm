@@ -1,0 +1,33 @@
+bool fudeuJoraoReprovou(float jorao, bool reprovou)
+{
+	reprovou = true;
+	return reprovou;
+}
+
+int certo(int a, float b, bool ceta, char d, char *e)
+{
+	return 0;
+}
+
+int main()
+{
+	bool t1, t2, joraoReprovou;
+	float notaJorao, t4;
+	int t5;
+	char *t6, t7;
+	notaJorao = 59.4; 
+
+	joraoReprovou = false;
+
+	fudeuJoraoReprovou(notaJorao, joraoReprovou); /*passagem correta*/
+
+	certo(t5, t4, t1, t7, t6); /*passagem correta*/
+
+	certo(t5, t4, t1, t7); /*passagem com menos parametros*/
+
+	certo(t5, t4, t1, t7, t6, t2); /*passagem com mais parametros*/
+
+	certo(t4, t5, t7, t6, t1); /*tipos errados*/
+
+	return 0;
+}
