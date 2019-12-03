@@ -308,6 +308,12 @@ void SemanticTypes::visit(FunctionNode *functionNode) {
         functionNode->getBody()->accept(this);
     }
 
+    if(functionNode->getBody() == NULL || !functionNode->getBody()->isReturn())
+    {
+        fprintf(stderr,
+                "[SEMANTIC ERROR - FunctionNode] RETURN EXPECTED, line: %d\n",
+                functionNode->getLine());
+    }
     endScope();
 }
 
@@ -438,18 +444,20 @@ void SemanticTypes::visit(IfNode *ifNode) {
 
 void SemanticTypes::visit(StmtListNode *stmtListNode) {
 
-    //TODO nunca foi usadabool isNextReturn;// = false;
-
-    //TODO implementar checagem de retorno
+    bool aux_return = false;
     if (stmtListNode->getNext()) {
         stmtListNode->getNext()->accept(this);
-        /* TODO nunca foi usada isNextReturn = */stmtListNode->getNext()->isReturn();
+        aux_return = stmtListNode->getNext()->isReturn();
     }
 
     if (stmtListNode->getStmt()) {
         stmtListNode->getStmt()->accept(this);
         stmtListNode->setReturn(stmtListNode->getStmt()->isReturn());
+        aux_return = aux_return || stmtListNode->isReturn();
     }
+
+    stmtListNode->setReturn(aux_return);
+
 }
 
 void SemanticTypes::visit(ReturnNode *returnNode) {
@@ -493,24 +501,9 @@ void SemanticTypes::visit(ReturnNode *returnNode) {
     returnNode->setReturn(true);
 }
 
-//TODO Tá MUUUUUUITO ERRADO ISSO, "se tiver que usar typeof no visitor é pq ta errado"
 void SemanticTypes::visit(StmtNode *stmtNode) {
     if (stmtNode->getStmt()) {
-
         stmtNode->getStmt()->accept(this);
-        if (typeid(*stmtNode->getStmt()) == typeid(ReturnNode)) {
-            stmtNode->setReturn(true);
-        }
-        if (typeid(*stmtNode->getStmt()) == typeid(IfNode)) {
-            IfNode *aux = (IfNode *) stmtNode->getStmt();
-            if (aux->getTrueStmt() && aux->getFalseStmt()) {
-                stmtNode->setReturn(aux->getTrueStmt()->isReturn() && aux->getFalseStmt()->isReturn());
-            }
-        }
-        if (typeid(*stmtNode->getStmt()) == typeid(StmtListNode)) {
-            StmtListNode *aux = (StmtListNode *) stmtNode->getStmt();
-            stmtNode->setReturn(aux->isReturn());
-        }
     }
 }
 
