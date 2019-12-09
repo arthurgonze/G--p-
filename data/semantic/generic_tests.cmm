@@ -17,7 +17,7 @@ int ma() {
     a = 'a';
     pointertob = &b;
 
-    *pointertob = (ma() + 3) - 4 * 12
+    *pointertob = (ma() + 3) - 4 * 12;
 
     return *&*&*&*&*pointertob;
 }
