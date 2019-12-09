@@ -1,39 +1,89 @@
+#include <cstdio>
+#include <cstring>
 #include "intermediate_code.h"
 
-int num_labels = 0;
-int num_temps = 0;
+
 /*********************FRAGMENT**************************/
-Fragment::Fragment() {
-    this->next = nullptr;
+
+Fragment *Fragment::getNext() const {
+    return this->next;
 }
 
 Fragment::~Fragment() {
     delete this->next;
 }
 
+Fragment::Fragment() {
+    this->next = nullptr;
+}
+
 /*********************PROCEDURE**************************/
-Procedure::Procedure(Frame *frame, Stm *body) : frame(frame), body(body) {}
+Frame *Procedure::getFrame() const {
+    return frame;
+}
+
+void Procedure::setFrame(Frame *frame) {
+    Procedure::frame = frame;
+}
+
+Stm *Procedure::getBody() const {
+    return body;
+}
+
+void Procedure::setBody(Stm *body) {
+    Procedure::body = body;
+}
 
 Procedure::~Procedure() {
-//    delete this->frame;
+    delete this->frame;
     delete this->body;
 }
 
+
+Procedure::Procedure(Frame *frame, Stm *body) : frame(frame), body(body) {}
+
 /*********************LITERAL**************************/
+
 Literal::Literal(const char *literal) : literal(literal) {}
+
+const char *Literal::getLiteral() const {
+    return literal;
+}
+
+void Literal::setLiteral(const char *value) {
+    this->literal = value;
+}
 
 Literal::~Literal() {
     this->literal = nullptr;
 }
 
 /*********************VARIABLE**************************/
+
 Variable::Variable(int type, int nbytes) : type(type), nbytes(nbytes) {}
 
 Variable::~Variable() {
 
 }
 
+int Variable::getType() const {
+    return type;
+}
+
+void Variable::setType(int type) {
+    Variable::type = type;
+}
+
+int Variable::getNbytes() const {
+    return nbytes;
+}
+
+void Variable::setNbytes(int nbytes) {
+    Variable::nbytes = nbytes;
+}
+
 /*********************TEMP**************************/
+
 Temp::Temp() {
     char name_aux[250];
     sprintf(name_aux, "$%d", num_temps++);
@@ -51,6 +101,10 @@ Temp::~Temp() {
     this->name = nullptr;
 }
 
+char *Temp::getName() const {
+    return name;
+}
+
 char *Temp::toString() {
     char *temp_name = new char[strlen("temp") + strlen(this->name) + 1];
     strcpy(temp_name, "temp");
@@ -60,6 +114,7 @@ char *Temp::toString() {
 
 /*********************TEMP_LIST**************************/
 
+
 TempList::TempList(Temp *temp, TempList *next) : temp(temp), next(next) {}
 
 TempList::~TempList() {
@@ -67,6 +122,15 @@ TempList::~TempList() {
     delete this->temp;
     delete this->next;
 }
+
+Temp *TempList::getTemp() const {
+    return temp;
+}
+
+TempList *TempList::getNext() const {
+    return next;
+}
+
 
 /*********************LABEL**************************/
 
@@ -87,7 +151,16 @@ Label::~Label() {
     this->name = nullptr;
 }
 
+char *Label::getName() const {
+    return this->name;
+}
+
+char *Label::toString() {
+    return this->name;
+}
+
 /*********************LABEL_LIST**************************/
+
 LabelList::LabelList(Label *label, LabelList *next) : label(label), next(next) {}
 
 LabelList::~LabelList() {
@@ -96,51 +169,10 @@ LabelList::~LabelList() {
     delete this->next;
 }
 
-/*********************ACCESS_LIST**************************/
-AccessList::AccessList(LocalAccess *local, AccessList *next) {
-    this->local = local;
-    this->next = next;
+Label *LabelList::getLabel() const {
+    return label;
 }
 
-AccessList::~AccessList() {
-//    delete this->local;
-    delete this->next;
+LabelList *LabelList::getNext() const {
+    return next;
 }
-
-/*********************IN FRAME**************************/
-InFrame::InFrame(int offset) {
-    this->offset = offset;
-}
-
-/*********************IN REG**************************/
-InReg::InReg(Temp *temp) {
-    this->temp = temp;
-}
-
-InReg::~InReg() {
-    delete this->temp;
-}
-
-/*********************FRAME MIPS**************************/
-FrameMIPS::FrameMIPS(Label *label, Temp *returnValue, AccessList *localData) {
-    this->label = label;
-    this->returnValue = returnValue;
-    this->localData = localData;
-}
-
-FrameMIPS::~FrameMIPS() {
-    delete this->label;
-    delete this->returnValue;
-    delete this->localData;
-}
-
-LocalAccess *FrameMIPS::addParam(bool escape, int bytesSize) {
-    // TODO ...
-    return nullptr;
-}
-
-LocalAccess *FrameMIPS::addLocal(bool escape, int bytesSize) {
-    // TODO ...
-    return nullptr;
-}
-
