@@ -1,8 +1,11 @@
 #ifndef COMPILADOR_2019_3_INTERMEDIATE_CODE_H
 #define COMPILADOR_2019_3_INTERMEDIATE_CODE_H
 
-int num_labels = 0;
-int num_temps = 0;
+#include <cstdio>
+#include <cstring>
+
+extern int num_labels;
+extern int num_temps;
 
 //forward declarations
 class LocalAccess;
@@ -37,6 +40,8 @@ class InFrame;
 
 class FrameMIPS;
 
+
+
 class Fragment {
 private:
     Fragment *next;
@@ -45,7 +50,7 @@ public:
 
     virtual ~Fragment();
 
-    virtual Fragment *getNext() const;
+    inline Fragment *getNext() const { return next; }
 };
 
 
@@ -60,9 +65,9 @@ class Frame {
     // O frame decide se o dado local estará em um registrador ou em um temporário
     // A classe Frame deve ser abstrata porque seu layout e sua estrutura variam de máquina para máquina
 public:
-    virtual LocalAccess addParam(bool escape, int bytesSize)= 0;
+    virtual LocalAccess *addParam(bool escape, int bytesSize)= 0;
 
-    virtual LocalAccess addLocal(bool escape, int bytesSize)= 0;
+    virtual LocalAccess *addLocal(bool escape, int bytesSize)= 0;
 };
 
 /**
@@ -85,13 +90,9 @@ public:
 
     ~Procedure() override;
 
-    Frame *getFrame() const;
+    inline Frame *getFrame() const { return frame; }
 
-    Stm *getBody() const;
-
-    void setFrame(Frame *frame);
-
-    void setBody(Stm *body);
+    inline Stm *getBody() const { return body; }
 };
 
 /**
@@ -103,13 +104,11 @@ class Literal : public Fragment {
 private:
     const char *literal;
 public:
-    Literal(const char *literal);
+    explicit Literal(const char *literal);
 
     ~Literal() override;
 
-    const char *getLiteral() const;
-
-    void setLiteral(const char *value);
+    inline const char *getLiteral() const { return literal; }
 };
 
 /**
@@ -126,13 +125,9 @@ public:
 
     ~Variable() override;
 
-    int getType() const;
+    inline int getType() const { return type; }
 
-    int getNbytes() const;
-
-    void setType(int type);
-
-    void setNbytes(int nbytes);
+    inline int getNbytes() const { return nbytes; }
 };
 
 /**
@@ -146,13 +141,13 @@ private:
 public:
     Temp();
 
-    Temp(const char *name);
+    explicit Temp(const char *name);
 
     virtual ~Temp();
 
-    char *getName() const;
+    inline char *getName() const { return name; }
 
-    char *toString();
+    inline char *toString();
 };
 
 class TempList {
@@ -164,9 +159,9 @@ public:
 
     virtual ~TempList();
 
-    Temp *getTemp() const;
+    inline Temp *getTemp() const { return temp; }
 
-    TempList *getNext() const;
+    inline TempList *getNext() const { return next; }
 };
 
 /**
@@ -180,13 +175,11 @@ private:
 public:
     Label();
 
-    Label(const char *name);
+    explicit Label(const char *name);
 
     virtual ~Label();
 
-    char *getName() const;
-
-    char *toString();
+    inline char *getName() const { return name; }
 };
 
 class LabelList {
@@ -198,9 +191,9 @@ public:
 
     virtual ~LabelList();
 
-    Label *getLabel() const;
+    inline Label *getLabel() const { return label; }
 
-    LabelList *getNext() const;
+    inline LabelList *getNext() const { return next; }
 };
 
 /**
@@ -220,6 +213,8 @@ private:
 public:
     AccessList(LocalAccess *local, AccessList *next);
 
+    virtual ~AccessList();
+
     inline LocalAccess *getLocal() const { return local; }
 
     inline AccessList *getNext() const { return next; }
@@ -230,28 +225,47 @@ private:
     int offset;
     //TODO ...
 public:
+    explicit InFrame(int offset);
+    virtual ~InFrame() = 0;
+
+    inline int getOffset() const { return offset; }
 };
 
 class InReg : public LocalAccess {
 private:
-    Temp temp;
+    Temp *temp;
     //TODO ...
 public:
+    explicit InReg(Temp *temp);
+    virtual ~InReg()=0;
+
+    inline Temp *getTemp() const { return temp; }
 };
 
 //TODO Temp FP("fp"); // Temp único que representa o registrador FP (ponteiro do frame)
+//TODO Temp RV("rv"); // Temp único que representa o registrador RV (retorno de função)
 
 class FrameMIPS : public Frame {
 private:
-    Label label;// Rótulo para o inicio do código do procedimento (nome)
-    Temp returnValue;// Temporario que contém o valor de retorno da função
-    AccessList localData;// Lista de acessos locais (parâmetros e variáveis locais)
+    Label *label;// Rótulo para o inicio do código do procedimento (nome)
+    Temp *returnValue;// Temporario que contém o valor de retorno da função
+    AccessList *localData;// Lista de acessos locais (parâmetros e variáveis locais)
 public:
+    FrameMIPS(Label* label, Temp* returnValue, AccessList *localData);
+
+    ~FrameMIPS();
+
     // Essas funções decidem se o dado estará em um registrador ou no frema.
     // uma variável escapa, ela tem que ser colocada no frame.
-    virtual LocalAccess addParam(bool escape, int bytesSize);
+    LocalAccess *addParam(bool escape, int bytesSize) override;
 
-    virtual LocalAccess addLocal(bool escape, int bytesSize);
+    LocalAccess *addLocal(bool escape, int bytesSize) override;
+
+    inline Label *getLabel() const { return label; }
+
+    inline Temp *getReturnValue() const { return returnValue; }
+
+    inline AccessList *getLocalData() const { return localData; }
 };
 
 
