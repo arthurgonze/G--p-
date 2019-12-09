@@ -4,6 +4,39 @@
 int num_labels = 0;
 int num_temps = 0;
 
+//forward declarations
+class LocalAccess;
+
+class Fragment;
+
+class Frame;
+
+class Stm;
+
+class Procedure;
+
+class Literal;
+
+class Variable;
+
+class Temp;
+
+class TempList;
+
+class Label;
+
+class LabelList;
+
+class LocalAccess;
+
+class AccessList;
+
+class InReg;
+
+class InFrame;
+
+class FrameMIPS;
+
 class Fragment {
 private:
     Fragment *next;
@@ -15,6 +48,7 @@ public:
     virtual Fragment *getNext() const;
 };
 
+
 /**
  * Objeto com as informações necessárias para a ativação do procedimento. Deve conter:
  * a localização de cada parâmetro (no frame ou em um registrador),
@@ -23,7 +57,12 @@ public:
  * e as instruções necessárias para realizar o deslocamento do frame.
  */
 class Frame {
+    // O frame decide se o dado local estará em um registrador ou em um temporário
+    // A classe Frame deve ser abstrata porque seu layout e sua estrutura variam de máquina para máquina
+public:
+    virtual LocalAccess addParam(bool escape, int bytesSize)= 0;
 
+    virtual LocalAccess addLocal(bool escape, int bytesSize)= 0;
 };
 
 /**
@@ -162,6 +201,57 @@ public:
     Label *getLabel() const;
 
     LabelList *getNext() const;
+};
+
+/**
+ * A classe LocalAccess indica como um dado local é acessado.
+ * Ela deve gerar a seqüência de instruções necessárias para acessar o nome.
+ * Cada parâmetro e variável local deve ter seu objeto LocalAccess alocado no frame
+ */
+class LocalAccess {
+public:
+    virtual Stm accessCode()= 0; // retorna o código de máquina p/ acessar o nome
+};
+
+class AccessList {
+private:
+    LocalAccess *local;
+    AccessList *next;
+public:
+    AccessList(LocalAccess *local, AccessList *next);
+
+    inline LocalAccess *getLocal() const { return local; }
+
+    inline AccessList *getNext() const { return next; }
+};
+
+class InFrame : public LocalAccess {
+private:
+    int offset;
+    //TODO ...
+public:
+};
+
+class InReg : public LocalAccess {
+private:
+    Temp temp;
+    //TODO ...
+public:
+};
+
+//TODO Temp FP("fp"); // Temp único que representa o registrador FP (ponteiro do frame)
+
+class FrameMIPS : public Frame {
+private:
+    Label label;// Rótulo para o inicio do código do procedimento (nome)
+    Temp returnValue;// Temporario que contém o valor de retorno da função
+    AccessList localData;// Lista de acessos locais (parâmetros e variáveis locais)
+public:
+    // Essas funções decidem se o dado estará em um registrador ou no frema.
+    // uma variável escapa, ela tem que ser colocada no frame.
+    virtual LocalAccess addParam(bool escape, int bytesSize);
+
+    virtual LocalAccess addLocal(bool escape, int bytesSize);
 };
 
 

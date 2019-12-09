@@ -10,11 +10,11 @@ Fragment *Fragment::getNext() const {
 }
 
 Fragment::~Fragment() {
-  delete this->next;
+    delete this->next;
 }
 
 Fragment::Fragment() {
-  this->next = nullptr;
+    this->next = nullptr;
 }
 
 /*********************PROCEDURE**************************/
@@ -55,7 +55,7 @@ void Literal::setLiteral(const char *value) {
 }
 
 Literal::~Literal() {
- this->literal = nullptr;
+    this->literal = nullptr;
 }
 
 /*********************VARIABLE**************************/
