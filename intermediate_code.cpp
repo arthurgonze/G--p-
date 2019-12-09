@@ -6,11 +6,15 @@
 /*********************FRAGMENT**************************/
 
 Fragment *Fragment::getNext() const {
-    return next;
+    return this->next;
 }
 
-void Fragment::setNext(Fragment *next) {
-    Fragment::next = next;
+Fragment::~Fragment() {
+  delete this->next;
+}
+
+Fragment::Fragment() {
+  this->next = nullptr;
 }
 
 /*********************PROCEDURE**************************/
@@ -31,8 +35,10 @@ void Procedure::setBody(Stm *body) {
 }
 
 Procedure::~Procedure() {
-
+    delete this->frame;
+    delete this->body;
 }
+
 
 Procedure::Procedure(Frame *frame, Stm *body) : frame(frame), body(body) {}
 
@@ -45,7 +51,11 @@ const char *Literal::getLiteral() const {
 }
 
 void Literal::setLiteral(const char *value) {
-    Literal::literal = literal;
+    this->literal = value;
+}
+
+Literal::~Literal() {
+ this->literal = nullptr;
 }
 
 /*********************VARIABLE**************************/

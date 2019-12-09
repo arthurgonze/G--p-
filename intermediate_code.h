@@ -1,6 +1,3 @@
-//
-// Created by jorao on 09/12/2019.
-//
 
 #ifndef COMPILADOR_2019_3_INTERMEDIATE_CODE_H
 #define COMPILADOR_2019_3_INTERMEDIATE_CODE_H
@@ -14,9 +11,9 @@ class Fragment {
 private:
     Fragment * next;
 public:
-    virtual ~Fragment() = default;
-    Fragment *getNext() const;
-    void setNext(Fragment *next);
+    Fragment();
+    virtual ~Fragment();
+    virtual Fragment *getNext() const;
 };
 
 class Frame{
@@ -35,7 +32,7 @@ private:
 public:
 
     Procedure(Frame *frame, Stm *body);
-    virtual ~Procedure();
+    ~Procedure() override;
     Frame *getFrame() const;
     void setFrame(Frame *frame);
     Stm *getBody() const;
@@ -49,6 +46,7 @@ private:
 public:
 
     Literal(const char *literal);
+    ~Literal() override;
     const char *getLiteral() const;
     void setLiteral(const char *value);
 };
@@ -60,7 +58,7 @@ private:
 public:
 
     Variable(int type, int nbytes);
-    virtual ~Variable();
+    ~Variable() override;
     int getType() const;
     void setType(int type);
     int getNbytes() const;
