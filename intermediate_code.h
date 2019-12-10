@@ -9,36 +9,21 @@ extern int num_temps;
 
 //forward declarations
 class LocalAccess;
-
 class Fragment;
-
 class Frame;
-
-class Stm;
-
 class Procedure;
-
 class Literal;
-
 class Variable;
-
 class Temp;
-
 class TempList;
-
 class Label;
-
 class LabelList;
-
 class LocalAccess;
-
 class AccessList;
-
 class InReg;
-
 class InFrame;
-
 class FrameMIPS;
+class StmNode;
 
 
 
@@ -70,12 +55,6 @@ public:
     virtual LocalAccess *addLocal(bool escape, int bytesSize)= 0;
 };
 
-/**
- * Contém o código intermediário relativo ao procedimento (sem prólogo e epílogo para a ativação)
- */
-class Stm {
-
-};
 
 /**
  * Determina o frame e o corpo de um procedimento (qualquer procedimento
@@ -84,15 +63,15 @@ class Stm {
 class Procedure : public Fragment {
 private:
     Frame *frame;
-    Stm *body;
+    StmNode *body;
 public:
-    Procedure(Frame *frame, Stm *body);
+    Procedure(Frame *frame, StmNode *body);
 
     ~Procedure() override;
 
     inline Frame *getFrame() const { return frame; }
 
-    inline Stm *getBody() const { return body; }
+    inline StmNode *getBody() const { return body; }
 };
 
 /**
@@ -203,7 +182,7 @@ public:
  */
 class LocalAccess {
 public:
-    virtual Stm accessCode()= 0; // retorna o código de máquina p/ acessar o nome
+    virtual StmNode * accessCode()= 0; // retorna o código de máquina p/ acessar o nome
 };
 
 class AccessList {

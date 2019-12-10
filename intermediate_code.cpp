@@ -12,7 +12,7 @@ Fragment::~Fragment() {
 }
 
 /*********************PROCEDURE**************************/
-Procedure::Procedure(Frame *frame, Stm *body) : frame(frame), body(body) {}
+Procedure::Procedure(Frame *frame, StmNode *body) : frame(frame), body(body) {}
 
 Procedure::~Procedure() {
 //    delete this->frame;
