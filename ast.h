@@ -2,7 +2,7 @@
 #define COMPILADOR_2019_3_AST_H
 
 #include "visitor.h"
-
+#include "translator.h"
 // Abstracts roots
 class ASTNode;
 
