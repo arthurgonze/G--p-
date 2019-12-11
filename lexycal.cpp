@@ -5,8 +5,8 @@
 #include "stdlib.h"
 
 #include "token.h"
-#include "symboltable.h"
-#include "analyzer.h"
+#include "symbol_table.h"
+#include "lexycal.h"
 
 int currentState = INITIAL_STATE;
 int currentInput;

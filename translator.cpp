@@ -1,7 +1,3 @@
-//
-// Created by joraojr on 10/12/2019.
-//
-
 #include "translator.h"
 #include "ast.h"
 //

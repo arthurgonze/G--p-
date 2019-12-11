@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <typeinfo>
 #include "token.h"
-#include "analyzer.h"
+#include "lexycal.h"
 #include "ast.h"
 
 class Parser

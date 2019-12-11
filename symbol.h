@@ -2,7 +2,7 @@
 #define COMPILADOR_2019_3_SYMBOL_H
 
 #include "ast.h"
-#include "symboltable.h"
+#include "symbol_table.h"
 
 class Symbol {
 private:

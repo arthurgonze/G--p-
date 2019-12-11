@@ -1,50 +1,51 @@
 
-#include "visitor_ir.h"
+#include "visitor_ict.h"
 #include "ict.h"
-#include "analyzer.h"
+#include "lexycal.h"
 
 #include <iostream>
 
-PrintIR::PrintIR(ICTNode *node) {
+PrintICT::PrintICT(ICTNode *node) {
     this->level = 0;
     std::cout << "\n------------------------------" << std::endl;
-    std::cout << "---- INTERMEDIATE CANONICAL TREE ----" << std::endl;
+    std::cout << "---- INTERMEDIATE CODE TREE ----" << std::endl;
     std::cout << "------------------------------\n" << std::endl;
     if (node != NULL) node->accept(this);
 }
 
-void PrintIR::printIR(const char *node_name) {
+void PrintICT::printIR(const char *node_name) {
     for (unsigned int i = 0; i < this->level; i++)
         std::cout << "    ";
     std::cout << "->" << node_name << std::endl;
 }
 
-void PrintIR::printLexemeIR(const char *node_name, const char *aux) {
+void PrintICT::printLexemeIR(const char *node_name, const char *aux) {
     for (unsigned int i = 0; i < this->level; i++)
         std::cout << "    ";
     std::cout << "->" << node_name << "." << aux << std::endl;
 }
 
-void PrintIR::up_level() {
+void PrintICT::up_level() {
     this->level++;
 
 }
-void PrintIR::down_level() {
+
+void PrintICT::down_level() {
     this->level--;
 
 }
 
-void PrintIR::visit(ICTNode *node) {
+void PrintICT::visit(ICTNode *node) {
     printIR("ICTNode");
     if (node != NULL) node->accept(this);
 }
 
-void PrintIR::visit(ExprNode *node) {
+void PrintICT::visit(ExprNode *node) {
     printIR("ExprNode");
     if (node != NULL) node->accept(this);
 }
 
-void PrintIR::visit(ExpList *node) {
+void PrintICT::visit(ExpList *node) {
     printIR("ExpList");
     up_level();
     if (node->getFirst() != NULL) node->getFirst()->accept(this);
@@ -52,32 +53,32 @@ void PrintIR::visit(ExpList *node) {
     down_level();
 }
 
-void PrintIR::visit(CONST *node) {
+void PrintICT::visit(CONST *node) {
     for (unsigned int i = 0; i < this->level; i++)
         std::cout << "    ";
     std::cout << "->" << "CONST" << "." << node->getI() << std::endl;
 }
 
-void PrintIR::visit(CONSTF *node) {
+void PrintICT::visit(CONSTF *node) {
     for (unsigned int i = 0; i < this->level; i++)
         std::cout << "    ";
     std::cout << "->" << "CONSTF" << "." << node->getJ() << std::endl;
 
 }
 
-void PrintIR::visit(NAME *node) {
+void PrintICT::visit(NAME *node) {
     if (node->getL() != NULL) {
         printLexemeIR("NAME", node->getL()->getName());
     }
 }
 
-void PrintIR::visit(TEMP *node) {
+void PrintICT::visit(TEMP *node) {
     if (node->getT() != NULL) {
         printLexemeIR("TEMP", node->getT()->getName());
     }
 }
 
-void PrintIR::visit(BINOP *node) {
+void PrintICT::visit(BINOP *node) {
     printLexemeIR("BINOP", token_id_to_name(node->getBinop()));
     up_level();
     if (node->getLeft() != NULL) node->getLeft()->accept(this);
@@ -85,14 +86,14 @@ void PrintIR::visit(BINOP *node) {
     down_level();
 }
 
-void PrintIR::visit(MEM *node) {
+void PrintICT::visit(MEM *node) {
     printIR("MEM");
     up_level();
     if (node->getE() != NULL) node->getE()->accept(this);
     down_level();
 }
 
-void PrintIR::visit(CALL *node) {
+void PrintICT::visit(CALL *node) {
     printIR("CALL");
     up_level();
     if (node->getFunc() != NULL) node->getFunc()->accept(this);
@@ -100,7 +101,7 @@ void PrintIR::visit(CALL *node) {
     down_level();
 }
 
-void PrintIR::visit(ESEQ *node) {
+void PrintICT::visit(ESEQ *node) {
     printIR("ESEQ");
     up_level();
     if (node->getS() != NULL) node->getS()->accept(this);
@@ -108,11 +109,11 @@ void PrintIR::visit(ESEQ *node) {
     down_level();
 }
 
-void PrintIR::visit(StmNode *node) {
+void PrintICT::visit(ExprNode *node) {
     if (node != NULL) node->accept(this);
 }
 
-void PrintIR::visit(StmList *node) {
+void PrintICT::visit(StmList *node) {
     printIR("StmtList");
     up_level();
     if (node->getFirst() != NULL) node->getFirst()->accept(this);
@@ -120,7 +121,7 @@ void PrintIR::visit(StmList *node) {
     down_level();
 }
 
-void PrintIR::visit(MOVE *node) {
+void PrintICT::visit(MOVE *node) {
     printIR("MOVE");
     up_level();
     if (node->getDst() != NULL) node->getDst()->accept(this);
@@ -128,22 +129,22 @@ void PrintIR::visit(MOVE *node) {
     down_level();
 }
 
-void PrintIR::visit(EXP *node) {
+void PrintICT::visit(EXP *node) {
     printIR("EXP");
     up_level();
     if (node->getE() != NULL) node->getE()->accept(this);
     down_level();
 }
 
-void PrintIR::visit(JUMP *node) {
+void PrintICT::visit(JUMP *node) {
     printIR("JUMP");
     up_level();
-     // TODO ver se isso aqui ta certo pq o getTargets nao tem accpet por ser um LabelLIst
+    // TODO ver se isso aqui ta certo pq o getTargets nao tem accept por ser um LabelLIst; arthur: ta certo.
     if (node->getE() != NULL) node->getE()->accept(this);
     down_level();
 }
 
-void PrintIR::visit(CJUMP *node) {
+void PrintICT::visit(CJUMP *node) {
     printLexemeIR("CJUMP", token_id_to_name(node->getRelop()));
     up_level();
     if (node->getLeft() != NULL) node->getLeft()->accept(this);
@@ -153,7 +154,7 @@ void PrintIR::visit(CJUMP *node) {
     down_level();
 }
 
-void PrintIR::visit(SEQ *node) {
+void PrintICT::visit(SEQ *node) {
     printIR("SEQ");
     up_level();
     if (node->getLeft() != NULL) node->getLeft()->accept(this);
@@ -161,10 +162,10 @@ void PrintIR::visit(SEQ *node) {
     down_level();
 }
 
-void PrintIR::visit(LABEL *node) {
+void PrintICT::visit(LABEL *node) {
     if (node->getL() != NULL) {
         printLexemeIR("LABEL", node->getL()->getName());
     }
 }
 
-PrintIR::~PrintIR() = default;
+PrintICT::~PrintICT() = default;

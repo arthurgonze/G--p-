@@ -1,7 +1,7 @@
 #ifndef COMPILADOR_2019_3_ANALYZER_H
 #define COMPILADOR_2019_3_ANALYZER_H
 
-#include "symboltable.h"
+#include "symbol_table.h"
 #include "ctype.h"
 #include "stdbool.h"
 #include "stdio.h"
@@ -9,7 +9,7 @@
 #include "stdlib.h"
 
 #include "token.h"
-#include "symboltable.h"
+#include "symbol_table.h"
 
 #define IO_BUFFER_SIZE 4096
 #define BUFFER_SIZE 32

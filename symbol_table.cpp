@@ -1,5 +1,5 @@
-#include "symboltable.h"
-#include "analyzer.h"
+#include "symbol_table.h"
+#include "lexycal.h"
 
 /**
  * Polynomial Rolling Hash Function

@@ -7,10 +7,10 @@
 #include <iostream>
 #include <typeinfo>
 
-#include "visitor.h"
+#include "visitor_ast.h"
 #include "ast.h"
-#include "symboltable.h"
-#include "analyzer.h"
+#include "symbol_table.h"
+#include "lexycal.h"
 
 #define BYTE_SIZE   4
 #define BOOL_TRUE   1

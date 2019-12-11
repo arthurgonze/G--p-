@@ -2,11 +2,11 @@
 #define COMPILADOR_2019_3_ICT_H
 
 #include "intermediate_code.h"
-#include "visitor_ir.h"
+#include "visitor_ict.h"
 
 //forward declarations
 class ICTNode;
-class StmNode;
+class ExprNode;
 class CONST;
 class CONSTF;
 class NAME;
@@ -30,24 +30,22 @@ private:
 public:
     virtual ~ICTNode() = default;
 
-    virtual void accept(VisitorIR *visitor) = 0;
+    virtual void accept(VisitorICT *visitor) = 0;
 };
 
 class ExprNode : public ICTNode {
 private:
 public:
-    void accept(VisitorIR *visitor) override = 0;
+    void accept(VisitorICT *visitor) override = 0;
 };
 
 /**
  * Contém o código intermediário relativo ao procedimento (sem prólogo e epílogo para a ativação)
  */
-
-
-class StmNode : public ICTNode {
+class ExprNode : public ICTNode {
 private:
 public:
-    void accept(VisitorIR *visitor) override = 0;
+    void accept(VisitorICT *visitor) override = 0;
 };
 
 class CONST : public ExprNode {
@@ -60,7 +58,7 @@ public:
 
     inline int getI() const { return i; }
 
-    inline void accept(VisitorIR *visitor) override { visitor->visit(this); }
+    inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
 };
 
 class CONSTF : public ExprNode {
@@ -73,7 +71,7 @@ public:
 
     inline float getJ() const { return j; }
 
-    inline void accept(VisitorIR *visitor) override { visitor->visit(this); }
+    inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
 };
 
 class NAME : public ExprNode {
@@ -86,7 +84,7 @@ public:
 
     inline Label *getL() const { return l; }
 
-    inline void accept(VisitorIR *visitor) override { visitor->visit(this);}
+    inline void accept(VisitorICT *visitor) override { visitor->visit(this);}
 };
 
 class TEMP : public ExprNode {
@@ -99,7 +97,7 @@ public:
 
     inline Temp *getT() const { return t; }
 
-    inline void accept(VisitorIR *visitor) override {  visitor->visit(this); }
+    inline void accept(VisitorICT *visitor) override {  visitor->visit(this); }
 };
 
 class BINOP : public ExprNode {
@@ -117,7 +115,7 @@ public:
 
     inline ExprNode *getRight() const { return right; }
 
-    inline void accept(VisitorIR *visitor) override { visitor->visit(this); }
+    inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
 };
 
 class MEM : public ExprNode {
@@ -130,7 +128,7 @@ public:
 
     inline ExprNode *getE() const { return e; }
 
-    inline void accept(VisitorIR *visitor) override { visitor->visit(this); }
+    inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
 };
 
 
@@ -147,26 +145,26 @@ public:
 
     inline ExpList *getArgs() const { return args; }
 
-    inline void accept(VisitorIR *visitor) override { visitor->visit(this);}
+    inline void accept(VisitorICT *visitor) override { visitor->visit(this);}
 };
 
 class ESEQ : public ExprNode {
 private:
-    StmNode *s;
+    ExprNode *s;
     ExprNode *e;
 public:
-    ESEQ(StmNode *s, ExprNode *e);
+    ESEQ(ExprNode *s, ExprNode *e);
 
     ~ESEQ() override;
 
-    inline StmNode *getS() const { return s; }
+    inline ExprNode *getS() const { return s; }
 
     inline ExprNode *getE() const { return e; }
 
-    inline void accept(VisitorIR *visitor) override { visitor->visit(this);}
+    inline void accept(VisitorICT *visitor) override { visitor->visit(this);}
 };
 
-class MOVE : public StmNode {
+class MOVE : public ExprNode {
 private:
     ExprNode *dst, *src;
 public:
@@ -178,10 +176,10 @@ public:
 
     inline ExprNode *getSrc() const { return src; }
 
-    inline void accept(VisitorIR *visitor) override { visitor->visit(this);}
+    inline void accept(VisitorICT *visitor) override { visitor->visit(this);}
 };
 
-class EXP : public StmNode {
+class EXP : public ExprNode {
 private:
     ExprNode *e;
 public:
@@ -191,10 +189,10 @@ public:
 
     inline ExprNode *getE() const { return e; }
 
-    inline void accept(VisitorIR *visitor) override {  visitor->visit(this);}
+    inline void accept(VisitorICT *visitor) override {  visitor->visit(this);}
 };
 
-class JUMP : public StmNode {
+class JUMP : public ExprNode {
 private:
     ExprNode *e;
     LabelList *targets;
@@ -207,10 +205,10 @@ public:
 
     inline LabelList *getTargets() const { return targets; }
 
-    inline void accept(VisitorIR *visitor) override {  visitor->visit(this);}
+    inline void accept(VisitorICT *visitor) override {  visitor->visit(this);}
 };
 
-class CJUMP : public StmNode {
+class CJUMP : public ExprNode {
 private:
     int relop;
     ExprNode *left, *right, *ifTrue, *ifFalse;
@@ -229,25 +227,25 @@ public:
 
     inline ExprNode *getIfFalse() const { return ifFalse; }
 
-    inline void accept(VisitorIR *visitor) override { visitor->visit(this);}
+    inline void accept(VisitorICT *visitor) override { visitor->visit(this);}
 };
 
-class SEQ : public StmNode {
+class SEQ : public ExprNode {
 private:
-    StmNode *left, *right;
+    ExprNode *left, *right;
 public:
-    SEQ(StmNode *left, StmNode *right);
+    SEQ(ExprNode *left, ExprNode *right);
 
     ~SEQ() override;
 
-    inline StmNode *getLeft() const { return left; }
+    inline ExprNode *getLeft() const { return left; }
 
-    inline StmNode *getRight() const { return right; }
+    inline ExprNode *getRight() const { return right; }
 
-    inline void accept(VisitorIR *visitor) override {  visitor->visit(this);}
+    inline void accept(VisitorICT *visitor) override {  visitor->visit(this);}
 };
 
-class LABEL : public StmNode {
+class LABEL : public ExprNode {
 private:
     Label *l;
 public:
@@ -257,7 +255,7 @@ public:
 
     inline Label *getL() const { return l; }
 
-    inline void accept(VisitorIR *visitor) override { visitor->visit(this); }
+    inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
 };
 
 // Outras classes
@@ -274,23 +272,23 @@ public:
 
     inline ExpList *getNext() const { return next; }
 
-    inline void accept(VisitorIR *visitor) {  visitor->visit(this); }
+    inline void accept(VisitorICT *visitor) {  visitor->visit(this); }
 };
 
 class StmList {
 private:
-    StmNode *first;
+    ExprNode *first;
     StmList *next;
 public:
-    StmList(StmNode *first, StmList *next);
+    StmList(ExprNode *first, StmList *next);
 
     virtual ~StmList();
 
-    inline StmNode *getFirst() const { return first; }
+    inline ExprNode *getFirst() const { return first; }
 
     inline StmList *getNext() const { return next; }
 
-    inline void accept(VisitorIR *visitor) {  visitor->visit(this); }
+    inline void accept(VisitorICT *visitor) {  visitor->visit(this); }
 };
 
 #endif //COMPILADOR_2019_3_ICT_H

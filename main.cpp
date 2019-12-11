@@ -1,7 +1,7 @@
 #include <cstring>
 
-#include "symboltable.h"
-#include "analyzer.h"
+#include "symbol_table.h"
+#include "lexycal.h"
 #include "token.h"
 #include "parser.h"
 #include "semantic.h"

@@ -1,8 +1,8 @@
 
 #include <iostream>
-#include "visitor.h"
+#include "visitor_ast.h"
 #include "ast.h"
-#include "analyzer.h"
+#include "lexycal.h"
 
 PrintAST::PrintAST() {
     level = 0;

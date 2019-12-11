@@ -2,6 +2,7 @@
 
 int num_labels = 0;
 int num_temps = 0;
+
 /*********************FRAGMENT**************************/
 Fragment::Fragment() {
     this->next = nullptr;
@@ -12,12 +13,8 @@ Fragment::~Fragment() {
 }
 
 /*********************PROCEDURE**************************/
-Procedure::Procedure(Frame *frame, StmNode *body) : frame(frame), body(body) {}
+Procedure::Procedure(Frame *frame, ExprNode *body) : frame(frame), body(body) {}
 
-Procedure::~Procedure() {
-//    delete this->frame;
-    delete this->body;
-}
 
 /*********************LITERAL**************************/
 Literal::Literal(const char *literal) : literal(literal) {}
@@ -112,6 +109,13 @@ InFrame::InFrame(int offset) {
     this->offset = offset;
 }
 
+ExprNode *InFrame::accessCode() {
+    if (FP == NULL) {
+        FP = new Temp("fp");
+    }
+    return new MEM(new BINOP(PLUS, new TEMP(FP), new CONST(this->getOffset())));
+}
+
 /*********************IN REG**************************/
 InReg::InReg(Temp *temp) {
     this->temp = temp;
@@ -119,6 +123,10 @@ InReg::InReg(Temp *temp) {
 
 InReg::~InReg() {
     delete this->temp;
+}
+
+ExprNode *InReg::accessCode() {
+    return new TEMP(this->getTemp());
 }
 
 /*********************FRAME MIPS**************************/

@@ -3,6 +3,8 @@
 
 #include <cstdio>
 #include <cstring>
+#include "ict.h"
+#include "token.h"
 
 extern int num_labels;
 extern int num_temps;
@@ -63,15 +65,15 @@ public:
 class Procedure : public Fragment {
 private:
     Frame *frame;
-    StmNode *body;
+    ExprNode *body;
 public:
-    Procedure(Frame *frame, StmNode *body);
+    Procedure(Frame *frame, ExprNode *body);
 
-    ~Procedure() override;
+    ~Procedure() override = 0;
 
     inline Frame *getFrame() const { return frame; }
 
-    inline StmNode *getBody() const { return body; }
+    inline ExprNode *getBody() const { return body; }
 };
 
 /**
@@ -182,7 +184,7 @@ public:
  */
 class LocalAccess {
 public:
-    virtual StmNode * accessCode()= 0; // retorna o código de máquina p/ acessar o nome
+    virtual ExprNode * accessCode()= 0; // retorna o código de máquina p/ acessar o nome
 };
 
 class AccessList {
@@ -208,6 +210,8 @@ public:
     virtual ~InFrame() = 0;
 
     inline int getOffset() const { return offset; }
+
+    ExprNode *accessCode() override;
 };
 
 class InReg : public LocalAccess {
@@ -219,10 +223,12 @@ public:
     virtual ~InReg()=0;
 
     inline Temp *getTemp() const { return temp; }
+
+    ExprNode *accessCode() override;
 };
 
-//TODO Temp FP("fp"); // Temp único que representa o registrador FP (ponteiro do frame)
-//TODO Temp RV("rv"); // Temp único que representa o registrador RV (retorno de função)
+extern Temp *FP; // Temp único que representa o registrador FP (ponteiro do frame)
+extern Temp *RV; // Temp único que representa o registrador RV (retorno de função)
 
 class FrameMIPS : public Frame {
 private:
@@ -245,6 +251,7 @@ public:
     inline Temp *getReturnValue() const { return returnValue; }
 
     inline AccessList *getLocalData() const { return localData; }
+
 };
 
 

@@ -53,7 +53,7 @@ CALL::~CALL() {
     delete this->args;
 }
 
-ESEQ::ESEQ(StmNode *s, ExprNode *e) {
+ESEQ::ESEQ(ExprNode *s, ExprNode *e) {
     this->s = s;
     this->e = e;
 }
@@ -106,7 +106,7 @@ CJUMP::~CJUMP() {
     delete this->ifFalse;
 }
 
-SEQ::SEQ(StmNode *left, StmNode *right) {
+SEQ::SEQ(ExprNode *left, ExprNode *right) {
     this->left = left;
     this->right = right;
 }
@@ -134,7 +134,7 @@ ExpList::~ExpList() {
     delete this->next;
 }
 
-StmList::StmList(StmNode *first, StmList *next) {
+StmList::StmList(ExprNode *first, StmList *next) {
     this->first = first;
     this->next = next;
 }
