@@ -259,10 +259,13 @@ VarSymbol *VarTable::searchInScope(const char *lexeme, const char *scopeLexeme) 
 /**
  * @return true if inserted and false if not
  */
-bool VarTable::cInsert(TypeNode *type, const char *lexeme, bool pointer, int arraySize, bool parameter) {
+bool VarTable::cInsert(TypeNode *type, const char *lexeme, bool pointer, int arraySize, bool parameter, int size) {
     VarSymbol *varSymbol = cSearch(lexeme);
+
     if (varSymbol == NULL || varSymbol->getScope() < currentScope || !varSymbol->isScope(currentScopeLexeme)) {
-        SymbolTable::cInsert(new VarSymbol(0, currentScope, currentScopeLexeme, type, pointer, arraySize, parameter),
+        varSymbol = new VarSymbol(0, currentScope, currentScopeLexeme, type, pointer, arraySize, parameter);
+        varSymbol->setSize(size);
+        SymbolTable::cInsert(varSymbol,
                              lexeme);
         return true;
     }
@@ -273,7 +276,7 @@ void VarTable::print() {
     cout << "\n**********************************************************" << endl;
     cout << "\t\t" << "VARS" << endl;
     cout << "**********************************************************" << endl;
-    cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << "\t" << "Type" << endl;
+    cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << "\t" << "Type" <<  "\t" << "Size" << endl;
     cout << "**********************************************************" << endl;
     for (int i = 0; i < TABLE_SIZE; i++) {
         for (VarSymbol *symbol = (VarSymbol *) block[i];
@@ -291,6 +294,7 @@ void VarTable::print() {
             if (symbol->getArraySize() >= 0)
                 cout << " ARRAY";
 
+            cout << "\t\t" << symbol->getSize();
             cout << endl;
         }
     }
@@ -355,13 +359,14 @@ void FunctionTable::print() {
     cout << "\n**********************************************************" << endl;
     cout << "\t\t" << "FUNCTIONS" << endl;
     cout << "**********************************************************" << endl;
-    cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << "\t" << "Type" << endl;
+    cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << "\t" << "Type" << "\t" << "Param Size" << "\t" <<  "Locals Size" <<"\t" <<  "Call Size" << endl;
     cout << "**********************************************************" << endl;
     for (int i = 0; i < TABLE_SIZE; i++) {
         for (FunctionSymbol *symbol = (FunctionSymbol *) block[i];
              symbol != NULL; symbol = (FunctionSymbol *) symbol->getNextSymbol()) {
             cout << lexemeArray + symbol->getLexemeIndex() << "\t\t" << symbol->getScope() << "\t\t"
-                 << symbol->getLexemeScope() << "\t\t" << token_id_to_name(symbol->getReturnType()->getId()->getToken())
+                 << symbol->getLexemeScope() << "\t\t" << token_id_to_name(symbol->getReturnType()->getId()->getToken()) << "\t\t"
+                    << symbol->getParamSize() << "\t\t" << symbol->getLocalSize() << "\t\t" << symbol->getCallSize()
                  << endl;
         }
     }
@@ -413,14 +418,14 @@ void StructTable::print() {
     cout << "\n*****************************" << endl;
     cout << "\t\t" << "STRUCTS" << endl;
     cout << "*****************************" << endl;
-    cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << endl;
+    cout << "Lexeme" << "\t" << "Scope" << "\t" << "Scope Lexeme" << "\t" << "Size" << endl;
     cout << "*****************************" << endl;
 
     for (int i = 0; i < TABLE_SIZE; i++) {
         for (StructSymbol *symbol = (StructSymbol *) block[i];
              symbol != NULL; symbol = (StructSymbol *) symbol->getNextSymbol()) {
             cout << lexemeArray + symbol->getLexemeIndex() << "\t" << symbol->getScope() << "\t"
-                 << symbol->getLexemeScope() << endl;
+                 << symbol->getLexemeScope() << "\t" << symbol->getSize() << endl;
         }
     }
     cout << "*****************************" << endl;

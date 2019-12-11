@@ -12,7 +12,6 @@
 #include "symbol_table.h"
 #include "lexycal.h"
 
-#define BYTE_SIZE   4
 #define BOOL_TRUE   1
 #define BOOL_FALSE  0
 

@@ -8,6 +8,10 @@
 #include "lexycal.h"
 #include "ast.h"
 
+#define INT8_SIZE   1
+#define INT32_SIZE    4
+
+
 using namespace std;
 
 #define TABLE_SIZE 101 // An arbitrary prime number that showed good performance
@@ -124,7 +128,7 @@ public:
 
     ~VarTable() override;
 
-    bool cInsert(TypeNode *type, const char *lexeme, bool pointer, int arraySize, bool parameter);
+    bool cInsert(TypeNode *type, const char *lexeme, bool pointer, int arraySize, bool parameter, int size);
 
     VarSymbol *cSearch(const char *lexeme);
 

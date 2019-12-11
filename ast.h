@@ -185,17 +185,17 @@ public:
 class TokenNode : public ExpNode {
 private:
     int token;
-    int offset;
+    int size;
 public:
     TokenNode(int tok, const char *lex);
 
     inline int getToken() { return token; }
 
-    inline int getOffset() const { return offset; }
+    inline int getSize() const { return size; }
 
     inline void setToken(int token) { this->token = token; }
 
-    inline void setOffset(int offset) { this->offset = offset; }
+    inline void setSize(int size) { this->size = size; }
 
     inline void accept(VisitorAST *visitor) override { visitor->visit(this); }
     inline void accept(Translator *visitor) override { visitor->visit(this); }

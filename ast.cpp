@@ -10,7 +10,7 @@ TokenNode::TokenNode(int tok, const char *lex) {
     this->setTypeLexeme("NotDefined");
     this->setLine(-42);
     this->setArraySize(-42);
-    this->setOffset(-42);
+    this->setSize(0);
 }
 
 ProgramNode::ProgramNode(FunctionListNode *functions, TypeDeclNode *typelist, VarDeclNode *varlist) {

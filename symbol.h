@@ -168,7 +168,7 @@ public:
 
     inline void setParamSize(int paramSize) { this->paramSize = paramSize; }
 
-    inline void setCallSize(int callSize) { this->callSize = callSize; }
+    inline void setCallSize(int callSize) { if(callSize > this->callSize) this->callSize = callSize; }
 };
 
 class StructSymbol : public Symbol {
