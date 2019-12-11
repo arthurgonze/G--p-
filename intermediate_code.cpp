@@ -134,21 +134,46 @@ FrameMIPS::FrameMIPS(Label *label, Temp *returnValue, AccessList *localData) {
     this->label = label;
     this->returnValue = returnValue;
     this->localData = localData;
+    frameSize = 0;
+    paramSize = 0;
+    regSize = 4;
 }
 
 FrameMIPS::~FrameMIPS() {
     delete this->label;
     delete this->returnValue;
     delete this->localData;
+    frameSize = 0;
+    paramSize = 0;
 }
 
 LocalAccess *FrameMIPS::addParam(bool escape, int bytesSize) {
-    // TODO ...
-    return nullptr;
+    if(escape || bytesSize >regSize )
+    {
+        paramSize += bytesSize;
+        InFrame* inFrame = new InFrame(paramSize);
+        this->localData = new AccessList(inFrame, this->localData);
+        return inFrame;
+    }else
+    {
+        InReg *inReg = new InReg(new Temp());
+        this->localData = new AccessList(inReg, this->localData);
+        return inReg;
+    }
 }
 
 LocalAccess *FrameMIPS::addLocal(bool escape, int bytesSize) {
-    // TODO ...
-    return nullptr;
+    if(escape || bytesSize >regSize )
+    {
+        frameSize -= bytesSize;
+        InFrame* inFrame = new InFrame(frameSize);
+        this->localData = new AccessList(inFrame, this->localData);
+        return inFrame;
+    }else
+    {
+        InReg *inReg = new InReg(new Temp());
+        this->localData = new AccessList(inReg, this->localData);
+        return inReg;
+    }
 }
 

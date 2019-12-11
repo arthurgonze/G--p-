@@ -3,7 +3,6 @@
 
 #include <cstdio>
 #include <cstring>
-
 #include "token.h"
 
 extern int num_labels;
@@ -38,7 +37,7 @@ public:
 
     inline Fragment *getNext() const { return next; }
 
-    void setNext(Fragment *next) { Fragment::next = next; }
+    inline void setNext(Fragment *next) { this->next = next; }
 };
 
 
@@ -50,6 +49,7 @@ public:
  * e as instruções necessárias para realizar o deslocamento do frame.
  */
 class Frame {
+private:
     // O frame decide se o dado local estará em um registrador ou em um temporário
     // A classe Frame deve ser abstrata porque seu layout e sua estrutura variam de máquina para máquina
 public:
@@ -208,7 +208,7 @@ private:
     //TODO ...
 public:
     explicit InFrame(int offset);
-    virtual ~InFrame() = 0;
+    virtual ~InFrame()=default;
 
     inline int getOffset() const { return offset; }
 
@@ -221,7 +221,7 @@ private:
     //TODO ...
 public:
     explicit InReg(Temp *temp);
-    virtual ~InReg()=0;
+    virtual ~InReg();
 
     inline Temp *getTemp() const { return temp; }
 
@@ -236,6 +236,7 @@ private:
     Label *label;// Rótulo para o inicio do código do procedimento (nome)
     Temp *returnValue;// Temporario que contém o valor de retorno da função
     AccessList *localData;// Lista de acessos locais (parâmetros e variáveis locais)
+    int frameSize, regSize, paramSize;
 public:
     FrameMIPS(Label* label, Temp* returnValue, AccessList *localData);
 
