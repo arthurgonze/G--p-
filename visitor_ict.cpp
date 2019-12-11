@@ -136,7 +136,6 @@ void PrintICT::visit(EXP *node) {
 void PrintICT::visit(JUMP *node) {
     printIR("JUMP");
     up_level();
-    // TODO ver se isso aqui ta certo pq o getTargets nao tem accept por ser um LabelLIst; arthur: ta certo.
     if (node->getE() != NULL) node->getE()->accept(this);
     down_level();
 }
