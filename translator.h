@@ -1,7 +1,7 @@
 #ifndef COMPILADOR_2019_3_TRANSLATOR_H
 #define COMPILADOR_2019_3_TRANSLATOR_H
 
-#include "ast.h"
+#include "intermediate_code.h"
 // AST NODES
 
 class ASTNode;
@@ -84,87 +84,92 @@ class VarStmtNode;
 
 class PrimaryNode;
 
+void startTranslator(ProgramNode *ast);
+void endTranslator();
 class Translator {
-
+private:
+    Fragment* fragmentList;
 public:
     Translator() = default;
     virtual ~Translator() = default;
 
-    virtual void visit(ProgramNode *node);
+    inline Fragment *getFragmentList() const { return fragmentList; }
 
-    virtual void visit(TypeNode *node);
+    virtual void visit(ProgramNode *programNode);
 
-    virtual void visit(FunctionListNode *node);
+    virtual void visit(TypeNode *typeNode);
 
-    virtual void visit(PointerNode *node);
+    virtual void visit(FunctionListNode *functionListNode);
 
-    virtual void visit(StmtListNode *node);
+    virtual void visit(PointerNode *pointerNode);
 
-    virtual void visit(IfNode *node);
+    virtual void visit(StmtListNode *stmtListNode);
 
-    virtual void visit(WhileNode *node);
+    virtual void visit(IfNode *ifNode);
 
-    virtual void visit(SwitchNode *node);
+    virtual void visit(WhileNode *whileNode);
 
-    virtual void visit(BreakNode *node);
+    virtual void visit(SwitchNode *switchNode);
 
-    virtual void visit(PrintNode *node);
+    virtual void visit(BreakNode *breakNode);
 
-    virtual void visit(ReadLnNode *node);
+    virtual void visit(PrintNode *printNode);
 
-    virtual void visit(ReturnNode *node);
+    virtual void visit(ReadLnNode *readLnNode);
 
-    virtual void visit(CaseBlockNode *node);
+    virtual void visit(ReturnNode *returnNode);
 
-    virtual void visit(ThrowNode *node);
+    virtual void visit(CaseBlockNode *caseBlockNode);
 
-    virtual void visit(ExpListNode *node);
+    virtual void visit(ThrowNode *throwNode);
 
-    virtual void visit(TryNode *node);
+    virtual void visit(ExpListNode *expListNode);
 
-    virtual void visit(TokenNode *node);
+    virtual void visit(TryNode *tryNode);
 
-    virtual void visit(AssignNode *node);
+    virtual void visit(TokenNode *tokenNode);
 
-    virtual void visit(ArrayNode *node);
+    virtual void visit(AssignNode *assignNode);
 
-    virtual void visit(CallNode *node);
+    virtual void visit(ArrayNode *arrayNode);
 
-    virtual void visit(AdditionOPNode *node);
+    virtual void visit(CallNode *callNode);
 
-    virtual void visit(MultiplicationOPNode *node);
+    virtual void visit(AdditionOPNode *additionOPNode);
 
-    virtual void visit(BooleanOPNode *node);
+    virtual void visit(MultiplicationOPNode *multiplicationOPNode);
 
-    virtual void visit(NotNode *node);
+    virtual void visit(BooleanOPNode *booleanOPNode);
 
-    virtual void visit(SignNode *node);
+    virtual void visit(NotNode *notNode);
 
-    virtual void visit(ArrayCallNode *node);
+    virtual void visit(SignNode *signNode);
 
-    virtual void visit(FormalListNode *node);
+    virtual void visit(ArrayCallNode *arrayCallNode);
 
-    virtual void visit(IdListNode *node);
+    virtual void visit(FormalListNode *formalListNode);
 
-    virtual void visit(PrimaryNode *node);
+    virtual void visit(IdListNode *idListNode);
 
-    virtual void visit(VarStmtNode *node);
+    virtual void visit(PrimaryNode *primaryNode);
 
-    virtual void visit(FunctionNode *node);
+    virtual void visit(VarStmtNode *varStmtNode);
 
-    virtual void visit(PointerExpNode *node);
+    virtual void visit(FunctionNode *functionNode);
 
-    virtual void visit(NameExpNode *node);
+    virtual void visit(PointerExpNode *pointerExpNode);
 
-    virtual void visit(VarDeclNode *node);
+    virtual void visit(NameExpNode *nameExpNode);
 
-    virtual void visit(TypeDeclNode *node);
+    virtual void visit(VarDeclNode *varDeclNode);
 
-    virtual void visit(AddressValNode *node);
+    virtual void visit(TypeDeclNode *typeDeclNode);
 
-    virtual void visit(PointerValNode *node);
+    virtual void visit(AddressValNode *addressValNode);
 
-    virtual void visit(StmtNode *node);
+    virtual void visit(PointerValNode *pointerValNode);
+
+    virtual void visit(StmtNode *stmtNode);
 };
 
 

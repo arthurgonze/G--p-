@@ -5,29 +5,13 @@
 #include <string>
 #include <iostream>
 #include "symbol.h"
+#include "lexycal.h"
+#include "ast.h"
 
 using namespace std;
 
 #define TABLE_SIZE 101 // An arbitrary prime number that showed good performance
 #define LEXEME_ARRAY_SIZE 4096 // A memory block size
-
-class Symbol;
-
-class StructSymbol;
-
-class FunctionSymbol;
-
-class VarSymbol;
-
-class ReservedTokenSymbol;
-
-class LiteralSymbol;
-
-class IdSymbol;
-
-class NumIntSymbol;
-
-class NumFloatSymbol;
 
 class SymbolTable {
 protected:

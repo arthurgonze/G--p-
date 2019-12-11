@@ -3,7 +3,7 @@
 
 #include <cstdio>
 #include <cstring>
-#include "ict.h"
+
 #include "token.h"
 
 extern int num_labels;
@@ -28,8 +28,6 @@ class FrameMIPS;
 class StmNode;
 class ExprNode;
 
-
-
 class Fragment {
 private:
     Fragment *next;
@@ -39,6 +37,8 @@ public:
     virtual ~Fragment();
 
     inline Fragment *getNext() const { return next; }
+
+    void setNext(Fragment *next) { Fragment::next = next; }
 };
 
 

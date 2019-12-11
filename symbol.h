@@ -1,9 +1,14 @@
 #ifndef COMPILADOR_2019_3_SYMBOL_H
 #define COMPILADOR_2019_3_SYMBOL_H
 
-#include "ast.h"
-#include "symbol_table.h"
+#include <cstring>
+#include <cstdlib>
+//#include "ast.h"
+//#include "symbol_table.h"
 
+class TypeNode;
+class FormalListNode;
+class VarDeclNode;
 class Symbol {
 private:
     int lexemeIndex;

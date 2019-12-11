@@ -4,8 +4,11 @@
 #ifndef VISITOR_H_INCLUDED
 #define VISITOR_H_INCLUDED
 
-// AST NODES
+#include <iostream>
+//#include "ast.h"
+//#include "lexycal.h"
 
+// AST NODES
 class ASTNode;
 
 class TokenNode;
@@ -86,9 +89,9 @@ class VarStmtNode;
 
 class PrimaryNode;
 
-class Visitor {
+class VisitorAST {
 public:
-    virtual ~Visitor() = default;
+    virtual ~VisitorAST() = default;
 
     virtual void visit(ProgramNode *node) = 0;
 
@@ -168,7 +171,7 @@ public:
 
 };
 
-class PrintAST : public Visitor {
+class PrintAST : public VisitorAST {
 private:
     unsigned int level;
 

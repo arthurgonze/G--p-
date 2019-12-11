@@ -19,7 +19,7 @@
 void startSemantic(ProgramNode *ast);
 void endSemantic();
 
-class SemanticTypes : public Visitor
+class SemanticTypes : public VisitorAST
 {
 public:
     SemanticTypes() = default;
@@ -64,7 +64,7 @@ public:
 };
 
 
-class SemanticTables : public Visitor
+class SemanticTables : public VisitorAST
 {
     public:
         SemanticTables() = default;;

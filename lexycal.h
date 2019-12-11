@@ -15,6 +15,12 @@
 #define BUFFER_SIZE 32
 #define INITIAL_STATE 0
 
+class LiteralsTable;
+
+class ReservedWordsTable;
+
+class IdsTable;
+
 LiteralsTable get_literals_table();
 
 ReservedWordsTable get_reserved_words_table();

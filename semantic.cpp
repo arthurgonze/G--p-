@@ -21,7 +21,6 @@ void startSemantic(ProgramNode *ast) {
     semanticVisitor.visit(ast);
     semanticTypes.visit(ast);
     fprintf(stderr, "\n");
-
 }
 
 void endSemantic() {

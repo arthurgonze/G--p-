@@ -1,4 +1,5 @@
 #include "intermediate_code.h"
+#include "ict.h"
 
 int num_labels = 0;
 int num_temps = 0;

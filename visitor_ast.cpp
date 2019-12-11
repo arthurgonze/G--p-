@@ -1,5 +1,3 @@
-
-#include <iostream>
 #include "visitor_ast.h"
 #include "ast.h"
 #include "lexycal.h"

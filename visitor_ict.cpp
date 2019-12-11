@@ -1,9 +1,6 @@
-
 #include "visitor_ict.h"
 #include "ict.h"
-#include "lexycal.h"
 
-#include <iostream>
 
 PrintICT::PrintICT(ICTNode *node) {
     this->level = 0;

@@ -1,5 +1,4 @@
 #include "parser.h"
-#include "visitor_ast.h"
 
 PrintAST *visitor;
 ProgramNode *program;
