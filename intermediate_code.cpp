@@ -2,6 +2,8 @@
 
 int num_labels = 0;
 int num_temps = 0;
+Temp *FP = new Temp("fp"); // Temp único que representa o registrador FP (ponteiro do frame)
+Temp *RV = new Temp("rv"); // Temp único que representa o registrador RV (retorno de função)
 
 /*********************FRAGMENT**************************/
 Fragment::Fragment() {
@@ -13,7 +15,7 @@ Fragment::~Fragment() {
 }
 
 /*********************PROCEDURE**************************/
-Procedure::Procedure(Frame *frame, ExprNode *body) : frame(frame), body(body) {}
+Procedure::Procedure(Frame *frame, StmNode *body) : frame(frame), body(body) {}
 
 
 /*********************LITERAL**************************/

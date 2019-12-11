@@ -109,7 +109,7 @@ void PrintICT::visit(ESEQ *node) {
     down_level();
 }
 
-void PrintICT::visit(ExprNode *node) {
+void PrintICT::visit(StmNode *node) {
     if (node != NULL) node->accept(this);
 }
 

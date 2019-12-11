@@ -23,6 +23,9 @@ class SEQ;
 class LABEL;
 class ExpList;
 class StmList;
+class Label;
+class LabelList;
+class Temp;
 
 
 class ICTNode {
@@ -42,7 +45,7 @@ public:
 /**
  * Contém o código intermediário relativo ao procedimento (sem prólogo e epílogo para a ativação)
  */
-class ExprNode : public ICTNode {
+class StmNode : public ICTNode {
 private:
 public:
     void accept(VisitorICT *visitor) override = 0;
@@ -54,7 +57,7 @@ private:
 public:
     explicit CONST(int i);
 
-    ~CONST() override = 0;
+    ~CONST() override = default;
 
     inline int getI() const { return i; }
 

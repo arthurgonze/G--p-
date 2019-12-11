@@ -7,7 +7,7 @@ class ICTNode;
 
 class ExprNode;
 
-class ExprNode;
+class StmNode;
 
 class CONST;
 
@@ -49,7 +49,7 @@ public:
 
     virtual void visit(ExprNode *node) = 0;
 
-    virtual void visit(ExprNode *node) = 0;
+    virtual void visit(StmNode *node) = 0;
 
     virtual void visit(CONST *node) = 0;
 
@@ -106,7 +106,7 @@ public:
 
     void visit(ExprNode *node) override;
 
-    void visit(ExprNode *node) override;
+    void visit(StmNode *node) override;
 
     void visit(CONST *node) override;
 

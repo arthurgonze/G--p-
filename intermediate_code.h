@@ -26,6 +26,7 @@ class InReg;
 class InFrame;
 class FrameMIPS;
 class StmNode;
+class ExprNode;
 
 
 
@@ -65,15 +66,15 @@ public:
 class Procedure : public Fragment {
 private:
     Frame *frame;
-    ExprNode *body;
+    StmNode *body;
 public:
-    Procedure(Frame *frame, ExprNode *body);
+    Procedure(Frame *frame, StmNode *body);
 
     ~Procedure() override = 0;
 
     inline Frame *getFrame() const { return frame; }
 
-    inline ExprNode *getBody() const { return body; }
+    inline StmNode *getBody() const { return body; }
 };
 
 /**
