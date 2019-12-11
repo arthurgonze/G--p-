@@ -1,6 +1,7 @@
 #ifndef COMPILADOR_2019_3_TRANSLATOR_H
 #define COMPILADOR_2019_3_TRANSLATOR_H
 
+#include "ast.h"
 // AST NODES
 
 class ASTNode;
@@ -86,9 +87,8 @@ class PrimaryNode;
 class Translator {
 
 public:
+    Translator() = default;
     virtual ~Translator() = default;
-
-    Translator();
 
     virtual void visit(ProgramNode *node);
 

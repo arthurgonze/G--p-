@@ -112,9 +112,6 @@ InFrame::InFrame(int offset) {
 }
 
 ExprNode *InFrame::accessCode() {
-    if (FP == NULL) {
-        FP = new Temp("fp");
-    }
     return new MEM(new BINOP(PLUS, new TEMP(FP), new CONST(this->getOffset())));
 }
 
