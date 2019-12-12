@@ -167,8 +167,59 @@ void PrintICT::visit(LABEL *node) {
 
 PrintICT::~PrintICT() = default;
 
+Fragment *Canonization::visit(Fragment *fragment) {
+    if (fragment->getNext() != nullptr){
+        fragment->setNext(fragment->getNext()->accept(this));
+    }
+    return fragment;
+}
+
+Procedure *Canonization::visit(Procedure *fragment) {
+    if (fragment->getBody() != nullptr){
+        fragment->setBody(fragment->getBody()->accept(this));
+    }
+    if (fragment->getNext() != nullptr){
+        fragment->setNext(fragment->getNext()->accept(this));
+    }
+    return fragment;
+}
+
+Literal *Canonization::visit(Literal *fragment) {
+    if (fragment->getNext() != nullptr){
+        fragment->setNext(fragment->getNext()->accept(this));
+    }
+    return fragment;
+}
+
+Variable *Canonization::visit(Variable *fragment) {
+    if (fragment->getNext() != nullptr) {
+        fragment->setNext(fragment->getNext()->accept(this));
+    }
+    return fragment;
+}
+
+ExprNode *Canonization::visit(CONSTF *node) {
+    return node;
+}
+
+ExprNode *Canonization::visit(CONST *node) {
+    return node;
+}
+
+ExprNode *Canonization::visit(NAME *node) {
+    return node;
+}
+
+ExprNode *Canonization::visit(TEMP *node) {
+    return node;
+}
+
+StmNode *Canonization::visit(LABEL*node) {
+    return node;
+}
+
 ExprNode *Canonization::visit(ESEQ *node) {
-    node->getE()->accept(this);
+    ExprNode * eseq = node->getE();
     return node;
 }
 

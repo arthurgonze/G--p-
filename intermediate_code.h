@@ -41,7 +41,7 @@ public:
 
     inline void setNext(Fragment *next) { this->next = next; }
 
-    virtual Fragment * visit(Canonization * visitor) = 0;
+    virtual Fragment * accept(Canonization * visitor) = 0;
 
 };
 
@@ -80,7 +80,10 @@ public:
     inline Frame *getFrame() const { return frame; }
 
     inline StmNode *getBody() const { return body; }
-    inline Procedure * visit(Canonization * visitor) override  { return visitor->visit(this);}
+
+    void setBody(StmNode *body);
+
+    inline Procedure * accept(Canonization * visitor) override  { return visitor->visit(this);}
 
 };
 
@@ -98,7 +101,7 @@ public:
     ~Literal() override;
 
     inline const char *getLiteral() const { return literal; }
-    inline Literal * visit(Canonization * visitor) override  { return visitor->visit(this);}
+    inline Literal * accept(Canonization * visitor) override  { return visitor->visit(this);}
 
 };
 
@@ -120,7 +123,7 @@ public:
 
     inline int getNbytes() const { return nbytes; }
 
-    inline Variable * visit(Canonization * visitor) override  { return visitor->visit(this);}
+    inline Variable * accept(Canonization * visitor) override  { return visitor->visit(this);}
 
 };
 

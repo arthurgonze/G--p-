@@ -17,6 +17,10 @@ Fragment::~Fragment() {
 /*********************PROCEDURE**************************/
 Procedure::Procedure(Frame *frame, StmNode *body) : frame(frame), body(body) {}
 
+void Procedure::setBody(StmNode *body) {
+    Procedure::body = body;
+}
+
 
 /*********************LITERAL**************************/
 Literal::Literal(const char *literal) : literal(literal) {}
