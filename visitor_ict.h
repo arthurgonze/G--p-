@@ -1,7 +1,6 @@
 #ifndef COMPILADOR_2019_3_VISITOR_IR_H
 #define COMPILADOR_2019_3_VISITOR_IR_H
 
-#include "lexycal.h"
 
 #include <iostream>
 

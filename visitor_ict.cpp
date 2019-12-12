@@ -1,5 +1,5 @@
 #include "visitor_ict.h"
-#include "ict.h"
+#include "lexycal.h"
 
 
 PrintICT::PrintICT(ICTNode *node) {

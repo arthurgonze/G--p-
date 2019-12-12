@@ -103,73 +103,76 @@ public:
 
     void visit(PointerNode *pointerNode);
 
-    void visit(StmtListNode *stmtListNode);
+    void visit(VarDeclNode *varDeclNode);
 
-    void visit(IfNode *ifNode);
-
-    void visit(WhileNode *whileNode);
-
-    void visit(SwitchNode *switchNode);
-
-    void visit(BreakNode *breakNode);
-
-    void visit(PrintNode *printNode);
-
-    void visit(ReadLnNode *readLnNode);
-
-    void visit(ReturnNode *returnNode);
+    void visit(TypeDeclNode *typeDeclNode);
 
     void visit(CaseBlockNode *caseBlockNode);
-
-    void visit(ThrowNode *throwNode);
-
-    void visit(ExpListNode *expListNode);
-
-    void visit(TryNode *tryNode);
-
-    void visit(TokenNode *tokenNode);
-
-    void visit(AssignNode *assignNode);
-
-    void visit(ArrayNode *arrayNode);
-
-    void visit(CallNode *callNode);
-
-    void visit(AdditionOPNode *additionOPNode);
-
-    void visit(MultiplicationOPNode *multiplicationOPNode);
-
-    void visit(BooleanOPNode *booleanOPNode);
-
-    void visit(NotNode *notNode);
-
-    void visit(SignNode *signNode);
-
-    void visit(ArrayCallNode *arrayCallNode);
 
     void visit(FormalListNode *formalListNode);
 
     void visit(IdListNode *idListNode);
 
-    void visit(PrimaryNode *primaryNode);
-
     void visit(VarStmtNode *varStmtNode);
 
     void visit(FunctionNode *functionNode);
 
-    void visit(PointerExpNode *pointerExpNode);
+    StmNode * visit(StmtNode *stmtNode);
 
-    void visit(NameExpNode *nameExpNode);
+    StmNode *visit(StmtListNode *stmtListNode);
 
-    void visit(VarDeclNode *varDeclNode);
+    StmNode *visit(IfNode *ifNode);
 
-    void visit(TypeDeclNode *typeDeclNode);
+    StmNode *visit(WhileNode *whileNode);
 
-    void visit(AddressValNode *addressValNode);
+    StmNode * visit(SwitchNode *switchNode);
 
-    void visit(PointerValNode *pointerValNode);
+    StmNode *visit(BreakNode *breakNode);
 
-    void visit(StmtNode *stmtNode);
+    StmNode *visit(PrintNode *printNode);
+
+    StmNode *visit(ReadLnNode *readLnNode);
+
+    StmNode *visit(ReturnNode *returnNode);
+
+    StmNode *visit(ThrowNode *throwNode);
+
+    ExprNode* visit(ExpListNode *expListNode);
+
+    StmNode * visit(TryNode *tryNode);
+
+    ExprNode * visit(TokenNode *tokenNode);
+
+    ExprNode* visit(AssignNode *assignNode);
+
+    ExprNode* visit(ArrayNode *arrayNode);
+
+    ExprNode* visit(CallNode *callNode);
+
+    ExprNode* visit(AdditionOPNode *additionOPNode);
+
+    ExprNode* visit(MultiplicationOPNode *multiplicationOPNode);
+
+    ExprNode* visit(BooleanOPNode *booleanOPNode);
+
+    ExprNode* visit(NotNode *notNode);
+
+    ExprNode* visit(SignNode *signNode);
+
+    ExprNode* visit(ArrayCallNode *arrayCallNode);
+
+    ExprNode* visit(PrimaryNode *primaryNode);
+
+    ExprNode* visit(PointerExpNode *pointerExpNode);
+
+    ExprNode* visit(NameExpNode *nameExpNode);
+
+    ExprNode* visit(AddressValNode *addressValNode);
+
+    ExprNode* visit(PointerValNode *pointerValNode);
+
+    ExprNode* visit(ExpNode *expNode);
+
 };
 
 

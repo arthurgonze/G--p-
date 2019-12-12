@@ -13,6 +13,7 @@ TokenNode::TokenNode(int tok, const char *lex) {
     this->setSize(0);
 }
 
+
 ProgramNode::ProgramNode(FunctionListNode *functions, TypeDeclNode *typelist, VarDeclNode *varlist) {
     this->functions = functions;
     this->typelist = typelist;

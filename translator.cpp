@@ -48,7 +48,7 @@ void Translator::visit(IdListNode *node) {
     }
 }
 
-void Translator::visit(StmtListNode *node) {
+StmNode * Translator::visit(StmtListNode *node) {
     if (node->getStmt() != nullptr) {
         node->getStmt()->accept(this);
     }
@@ -66,7 +66,11 @@ void Translator::visit(VarStmtNode *node) {
     }
 }
 
-void Translator::visit(IfNode *node) {
+StmNode * Translator::visit(IfNode *node) {
+
+    Label* thenLabel = new Label();
+    Label* endLabel = new Label();
+
     if (node->getHead() != nullptr) {
         node->getHead()->accept(this);
     }
@@ -76,9 +80,14 @@ void Translator::visit(IfNode *node) {
     if (node->getFalseStmt() != nullptr) {
         node->getFalseStmt()->accept(this);
     }
+
+    if(node->getFalseStmt() == nullptr) {
+        return new SEQ(new CJUMP(EQ, node->getHead()->accept(this), new CONST(0), thenLabel , endLabel),
+                       new SEQ(new LABEL(thenLabel), new SEQ(node->getTrueStmt()->accept(this), new LABEL(endLabel))));
+    }
 }
 
-void Translator::visit(WhileNode *node) {
+StmNode * Translator::visit(WhileNode *node) {
     if (node->getHead() != nullptr) {
         node->getHead()->accept(this);
     }
@@ -87,7 +96,7 @@ void Translator::visit(WhileNode *node) {
     }
 }
 
-void Translator::visit(SwitchNode *node) {
+StmNode * Translator::visit(SwitchNode *node) {
     if (node->getExp() != nullptr) {
         node->getExp()->accept(this);
     }
@@ -96,19 +105,19 @@ void Translator::visit(SwitchNode *node) {
     }
 }
 
-void Translator::visit(PrintNode *node) {
+StmNode * Translator::visit(PrintNode *node) {
     if (node->getExpList() != nullptr) {
         node->getExpList()->accept(this);
     }
 }
 
-void Translator::visit(ReadLnNode *node) {
+StmNode * Translator::visit(ReadLnNode *node) {
     if (node->getExp() != nullptr) {
         node->getExp()->accept(this);
     }
 }
 
-void Translator::visit(ReturnNode *node) {
+StmNode * Translator::visit(ReturnNode *node) {
     if (node->getExp() != nullptr) {
         node->getExp()->accept(this);
     }
@@ -126,7 +135,7 @@ void Translator::visit(CaseBlockNode *node) {
     }
 }
 
-void Translator::visit(ExpListNode *node) {
+ExprNode * Translator::visit(ExpListNode *node) {
     if (node->getExp() != nullptr) {
         node->getExp()->accept(this);
     }
@@ -135,7 +144,7 @@ void Translator::visit(ExpListNode *node) {
     }
 }
 
-void Translator::visit(TryNode *node) {
+StmNode * Translator::visit(TryNode *node) {
     if (node->getTry() != nullptr) {
         node->getTry()->accept(this);
     }
@@ -144,7 +153,7 @@ void Translator::visit(TryNode *node) {
     }
 }
 
-void Translator::visit(PrimaryNode *node) {
+ExprNode * Translator::visit(PrimaryNode *node) {
     if (node->getTokenNode() != nullptr) {
         node->getTokenNode()->accept(this);
     }
@@ -153,7 +162,7 @@ void Translator::visit(PrimaryNode *node) {
     }
 }
 
-void Translator::visit(CallNode *node) {
+ExprNode * Translator::visit(CallNode *node) {
     if (node->getId() != nullptr) {
         node->getId()->accept(this);
     }
@@ -162,7 +171,7 @@ void Translator::visit(CallNode *node) {
     }
 }
 
-void Translator::visit(ArrayCallNode *node) {
+ExprNode * Translator::visit(ArrayCallNode *node) {
     if (node->getExp() != nullptr) {
         node->getExp()->accept(this);
     }
@@ -171,13 +180,13 @@ void Translator::visit(ArrayCallNode *node) {
     }
 }
 
-void Translator::visit(ArrayNode *node) {
+ExprNode * Translator::visit(ArrayNode *node) {
     if (node->getNumInt() != nullptr) {
         node->getNumInt()->accept(this);
     }
 }
 
-void Translator::visit(AssignNode *node) {
+ExprNode * Translator::visit(AssignNode *node) {
     if (node->getExp1() != nullptr) {
         node->getExp1()->accept(this);
     }
@@ -186,7 +195,7 @@ void Translator::visit(AssignNode *node) {
     }
 }
 
-void Translator::visit(AdditionOPNode *node) {
+ExprNode * Translator::visit(AdditionOPNode *node) {
     if (node->getExp1() != nullptr) {
         node->getExp1()->accept(this);
     }
@@ -195,7 +204,7 @@ void Translator::visit(AdditionOPNode *node) {
     }
 }
 
-void Translator::visit(MultiplicationOPNode *node) {
+ExprNode * Translator::visit(MultiplicationOPNode *node) {
     if (node->getExp1() != nullptr) {
         node->getExp1()->accept(this);
     }
@@ -204,22 +213,31 @@ void Translator::visit(MultiplicationOPNode *node) {
     }
 }
 
-void Translator::visit(BooleanOPNode *node) {
+
+ExprNode* Translator::visit(BooleanOPNode *node) {
     if (node->getExp1() != nullptr) {
         node->getExp1()->accept(this);
     }
     if (node->getExp2() != nullptr) {
         node->getExp2()->accept(this);
     }
+
+    Temp* r = new Temp();
+    Label* t = new Label();
+    Label* f = new Label();
+
+    return new ESEQ(new SEQ(new MOVE(new TEMP(r), new CONST(1)),
+                            new SEQ(new CJUMP(node->getOp()->getToken(), node->getExp1()->accept(this), node->getExp2()->accept(this), t, f),
+                                    new SEQ(new LABEL(f), new SEQ(new MOVE(new TEMP(r), new CONST(0)), new LABEL(t))))), new TEMP(r));
 }
 
-void Translator::visit(NotNode *node) {
+ExprNode * Translator::visit(NotNode *node) {
     if (node->getExp() != nullptr) {
         node->getExp()->accept(this);
     }
 }
 
-void Translator::visit(SignNode *node) {
+ExprNode * Translator::visit(SignNode *node) {
     if (node->getExp() != nullptr) {
         node->getExp()->accept(this);
     }
@@ -264,7 +282,7 @@ void Translator::visit(FunctionNode *node) {
     }
 }
 
-void Translator::visit(PointerExpNode *node) {
+ExprNode * Translator::visit(PointerExpNode *node) {
     if (node->getExp() != nullptr) {
         node->getExp()->accept(this);
     }
@@ -273,7 +291,7 @@ void Translator::visit(PointerExpNode *node) {
     }
 }
 
-void Translator::visit(NameExpNode *node) {
+ExprNode * Translator::visit(NameExpNode *node) {
     if (node->getExp() != nullptr) {
         node->getExp()->accept(this);
     }
@@ -306,23 +324,23 @@ void Translator::visit(TypeDeclNode *node) {
     }
 }
 
-void Translator::visit(AddressValNode *node) {
+ExprNode * Translator::visit(AddressValNode *node) {
     if (node->getExp() != nullptr) {
         node->getExp()->accept(this);
     }
 }
 
-void Translator::visit(PointerValNode *node) {
+ExprNode * Translator::visit(PointerValNode *node) {
     if (node->getExp() != nullptr) {
         node->getExp()->accept(this);
     }
 }
 
-void Translator::visit(StmtNode *node) {
-    if (node->getStmt() != nullptr) {
-        node->getStmt()->accept(this);
-    }
-}
+//StmNode * Translator::visit(StmtNode *node) {
+//    if (node->getStmt() != nullptr) {
+//        node->getStmt()->accept(this);
+//    }
+//}
 
 
 /*
@@ -331,14 +349,14 @@ void Translator::visit(StmtNode *node) {
 void Translator::visit(PointerNode *node) {
 }
 
-void Translator::visit(BreakNode *node) {
+StmNode * Translator::visit(BreakNode *node) {
 }
 
-void Translator::visit(ThrowNode *node) {
+StmNode * Translator::visit(ThrowNode *node) {
 }
 
 void Translator::visit(TypeNode *node) {
 }
 
-void Translator::visit(TokenNode *node) {
+ExprNode * Translator::visit(TokenNode *node) {
 }
