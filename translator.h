@@ -2,6 +2,7 @@
 #define COMPILADOR_2019_3_TRANSLATOR_H
 
 #include "intermediate_code.h"
+
 // AST NODES
 
 class ASTNode;
@@ -84,13 +85,20 @@ class VarStmtNode;
 
 class PrimaryNode;
 
+class VarTable;
+class FunctionTable;
+class StructTable;
+
 void startTranslator(ProgramNode *ast);
 void endTranslator();
 class Translator {
 private:
     Fragment* fragmentList;
+    VarTable* varTable;
+    FunctionTable* functionTable;
+    StructTable* structTable;
 public:
-    Translator() = default;
+    Translator(VarTable *varTable, FunctionTable *functionTable, StructTable *structTable);
     ~Translator() = default;
 
     inline Fragment *getFragmentList() const { return fragmentList; }

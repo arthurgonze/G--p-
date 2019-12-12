@@ -1,10 +1,13 @@
 #include "translator.h"
 #include "ast.h"
+#include "symbol_table.h"
+
+//FunctionSymbol *activeFunction = NULL;
 
 void startTranslator(ProgramNode *ast) {
-    Translator translator;
-    translator.visit(ast);
-    fprintf(stderr, "\n");
+//    Translator translator;
+//    translator.visit(ast);
+//    fprintf(stderr, "\n");
 }
 
 void endTranslator() {
@@ -208,6 +211,8 @@ ExprNode *Translator::visit(ArrayCallNode *node) {
     if (node->getIndex() != nullptr) {
         node->getIndex()->accept(this);
     }
+
+//    return new MEM
 }
 
 ExprNode *Translator::visit(ArrayNode *node) {
@@ -344,6 +349,7 @@ void Translator::visit(FunctionNode *node) {
     if (node->getId() != nullptr) {
         node->getId()->accept(this);
     }
+    //activeFunction = functionTable->cSearch(node->getId()->getLexeme());
     if (node->getParameters() != nullptr) {
         node->getParameters()->accept(this);
     }
@@ -353,6 +359,7 @@ void Translator::visit(FunctionNode *node) {
     if (node->getBody() != nullptr) {
         node->getBody()->accept(this);
     }
+
 }
 
 ExprNode *Translator::visit(PointerExpNode *node) {
@@ -383,6 +390,7 @@ void Translator::visit(VarDeclNode *node) {
     if (node->getNext() != nullptr) {
         node->getNext()->accept(this);
     }
+
 }
 
 void Translator::visit(TypeDeclNode *node) {
@@ -447,7 +455,7 @@ ExprNode *Translator::visit(TokenNode *node) {
 
     if (node->getToken() == LITERALCHAR || node->getToken() == LITERAL) {
         Literal *literal = new Literal(node->getLexeme());
-        //TODO verificar CS
+        //TODO verificar
         literal->setNext(fragmentList);
         fragmentList = literal;
         return new NAME(new Label(node->getLexeme()));
@@ -462,7 +470,26 @@ ExprNode *Translator::visit(TokenNode *node) {
     }
 
     if (node->getToken() == ID) {
-        //TODO verificar se eh variavel ou funcao?...
+        //TODO verificar se eh variavel ou funcao?... na real acho que a verificação do ID não deve ser feita aqui por nao ter peso nenhum
+        // verificar se eh variavel simples
+        VarSymbol *aux = varTable->searchInScope(node->getLexeme(), "lexemaDaFuncaoAtual"/*TODO activeFunction->getLexeme()*/);
+        if(aux)//se for diferente de nulo o id eh variavel
+        {
+            return new BINOP(PLUS, new TEMP(FP), new CONST(aux->getOffset()));
+        }else
+        {
+            aux =varTable->cSearch(node->getLexeme());
+            if(aux)
+            {
+                return new MEM(new BINOP(PLUS, new TEMP(FP), new CONST(aux->getOffset())));//TODO VERIFICAR FRAME POINTER E OFFSET e olhar no slide o codigo
+            }
+        }
         return NULL;
     }
+}
+
+Translator::Translator(VarTable *varTable, FunctionTable *functionTable, StructTable *structTable) {
+this->varTable = varTable;
+this->functionTable = functionTable;
+this->structTable = structTable;
 }
