@@ -1,5 +1,5 @@
 #include "visitor_ict.h"
-#include "ict.h"
+#include "lexycal.h"
 
 
 PrintICT::PrintICT(ICTNode *node) {
@@ -145,8 +145,9 @@ void PrintICT::visit(CJUMP *node) {
     up_level();
     if (node->getLeft() != NULL) node->getLeft()->accept(this);
     if (node->getRight() != NULL) node->getRight()->accept(this);
-    if (node->getIfTrue() != NULL) node->getIfTrue()->accept(this);
-    if (node->getIfFalse() != NULL) node->getIfTrue()->accept(this);
+    // TODO class Label’ has no member named ‘accept’
+//    if (node->getIfTrue() != NULL) node->getIfTrue()->accept(this);
+//    if (node->getIfFalse() != NULL) node->getIfTrue()->accept(this);
     down_level();
 }
 
