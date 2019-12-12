@@ -215,7 +215,7 @@ Variable *Canonization::visit(Variable *fragment) {
 }
 
 
-/**********************
+/********************** CANONIZATION ***********/
 
 ExprNode *Canonization::visit(CONSTF *node) {
     return node;
