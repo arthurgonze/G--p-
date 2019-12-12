@@ -308,7 +308,7 @@ private:
 public:
     explicit CONSTF(float j);
 
-    ~CONSTF() override = 0;
+    ~CONSTF() override = default;
 
     inline float getJ() const { return j; }
 
