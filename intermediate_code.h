@@ -40,6 +40,9 @@ public:
     inline Fragment *getNext() const { return next; }
 
     inline void setNext(Fragment *next) { this->next = next; }
+
+    virtual Fragment * visit(Canonization * visitor) = 0;
+
 };
 
 
@@ -77,6 +80,8 @@ public:
     inline Frame *getFrame() const { return frame; }
 
     inline StmNode *getBody() const { return body; }
+    inline Procedure * visit(Canonization * visitor) override  { return visitor->visit(this);}
+
 };
 
 /**
@@ -93,6 +98,8 @@ public:
     ~Literal() override;
 
     inline const char *getLiteral() const { return literal; }
+    inline Literal * visit(Canonization * visitor) override  { return visitor->visit(this);}
+
 };
 
 /**
@@ -112,6 +119,9 @@ public:
     inline int getType() const { return type; }
 
     inline int getNbytes() const { return nbytes; }
+
+    inline Variable * visit(Canonization * visitor) override  { return visitor->visit(this);}
+
 };
 
 /**
@@ -280,6 +290,8 @@ private:
 public:
     ~StmNode() override =default;
     void accept(VisitorICT *visitor) override = 0;
+    virtual StmNode * accept(Canonization *visitor)  = 0;
+
 };
 
 class ExprNode : public StmNode{
@@ -287,6 +299,9 @@ private:
 public:
     ~ExprNode() override =default;
     void accept(VisitorICT *visitor) override = 0;
+
+    virtual StmNode * accept(Canonization *visitor)  = 0;
+
 };
 
 class CONST : public ExprNode {
@@ -300,6 +315,8 @@ public:
     inline int getI() const { return i; }
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
+    inline ExprNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 class CONSTF : public ExprNode {
@@ -313,6 +330,8 @@ public:
     inline float getJ() const { return j; }
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
+    inline ExprNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 class NAME : public ExprNode {
@@ -326,6 +345,8 @@ public:
     inline Label *getL() const { return l; }
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this);}
+    inline ExprNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 class TEMP : public ExprNode {
@@ -339,6 +360,8 @@ public:
     inline Temp *getT() const { return t; }
 
     inline void accept(VisitorICT *visitor) override {  visitor->visit(this); }
+    inline ExprNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 class BINOP : public ExprNode {
@@ -357,6 +380,8 @@ public:
     inline ExprNode *getRight() const { return right; }
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
+    inline ExprNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 class MEM : public ExprNode {
@@ -370,6 +395,8 @@ public:
     inline ExprNode *getE() const { return e; }
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
+    inline ExprNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 
@@ -387,6 +414,8 @@ public:
     inline ExpList *getArgs() const { return args; }
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this);}
+    inline ExprNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 class ESEQ : public ExprNode {
@@ -403,6 +432,8 @@ public:
     inline ExprNode *getE() const { return e; }
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this);}
+    inline ExprNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 class MOVE : public StmNode {
@@ -418,6 +449,8 @@ public:
     inline ExprNode *getSrc() const { return src; }
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this);}
+    inline StmNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 class EXP : public StmNode {
@@ -431,6 +464,8 @@ public:
     inline ExprNode *getE() const { return e; }
 
     inline void accept(VisitorICT *visitor) override {  visitor->visit(this);}
+    inline StmNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 class JUMP : public StmNode {
@@ -447,6 +482,8 @@ public:
     inline LabelList *getTargets() const { return targets; }
 
     inline void accept(VisitorICT *visitor) override {  visitor->visit(this);}
+    inline StmNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 class CJUMP : public StmNode {
@@ -470,6 +507,8 @@ public:
     inline Label *getIfFalse() const { return ifFalse; }
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this);}
+    inline StmNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 class SEQ : public StmNode {
@@ -485,6 +524,8 @@ public:
     inline StmNode *getRight() const { return right; }
 
     inline void accept(VisitorICT *visitor) override {  visitor->visit(this);}
+    inline StmNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 class LABEL : public StmNode {
@@ -498,6 +539,8 @@ public:
     inline Label *getL() const { return l; }
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
+    inline StmNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 // Outras classes
@@ -515,6 +558,8 @@ public:
     inline ExpList *getNext() const { return next; }
 
     inline void accept(VisitorICT *visitor) override {  visitor->visit(this); }
+    inline ExprNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 class StmList : public StmNode{
@@ -531,6 +576,8 @@ public:
     inline StmList *getNext() const { return next; }
 
     inline void accept(VisitorICT *visitor) override {  visitor->visit(this); }
+    inline StmNode * accept(Canonization *visitor) override { return visitor->visit(this); }
+
 };
 
 #endif //COMPILADOR_2019_3_INTERMEDIATE_CODE_H

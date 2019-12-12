@@ -166,3 +166,12 @@ void PrintICT::visit(LABEL *node) {
 }
 
 PrintICT::~PrintICT() = default;
+
+ExprNode *Canonization::visit(ESEQ *node) {
+    node->getE()->accept(this);
+    return node;
+}
+
+StmNode *Canonization::visit(ExprNode *node) {
+    return nullptr;
+}
