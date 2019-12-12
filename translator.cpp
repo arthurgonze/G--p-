@@ -4,10 +4,9 @@
 
 //FunctionSymbol *activeFunction = NULL;
 
-void startTranslator(ProgramNode *ast) {
-//    Translator translator;
-//    translator.visit(ast);
-//    fprintf(stderr, "\n");
+void startTranslator(ProgramNode *ast, Translator *translator) {
+    translator->visit(ast);
+    fprintf(stderr, "\n");
 }
 
 void endTranslator() {
@@ -472,7 +471,7 @@ ExprNode *Translator::visit(TokenNode *node) {
     if (node->getToken() == ID) {
         //TODO verificar se eh variavel ou funcao?... na real acho que a verificação do ID não deve ser feita aqui por nao ter peso nenhum
         // verificar se eh variavel simples
-        VarSymbol *aux = varTable->searchInScope(node->getLexeme(), "lexemaDaFuncaoAtual"/*TODO activeFunction->getLexeme()*/);
+        VarSymbol *aux = varTable->searchInScope(node->getLexeme(), "FuncaoAtiva"/*activeFunction->getLexeme()*/);
         if(aux)//se for diferente de nulo o id eh variavel
         {
             return new BINOP(PLUS, new TEMP(FP), new CONST(aux->getOffset()));

@@ -16,7 +16,7 @@
 #define BOOL_FALSE  0
 
 void startSemantic(ProgramNode *ast);
-void endSemantic();
+Translator* endSemantic();
 
 class SemanticTypes : public VisitorAST
 {

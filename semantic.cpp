@@ -23,14 +23,17 @@ void startSemantic(ProgramNode *ast) {
     fprintf(stderr, "\n");
 }
 
-void endSemantic() {
+Translator* endSemantic() {
     activeFunction = NULL;
     varTable->print();
     functionTable->print();
     structTable->print();
+
+    Translator *translator = new Translator(varTable,functionTable,structTable);
     delete varTable;
     delete functionTable;
     delete structTable;
+    return translator;
 }
 
 void beginScope(const char *scopeLex) {

@@ -49,7 +49,10 @@ int main(int argc, char *argv[]) {
     lexical_analyzer_dispose();
 
     startSemantic(ast);
-    endSemantic();
+    Translator *translator = endSemantic();
+
+    startTranslator(ast, translator);
+    endTranslator();
 
     delete (ast);
     delete (parser);

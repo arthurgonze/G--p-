@@ -89,14 +89,13 @@ class VarTable;
 class FunctionTable;
 class StructTable;
 
-void startTranslator(ProgramNode *ast);
-void endTranslator();
 class Translator {
 private:
     Fragment* fragmentList;
     VarTable* varTable;
     FunctionTable* functionTable;
     StructTable* structTable;
+    FrameMIPS *currentFrame;
 public:
     Translator(VarTable *varTable, FunctionTable *functionTable, StructTable *structTable);
     ~Translator() = default;
@@ -182,6 +181,9 @@ public:
     ExprNode* visit(ExpNode *expNode);
 
 };
+
+void startTranslator(ProgramNode *ast, Translator *translator);
+void endTranslator();
 
 
 #endif //COMPILADOR_2019_3_TRANSLATOR_H
