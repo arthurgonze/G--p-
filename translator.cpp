@@ -52,9 +52,14 @@ StmNode *Translator::visit(StmtListNode *node) {
     if (node->getStmt() != nullptr) {
         node->getStmt()->accept(this);
     }
+
     if (node->getNext() != nullptr) {
-        node->getNext()->accept(this);
+        return new SEQ(node->getStmt()->accept(this), node->getNext()->accept(this));
     }
+    else {
+        return node->getStmt()->accept(this);
+    }
+
 }
 
 void Translator::visit(VarStmtNode *node) {
@@ -115,7 +120,8 @@ StmNode *Translator::visit(WhileNode *node) {
                            new SEQ(new LABEL(startLabel),
                                    new SEQ(node->getBody()->accept(this),
                                            new SEQ(new JUMP(new NAME(testLabel), nullptr),
-                                                   new LABEL(endLabel))))));
+                                                   new LABEL(endLabel))))
+                   ));
 
 }
 
@@ -144,6 +150,7 @@ StmNode *Translator::visit(ReturnNode *node) {
     if (node->getExp() != nullptr) {
         node->getExp()->accept(this);
     }
+
 }
 
 void Translator::visit(CaseBlockNode *node) {
@@ -181,7 +188,7 @@ ExprNode *Translator::visit(PrimaryNode *node) {
         node->getTokenNode()->accept(this);
     }
     if (node->getExp() != nullptr) {
-        node->getExp()->accept(this);
+        return node->getExp()->accept(this);
     }
 }
 
@@ -210,6 +217,7 @@ ExprNode *Translator::visit(ArrayNode *node) {
 }
 
 ExprNode *Translator::visit(AssignNode *node) {
+
     if (node->getExp1() != nullptr) {
         node->getExp1()->accept(this);
     }
@@ -225,6 +233,8 @@ ExprNode *Translator::visit(AdditionOPNode *node) {
     if (node->getExp2() != nullptr) {
         node->getExp2()->accept(this);
     }
+
+    return new BINOP(node->getOp()->getToken(), node->getExp1()->accept(this), node->getExp2()->accept(this));
 }
 
 ExprNode *Translator::visit(MultiplicationOPNode *node) {
@@ -234,6 +244,8 @@ ExprNode *Translator::visit(MultiplicationOPNode *node) {
     if (node->getExp2() != nullptr) {
         node->getExp2()->accept(this);
     }
+
+    return new BINOP(node->getOp()->getToken(), node->getExp1()->accept(this), node->getExp2()->accept(this));
 }
 
 
@@ -272,7 +284,8 @@ ExprNode *Translator::visit(BooleanOPNode *node) {
                                                 new SEQ(new MOVE(new TEMP(r), new CONST(1)),
                                                         new LABEL(l2))))),
                         new TEMP(r));
-    } else if (node->getOp()->getToken() == (LE || GE || GT || LT || EQ || NE)) {
+    } //TODO Não sei se precisa de verificar pq acho q n pode ser null, ja que veio do semantico
+    else if (node->getOp()->getToken() == (LE || GE || GT || LT || EQ || NE)) {
         Temp *r = new Temp();
         Label *t = new Label();
         Label *f = new Label();
@@ -291,12 +304,16 @@ ExprNode *Translator::visit(NotNode *node) {
     if (node->getExp() != nullptr) {
         node->getExp()->accept(this);
     }
+
 }
 
 ExprNode *Translator::visit(SignNode *node) {
     if (node->getExp() != nullptr) {
         node->getExp()->accept(this);
     }
+
+    return new BINOP(MINUS, new CONST(0), node->getExp()->accept(this));
+
 }
 
 void Translator::visit(FormalListNode *node) {
@@ -390,6 +407,8 @@ ExprNode *Translator::visit(PointerValNode *node) {
     if (node->getExp() != nullptr) {
         node->getExp()->accept(this);
     }
+
+    return new MEM(node->getExp()->accept(this));
 }
 
 //StmNode * Translator::visit(StmtNode *node) {
