@@ -91,7 +91,7 @@ JUMP::~JUMP() {
     delete this->targets;
 }
 
-CJUMP::CJUMP(int relop, ExprNode *left, ExprNode *right, ExprNode *ifTrue, ExprNode *ifFalse) {
+CJUMP::CJUMP(int relop, ExprNode *left, ExprNode *right, Label *ifTrue, Label *ifFalse) {
     this->relop = relop;
     this->left = left;
     this->right = right;
@@ -106,7 +106,7 @@ CJUMP::~CJUMP() {
     delete this->ifFalse;
 }
 
-SEQ::SEQ(ExprNode *left, ExprNode *right) {
+SEQ::SEQ(StmNode *left, StmNode *right) {
     this->left = left;
     this->right = right;
 }

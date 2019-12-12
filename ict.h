@@ -36,11 +36,6 @@ public:
     virtual void accept(VisitorICT *visitor) = 0;
 };
 
-class ExprNode : public ICTNode {
-private:
-public:
-    void accept(VisitorICT *visitor) override = 0;
-};
 
 /**
  * Contém o código intermediário relativo ao procedimento (sem prólogo e epílogo para a ativação)
@@ -48,6 +43,14 @@ public:
 class StmNode : public ICTNode {
 private:
 public:
+    ~StmNode() override =default;
+    void accept(VisitorICT *visitor) override = 0;
+};
+
+class ExprNode : public StmNode{
+private:
+public:
+    ~ExprNode() override =default;
     void accept(VisitorICT *visitor) override = 0;
 };
 
@@ -167,7 +170,7 @@ public:
     inline void accept(VisitorICT *visitor) override { visitor->visit(this);}
 };
 
-class MOVE : public ExprNode {
+class MOVE : public StmNode {
 private:
     ExprNode *dst, *src;
 public:
@@ -182,7 +185,7 @@ public:
     inline void accept(VisitorICT *visitor) override { visitor->visit(this);}
 };
 
-class EXP : public ExprNode {
+class EXP : public StmNode {
 private:
     ExprNode *e;
 public:
@@ -195,7 +198,7 @@ public:
     inline void accept(VisitorICT *visitor) override {  visitor->visit(this);}
 };
 
-class JUMP : public ExprNode {
+class JUMP : public StmNode {
 private:
     ExprNode *e;
     LabelList *targets;
@@ -211,12 +214,13 @@ public:
     inline void accept(VisitorICT *visitor) override {  visitor->visit(this);}
 };
 
-class CJUMP : public ExprNode {
+class CJUMP : public StmNode {
 private:
     int relop;
-    ExprNode *left, *right, *ifTrue, *ifFalse;
+    ExprNode *left, *right;
+    Label *ifTrue, *ifFalse;
 public:
-    CJUMP(int relop, ExprNode *left, ExprNode *right, ExprNode *ifTrue, ExprNode *ifFalse);
+    CJUMP(int relop, ExprNode *left, ExprNode *right, Label *ifTrue, Label *ifFalse);
 
     ~CJUMP() override;
 
@@ -226,29 +230,29 @@ public:
 
     inline ExprNode *getRight() const { return right; }
 
-    inline ExprNode *getIfTrue() const { return ifTrue; }
+    inline Label *getIfTrue() const { return ifTrue; }
 
-    inline ExprNode *getIfFalse() const { return ifFalse; }
+    inline Label *getIfFalse() const { return ifFalse; }
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this);}
 };
 
-class SEQ : public ExprNode {
+class SEQ : public StmNode {
 private:
-    ExprNode *left, *right;
+    StmNode *left, *right;
 public:
-    SEQ(ExprNode *left, ExprNode *right);
+    SEQ(StmNode *left, StmNode *right);
 
     ~SEQ() override;
 
-    inline ExprNode *getLeft() const { return left; }
+    inline StmNode *getLeft() const { return left; }
 
-    inline ExprNode *getRight() const { return right; }
+    inline StmNode *getRight() const { return right; }
 
     inline void accept(VisitorICT *visitor) override {  visitor->visit(this);}
 };
 
-class LABEL : public ExprNode {
+class LABEL : public StmNode {
 private:
     Label *l;
 public:
@@ -262,36 +266,36 @@ public:
 };
 
 // Outras classes
-class ExpList {
+class ExpList : public ExprNode{
 private:
     ExprNode *first;
     ExpList *next;
 public:
     ExpList(ExprNode *first, ExpList *next);
 
-    virtual ~ExpList();
+    ~ExpList() override;
 
     inline ExprNode *getFirst() const { return first; }
 
     inline ExpList *getNext() const { return next; }
 
-    inline void accept(VisitorICT *visitor) {  visitor->visit(this); }
+    inline void accept(VisitorICT *visitor) override {  visitor->visit(this); }
 };
 
-class StmList {
+class StmList : public StmNode{
 private:
     ExprNode *first;
     StmList *next;
 public:
     StmList(ExprNode *first, StmList *next);
 
-    virtual ~StmList();
+    ~StmList() override;
 
     inline ExprNode *getFirst() const { return first; }
 
     inline StmList *getNext() const { return next; }
 
-    inline void accept(VisitorICT *visitor) {  visitor->visit(this); }
+    inline void accept(VisitorICT *visitor) override {  visitor->visit(this); }
 };
 
 #endif //COMPILADOR_2019_3_ICT_H

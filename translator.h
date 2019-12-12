@@ -91,85 +91,85 @@ private:
     Fragment* fragmentList;
 public:
     Translator() = default;
-    virtual ~Translator() = default;
+    ~Translator() = default;
 
     inline Fragment *getFragmentList() const { return fragmentList; }
 
-    virtual void visit(ProgramNode *programNode);
+    void visit(ProgramNode *programNode);
 
-    virtual void visit(TypeNode *typeNode);
+    void visit(TypeNode *typeNode);
 
-    virtual void visit(FunctionListNode *functionListNode);
+    void visit(FunctionListNode *functionListNode);
 
-    virtual void visit(PointerNode *pointerNode);
+    void visit(PointerNode *pointerNode);
 
-    virtual void visit(StmtListNode *stmtListNode);
+    void visit(StmtListNode *stmtListNode);
 
-    virtual void visit(IfNode *ifNode);
+    void visit(IfNode *ifNode);
 
-    virtual void visit(WhileNode *whileNode);
+    void visit(WhileNode *whileNode);
 
-    virtual void visit(SwitchNode *switchNode);
+    void visit(SwitchNode *switchNode);
 
-    virtual void visit(BreakNode *breakNode);
+    void visit(BreakNode *breakNode);
 
-    virtual void visit(PrintNode *printNode);
+    void visit(PrintNode *printNode);
 
-    virtual void visit(ReadLnNode *readLnNode);
+    void visit(ReadLnNode *readLnNode);
 
-    virtual void visit(ReturnNode *returnNode);
+    void visit(ReturnNode *returnNode);
 
-    virtual void visit(CaseBlockNode *caseBlockNode);
+    void visit(CaseBlockNode *caseBlockNode);
 
-    virtual void visit(ThrowNode *throwNode);
+    void visit(ThrowNode *throwNode);
 
-    virtual void visit(ExpListNode *expListNode);
+    void visit(ExpListNode *expListNode);
 
-    virtual void visit(TryNode *tryNode);
+    void visit(TryNode *tryNode);
 
-    virtual void visit(TokenNode *tokenNode);
+    void visit(TokenNode *tokenNode);
 
-    virtual void visit(AssignNode *assignNode);
+    void visit(AssignNode *assignNode);
 
-    virtual void visit(ArrayNode *arrayNode);
+    void visit(ArrayNode *arrayNode);
 
-    virtual void visit(CallNode *callNode);
+    void visit(CallNode *callNode);
 
-    virtual void visit(AdditionOPNode *additionOPNode);
+    void visit(AdditionOPNode *additionOPNode);
 
-    virtual void visit(MultiplicationOPNode *multiplicationOPNode);
+    void visit(MultiplicationOPNode *multiplicationOPNode);
 
-    virtual void visit(BooleanOPNode *booleanOPNode);
+    void visit(BooleanOPNode *booleanOPNode);
 
-    virtual void visit(NotNode *notNode);
+    void visit(NotNode *notNode);
 
-    virtual void visit(SignNode *signNode);
+    void visit(SignNode *signNode);
 
-    virtual void visit(ArrayCallNode *arrayCallNode);
+    void visit(ArrayCallNode *arrayCallNode);
 
-    virtual void visit(FormalListNode *formalListNode);
+    void visit(FormalListNode *formalListNode);
 
-    virtual void visit(IdListNode *idListNode);
+    void visit(IdListNode *idListNode);
 
-    virtual void visit(PrimaryNode *primaryNode);
+    void visit(PrimaryNode *primaryNode);
 
-    virtual void visit(VarStmtNode *varStmtNode);
+    void visit(VarStmtNode *varStmtNode);
 
-    virtual void visit(FunctionNode *functionNode);
+    void visit(FunctionNode *functionNode);
 
-    virtual void visit(PointerExpNode *pointerExpNode);
+    void visit(PointerExpNode *pointerExpNode);
 
-    virtual void visit(NameExpNode *nameExpNode);
+    void visit(NameExpNode *nameExpNode);
 
-    virtual void visit(VarDeclNode *varDeclNode);
+    void visit(VarDeclNode *varDeclNode);
 
-    virtual void visit(TypeDeclNode *typeDeclNode);
+    void visit(TypeDeclNode *typeDeclNode);
 
-    virtual void visit(AddressValNode *addressValNode);
+    void visit(AddressValNode *addressValNode);
 
-    virtual void visit(PointerValNode *pointerValNode);
+    void visit(PointerValNode *pointerValNode);
 
-    virtual void visit(StmtNode *stmtNode);
+    void visit(StmtNode *stmtNode);
 };
 
 

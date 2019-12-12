@@ -112,7 +112,7 @@ InFrame::InFrame(int offset) {
     this->offset = offset;
 }
 
-ExprNode *InFrame::accessCode() {
+StmNode *InFrame::accessCode() {
     return new MEM(new BINOP(PLUS, new TEMP(FP), new CONST(this->getOffset())));
 }
 
@@ -125,7 +125,7 @@ InReg::~InReg() {
     delete this->temp;
 }
 
-ExprNode *InReg::accessCode() {
+StmNode *InReg::accessCode() {
     return new TEMP(this->getTemp());
 }
 

@@ -185,7 +185,7 @@ public:
  */
 class LocalAccess {
 public:
-    virtual ExprNode * accessCode()= 0; // retorna o código de máquina p/ acessar o nome
+    virtual StmNode * accessCode()= 0; // retorna o código de máquina p/ acessar o nome
 };
 
 class AccessList {
@@ -212,7 +212,7 @@ public:
 
     inline int getOffset() const { return offset; }
 
-    ExprNode *accessCode() override;
+    StmNode *accessCode() override;
 };
 
 class InReg : public LocalAccess {
@@ -225,7 +225,7 @@ public:
 
     inline Temp *getTemp() const { return temp; }
 
-    ExprNode *accessCode() override;
+    StmNode *accessCode() override;
 };
 
 extern Temp *FP; // Temp único que representa o registrador FP (ponteiro do frame)
