@@ -96,6 +96,7 @@ private:
     FunctionTable* functionTable;
     StructTable* structTable;
     FrameMIPS *currentFrame;
+    void printFragmentList();
 public:
     Translator(VarTable *varTable, FunctionTable *functionTable, StructTable *structTable);
     ~Translator() = default;

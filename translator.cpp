@@ -492,3 +492,13 @@ this->varTable = varTable;
 this->functionTable = functionTable;
 this->structTable = structTable;
 }
+
+void Translator::printFragmentList() {
+//    VisitorICT visitorICT;
+//    Fragment *fragmentListAux = fragmentList;
+//    while(fragmentListAux!=NULL)
+//    {
+//        visitorICT.visit(fragmentListAux);
+//        fragmentListAux=fragmentListAux->getNext();
+//    }
+}
