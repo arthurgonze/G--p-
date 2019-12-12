@@ -4,10 +4,6 @@
 
 PrintICT::PrintICT(ICTNode *node) {
     this->level = 0;
-    std::cout << "\n------------------------------" << std::endl;
-    std::cout << "---- INTERMEDIATE CODE TREE ----" << std::endl;
-    std::cout << "------------------------------\n" << std::endl;
-    if (node != NULL) node->accept(this);
 }
 
 void PrintICT::printIR(const char *node_name) {
@@ -24,13 +20,33 @@ void PrintICT::printLexemeIR(const char *node_name, const char *aux) {
 
 void PrintICT::up_level() {
     this->level++;
-
 }
 
 void PrintICT::down_level() {
     this->level--;
 
 }
+
+void PrintICT::visit(Procedure *node) {
+    if (node != NULL) {
+        node->accept(this);
+    }
+}
+void PrintICT::visit(Literal *node) {
+
+    printLexemeIR("LITERAL_",node->getLiteral());
+
+    if(node->getNext()) node->getNext()->accept(this);
+}
+
+void PrintICT::visit(Variable *node) {
+
+    printLexemeIR("VARIABLE_", token_id_to_name(node->getType()));
+
+    if(node->getNext()) node->getNext()->accept(this);
+}
+
+
 
 void PrintICT::visit(ICTNode *node) {
     printIR("ICTNode");
@@ -197,6 +213,9 @@ Variable *Canonization::visit(Variable *fragment) {
     }
     return fragment;
 }
+
+
+/**********************
 
 ExprNode *Canonization::visit(CONSTF *node) {
     return node;

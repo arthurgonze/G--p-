@@ -92,6 +92,13 @@ public:
 
     virtual void visit(StmList *node) = 0;
 
+    virtual void visit(Procedure *node) = 0;
+
+    virtual void visit(Literal *node) = 0;
+
+    virtual void visit(Variable *node) = 0;
+
+
 };
 
 class PrintICT : public VisitorICT {
@@ -110,6 +117,13 @@ public:
     PrintICT(ICTNode *node);
 
     virtual ~PrintICT();
+
+    void visit(Procedure *node) override;
+
+    void visit(Literal *node) override;
+
+    void visit(Variable *node) override;
+
 
     void visit(ICTNode *node) override;
 
