@@ -30,9 +30,9 @@ Translator* endSemantic() {
     structTable->print();
 
     Translator *translator = new Translator(varTable,functionTable,structTable);
-    delete varTable;
-    delete functionTable;
-    delete structTable;
+//    delete varTable;
+//    delete functionTable;
+//    delete structTable;
     return translator;
 }
 

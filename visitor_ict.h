@@ -98,6 +98,9 @@ public:
 
     virtual void visit(Variable *node) = 0;
 
+    virtual void visit(Fragment *node) = 0;
+
+
 
 };
 
@@ -114,9 +117,11 @@ private:
     void down_level();
 
 public:
-    PrintICT(ICTNode *node);
+    PrintICT();
 
     virtual ~PrintICT();
+
+    void visit(Fragment *node) override;
 
     void visit(Procedure *node) override;
 

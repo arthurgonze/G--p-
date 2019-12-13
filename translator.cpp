@@ -9,8 +9,9 @@ void startTranslator(ProgramNode *ast, Translator *translator) {
     fprintf(stderr, "\n");
 }
 
-void endTranslator() {
+void endTranslator(Translator *translator) {
     //TODO ...
+    translator->printFragmentList();
 }
 
 /********** TRANSLATOR **********/
@@ -57,8 +58,7 @@ StmNode *Translator::visit(StmtListNode *node) {
 
     if (node->getNext() != nullptr) {
         return new SEQ(node->getStmt()->accept(this), node->getNext()->accept(this));
-    }
-    else {
+    } else {
         return node->getStmt()->accept(this);
     }
 
@@ -472,15 +472,14 @@ ExprNode *Translator::visit(TokenNode *node) {
         //TODO verificar se eh variavel ou funcao?... na real acho que a verificação do ID não deve ser feita aqui por nao ter peso nenhum
         // verificar se eh variavel simples
         VarSymbol *aux = varTable->searchInScope(node->getLexeme(), "FuncaoAtiva"/*activeFunction->getLexeme()*/);
-        if(aux)//se for diferente de nulo o id eh variavel
+        if (aux)//se for diferente de nulo o id eh variavel
         {
             return new BINOP(PLUS, new TEMP(FP), new CONST(aux->getOffset()));
-        }else
-        {
-            aux =varTable->cSearch(node->getLexeme());
-            if(aux)
-            {
-                return new MEM(new BINOP(PLUS, new TEMP(FP), new CONST(aux->getOffset())));//TODO VERIFICAR FRAME POINTER E OFFSET e olhar no slide o codigo
+        } else {
+            aux = varTable->cSearch(node->getLexeme());
+            if (aux) {
+                return new MEM(new BINOP(PLUS, new TEMP(FP), new CONST(
+                        aux->getOffset())));//TODO VERIFICAR FRAME POINTER E OFFSET e olhar no slide o codigo
             }
         }
         return NULL;
@@ -488,17 +487,14 @@ ExprNode *Translator::visit(TokenNode *node) {
 }
 
 Translator::Translator(VarTable *varTable, FunctionTable *functionTable, StructTable *structTable) {
-this->varTable = varTable;
-this->functionTable = functionTable;
-this->structTable = structTable;
+    this->varTable = varTable;
+    this->functionTable = functionTable;
+    this->structTable = structTable;
+    fragmentList = nullptr;
 }
 
 void Translator::printFragmentList() {
-//    VisitorICT visitorICT;
-//    Fragment *fragmentListAux = fragmentList;
-//    while(fragmentListAux!=NULL)
-//    {
-//        visitorICT.visit(fragmentListAux);
-//        fragmentListAux=fragmentListAux->getNext();
-//    }
+    PrintICT *visitorICT = new PrintICT();
+    visitorICT->visit(fragmentList);
+
 }

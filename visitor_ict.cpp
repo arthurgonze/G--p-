@@ -2,7 +2,7 @@
 #include "lexycal.h"
 
 
-PrintICT::PrintICT(ICTNode *node) {
+PrintICT::PrintICT() {
     this->level = 0;
 }
 
@@ -27,6 +27,13 @@ void PrintICT::down_level() {
 
 }
 
+
+void PrintICT::visit(Fragment *node) {
+
+    if (node != NULL) {
+        node->accept(this);
+    }
+}
 void PrintICT::visit(Procedure *node) {
     if (node != NULL) {
         node->accept(this);

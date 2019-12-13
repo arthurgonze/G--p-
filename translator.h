@@ -96,11 +96,11 @@ private:
     FunctionTable* functionTable;
     StructTable* structTable;
     FrameMIPS *currentFrame;
-    void printFragmentList();
+
 public:
     Translator(VarTable *varTable, FunctionTable *functionTable, StructTable *structTable);
     ~Translator() = default;
-
+    void printFragmentList();
     inline Fragment *getFragmentList() const { return fragmentList; }
 
     void visit(ProgramNode *programNode);
@@ -184,7 +184,7 @@ public:
 };
 
 void startTranslator(ProgramNode *ast, Translator *translator);
-void endTranslator();
+void endTranslator(Translator *translator);
 
 
 #endif //COMPILADOR_2019_3_TRANSLATOR_H

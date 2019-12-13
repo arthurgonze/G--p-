@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
     Translator *translator = endSemantic();
 
     startTranslator(ast, translator);
-    endTranslator();
+    endTranslator(translator);
 
     delete (ast);
     delete (parser);
