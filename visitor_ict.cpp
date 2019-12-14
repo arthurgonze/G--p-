@@ -27,36 +27,46 @@ void PrintICT::down_level() {
 
 }
 
-
+/********************** PRINT ICT FRAGMENTS **********************/
 void PrintICT::visit(Fragment *node) {
     std::cout << "\n------------------------------" << std::endl;
     std::cout << "---- INTERMEDIATE CODE TREE ----" << std::endl;
     std::cout << "------------------------------\n" << std::endl;
-    if (node->getNext() != NULL) {
-        node->getNext()->accept(this);
+    printIR("Fragment");
+    up_level();
+    if (node != NULL) {
+        node->accept(this);
     }
+    down_level();
 }
+
 void PrintICT::visit(Procedure *node) {
+    printIR("Procedure");
+    up_level();
+    if (node->getBody()) {// printa os nos do body da procedure
+        node->getBody()->accept(this);
+    }
+    down_level();
     if (node->getNext() != NULL) {
         node->getNext()->accept(this);
     }
 }
+
 void PrintICT::visit(Literal *node) {
-
-    printLexemeIR("LITERAL_",node->getLiteral());
-
-    if(node->getNext()) node->getNext()->accept(this);
+    up_level();
+    printLexemeIR("LITERAL_", node->getLiteral());
+    down_level();
+    if (node->getNext()) node->getNext()->accept(this);
 }
 
 void PrintICT::visit(Variable *node) {
-
+    up_level();
     printLexemeIR("VARIABLE_", token_id_to_name(node->getType()));
-
-    if(node->getNext()) node->getNext()->accept(this);
+    down_level();
+    if (node->getNext()) node->getNext()->accept(this);
 }
 
-
-
+/********************** PRINT ICT NODES **********************/
 void PrintICT::visit(ICTNode *node) {
     printIR("ICTNode");
     if (node != NULL) node->accept(this);
@@ -85,7 +95,6 @@ void PrintICT::visit(CONSTF *node) {
     for (unsigned int i = 0; i < this->level; i++)
         std::cout << "    ";
     std::cout << "->" << "CONSTF" << "." << node->getJ() << std::endl;
-
 }
 
 void PrintICT::visit(NAME *node) {
@@ -132,6 +141,7 @@ void PrintICT::visit(ESEQ *node) {
 }
 
 void PrintICT::visit(StmNode *node) {
+    printIR("StmNode");
     if (node != NULL) node->accept(this);
 }
 
@@ -170,9 +180,9 @@ void PrintICT::visit(CJUMP *node) {
     up_level();
     if (node->getLeft() != NULL) node->getLeft()->accept(this);
     if (node->getRight() != NULL) node->getRight()->accept(this);
-    // TODO class Label’ has no member named ‘accept’
-//    if (node->getIfTrue() != NULL) node->getIfTrue()->accept(this);
-//    if (node->getIfFalse() != NULL) node->getIfTrue()->accept(this);
+    // TODO class Label’ has no member named ‘accept’, entao fiz o que ta ai
+    if (node->getIfTrue() != NULL) printLexemeIR("LABEL_TRUE", node->getIfTrue()->getName());//->accept(this);
+    if (node->getIfFalse() != NULL) printLexemeIR("LABEL_FALSE", node->getIfFalse()->getName());
     down_level();
 }
 
@@ -192,65 +202,64 @@ void PrintICT::visit(LABEL *node) {
 
 PrintICT::~PrintICT() = default;
 
-Fragment *Canonization::visit(Fragment *fragment) {
-    if (fragment->getNext() != nullptr){
-        fragment->setNext(fragment->getNext()->accept(this));
-    }
-    return fragment;
-}
 
-Procedure *Canonization::visit(Procedure *fragment) {
-    if (fragment->getBody() != nullptr){
-        fragment->setBody(fragment->getBody()->accept(this));
-    }
-    if (fragment->getNext() != nullptr){
-        fragment->setNext(fragment->getNext()->accept(this));
-    }
-    return fragment;
-}
-
-Literal *Canonization::visit(Literal *fragment) {
-    if (fragment->getNext() != nullptr){
-        fragment->setNext(fragment->getNext()->accept(this));
-    }
-    return fragment;
-}
-
-Variable *Canonization::visit(Variable *fragment) {
+/********************** CANONICALIZER **********************/
+Fragment *Canonicalizer::visit(Fragment *fragment) {
     if (fragment->getNext() != nullptr) {
         fragment->setNext(fragment->getNext()->accept(this));
     }
     return fragment;
 }
 
+Procedure *Canonicalizer::visit(Procedure *fragment) {
+    if (fragment->getBody() != nullptr) {
+        fragment->setBody(fragment->getBody()->accept(this));
+    }
+    if (fragment->getNext() != nullptr) {
+        fragment->setNext(fragment->getNext()->accept(this));
+    }
+    return fragment;
+}
 
-/********************** CANONIZATION ***********/
+Literal *Canonicalizer::visit(Literal *fragment) {
+    if (fragment->getNext() != nullptr) {
+        fragment->setNext(fragment->getNext()->accept(this));
+    }
+    return fragment;
+}
 
-ExprNode *Canonization::visit(CONSTF *node) {
+Variable *Canonicalizer::visit(Variable *fragment) {
+    if (fragment->getNext() != nullptr) {
+        fragment->setNext(fragment->getNext()->accept(this));
+    }
+    return fragment;
+}
+
+ExprNode *Canonicalizer::visit(CONSTF *node) {
     return node;
 }
 
-ExprNode *Canonization::visit(CONST *node) {
+ExprNode *Canonicalizer::visit(CONST *node) {
     return node;
 }
 
-ExprNode *Canonization::visit(NAME *node) {
+ExprNode *Canonicalizer::visit(NAME *node) {
     return node;
 }
 
-ExprNode *Canonization::visit(TEMP *node) {
+ExprNode *Canonicalizer::visit(TEMP *node) {
     return node;
 }
 
-StmNode *Canonization::visit(LABEL*node) {
+StmNode *Canonicalizer::visit(LABEL *node) {
     return node;
 }
 
-ExprNode *Canonization::visit(ESEQ *node) {
-    ExprNode * eseq = node->getE();
+ExprNode *Canonicalizer::visit(ESEQ *node) {
+    ExprNode *eseq = node->getE();
     return node;
 }
 
-StmNode *Canonization::visit(ExprNode *node) {
+StmNode *Canonicalizer::visit(ExprNode *node) {
     return nullptr;
 }

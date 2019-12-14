@@ -86,22 +86,28 @@ class VarStmtNode;
 class PrimaryNode;
 
 class VarTable;
+
 class FunctionTable;
+
 class StructTable;
+
 class FunctionSymbol;
 
 class Translator {
 private:
-    Fragment* fragmentList;
-    VarTable* varTable;
-    FunctionTable* functionTable;
-    StructTable* structTable;
+    Fragment *fragmentList;
+    VarTable *varTable;
+    FunctionTable *functionTable;
+    StructTable *structTable;
     FrameMIPS *currentFrame;
     FunctionSymbol *activeFunction;
 public:
     Translator(VarTable *varTable, FunctionTable *functionTable, StructTable *structTable);
+
     ~Translator() = default;
+
     void printFragmentList();
+
     inline Fragment *getFragmentList() const { return fragmentList; }
 
     void visit(ProgramNode *programNode);
@@ -126,7 +132,7 @@ public:
 
     void visit(FunctionNode *functionNode);
 
-    StmNode * visit(StmtNode *stmtNode);
+//    StmNode * visit(StmtNode *stmtNode);
 
     StmNode *visit(StmtListNode *stmtListNode);
 
@@ -134,7 +140,7 @@ public:
 
     StmNode *visit(WhileNode *whileNode);
 
-    StmNode * visit(SwitchNode *switchNode);
+    StmNode *visit(SwitchNode *switchNode);
 
     StmNode *visit(BreakNode *breakNode);
 
@@ -146,45 +152,46 @@ public:
 
     StmNode *visit(ThrowNode *throwNode);
 
-    ExprNode* visit(ExpListNode *expListNode);
+    ExprNode *visit(ExpListNode *expListNode);
 
-    StmNode * visit(TryNode *tryNode);
+    StmNode *visit(TryNode *tryNode);
 
-    ExprNode * visit(TokenNode *tokenNode);
+    ExprNode *visit(TokenNode *tokenNode);
 
-    ExprNode* visit(AssignNode *assignNode);
+    ExprNode *visit(AssignNode *assignNode);
 
-    ExprNode* visit(ArrayNode *arrayNode);
+    ExprNode *visit(ArrayNode *arrayNode);
 
-    ExprNode* visit(CallNode *callNode);
+    ExprNode *visit(CallNode *callNode);
 
-    ExprNode* visit(AdditionOPNode *additionOPNode);
+    ExprNode *visit(AdditionOPNode *additionOPNode);
 
-    ExprNode* visit(MultiplicationOPNode *multiplicationOPNode);
+    ExprNode *visit(MultiplicationOPNode *multiplicationOPNode);
 
-    ExprNode* visit(BooleanOPNode *booleanOPNode);
+    ExprNode *visit(BooleanOPNode *booleanOPNode);
 
-    ExprNode* visit(NotNode *notNode);
+    ExprNode *visit(NotNode *notNode);
 
-    ExprNode* visit(SignNode *signNode);
+    ExprNode *visit(SignNode *signNode);
 
-    ExprNode* visit(ArrayCallNode *arrayCallNode);
+    ExprNode *visit(ArrayCallNode *arrayCallNode);
 
-    ExprNode* visit(PrimaryNode *primaryNode);
+    ExprNode *visit(PrimaryNode *primaryNode);
 
-    ExprNode* visit(PointerExpNode *pointerExpNode);
+    ExprNode *visit(PointerExpNode *pointerExpNode);
 
-    ExprNode* visit(NameExpNode *nameExpNode);
+    ExprNode *visit(NameExpNode *nameExpNode);
 
-    ExprNode* visit(AddressValNode *addressValNode);
+    ExprNode *visit(AddressValNode *addressValNode);
 
-    ExprNode* visit(PointerValNode *pointerValNode);
+    ExprNode *visit(PointerValNode *pointerValNode);
 
-    ExprNode* visit(ExpNode *expNode);
+//    ExprNode* visit(ExpNode *expNode);
 
 };
 
 void startTranslator(ProgramNode *ast, Translator *translator);
+
 void endTranslator(Translator *translator);
 
 

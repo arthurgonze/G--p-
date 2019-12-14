@@ -3,6 +3,7 @@
 
 
 #include <iostream>
+
 //ICT NODES
 class ICTNode;
 
@@ -101,7 +102,6 @@ public:
     virtual void visit(Fragment *node) = 0;
 
 
-
 };
 
 class PrintICT : public VisitorICT {
@@ -128,7 +128,6 @@ public:
     void visit(Literal *node) override;
 
     void visit(Variable *node) override;
-
 
     void visit(ICTNode *node) override;
 
@@ -167,15 +166,13 @@ public:
     void visit(ExpList *node) override;
 
     void visit(StmList *node) override;
-
 };
-
 
 class VisitorCICT {
 public:
     virtual ~VisitorCICT() = default;
 
-    virtual Fragment * visit(Fragment * fragment) = 0;
+    virtual Fragment *visit(Fragment *fragment) = 0;
 
     virtual Procedure *visit(Procedure *fragment) =0;
 
@@ -183,52 +180,51 @@ public:
 
     virtual Variable *visit(Variable *fragment) = 0;
 
-    virtual StmNode * visit(StmList *node) = 0;
+    virtual StmNode *visit(StmList *node) = 0;
 
-    virtual StmNode * visit(ExprNode *node) = 0;
+    virtual StmNode *visit(ExprNode *node) = 0;
 
-    virtual StmNode * visit(MOVE *node) = 0;
+    virtual StmNode *visit(MOVE *node) = 0;
 
-    virtual StmNode * visit(JUMP *node) = 0;
+    virtual StmNode *visit(JUMP *node) = 0;
 
-    virtual StmNode * visit(CJUMP *node) = 0;
+    virtual StmNode *visit(CJUMP *node) = 0;
 
-    virtual StmNode * visit(SEQ *node) = 0;
+    virtual StmNode *visit(SEQ *node) = 0;
 
-    virtual StmNode * visit(LABEL *node) = 0;
+    virtual StmNode *visit(LABEL *node) = 0;
 
-    virtual StmNode * visit(EXP *node) = 0;
+    virtual StmNode *visit(EXP *node) = 0;
 
-    virtual ExprNode * visit(CONST *node) = 0;
+    virtual ExprNode *visit(CONST *node) = 0;
 
-    virtual ExprNode * visit(CONSTF *node) = 0;
+    virtual ExprNode *visit(CONSTF *node) = 0;
 
-    virtual ExprNode * visit(NAME *node) = 0;
+    virtual ExprNode *visit(NAME *node) = 0;
 
-    virtual ExprNode * visit(TEMP *node) = 0;
+    virtual ExprNode *visit(TEMP *node) = 0;
 
-    virtual ExprNode * visit(BINOP *node) = 0;
+    virtual ExprNode *visit(BINOP *node) = 0;
 
-    virtual ExprNode * visit(MEM *node) = 0;
+    virtual ExprNode *visit(MEM *node) = 0;
 
-    virtual ExprNode * visit(CALL *node) = 0;
+    virtual ExprNode *visit(CALL *node) = 0;
 
-    virtual ExprNode * visit(ESEQ *node) = 0;
+    virtual ExprNode *visit(ESEQ *node) = 0;
 
-    virtual ExprNode * visit(ExpList *node) = 0;
+    virtual ExprNode *visit(ExpList *node) = 0;
 
 };
 
-
-class Canonization : public VisitorCICT{
+class Canonicalizer : public VisitorCICT {
 private:
 
 public:
-    Canonization();
+    Canonicalizer();
 
-    virtual ~Canonization();
+    virtual ~Canonicalizer();
 
-    Fragment * visit(Fragment * fragment) override ;
+    Fragment *visit(Fragment *fragment) override;
 
     Procedure *visit(Procedure *fragment) override;
 
@@ -236,39 +232,39 @@ public:
 
     Variable *visit(Variable *fragment) override;
 
-    StmNode * visit(StmList *node) override;
+    StmNode *visit(StmList *node) override;
 
-    StmNode * visit(ExprNode *node) override;
+    StmNode *visit(ExprNode *node) override;
 
-    StmNode * visit(MOVE *node) override;
+    StmNode *visit(MOVE *node) override;
 
-    StmNode * visit(JUMP *node) override;
+    StmNode *visit(JUMP *node) override;
 
-    StmNode * visit(CJUMP *node) override;
+    StmNode *visit(CJUMP *node) override;
 
-    StmNode * visit(SEQ *node) override;
+    StmNode *visit(SEQ *node) override;
 
-    StmNode * visit(LABEL *node) override;
+    StmNode *visit(LABEL *node) override;
 
-    StmNode * visit(EXP *node) override;
+    StmNode *visit(EXP *node) override;
 
-    ExprNode * visit(CONST *node) override;
+    ExprNode *visit(CONST *node) override;
 
-    ExprNode * visit(CONSTF *node) override;
+    ExprNode *visit(CONSTF *node) override;
 
-    ExprNode * visit(NAME *node) override;
+    ExprNode *visit(NAME *node) override;
 
-    ExprNode * visit(TEMP *node) override;
+    ExprNode *visit(TEMP *node) override;
 
-    ExprNode * visit(BINOP *node) override;
+    ExprNode *visit(BINOP *node) override;
 
-    ExprNode * visit(MEM *node) override;
+    ExprNode *visit(MEM *node) override;
 
-    ExprNode * visit(CALL *node) override;
+    ExprNode *visit(CALL *node) override;
 
-    ExprNode * visit(ESEQ *node) override;
+    ExprNode *visit(ESEQ *node) override;
 
-    ExprNode * visit(ExpList *node) override;
+    ExprNode *visit(ExpList *node) override;
 
 };
 

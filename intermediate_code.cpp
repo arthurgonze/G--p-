@@ -22,8 +22,8 @@ void Procedure::setBody(StmNode *body) {
 }
 
 Procedure::~Procedure() {
-delete this->frame;
-delete this->body;
+    delete this->frame;
+    delete this->body;
 }
 
 
@@ -67,7 +67,6 @@ char *Temp::toString() {
 }
 
 /*********************TEMP_LIST**************************/
-
 TempList::TempList(Temp *temp, TempList *next) : temp(temp), next(next) {}
 
 TempList::~TempList() {
@@ -77,7 +76,6 @@ TempList::~TempList() {
 }
 
 /*********************LABEL**************************/
-
 Label::Label() {
     char name_aux[250];
     sprintf(name_aux, "Label$%d", num_labels++);
@@ -120,7 +118,7 @@ InFrame::InFrame(int offset) {
     this->offset = offset;
 }
 
-StmNode *InFrame::accessCode() {
+ExprNode *InFrame::accessCode() {
     return new MEM(new BINOP(PLUS, new TEMP(FP), new CONST(this->getOffset())));
 }
 
@@ -133,7 +131,7 @@ InReg::~InReg() {
     delete this->temp;
 }
 
-StmNode *InReg::accessCode() {
+ExprNode *InReg::accessCode() {
     return new TEMP(this->getTemp());
 }
 
@@ -156,14 +154,12 @@ FrameMIPS::~FrameMIPS() {
 }
 
 LocalAccess *FrameMIPS::addParam(bool escape, int bytesSize) {
-    if(escape || bytesSize >regSize )
-    {
+    if (escape || bytesSize > regSize) {
         paramSize += bytesSize;
-        InFrame* inFrame = new InFrame(paramSize);
+        InFrame *inFrame = new InFrame(paramSize);
         this->localData = new AccessList(inFrame, this->localData);
         return inFrame;
-    }else
-    {
+    } else {
         InReg *inReg = new InReg(new Temp());
         this->localData = new AccessList(inReg, this->localData);
         return inReg;
@@ -171,14 +167,12 @@ LocalAccess *FrameMIPS::addParam(bool escape, int bytesSize) {
 }
 
 LocalAccess *FrameMIPS::addLocal(bool escape, int bytesSize) {
-    if(escape || bytesSize >regSize )
-    {
+    if (escape || bytesSize > regSize) {
         frameSize -= bytesSize;
-        InFrame* inFrame = new InFrame(frameSize);
+        InFrame *inFrame = new InFrame(frameSize);
         this->localData = new AccessList(inFrame, this->localData);
         return inFrame;
-    }else
-    {
+    } else {
         InReg *inReg = new InReg(new Temp());
         this->localData = new AccessList(inReg, this->localData);
         return inReg;
@@ -186,10 +180,7 @@ LocalAccess *FrameMIPS::addLocal(bool escape, int bytesSize) {
 }
 
 
-
 /*********************ICT**************************/
-
-
 CONST::CONST(int i) {
     this->i = i;
 }

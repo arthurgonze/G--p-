@@ -34,58 +34,34 @@ void Translator::visit(FunctionListNode *functionListNode) {
     }
 }
 
-void Translator::visit(IdListNode *idListNode) {
-    if (idListNode->getPointer() != nullptr) {
-        idListNode->getPointer()->accept(this);
-    }
-    if (idListNode->getId() != nullptr) {
-        idListNode->getId()->accept(this);
-    }
-    if (idListNode->getArray() != nullptr) {
-        idListNode->getArray()->accept(this);
-    }
-    if (idListNode->getNext() != nullptr) {
-        idListNode->getNext()->accept(this);
-    }
-}
+void Translator::visit(IdListNode *idListNode) {}
 
 StmNode *Translator::visit(StmtListNode *stmtListNode) {
-    if (stmtListNode->getStmt() != nullptr) {
-        stmtListNode->getStmt()->accept(this);
-    }
-
     if (stmtListNode->getNext() != nullptr) {
         return new SEQ(stmtListNode->getStmt()->accept(this), stmtListNode->getNext()->accept(this));
     } else {
         return stmtListNode->getStmt()->accept(this);
     }
-
 }
 
-void Translator::visit(VarStmtNode *varStmtNode) {
-    if (varStmtNode->getDecl() != nullptr) {
-        varStmtNode->getDecl()->accept(this);
-    }
-    if (varStmtNode->getBody() != nullptr) {
-        varStmtNode->getBody()->accept(this);
-    }
-}
+void Translator::visit(VarStmtNode *varStmtNode) {}
 
 StmNode *Translator::visit(IfNode *ifNode) {
-
     Label *thenLabel = new Label();
     Label *elseLabel = new Label();
     Label *endLabel = new Label();
 
+    // sem else
     if (ifNode->getFalseStmt() == nullptr && ifNode->getTrueStmt() != nullptr) {
-        return new SEQ(new CJUMP(EQ, ifNode->getHead()->accept(this), new CONST(0), thenLabel, endLabel),
+        return new SEQ(new CJUMP(NE, ifNode->getHead()->accept(this), new CONST(0), thenLabel, endLabel),
                        new SEQ(new LABEL(thenLabel),
                                new SEQ(ifNode->getTrueStmt()->accept(this),
                                        new LABEL(endLabel))));
-    } else if(ifNode->getFalseStmt() != nullptr && ifNode->getTrueStmt() != nullptr) {
-        return new SEQ(new CJUMP(EQ, ifNode->getHead()->accept(this), new CONST(0), thenLabel, elseLabel),
+    } else if (ifNode->getFalseStmt() != nullptr && ifNode->getTrueStmt() != nullptr) {// com else
+        return new SEQ(new CJUMP(NE, ifNode->getHead()->accept(this), new CONST(0), thenLabel, elseLabel),
                        new SEQ(new LABEL(thenLabel),
                                new SEQ(new SEQ(ifNode->getTrueStmt()->accept(this),
+                                               // TODO eu to passando nullptr pra todos os targets dos jumps
                                                new JUMP(new NAME(endLabel), nullptr)),
                                        new SEQ(new LABEL(elseLabel),
                                                new SEQ(ifNode->getFalseStmt()->accept(this),
@@ -94,15 +70,9 @@ StmNode *Translator::visit(IfNode *ifNode) {
 }
 
 StmNode *Translator::visit(WhileNode *whileNode) {
-    if (whileNode->getHead() != nullptr) {
-        whileNode->getHead()->accept(this);
-    }
-    if (whileNode->getBody() != nullptr) {
-        whileNode->getBody()->accept(this);
-    }
-
     Label *testLabel = new Label();
     Label *startLabel = new Label();
+    // TODO fazer um label de fim do while? e empilhar e desempilhar esses labels?
     Label *endLabel = new Label();
 
     return new SEQ(new LABEL(testLabel),
@@ -110,9 +80,7 @@ StmNode *Translator::visit(WhileNode *whileNode) {
                            new SEQ(new LABEL(startLabel),
                                    new SEQ(whileNode->getBody()->accept(this),
                                            new SEQ(new JUMP(new NAME(testLabel), nullptr),
-                                                   new LABEL(endLabel))))
-                   ));
-
+                                                   new LABEL(endLabel))))));
 }
 
 StmNode *Translator::visit(SwitchNode *switchNode) {
@@ -143,26 +111,9 @@ StmNode *Translator::visit(ReturnNode *returnNode) {
 
 }
 
-void Translator::visit(CaseBlockNode *caseBlockNode) {
-    if (caseBlockNode->getNum() != nullptr) {
-        caseBlockNode->getNum()->accept(this);
-    }
-    if (caseBlockNode->getStmt() != nullptr) {
-        caseBlockNode->getStmt()->accept(this);
-    }
-    if (caseBlockNode->getNext() != nullptr) {
-        caseBlockNode->getNext()->accept(this);
-    }
-}
+void Translator::visit(CaseBlockNode *caseBlockNode) {}
 
-ExprNode *Translator::visit(ExpListNode *expListNode) {
-    if (expListNode->getExp() != nullptr) {
-        expListNode->getExp()->accept(this);
-    }
-    if (expListNode->getNext() != nullptr) {
-        expListNode->getNext()->accept(this);
-    }
-}
+ExprNode *Translator::visit(ExpListNode *expListNode) { return NULL; }// did it in the callNode
 
 StmNode *Translator::visit(TryNode *tryNode) {
     if (tryNode->getTry() != nullptr) {
@@ -183,132 +134,134 @@ ExprNode *Translator::visit(PrimaryNode *primaryNode) {
 }
 
 ExprNode *Translator::visit(CallNode *callNode) {
-    if (callNode->getId() != nullptr) {
-        callNode->getId()->accept(this);
+    ExpListNode *param = callNode->getParameters(); // pega os parametros da chamada
+    ExpList *lcall = NULL;
+    while (param) {// se tiver parametros
+        ExprNode *exp = param->getExp()->accept(this);// acessa o no
+        lcall = new ExpList(exp, lcall);// cria uma lista de exp
+        param = param->getNext();// vai para o proximo param
     }
-    if (callNode->getParameters() != nullptr) {
-        callNode->getParameters()->accept(this);
-    }
+    char callLabel[200];
+    sprintf(callLabel, "func_%s_call", callNode->getId()->getLexeme());// cria um label para a chamada
+    return new CALL(new NAME(new Label(callLabel)), lcall);// cria o call node com a funcao e seus parametros
 }
 
 ExprNode *Translator::visit(ArrayCallNode *arrayCallNode) {
-    if (arrayCallNode->getExp() != nullptr) {
-        arrayCallNode->getExp()->accept(this);
-    }
-    if (arrayCallNode->getIndex() != nullptr) {
-        arrayCallNode->getIndex()->accept(this);
+    int tam;
+    //verificar se o tipo do array eh uma estrutura
+    StructSymbol *structSymbol = structTable->cSearch(arrayCallNode->getTypeLexeme());// TODO to verificando certo na tabela?
+    if (structSymbol) {
+        tam = structSymbol->getSize();
+    } else if (arrayCallNode->getExp()->isPointer() || arrayCallNode->getType() == FLOAT) {
+        // se nao for uma estrutra e for um ponteiro ou float
+        tam = INT32_SIZE;
+    } else {
+        // se for um tipo primitivo que nao seja ponteiro ou float
+        tam = INT8_SIZE;
     }
 
-//    return new MEM
+    return new MEM(new BINOP(PLUS,
+                             arrayCallNode->getExp()->accept(this),
+                             new BINOP(STAR,
+                                       new CONST(tam),
+                                       arrayCallNode->getIndex()->accept(this))));
 }
 
-ExprNode *Translator::visit(ArrayNode *arrayNode) {
-    if (arrayNode->getNumInt() != nullptr) {
-        arrayNode->getNumInt()->accept(this);
-    }
-}
+ExprNode *Translator::visit(ArrayNode *arrayNode) { return NULL; }
 
 ExprNode *Translator::visit(AssignNode *assignNode) {
+    // TODO esse cast eh ok?
+    return (ExprNode *) (new MOVE(assignNode->getExp1()->accept(this), assignNode->getExp2()->accept(this)));
 
-    if (assignNode->getExp1() != nullptr) {
-        assignNode->getExp1()->accept(this);
-    }
-    if (assignNode->getExp2() != nullptr) {
-        assignNode->getExp2()->accept(this);
-    }
 }
 
 ExprNode *Translator::visit(AdditionOPNode *additionOPNode) {
-    if (additionOPNode->getExp1() != nullptr) {
-        additionOPNode->getExp1()->accept(this);
-    }
-    if (additionOPNode->getExp2() != nullptr) {
-        additionOPNode->getExp2()->accept(this);
-    }
-
-    return new BINOP(additionOPNode->getOp()->getToken(), additionOPNode->getExp1()->accept(this),
-                     additionOPNode->getExp2()->accept(this));
+    LocalAccess *tmp = this->currentFrame->addLocal(false, INT8_SIZE);
+    return new ESEQ(new MOVE(tmp->accessCode(),
+                             new BINOP(additionOPNode->getOp()->getToken(),
+                                       additionOPNode->getExp1()->accept(this),
+                                       additionOPNode->getExp2()->accept(this))),
+                    tmp->accessCode());
+//    return new BINOP(additionOPNode->getOp()->getToken(), additionOPNode->getExp1()->accept(this),
+//                     additionOPNode->getExp2()->accept(this));
 }
 
 ExprNode *Translator::visit(MultiplicationOPNode *multiplicationOPNode) {
-    if (multiplicationOPNode->getExp1() != nullptr) {
-        multiplicationOPNode->getExp1()->accept(this);
-    }
-    if (multiplicationOPNode->getExp2() != nullptr) {
-        multiplicationOPNode->getExp2()->accept(this);
-    }
-
-    return new BINOP(multiplicationOPNode->getOp()->getToken(), multiplicationOPNode->getExp1()->accept(this),
-                     multiplicationOPNode->getExp2()->accept(this));
+    LocalAccess *tmp = this->currentFrame->addLocal(false, INT8_SIZE);//TODO eh INT8 mesmo?
+    return new ESEQ(new MOVE(tmp->accessCode(),
+                             new BINOP(multiplicationOPNode->getOp()->getToken(),
+                                       multiplicationOPNode->getExp1()->accept(this),
+                                       multiplicationOPNode->getExp2()->accept(this))),
+                    tmp->accessCode());
+//    return new BINOP(multiplicationOPNode->getOp()->getToken(), multiplicationOPNode->getExp1()->accept(this),
+//                     multiplicationOPNode->getExp2()->accept(this));
 }
 
 ExprNode *Translator::visit(BooleanOPNode *booleanOPNode) {
-    if (booleanOPNode->getExp1() != nullptr) {
-        booleanOPNode->getExp1()->accept(this);
-    }
-    if (booleanOPNode->getExp2() != nullptr) {
-        booleanOPNode->getExp2()->accept(this);
-    }
+    if (booleanOPNode->getExp1() && booleanOPNode->getExp2()) {
+        if (booleanOPNode->getOp()->getToken() == AND) {
+            Temp *r = new Temp();
+            Label *l1 = new Label();
+            Label *l2 = new Label();
+            Label *l3 = new Label();
 
+            return new ESEQ(new SEQ(new MOVE(new TEMP(r), new CONST(0)),
+                                    new SEQ(new CJUMP(NE, booleanOPNode->getExp1()->accept(this), new CONST(0), l1, l2),
+                                            new SEQ(new LABEL(l1),
+                                                    new SEQ(new CJUMP(NE, booleanOPNode->getExp2()->accept(this),
+                                                                      new CONST(0), l3,
+                                                                      l2),
+                                                            new SEQ(new LABEL(l3),
+                                                                    new SEQ(new MOVE(new TEMP(r), new CONST(1)),
+                                                                            new LABEL(l2))))))),
+                            new TEMP(r));
+        } else if (booleanOPNode->getOp()->getToken() == OR) {
+            Temp *r = new Temp();
+            Label *l1 = new Label();
+            Label *l2 = new Label();
 
-    if (booleanOPNode->getOp()->getToken() == AND) {
-        Temp *r = new Temp();
-        Label *l1 = new Label();
-        Label *l2 = new Label();
-        Label *l3 = new Label();
-
-        return new ESEQ(new SEQ(new MOVE(new TEMP(r), new CONST(0)),
-                                new SEQ(new CJUMP(NE, booleanOPNode->getExp1()->accept(this), new CONST(0), l1, l2),
-                                        new SEQ(new LABEL(l1),
-                                                new SEQ(new CJUMP(NE, booleanOPNode->getExp2()->accept(this),
-                                                                  new CONST(0), l3,
-                                                                  l2),
-                                                        new SEQ(new LABEL(l3),
-                                                                new SEQ(new MOVE(new TEMP(r), new CONST(1)),
-                                                                        new LABEL(l2))))))),
-                        new TEMP(r));
-    } else if (booleanOPNode->getOp()->getToken() == OR) {
-        Temp *r = new Temp();
-        Label *l1 = new Label();
-        Label *l2 = new Label();
-
-        return new ESEQ(new SEQ(new MOVE(new TEMP(r), booleanOPNode->getExp1()->accept(this)),
-                                new SEQ(new CJUMP(NE, booleanOPNode->getExp2()->accept(this), new CONST(0), l1, l2),
-                                        new SEQ(new LABEL(l1),
-                                                new SEQ(new MOVE(new TEMP(r), new CONST(1)),
-                                                        new LABEL(l2))))),
-                        new TEMP(r));
-    } //TODO Não sei se precisa de verificar pq acho q n pode ser null, ja que veio do semantico
-    else if (booleanOPNode->getOp()->getToken() == (LE || GE || GT || LT || EQ || NE)) {
-        Temp *r = new Temp();
-        Label *t = new Label();
-        Label *f = new Label();
-        //TODO SAO SO ESSES OPERADORES RELACIONAIS OU TEM MAIS?(na condicao do if)
-        return new ESEQ(new SEQ(new MOVE(new TEMP(r), new CONST(1)),
-                                new SEQ(new CJUMP(booleanOPNode->getOp()->getToken(),
-                                                  booleanOPNode->getExp1()->accept(this),
-                                                  booleanOPNode->getExp2()->accept(this), t, f),
-                                        new SEQ(new LABEL(f),
-                                                new SEQ(new MOVE(new TEMP(r), new CONST(0)), new LABEL(t))))),
-                        new TEMP(r));
+            return new ESEQ(new SEQ(new MOVE(new TEMP(r), booleanOPNode->getExp1()->accept(this)),
+                                    new SEQ(new CJUMP(NE, booleanOPNode->getExp2()->accept(this), new CONST(0), l1, l2),
+                                            new SEQ(new LABEL(l1),
+                                                    new SEQ(new MOVE(new TEMP(r), new CONST(1)),
+                                                            new LABEL(l2))))),
+                            new TEMP(r));
+        } else {//TODO if (booleanOPNode->getOp()->getToken() == (LE || GE || GT || LT || EQ || NE)) {
+            Temp *r = new Temp();
+            Label *t = new Label();
+            Label *f = new Label();
+            //TODO SAO SO ESSES OPERADORES RELACIONAIS OU TEM MAIS?(na condicao do if)
+            return new ESEQ(new SEQ(new MOVE(new TEMP(r), new CONST(1)),
+                                    new SEQ(new CJUMP(booleanOPNode->getOp()->getToken(),
+                                                      booleanOPNode->getExp1()->accept(this),
+                                                      booleanOPNode->getExp2()->accept(this), t, f),
+                                            new SEQ(new LABEL(f),
+                                                    new SEQ(new MOVE(new TEMP(r), new CONST(0)), new LABEL(t))))),
+                            new TEMP(r));
+        }
     }
     return NULL;
 }
 
 ExprNode *Translator::visit(NotNode *notNode) {
-    if (notNode->getExp() != nullptr) {
-        notNode->getExp()->accept(this);
-    }
-
+    LocalAccess *tmp = this->currentFrame->addLocal(false, INT8_SIZE);
+    Label *t = new Label();
+    Label *f = new Label();
+    return new ESEQ(new SEQ(new MOVE(tmp->accessCode(), new CONST(1)),
+                            new SEQ(new CJUMP(EQ, notNode->getExp()->accept(this), new CONST(0), t, f),
+                                    new SEQ(new LABEL(f),
+                                            new SEQ(new MOVE(tmp->accessCode(), new CONST(0)),
+                                                    new LABEL(t))))),
+                    tmp->accessCode());
 }
 
 ExprNode *Translator::visit(SignNode *signNode) {
-    if (signNode->getExp() != nullptr) {
-        signNode->getExp()->accept(this);
-    }
+    LocalAccess *result = this->currentFrame->addLocal(false, INT8_SIZE);
+    return new ESEQ(new MOVE(result->accessCode(),
+                             new BINOP(MINUS, new CONST(0), signNode->getExp()->accept(this))),
+                    result->accessCode());
 
-    return new BINOP(MINUS, new CONST(0), signNode->getExp()->accept(this));
-
+//    return new BINOP(MINUS, new CONST(0), signNode->getExp()->accept(this));
 }
 
 void Translator::visit(FormalListNode *formalListNode) {
@@ -317,14 +270,14 @@ void Translator::visit(FormalListNode *formalListNode) {
     while (formalListNodeAUX) {
         escape = false;
         // se for id, ponteiro ou arranjo ele escapa
-        if ((formalListNodeAUX->getType()->getType() && formalListNodeAUX->getParameterType() == ID) || (formalListNodeAUX->getPointer()) || (formalListNodeAUX->getArray()))
-        {
+        if ((formalListNodeAUX->getType()->getType() && formalListNodeAUX->getParameterType() == ID) ||
+            (formalListNodeAUX->getPointer()) || (formalListNodeAUX->getArray())) {
             escape = true;
         }
         // TODO fazer um if pra dizer que tudo escapa e setar as parada pra true?
 
 //        VarSymbol *varSymbol= varTable->searchInScope(formalListNodeAUX->getId()->getLexeme(), activeFunction->getLexeme());
-                //(Indice_campos*)funcaoatual->escopo->verificaExiste(formalListNodeAUX->id->lex);
+        //(Indice_campos*)funcaoatual->escopo->verificaExiste(formalListNodeAUX->id->lex);
         this->currentFrame->addParam(escape, formalListNodeAUX->getId()->getSize());//TODO get size ou offset?
         formalListNodeAUX = formalListNodeAUX->getNext();
     }
@@ -333,7 +286,8 @@ void Translator::visit(FormalListNode *formalListNode) {
 void Translator::visit(FunctionNode *functionNode) {
     currentFrame = new FrameMIPS(nullptr, nullptr, nullptr);
     currentFrame->setReturnValue(new Temp());// marcando o temporario pra onde retornar
-    activeFunction = functionTable->cSearch(functionNode->getId()->getLexeme());// TODO acho que a active function ta dando ruim e por isso as variavei locais não sao adicionada la no VarDeclNode
+    // TODO acho que a active function ta dando ruim e por isso as variavei locais não sao adicionada la no VarDeclNode
+    activeFunction = functionTable->cSearch(functionNode->getId()->getLexeme());
     if (functionNode->getParameters()) {
         functionNode->getParameters()->accept(this);
     }
@@ -382,11 +336,11 @@ void Translator::visit(VarDeclNode *varDeclNode) {
     VarDeclNode *varDeclNodeAUX = varDeclNode;
     bool escape;
     while (varDeclNodeAUX) {
-        escape=false;
+        escape = false;
         if (varDeclNodeAUX->getType() &&
             varDeclNodeAUX->getType()->getId()->getToken() == ID)// se o tipo da variavel declarada for um ID
         {
-            escape=true;
+            escape = true;
         }
         if (varDeclNodeAUX->getIdList()) {
             IdListNode *idListNodeAUX = varDeclNodeAUX->getIdList();
@@ -397,8 +351,7 @@ void Translator::visit(VarDeclNode *varDeclNode) {
                 }
                 // TODO fazer um if pra dizer que tudo escapa e setar as parada pra true?
                 // buscar na tabela para saber se eh local ou global
-                if(activeFunction)
-                {
+                if (activeFunction) {
                     VarSymbol *varSymbol = varTable->searchInScope(idListNodeAUX->getId()->getLexeme(),
                                                                    activeFunction->getLexeme());
                     if (varSymbol)//local
@@ -434,17 +387,7 @@ void Translator::visit(VarDeclNode *varDeclNode) {
     }
 }
 
-void Translator::visit(TypeDeclNode *typeDeclNode) {
-    if (typeDeclNode->getDecl() != nullptr) {
-        typeDeclNode->getDecl()->accept(this);
-    }
-    if (typeDeclNode->getId() != nullptr) {
-        typeDeclNode->getId()->accept(this);
-    }
-    if (typeDeclNode->getNext() != nullptr) {
-        typeDeclNode->getNext()->accept(this);
-    }
-}
+void Translator::visit(TypeDeclNode *typeDeclNode) {}
 
 ExprNode *Translator::visit(AddressValNode *addressValNode) {
     if (addressValNode->getExp() != nullptr) {
@@ -453,30 +396,19 @@ ExprNode *Translator::visit(AddressValNode *addressValNode) {
 }
 
 ExprNode *Translator::visit(PointerValNode *pointerValNode) {
-    if (pointerValNode->getExp() != nullptr) {
-        pointerValNode->getExp()->accept(this);
-    }
-
     return new MEM(pointerValNode->getExp()->accept(this));
 }
 
 /*
  * TERMINAL NODES
  */
-void Translator::visit(PointerNode *pointerNode) {
-//    TODO return NULL;?
-}
+void Translator::visit(PointerNode *pointerNode) {}
 
-StmNode *Translator::visit(BreakNode *breakNode) {
-}
+StmNode *Translator::visit(BreakNode *breakNode) {}
 
-StmNode *Translator::visit(ThrowNode *throwNode) {
-    return NULL;
-}
+StmNode *Translator::visit(ThrowNode *throwNode) { return NULL; }
 
-void Translator::visit(TypeNode *typeNode) {
-    // TODO return NULL?
-}
+void Translator::visit(TypeNode *typeNode) {}
 
 ExprNode *Translator::visit(TokenNode *tokenNode) {
     if (tokenNode->getToken() == NUMINT) {
@@ -533,3 +465,4 @@ void Translator::printFragmentList() {
     PrintICT *visitorICT = new PrintICT();
     visitorICT->visit(fragmentList);
 }
+
