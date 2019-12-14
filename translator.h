@@ -88,6 +88,7 @@ class PrimaryNode;
 class VarTable;
 class FunctionTable;
 class StructTable;
+class FunctionSymbol;
 
 class Translator {
 private:
@@ -96,7 +97,7 @@ private:
     FunctionTable* functionTable;
     StructTable* structTable;
     FrameMIPS *currentFrame;
-
+    FunctionSymbol *activeFunction;
 public:
     Translator(VarTable *varTable, FunctionTable *functionTable, StructTable *structTable);
     ~Translator() = default;

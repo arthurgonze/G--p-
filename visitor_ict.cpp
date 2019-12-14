@@ -29,14 +29,16 @@ void PrintICT::down_level() {
 
 
 void PrintICT::visit(Fragment *node) {
-
-    if (node != NULL) {
-        node->accept(this);
+    std::cout << "\n------------------------------" << std::endl;
+    std::cout << "---- INTERMEDIATE CODE TREE ----" << std::endl;
+    std::cout << "------------------------------\n" << std::endl;
+    if (node->getNext() != NULL) {
+        node->getNext()->accept(this);
     }
 }
 void PrintICT::visit(Procedure *node) {
-    if (node != NULL) {
-        node->accept(this);
+    if (node->getNext() != NULL) {
+        node->getNext()->accept(this);
     }
 }
 void PrintICT::visit(Literal *node) {

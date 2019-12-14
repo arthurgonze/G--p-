@@ -21,6 +21,11 @@ void Procedure::setBody(StmNode *body) {
     Procedure::body = body;
 }
 
+Procedure::~Procedure() {
+delete this->frame;
+delete this->body;
+}
+
 
 /*********************LITERAL**************************/
 Literal::Literal(const char *literal) : literal(literal) {}
