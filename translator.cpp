@@ -149,7 +149,8 @@ ExprNode *Translator::visit(CallNode *callNode) {
 ExprNode *Translator::visit(ArrayCallNode *arrayCallNode) {
     int tam;
     //verificar se o tipo do array eh uma estrutura
-    StructSymbol *structSymbol = structTable->cSearch(arrayCallNode->getTypeLexeme());// TODO to verificando certo na tabela?
+    StructSymbol *structSymbol = structTable->cSearch(
+            arrayCallNode->getTypeLexeme());// TODO to verificando certo na tabela?
     if (structSymbol) {
         tam = structSymbol->getSize();
     } else if (arrayCallNode->getExp()->isPointer() || arrayCallNode->getType() == FLOAT) {
@@ -286,10 +287,12 @@ void Translator::visit(FormalListNode *formalListNode) {
 void Translator::visit(FunctionNode *functionNode) {
     currentFrame = new FrameMIPS(nullptr, nullptr, nullptr);
     currentFrame->setReturnValue(new Temp());// marcando o temporario pra onde retornar
-    // TODO acho que a active function ta dando ruim e por isso as variavei locais não sao adicionada la no VarDeclNode
-    activeFunction = functionTable->cSearch(functionNode->getId()->getLexeme());
+
     if (functionNode->getParameters()) {
         functionNode->getParameters()->accept(this);
+    }
+    if (functionNode && functionNode->getId()) {
+        this->activeFunction = functionTable->cSearch(functionNode->getId()->getLexeme());
     }
     if (functionNode->getLocal()) {
         functionNode->getLocal()->accept(this);
@@ -351,30 +354,23 @@ void Translator::visit(VarDeclNode *varDeclNode) {
                 }
                 // TODO fazer um if pra dizer que tudo escapa e setar as parada pra true?
                 // buscar na tabela para saber se eh local ou global
-                if (activeFunction) {
-                    VarSymbol *varSymbol = varTable->searchInScope(idListNodeAUX->getId()->getLexeme(),
-                                                                   activeFunction->getLexeme());
-                    if (varSymbol)//local
-                    {
-                        //TODO getSize ou getOffset?, verificar se o bool de escapa ta certo
-                        this->currentFrame->addLocal(escape, varSymbol->getSize());
-                    }
-                    //TODO decidir aonde colocar o else para definir se a variavel eh global
-//                    else//global
-//                    {
-//                        varSymbol = varTable->cSearch(idListNodeAUX->getId()->getLexeme());
-//                        if (varSymbol) {
-//                            //TODO eh assim que pega o int do tipo da variavel mesmo ne?
-//                            Variable *variable = new Variable(varSymbol->getType()->getType(), varSymbol->getSize());
-//                            variable->setNext(fragmentList);
-//                            fragmentList = variable;
-//                        }
-//                    }
-                } else //global
+                VarSymbol *varSymbol = NULL;
+                if (this->activeFunction) {
+                    varSymbol = varTable->searchInScope(idListNodeAUX->getId()->getLexeme(),
+                                                        activeFunction->getLexeme());
+                }
+
+                if (varSymbol)//local
                 {
-                    VarSymbol *varSymbol = varTable->cSearch(idListNodeAUX->getId()->getLexeme());
+                    //TODO getSize ou getOffset?, verificar se o bool de escapa ta certo
+                    this->currentFrame->addLocal(escape, varSymbol->getSize());
+                    Variable *variable = new Variable(varSymbol->getType()->getType(), varSymbol->getSize());
+                    variable->setNext(fragmentList);
+                    fragmentList = variable;
+                } else//global
+                {
+                    varSymbol = varTable->cSearch(idListNodeAUX->getId()->getLexeme());
                     if (varSymbol) {
-                        //TODO eh assim que pega o int do tipo da variavel mesmo ne?
                         Variable *variable = new Variable(varSymbol->getType()->getType(), varSymbol->getSize());
                         variable->setNext(fragmentList);
                         fragmentList = variable;
