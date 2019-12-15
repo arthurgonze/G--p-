@@ -183,14 +183,19 @@ LocalAccess *FrameMIPS::addLocal(bool escape, int bytesSize) {
 /*********************ICT**************************/
 CONST::CONST(int i) {
     this->i = i;
+    this->setTypeStm(V_CONST);
 }
 
 CONSTF::CONSTF(float j) {
     this->j = j;
+    this->setTypeStm(V_CONSTF);
+
 }
 
 NAME::NAME(Label *l) {
     this->l = l;
+    this->setTypeStm(V_NAME);
+
 }
 
 NAME::~NAME() {
@@ -199,6 +204,8 @@ NAME::~NAME() {
 
 TEMP::TEMP(Temp *t) {
     this->t = t;
+    this->setTypeStm(V_TEMP);
+
 }
 
 TEMP::~TEMP() {
@@ -209,6 +216,8 @@ BINOP::BINOP(int binop, ExprNode *left, ExprNode *right) {
     this->binop = binop;
     this->left = left;
     this->right = right;
+    this->setTypeStm(V_BINOP);
+
 }
 
 BINOP::~BINOP() {
@@ -218,6 +227,8 @@ BINOP::~BINOP() {
 
 MEM::MEM(ExprNode *e) {
     this->e = e;
+    this->setTypeStm(V_MEM);
+
 }
 
 MEM::~MEM() {
@@ -227,6 +238,8 @@ MEM::~MEM() {
 CALL::CALL(ExprNode *func, ExpList *args) {
     this->func = func;
     this->args = args;
+    this->setTypeStm(V_CALL);
+
 }
 
 CALL::~CALL() {
@@ -237,6 +250,7 @@ CALL::~CALL() {
 ESEQ::ESEQ(StmNode *s, ExprNode *e) {
     this->s = s;
     this->e = e;
+    this->setTypeStm(V_ESEQ);
 }
 
 ESEQ::~ESEQ() {
@@ -247,6 +261,8 @@ ESEQ::~ESEQ() {
 MOVE::MOVE(ExprNode *dst, ExprNode *src) {
     this->dst = dst;
     this->src = src;
+    this->setTypeStm(V_MOVE);
+
 }
 
 MOVE::~MOVE() {
@@ -256,6 +272,8 @@ MOVE::~MOVE() {
 
 EXP::EXP(ExprNode *e) {
     this->e = e;
+    this->setTypeStm(V_EXP);
+
 }
 
 EXP::~EXP() {
@@ -265,6 +283,8 @@ EXP::~EXP() {
 JUMP::JUMP(ExprNode *e, LabelList *targets) {
     this->e = e;
     this->targets = targets;
+    this->setTypeStm(V_JUMP);
+
 }
 
 JUMP::~JUMP() {
@@ -278,6 +298,8 @@ CJUMP::CJUMP(int relop, ExprNode *left, ExprNode *right, Label *ifTrue, Label *i
     this->right = right;
     this->ifTrue = ifTrue;
     this->ifFalse = ifFalse;
+    this->setTypeStm(V_CJUMP);
+
 }
 
 CJUMP::~CJUMP() {
@@ -290,6 +312,7 @@ CJUMP::~CJUMP() {
 SEQ::SEQ(StmNode *left, StmNode *right) {
     this->left = left;
     this->right = right;
+    this->setTypeStm(V_SEQ);
 }
 
 SEQ::~SEQ() {
@@ -299,6 +322,8 @@ SEQ::~SEQ() {
 
 LABEL::LABEL(Label *l) {
     this->l = l;
+    this->setTypeStm(V_LABEL);
+
 }
 
 LABEL::~LABEL() {
@@ -308,6 +333,8 @@ LABEL::~LABEL() {
 ExpList::ExpList(ExprNode *first, ExpList *next) {
     this->first = first;
     this->next = next;
+    this->setTypeStm(V_EXP_LIST);
+
 }
 
 ExpList::~ExpList() {
@@ -318,9 +345,19 @@ ExpList::~ExpList() {
 StmList::StmList(StmNode *first, StmList *next) {
     this->first = first;
     this->next = next;
+    this->setTypeStm(V_STM_LIST);
+
 }
 
 StmList::~StmList() {
     delete this->first;
     delete this->next;
+}
+
+int StmNode::getTypeStm() const {
+    return typeStm;
+}
+
+void StmNode::setTypeStm(int typeStm) {
+    StmNode::typeStm = typeStm;
 }

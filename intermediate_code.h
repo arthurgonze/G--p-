@@ -6,6 +6,29 @@
 #include "token.h"
 #include "visitor_ict.h"
 
+//STM_NODES
+#define V_CONST 0
+#define V_CONSTF 1
+#define V_NAME 2
+#define V_TEMP 3
+#define V_BINOP 4
+#define V_MEM 5
+#define V_CALL 6
+#define V_ESEQ 7
+
+//EXP_NODES
+#define V_MOVE 8
+#define V_EXP 9
+#define V_JUMP 10
+#define V_CJUMP 11
+#define V_SEQ 12
+#define V_LABEL 13
+
+//LIST_NODES
+#define V_STM_LIST 14
+#define V_EXP_LIST 15
+
+
 
 extern int num_labels;
 extern int num_temps;
@@ -323,6 +346,8 @@ public:
  */
 class StmNode : public ICTNode {
 private:
+    int typeStm;
+
 public:
     ~StmNode() override = default;
 
@@ -330,6 +355,9 @@ public:
 
     virtual StmNode *accept(Canonicalizer *visitor)  = 0;
 
+    int getTypeStm() const;
+
+    void setTypeStm(int typeStm);
 };
 
 class ExprNode : public StmNode {
