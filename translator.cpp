@@ -487,12 +487,12 @@ void Translator::printFragmentList() {
     visitorICT->visit(fragmentList);
 
     Canonicalizer * canonicalizer = new Canonicalizer();
-    fragmentList = canonicalizer->visit(fragmentList);
 
     std::cout << "\n------------------------------" << std::endl;
     std::cout << "---- CANONICAL INTERMEDIATE CODE TREE ----" << std::endl;
     std::cout << "------------------------------\n" << std::endl;
-    visitorICT->visit(fragmentList);
+
+    fragmentList = canonicalizer->visit(fragmentList);
 
 
 }
