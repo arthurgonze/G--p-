@@ -89,7 +89,8 @@ StmNode *Translator::visit(WhileNode *whileNode) {
                                                    new LABEL(endLabel))))));
 }
 
-StmNode *Translator::visit(SwitchNode *switchNode) {// TODO ...
+// TODO ...
+StmNode *Translator::visit(SwitchNode *switchNode) {
     if (switchNode->getExp() != nullptr) {
         switchNode->getExp()->accept(this);
     }
@@ -99,21 +100,33 @@ StmNode *Translator::visit(SwitchNode *switchNode) {// TODO ...
     return NULL;
 }
 
-StmNode *Translator::visit(PrintNode *printNode) {// TODO...
-    if (printNode->getExpList() != nullptr) {
-        printNode->getExpList()->accept(this);
+StmNode *Translator::visit(PrintNode *printNode) {
+    // pego a lista de expressoes do print
+    ExpListNode *param = printNode->getExpList();
+    // crio uma lista de expressoes da ICT
+    ExpList *lcall = NULL;
+    while (param) {
+        //construo esse novo no com as expressoes do no
+        lcall = new ExpList(param->getExp()->accept(this), lcall);
+        param = param->getNext();
     }
-    return NULL;
+    // crio o nome de chamada para o print
+    char nome[200] = "printNode";
+    // retorno  uma expressao call com a lista de expressoes e o name/label criado
+    return new EXP(new CALL(new NAME(new Label(nome)), lcall));
 }
 
-StmNode *Translator::visit(ReadLnNode *readLnNode) {// TODO ...
-    if (readLnNode->getExp() != nullptr) {
-        readLnNode->getExp()->accept(this);
-    }
-    return NULL;
+StmNode *Translator::visit(ReadLnNode *readLnNode) {
+    //crio o label de chamada do read
+    char nome[200] = "readLnNode";
+    // TODO dar um append no lexema da expr? readLnNode->getExp()->getLexeme();
+    // retorno uma expressao call com o name/label da chamada e o accept para a expressao do read
+    return new EXP(new CALL(new NAME(new Label(nome)),
+                            new ExpList(readLnNode->getExp()->accept(this), NULL)));
 }
 
-StmNode *Translator::visit(ReturnNode *returnNode) {// TODO ...
+// TODO ...
+StmNode *Translator::visit(ReturnNode *returnNode) {
     if (returnNode->getExp() != nullptr) {
         returnNode->getExp()->accept(this);
     }
@@ -131,8 +144,7 @@ ExprNode *Translator::visit(PrimaryNode *primaryNode) {//TODO checar casos de ar
     //checa se eh ID
     if (primaryNode->getTokenNode() && primaryNode->getTokenNode()->getToken() == ID) {
         VarSymbol *aux;
-        if(activeFunction)
-        {
+        if (activeFunction) {
             aux = varTable->searchInScope(primaryNode->getLexeme(), activeFunction->getLexeme());
         }
         if (aux)// variavel local
@@ -145,15 +157,15 @@ ExprNode *Translator::visit(PrimaryNode *primaryNode) {//TODO checar casos de ar
             aux = varTable->cSearch(primaryNode->getTokenNode()->getLexeme());
             if (aux) {// var global
                 char name[200];
-                sprintf(name,"var_%s",primaryNode->getTokenNode()->getLexeme());
-                Label *labelAUX=new Label(name);
+                sprintf(name, "var_%s", primaryNode->getTokenNode()->getLexeme());
+                Label *labelAUX = new Label(name);
                 return new MEM(new NAME(labelAUX));
             }
         }
     } else // nao eh ID
     {
         //checa se eh expressao
-        if(primaryNode->getExp()){
+        if (primaryNode->getExp()) {
             return primaryNode->getExp()->accept(this);
         }
         //checa se eh um primitivo
@@ -171,7 +183,7 @@ ExprNode *Translator::visit(PrimaryNode *primaryNode) {//TODO checar casos de ar
             //TODO verificar
             literal->setNext(fragmentList);
             fragmentList = literal;
-            return new NAME(new Label(primaryNode->getLexeme()));
+            return new NAME(new Label(primaryNode->getTokenNode()->getLexeme()));
         }
 
         if (primaryNode->getTokenNode()->getToken() == TRUE) {
@@ -379,11 +391,9 @@ ExprNode *Translator::visit(PointerExpNode *pointerExpNode) {//TODO verificar co
 ExprNode *Translator::visit(NameExpNode *nameExpNode) {
     // TODO aqui eu to pegando a variavel e consequentemente as informacoes de tamanho/offset que ela pertence?
     VarSymbol *var = varTable->cSearch(nameExpNode->getLexeme());
-    if(var)
-    {
+    if (var) {
         return new MEM(new BINOP(PLUS, nameExpNode->getExp()->accept(this), new CONST(var->getOffset())));
-    } else
-    {
+    } else {
         return NULL;
     }
 }
