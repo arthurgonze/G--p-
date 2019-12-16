@@ -416,12 +416,12 @@ StmNode *Canonicalizer::visit(SEQ *node) {
 
 ExprNode *Canonicalizer::visit(CALL *node) {
     //TODO
-    return nullptr;
+    return node;
 }
 
 StmNode *Canonicalizer::visit(EXP *node) {
     //TODO
-    return nullptr;
+    return node;
 }
 
 bool Canonicalizer::isChanged() const {

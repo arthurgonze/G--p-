@@ -3,7 +3,7 @@
 #include "symbol_table.h"
 
 void startTranslator(ProgramNode *ast, Translator *translator) {
-    translator->visit(ast);
+    ast->accept(translator);
     fprintf(stderr, "\n");
 }
 
@@ -145,7 +145,7 @@ ExprNode *Translator::visit(PrimaryNode *primaryNode) {//TODO checar casos de ar
     if (primaryNode->getTokenNode() && primaryNode->getTokenNode()->getToken() == ID) {
         VarSymbol *aux;
         if (activeFunction) {
-            aux = varTable->searchInScope(primaryNode->getLexeme(), activeFunction->getLexeme());
+            aux = varTable->searchInScope(primaryNode->getTokenNode()->getLexeme(), activeFunction->getLexeme());
         }
         if (aux)// variavel local
         {
@@ -170,16 +170,16 @@ ExprNode *Translator::visit(PrimaryNode *primaryNode) {//TODO checar casos de ar
         }
         //checa se eh um primitivo
         if (primaryNode->getTokenNode()->getToken() == NUMINT) {
-            return new CONST(atoi(primaryNode->getLexeme()));
+            return new CONST(atoi(primaryNode->getTokenNode()->getLexeme()));
         }
 
         if (primaryNode->getTokenNode()->getToken() == NUMFLOAT) {
-            return new CONSTF(atof(primaryNode->getLexeme()));
+            return new CONSTF(atoi(primaryNode->getTokenNode()->getLexeme()));
         }
 
         if (primaryNode->getTokenNode()->getToken() == LITERALCHAR ||
             primaryNode->getTokenNode()->getToken() == LITERAL) {
-            Literal *literal = new Literal(primaryNode->getLexeme());
+            Literal *literal = new Literal((primaryNode->getTokenNode()->getLexeme()));
             //TODO verificar
             literal->setNext(fragmentList);
             fragmentList = literal;
@@ -484,15 +484,14 @@ void Translator::printFragmentList() {
     std::cout << "\n------------------------------" << std::endl;
     std::cout << "---- INTERMEDIATE CODE TREE ----" << std::endl;
     std::cout << "------------------------------\n" << std::endl;
-    visitorICT->visit(fragmentList);
-
+    fragmentList->accept(visitorICT);
     Canonicalizer * canonicalizer = new Canonicalizer();
 
     fragmentList = canonicalizer->visit(fragmentList);
     while(canonicalizer->isChanged()){
         std::cout << "x" << std::endl;
         canonicalizer->change();
-        fragmentList = canonicalizer->visit(fragmentList);
+        fragmentList = fragmentList->accept(canonicalizer);
 
     }
     std::cout << "\n------------------------------" << std::endl;
