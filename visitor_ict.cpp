@@ -283,7 +283,7 @@ StmNode *Canonicalizer::visit(LABEL *node) {
 
 ExprNode *Canonicalizer::visit(ESEQ *node) {
 
-    if (node->getE() != NULL) {
+    if (node->getE()) {
         if (node->getE()->getTypeStm() == V_ESEQ) {
             changed = true;
             ExprNode *eseq = node->getE();
@@ -414,12 +414,18 @@ StmNode *Canonicalizer::visit(SEQ *node) {
 }
 
 ExprNode *Canonicalizer::visit(CALL *node) {
-    //TODO
-    return node;
+    changed= true;
+    Temp * t = new Temp();
+    return new ESEQ(new MOVE(new TEMP(t),new CALL(node->getFunc()->accept(this),
+            node->getArgs()->accept(this))),new TEMP(t));
+
+
 }
 
 StmNode *Canonicalizer::visit(EXP *node) {
-    //TODO
+    if(node->getE() && node->getE()->getTypeStm() == V_CALL){
+        return node->getE()->accept(this);
+    }
     return node;
 }
 

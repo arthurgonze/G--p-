@@ -262,10 +262,10 @@ ExprNode *Translator::visit(MultiplicationOPNode *multiplicationOPNode) {
 
 ExprNode *Translator::visit(BooleanOPNode *booleanOPNode) {
     if (booleanOPNode->getExp1() && booleanOPNode->getExp2()) {
-        if (booleanOPNode->getOp()->getToken() == AND) {
             Temp *r = new Temp();
             Label *l1 = new Label();
             Label *l2 = new Label();
+          if (booleanOPNode->getOp()->getToken() == AND) {
             Label *l3 = new Label();
 
             return new ESEQ(new SEQ(new MOVE(new TEMP(r), new CONST(0)),
@@ -476,17 +476,17 @@ void Translator::printFragmentList() {
 
     fragmentList = canonicalizer->visit(fragmentList);
     while(canonicalizer->isChanged()){
-        std::cout << "x" << std::endl;
-        fragmentList->accept(visitorICT);
+//        std::cout << "x" << std::endl;
+//        fragmentList->accept(visitorICT);
         canonicalizer->change();
         fragmentList = fragmentList->accept(canonicalizer);
 
     }
-//    std::cout << "\n------------------------------" << std::endl;
-//    std::cout << "---- CANONICAL INTERMEDIATE CODE TREE ----" << std::endl;
-//    std::cout << "------------------------------\n" << std::endl;
-//
-//    fragmentList->accept(visitorICT);
+    std::cout << "\n------------------------------" << std::endl;
+    std::cout << "---- CANONICAL INTERMEDIATE CODE TREE ----" << std::endl;
+    std::cout << "------------------------------\n" << std::endl;
+
+    fragmentList->accept(visitorICT);
 
 
 }
