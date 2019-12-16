@@ -108,6 +108,8 @@ public:
 
     void printFragmentList();
 
+    void deleteTables();
+
     inline Fragment *getFragmentList() const { return fragmentList; }
 
     void visit(ProgramNode *programNode);

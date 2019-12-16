@@ -47,15 +47,17 @@ int main(int argc, char *argv[]) {
     Parser *parser = new Parser();
     ProgramNode *ast = parser->StartParser();
     lexical_analyzer_dispose();
-
+    delete (parser);
     startSemantic(ast);
     Translator *translator = endSemantic();
 
-    startTranslator(ast, translator);
-    endTranslator(translator);
-
-    delete (ast);
-    delete (parser);
+    if(translator)
+    {
+        startTranslator(ast, translator);
+        delete (ast);
+        endTranslator(translator);
+    }
+    delete (translator);
     printf("\n");
 
     return returnCode;
