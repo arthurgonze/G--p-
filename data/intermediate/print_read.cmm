@@ -1,0 +1,18 @@
+typedef struct
+{
+	int hours;
+	int minutes;
+	int seconds;
+} stTime;
+
+int main() {
+	stTime *time;
+	char *s;
+
+  	print("%02d:", time->hours);
+  	
+  	readln(s);
+  	
+  	return 0;
+}
+

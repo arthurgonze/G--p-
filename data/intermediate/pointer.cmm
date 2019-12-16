@@ -1,0 +1,13 @@
+typedef struct {
+    int a;
+    int b[10];
+} s1;
+
+int main() {
+	s1 *t1;
+
+	t1->a = 2;
+	t1->b[2] = 3;  
+  return 0;
+}
+

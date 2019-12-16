@@ -1,0 +1,14 @@
+typedef struct {
+    int a;
+    int b[10];
+} s1;
+
+int main() {
+  s1 t1;
+  
+  t1.a = 3;
+  t1.b[5] = 7;
+  
+  return 0;
+}
+
