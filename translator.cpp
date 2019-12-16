@@ -366,7 +366,7 @@ void Translator::visit(FunctionNode *functionNode) {
 
     StmNode *stmNode = NULL;// preciso desse no pra guardar todas as instrucoes dos retornos que estarao no corpo da funcao
     if (functionNode->getBody()) {
-        stmNode = this->visit(functionNode->getBody());// faco o no receber o retorno do visit ao corpo da funcao
+        stmNode = functionNode->getBody()->accept(this);// faco o no receber o retorno do visit ao corpo da funcao
     }
     // TODO desempilhar
 
@@ -490,15 +490,16 @@ void Translator::printFragmentList() {
     fragmentList = canonicalizer->visit(fragmentList);
     while(canonicalizer->isChanged()){
         std::cout << "x" << std::endl;
+        fragmentList->accept(visitorICT);
         canonicalizer->change();
         fragmentList = fragmentList->accept(canonicalizer);
 
     }
-    std::cout << "\n------------------------------" << std::endl;
-    std::cout << "---- CANONICAL INTERMEDIATE CODE TREE ----" << std::endl;
-    std::cout << "------------------------------\n" << std::endl;
-
-    visitorICT->visit(fragmentList);
+//    std::cout << "\n------------------------------" << std::endl;
+//    std::cout << "---- CANONICAL INTERMEDIATE CODE TREE ----" << std::endl;
+//    std::cout << "------------------------------\n" << std::endl;
+//
+//    fragmentList->accept(visitorICT);
 
 
 }
