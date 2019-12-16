@@ -321,7 +321,7 @@ StmNode *Canonicalizer::visit(JUMP *node) {
 }
 
 StmNode *Canonicalizer::visit(CJUMP *node) {
-    if (node->getLeft()->getTypeStm() == V_ESEQ) {
+    if (node->getLeft() && node->getLeft()->getTypeStm() == V_ESEQ) {
         changed = true;
         ExprNode *eseq = node->getLeft();
         return new SEQ(eseq->getS()->accept(this),new CJUMP(node->getRelop(),
@@ -346,8 +346,8 @@ StmNode *Canonicalizer::visit(CJUMP *node) {
     }
 
     else {
-        node->setLeft(node->getLeft()->accept(this));
-        node->setRight(node->getRight()->accept(this));
+        if(node->getLeft())node->setLeft(node->getLeft()->accept(this));
+        if(node->getRight())node->setRight(node->getRight()->accept(this));
     }
     return node;
 }
@@ -402,7 +402,7 @@ StmNode *Canonicalizer::visit(MOVE *node) {
 StmNode *Canonicalizer::visit(SEQ *node) {
     if(node->getS1() && node->getS1()->getTypeStm() == V_SEQ){
         StmNode *seq = node->getS1();
-        if(seq->getS1() && seq->getS2()) {
+        if(seq->getS1() && seq->getS2() && node->getS2()) {
             changed = true;
             return new SEQ(seq->getS1()->accept(this), new SEQ(seq->getS2()->accept(this),
                                                                node->getS2()->accept(this)));
