@@ -225,6 +225,14 @@ BINOP::~BINOP() {
     delete this->right;
 }
 
+void BINOP::setLeft(ExprNode *left) {
+    BINOP::left = left;
+}
+
+void BINOP::setRight(ExprNode *right) {
+    BINOP::right = right;
+}
+
 MEM::MEM(ExprNode *e) {
     this->e = e;
     this->setTypeStm(V_MEM);
@@ -233,6 +241,10 @@ MEM::MEM(ExprNode *e) {
 
 MEM::~MEM() {
     delete this->e;
+}
+
+void MEM::setE(ExprNode *e) {
+    MEM::e = e;
 }
 
 CALL::CALL(ExprNode *func, ExpList *args) {
@@ -258,6 +270,14 @@ ESEQ::~ESEQ() {
     delete this->e;
 }
 
+void ESEQ::setS(StmNode *s) {
+    ESEQ::s = s;
+}
+
+void ESEQ::setE(ExprNode *e) {
+    ESEQ::e = e;
+}
+
 MOVE::MOVE(ExprNode *dst, ExprNode *src) {
     this->dst = dst;
     this->src = src;
@@ -268,6 +288,14 @@ MOVE::MOVE(ExprNode *dst, ExprNode *src) {
 MOVE::~MOVE() {
     delete this->dst;
     delete this->src;
+}
+
+void MOVE::setDst(ExprNode *dst) {
+    MOVE::dst = dst;
+}
+
+void MOVE::setSrc(ExprNode *src) {
+    MOVE::src = src;
 }
 
 EXP::EXP(ExprNode *e) {
@@ -287,9 +315,24 @@ JUMP::JUMP(ExprNode *e, LabelList *targets) {
 
 }
 
+JUMP::JUMP(ExprNode *e) {
+    this->e = e;
+    this->targets = nullptr;
+    this->setTypeStm(V_JUMP);
+
+}
+
 JUMP::~JUMP() {
     delete this->e;
     delete this->targets;
+}
+
+void JUMP::setE(ExprNode *e) {
+    JUMP::e = e;
+}
+
+void JUMP::setTargets(LabelList *targets) {
+    JUMP::targets = targets;
 }
 
 CJUMP::CJUMP(int relop, ExprNode *left, ExprNode *right, Label *ifTrue, Label *ifFalse) {
@@ -307,6 +350,14 @@ CJUMP::~CJUMP() {
     delete this->right;
     delete this->ifTrue;
     delete this->ifFalse;
+}
+
+void CJUMP::setLeft(ExprNode *left) {
+    CJUMP::left = left;
+}
+
+void CJUMP::setRight(ExprNode *right) {
+    CJUMP::right = right;
 }
 
 SEQ::SEQ(StmNode *left, StmNode *right) {
@@ -342,6 +393,14 @@ ExpList::~ExpList() {
     delete this->next;
 }
 
+void ExpList::setFirst(ExprNode *first) {
+    ExpList::first = first;
+}
+
+void ExpList::setNext(ExpList *next) {
+    ExpList::next = next;
+}
+
 StmList::StmList(StmNode *first, StmList *next) {
     this->first = first;
     this->next = next;
@@ -352,6 +411,14 @@ StmList::StmList(StmNode *first, StmList *next) {
 StmList::~StmList() {
     delete this->first;
     delete this->next;
+}
+
+void StmList::setFirst(StmNode *first) {
+    StmList::first = first;
+}
+
+void StmList::setNext(StmList *next) {
+    StmList::next = next;
 }
 
 int StmNode::getTypeStm() const {

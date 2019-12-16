@@ -119,7 +119,7 @@ private:
 public:
     PrintICT();
 
-    virtual ~PrintICT();
+    ~PrintICT() override;
 
     void visit(Fragment *node) override;
 
@@ -174,15 +174,17 @@ public:
 
     virtual Fragment *visit(Fragment *fragment) = 0;
 
-    virtual Procedure *visit(Procedure *fragment) =0;
+    virtual Procedure *visit(Procedure *fragment) = 0;
 
     virtual Literal *visit(Literal *fragment) = 0;
 
     virtual Variable *visit(Variable *fragment) = 0;
 
-    virtual StmNode *visit(StmList *node) = 0;
+    virtual StmList *visit(StmList *node) = 0;
 
-    virtual StmNode *visit(ExprNode *node) = 0;
+    virtual StmNode *visit(StmNode *node) = 0;
+
+    virtual ExprNode *visit(ExprNode *node) = 0;
 
     virtual StmNode *visit(MOVE *node) = 0;
 
@@ -212,7 +214,7 @@ public:
 
     virtual ExprNode *visit(ESEQ *node) = 0;
 
-    virtual ExprNode *visit(ExpList *node) = 0;
+    virtual ExpList *visit(ExpList *node) = 0;
 
 };
 
@@ -222,7 +224,7 @@ private:
 public:
     Canonicalizer();
 
-    virtual ~Canonicalizer();
+    virtual ~Canonicalizer() = default;
 
     Fragment *visit(Fragment *fragment) override;
 
@@ -232,9 +234,11 @@ public:
 
     Variable *visit(Variable *fragment) override;
 
-    StmNode *visit(StmList *node) override;
+    StmList *visit(StmList *node) override;
 
-    StmNode *visit(ExprNode *node) override;
+    StmNode *visit(StmNode *node) override;
+
+    ExprNode *visit(ExprNode *node) override;
 
     StmNode *visit(MOVE *node) override;
 
@@ -264,7 +268,7 @@ public:
 
     ExprNode *visit(ESEQ *node) override;
 
-    ExprNode *visit(ExpList *node) override;
+    ExpList *visit(ExpList *node) override;
 
 };
 

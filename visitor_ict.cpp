@@ -29,9 +29,6 @@ void PrintICT::down_level() {
 
 /********************** PRINT ICT FRAGMENTS **********************/
 void PrintICT::visit(Fragment *node) {
-    std::cout << "\n------------------------------" << std::endl;
-    std::cout << "---- INTERMEDIATE CODE TREE ----" << std::endl;
-    std::cout << "------------------------------\n" << std::endl;
     printIR("Fragment");
     up_level();
     if (node != NULL) {
@@ -189,8 +186,8 @@ void PrintICT::visit(CJUMP *node) {
 void PrintICT::visit(SEQ *node) {
     printIR("SEQ");
     up_level();
-    if (node->getLeft() != NULL) node->getLeft()->accept(this);
-    if (node->getRight() != NULL) node->getRight()->accept(this);
+    if (node->getS1() != NULL) node->getS1()->accept(this);
+    if (node->getS2() != NULL) node->getS2()->accept(this);
     down_level();
 }
 
@@ -204,6 +201,11 @@ PrintICT::~PrintICT() = default;
 
 
 /********************** CANONICALIZER **********************/
+
+Canonicalizer::Canonicalizer() {
+
+}
+
 Fragment *Canonicalizer::visit(Fragment *fragment) {
     if (fragment->getNext() != nullptr) {
         fragment->setNext(fragment->getNext()->accept(this));
@@ -235,6 +237,30 @@ Variable *Canonicalizer::visit(Variable *fragment) {
     return fragment;
 }
 
+StmList *Canonicalizer::visit(StmList *node) {
+    if (node->getNext() != nullptr) node->setNext(node->getNext()->accept(this));
+    if (node->getFirst() != nullptr) node->setFirst(node->getFirst()->accept(this));
+    return node;
+}
+
+ExpList *Canonicalizer::visit(ExpList *node) {
+    if (node->getNext() != nullptr) node->setNext(node->getNext()->accept(this));
+    if (node->getFirst() != nullptr) node->setFirst(node->getFirst()->accept(this));
+    return node;
+}
+
+
+ExprNode *Canonicalizer::visit(ExprNode *node) {
+    node = node->accept(this);
+    return node;
+}
+
+StmNode *Canonicalizer::visit(StmNode *node) {
+    node = node->accept(this);
+    return node;
+}
+
+
 ExprNode *Canonicalizer::visit(CONSTF *node) {
     return node;
 }
@@ -256,10 +282,132 @@ StmNode *Canonicalizer::visit(LABEL *node) {
 }
 
 ExprNode *Canonicalizer::visit(ESEQ *node) {
-    ExprNode *eseq = node->getE();
+
+    if (node->getE() != NULL) {
+        if (node->getE()->getTypeStm() == V_ESEQ) {
+            ExprNode *eseq = node->getE();
+            return new ESEQ(new SEQ(node->getS()->accept(this), eseq->getS()->accept(this)),
+                            eseq->getE()->accept(this));
+        }
+    } else {
+        node->setS(node->getS()->accept(this));
+        node->setE(node->getE()->accept(this));
+    }
     return node;
 }
 
-StmNode *Canonicalizer::visit(ExprNode *node) {
+ExprNode *Canonicalizer::visit(MEM *node) {
+    if (node->getE()->getTypeStm() == V_ESEQ) {
+        ExprNode *eseq = node->getE();
+        return new ESEQ(eseq->getS()->accept(this),
+                        new MEM(eseq->getE()->accept(this)));
+    } else {
+        node->setE(node->getE()->accept(this));
+    }
+    return node;
+}
+
+StmNode *Canonicalizer::visit(JUMP *node) {
+    if (node->getE()->getTypeStm() == V_ESEQ) {
+        ExprNode *eseq = node->getE();
+        return new SEQ(eseq->getS()->accept(this), new JUMP(eseq->getE()->accept(this)));
+    } else {
+        node->setE(node->getE()->accept(this));
+    }
+    return node;
+}
+
+StmNode *Canonicalizer::visit(CJUMP *node) {
+    if (node->getLeft()->getTypeStm() == V_ESEQ) {
+        ExprNode *eseq = node->getLeft();
+        return new SEQ(eseq->getS()->accept(this),new CJUMP(node->getRelop(),
+                eseq->getE()->accept(this),node->getRight()->accept(this),node->getIfTrue(),node->getIfFalse()));
+    }
+
+    if(node->getRight()->getTypeStm() == V_ESEQ){
+        ExprNode * eseq = node->getRight();
+        Temp * t = new Temp();
+
+        if(node->getRight()->getTypeStm() == V_NAME) {
+            return new SEQ(eseq->getS()->accept(this),new CJUMP(node->getRelop(),
+                    node->getLeft()->accept(this),eseq->getE()->accept(this),
+                         node->getIfTrue(), node->getIfFalse()));
+        }else {
+            return new SEQ(new MOVE(new TEMP(t), node->getLeft()->accept(this)),
+                           new SEQ(eseq->getS()->accept(this), new CJUMP(node->getRelop(),
+                                                                         new TEMP(t), eseq->getE()->accept(this),
+                                                                         node->getIfTrue(), node->getIfFalse())));
+        }
+    }
+
+    else {
+        node->setLeft(node->getLeft()->accept(this));
+        node->setRight(node->getRight()->accept(this));
+    }
+    return node;
+}
+
+ExprNode *Canonicalizer::visit(BINOP *node) {
+    if (node->getLeft()->getTypeStm() == V_ESEQ) {
+        ExprNode *eseq = node->getLeft();
+
+        return new ESEQ(eseq->getS()->accept(this),
+                new BINOP(node->getBinop(),eseq->getE()->accept(this),
+                        node->getRight()->accept(this)));
+
+     }
+    if(node->getRight()->getTypeStm() == V_ESEQ){
+        ExprNode *eseq = node->getRight();
+        Temp *t = new Temp();
+
+        if(node->getLeft()->getTypeStm() == V_CONST ){
+
+            return new ESEQ (eseq->getS()->accept(this),
+                    new BINOP(node->getBinop(),node->getLeft()->accept(this),
+                            eseq->getE()->accept(this)));
+        } else {
+            return new ESEQ(new MOVE(new TEMP(t), node->getLeft()->accept(this)),
+                            new ESEQ(eseq->getS()->accept(this),
+                                     new BINOP(node->getBinop(), new TEMP(t), eseq->getE()->accept(this))));
+        }
+    }
+    else {
+        node->setLeft(node->getLeft()->accept(this));
+        node->setRight(node->getRight()->accept(this));
+    }
+    return node;
+}
+
+StmNode *Canonicalizer::visit(MOVE *node) {
+    if(node->getDst()->getTypeStm() == V_ESEQ){
+        ExprNode *eseq = node->getDst();
+
+        return new SEQ(eseq->getS()->accept(this),new MOVE(eseq->getE()->accept(this),
+                node->getSrc()->accept(this)));
+    }else{
+        node->setDst(node->getDst()->accept(this));
+        node->setSrc(node->getSrc()->accept(this));
+    }
+    return node;
+}
+
+StmNode *Canonicalizer::visit(SEQ *node) {
+    if(node->getS1()->getTypeStm() == V_SEQ){
+        StmNode *seq = node->getS1();
+        return new SEQ(seq->getS1()->accept(this),new SEQ(seq->getS2()->accept(this),
+                node->getS2()->accept(this)));
+    }
+
+    return node;
+}
+
+ExprNode *Canonicalizer::visit(CALL *node) {
+    //TODO
     return nullptr;
 }
+
+StmNode *Canonicalizer::visit(EXP *node) {
+    //TODO
+    return nullptr;
+}
+

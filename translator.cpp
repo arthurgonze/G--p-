@@ -459,6 +459,19 @@ Translator::Translator(VarTable *varTable, FunctionTable *functionTable, StructT
 
 void Translator::printFragmentList() {
     PrintICT *visitorICT = new PrintICT();
+    std::cout << "\n------------------------------" << std::endl;
+    std::cout << "---- INTERMEDIATE CODE TREE ----" << std::endl;
+    std::cout << "------------------------------\n" << std::endl;
     visitorICT->visit(fragmentList);
+
+    Canonicalizer * canonicalizer = new Canonicalizer();
+    fragmentList = canonicalizer->visit(fragmentList);
+
+    std::cout << "\n------------------------------" << std::endl;
+    std::cout << "---- CANONICAL INTERMEDIATE CODE TREE ----" << std::endl;
+    std::cout << "------------------------------\n" << std::endl;
+    visitorICT->visit(fragmentList);
+
+
 }
 
