@@ -42,13 +42,16 @@ void PrintICT::visit(Fragment *node) {
 
 void PrintICT::visit(Procedure *node) {
     printIR("Procedure");
-    up_level();
-    if (node->getBody()) {// printa os nos do body da procedure
-        node->getBody()->accept(this);
-    }
-    down_level();
-    if (node->getNext() != NULL) {
-        node->getNext()->accept(this);
+    if(node)
+    {
+        up_level();
+        if (node->getBody()) {// printa os nos do body da procedure
+            node->getBody()->accept(this);
+        }
+        down_level();
+        if (node->getNext() != NULL) {
+            node->getNext()->accept(this);
+        }
     }
 }
 
@@ -189,8 +192,11 @@ void PrintICT::visit(CJUMP *node) {
 void PrintICT::visit(SEQ *node) {
     printIR("SEQ");
     up_level();
-    if (node->getLeft() != NULL) node->getLeft()->accept(this);
-    if (node->getRight() != NULL) node->getRight()->accept(this);
+    if(node)
+    {
+        if (node->getLeft() != NULL) node->getLeft()->accept(this);
+        if (node->getRight() != NULL) node->getRight()->accept(this);
+    }
     down_level();
 }
 

@@ -8,7 +8,7 @@ void startTranslator(ProgramNode *ast, Translator *translator) {
 }
 
 void endTranslator(Translator *translator) {
-    //TODO ...
+    translator->deleteTables();
     translator->printFragmentList();
 }
 
@@ -37,10 +37,14 @@ void Translator::visit(FunctionListNode *functionListNode) {
 void Translator::visit(IdListNode *idListNode) {}
 
 StmNode *Translator::visit(StmtListNode *stmtListNode) {
-    if (stmtListNode->getNext() != nullptr) {
-        return new SEQ(stmtListNode->getStmt()->accept(this), stmtListNode->getNext()->accept(this));
+    if (stmtListNode && stmtListNode->getStmt()) {
+        if (stmtListNode->getNext() != nullptr) {
+            return new SEQ(stmtListNode->getStmt()->accept(this), stmtListNode->getNext()->accept(this));
+        } else {
+            return stmtListNode->getStmt()->accept(this);
+        }
     } else {
-        return stmtListNode->getStmt()->accept(this);
+        return NULL;
     }
 }
 
@@ -66,6 +70,8 @@ StmNode *Translator::visit(IfNode *ifNode) {
                                        new SEQ(new LABEL(elseLabel),
                                                new SEQ(ifNode->getFalseStmt()->accept(this),
                                                        new LABEL(endLabel))))));
+    } else {
+        return NULL;
     }
 }
 
@@ -83,54 +89,101 @@ StmNode *Translator::visit(WhileNode *whileNode) {
                                                    new LABEL(endLabel))))));
 }
 
-StmNode *Translator::visit(SwitchNode *switchNode) {
+StmNode *Translator::visit(SwitchNode *switchNode) {// TODO ...
     if (switchNode->getExp() != nullptr) {
         switchNode->getExp()->accept(this);
     }
     if (switchNode->getBlock() != nullptr) {
         switchNode->getBlock()->accept(this);
     }
+    return NULL;
 }
 
-StmNode *Translator::visit(PrintNode *printNode) {
+StmNode *Translator::visit(PrintNode *printNode) {// TODO...
     if (printNode->getExpList() != nullptr) {
         printNode->getExpList()->accept(this);
     }
+    return NULL;
 }
 
-StmNode *Translator::visit(ReadLnNode *readLnNode) {
+StmNode *Translator::visit(ReadLnNode *readLnNode) {// TODO ...
     if (readLnNode->getExp() != nullptr) {
         readLnNode->getExp()->accept(this);
     }
+    return NULL;
 }
 
-StmNode *Translator::visit(ReturnNode *returnNode) {
+StmNode *Translator::visit(ReturnNode *returnNode) {// TODO ...
     if (returnNode->getExp() != nullptr) {
         returnNode->getExp()->accept(this);
     }
-
+    return NULL;
 }
 
 void Translator::visit(CaseBlockNode *caseBlockNode) {}
 
 ExprNode *Translator::visit(ExpListNode *expListNode) { return NULL; }// did it in the callNode
 
-StmNode *Translator::visit(TryNode *tryNode) {
-    if (tryNode->getTry() != nullptr) {
-        tryNode->getTry()->accept(this);
-    }
-    if (tryNode->getCatch() != nullptr) {
-        tryNode->getCatch()->accept(this);
-    }
-}
+//TODO professor disse que o codigo varia conforme a arquitetura e que não era necessario a implementacao
+StmNode *Translator::visit(TryNode *tryNode) { return NULL; }
 
-ExprNode *Translator::visit(PrimaryNode *primaryNode) {
-    if (primaryNode->getTokenNode() != nullptr) {
-        primaryNode->getTokenNode()->accept(this);
+ExprNode *Translator::visit(PrimaryNode *primaryNode) {//TODO checar casos de arranjos?
+    //checa se eh ID
+    if (primaryNode->getTokenNode() && primaryNode->getTokenNode()->getToken() == ID) {
+        VarSymbol *aux;
+        if(activeFunction)
+        {
+            aux = varTable->searchInScope(primaryNode->getLexeme(), activeFunction->getLexeme());
+        }
+        if (aux)// variavel local
+        {
+            //TODO verificar corretude
+            LocalAccess *tmp = this->currentFrame->addLocal(false, primaryNode->getTokenNode()->getSize());
+            return tmp->accessCode();
+//            return new BINOP(PLUS, new TEMP(FP), new CONST(aux->getOffset()));
+        } else {
+            aux = varTable->cSearch(primaryNode->getTokenNode()->getLexeme());
+            if (aux) {// var global
+                char name[200];
+                sprintf(name,"var_%s",primaryNode->getTokenNode()->getLexeme());
+                Label *labelAUX=new Label(name);
+                return new MEM(new NAME(labelAUX));
+            }
+        }
+    } else // nao eh ID
+    {
+        //checa se eh expressao
+        if(primaryNode->getExp()){
+            return primaryNode->getExp()->accept(this);
+        }
+        //checa se eh um primitivo
+        if (primaryNode->getTokenNode()->getToken() == NUMINT) {
+            return new CONST(atoi(primaryNode->getLexeme()));
+        }
+
+        if (primaryNode->getTokenNode()->getToken() == NUMFLOAT) {
+            return new CONSTF(atof(primaryNode->getLexeme()));
+        }
+
+        if (primaryNode->getTokenNode()->getToken() == LITERALCHAR ||
+            primaryNode->getTokenNode()->getToken() == LITERAL) {
+            Literal *literal = new Literal(primaryNode->getLexeme());
+            //TODO verificar
+            literal->setNext(fragmentList);
+            fragmentList = literal;
+            return new NAME(new Label(primaryNode->getLexeme()));
+        }
+
+        if (primaryNode->getTokenNode()->getToken() == TRUE) {
+            return new CONST(1);
+        }
+
+        if (primaryNode->getTokenNode()->getToken() == FALSE) {
+            return new CONST(0);
+        }
     }
-    if (primaryNode->getExp() != nullptr) {
-        return primaryNode->getExp()->accept(this);
-    }
+
+    return NULL;
 }
 
 ExprNode *Translator::visit(CallNode *callNode) {
@@ -231,7 +284,6 @@ ExprNode *Translator::visit(BooleanOPNode *booleanOPNode) {
             Temp *r = new Temp();
             Label *t = new Label();
             Label *f = new Label();
-            //TODO SAO SO ESSES OPERADORES RELACIONAIS OU TEM MAIS?(na condicao do if)
             return new ESEQ(new SEQ(new MOVE(new TEMP(r), new CONST(1)),
                                     new SEQ(new CJUMP(booleanOPNode->getOp()->getToken(),
                                                       booleanOPNode->getExp1()->accept(this),
@@ -275,10 +327,6 @@ void Translator::visit(FormalListNode *formalListNode) {
             (formalListNodeAUX->getPointer()) || (formalListNodeAUX->getArray())) {
             escape = true;
         }
-        // TODO fazer um if pra dizer que tudo escapa e setar as parada pra true?
-
-//        VarSymbol *varSymbol= varTable->searchInScope(formalListNodeAUX->getId()->getLexeme(), activeFunction->getLexeme());
-        //(Indice_campos*)funcaoatual->escopo->verificaExiste(formalListNodeAUX->id->lex);
         this->currentFrame->addParam(escape, formalListNodeAUX->getId()->getSize());//TODO get size ou offset?
         formalListNodeAUX = formalListNodeAUX->getNext();
     }
@@ -300,7 +348,7 @@ void Translator::visit(FunctionNode *functionNode) {
 
     char endFuncLabel[50];
     sprintf(endFuncLabel, "%s_end", functionNode->getId()->getLexeme());
-    Label *endLab = new Label(endFuncLabel);
+//    Label *endLab = new Label(endFuncLabel);
     // TODO empilhar
 
     StmNode *stmNode = NULL;// preciso desse no pra guardar todas as instrucoes dos retornos que estarao no corpo da funcao
@@ -317,22 +365,20 @@ void Translator::visit(FunctionNode *functionNode) {
     fragmentList = procedure;
 }
 
-ExprNode *Translator::visit(PointerExpNode *pointerExpNode) {
-    if (pointerExpNode->getExp() != nullptr) {
-        pointerExpNode->getExp()->accept(this);
-    }
-    if (pointerExpNode->getId() != nullptr) {
-        pointerExpNode->getId()->accept(this);
+ExprNode *Translator::visit(PointerExpNode *pointerExpNode) {//TODO verificar corretude
+    VarSymbol *pointerVar = varTable->cSearch(pointerExpNode->getId()->getLexeme());
+    if (pointerVar) {
+        // TODO offset ou size?
+        return new MEM(new BINOP(PLUS, pointerExpNode->getExp()->accept(this), new CONST(pointerVar->getOffset())));
+    } else {
+        return NULL;
     }
 }
 
 ExprNode *Translator::visit(NameExpNode *nameExpNode) {
-    if (nameExpNode->getExp() != nullptr) {
-        nameExpNode->getExp()->accept(this);
-    }
-    if (nameExpNode->getId() != nullptr) {
-        nameExpNode->getId()->accept(this);
-    }
+    // TODO aqui eu to pegando a variavel e consequentemente as informacoes de tamanho/offset que ela pertence?
+    VarSymbol *var = varTable->cSearch(nameExpNode->getLexeme());
+    return new MEM(new BINOP(PLUS, nameExpNode->getExp()->accept(this), new CONST(var->getOffset())));
 }
 
 void Translator::visit(VarDeclNode *varDeclNode) {
@@ -352,7 +398,6 @@ void Translator::visit(VarDeclNode *varDeclNode) {
                 {
                     escape = true;
                 }
-                // TODO fazer um if pra dizer que tudo escapa e setar as parada pra true?
                 // buscar na tabela para saber se eh local ou global
                 VarSymbol *varSymbol = NULL;
                 if (this->activeFunction) {
@@ -385,10 +430,11 @@ void Translator::visit(VarDeclNode *varDeclNode) {
 
 void Translator::visit(TypeDeclNode *typeDeclNode) {}
 
-ExprNode *Translator::visit(AddressValNode *addressValNode) {
+ExprNode *Translator::visit(AddressValNode *addressValNode) {// TODO acho que so retorna o accept mesmo e ja era?
     if (addressValNode->getExp() != nullptr) {
-        addressValNode->getExp()->accept(this);
+        return addressValNode->getExp()->accept(this);
     }
+    return NULL;
 }
 
 ExprNode *Translator::visit(PointerValNode *pointerValNode) {
@@ -400,54 +446,13 @@ ExprNode *Translator::visit(PointerValNode *pointerValNode) {
  */
 void Translator::visit(PointerNode *pointerNode) {}
 
-StmNode *Translator::visit(BreakNode *breakNode) {}
+StmNode *Translator::visit(BreakNode *breakNode) { return NULL; }
 
 StmNode *Translator::visit(ThrowNode *throwNode) { return NULL; }
 
 void Translator::visit(TypeNode *typeNode) {}
 
-ExprNode *Translator::visit(TokenNode *tokenNode) {
-    if (tokenNode->getToken() == NUMINT) {
-        return new CONST(atoi(tokenNode->getLexeme()));
-    }
-
-    if (tokenNode->getToken() == NUMFLOAT) {
-        return new CONSTF(atof(tokenNode->getLexeme()));
-    }
-
-    if (tokenNode->getToken() == LITERALCHAR || tokenNode->getToken() == LITERAL) {
-        Literal *literal = new Literal(tokenNode->getLexeme());
-        //TODO verificar
-        literal->setNext(fragmentList);
-        fragmentList = literal;
-        return new NAME(new Label(tokenNode->getLexeme()));
-    }
-
-    if (tokenNode->getToken() == TRUE) {
-        return new CONST(1);
-    }
-
-    if (tokenNode->getToken() == FALSE) {
-        return new CONST(0);
-    }
-
-    if (tokenNode->getToken() == ID) {
-        //TODO verificar se eh variavel ou funcao?... na real acho que a verificação do ID não deve ser feita aqui por nao ter peso nenhum
-        // verificar se eh variavel simples
-        VarSymbol *aux = varTable->searchInScope(tokenNode->getLexeme(), "FuncaoAtiva"/*activeFunction->getLexeme()*/);
-        if (aux)//se for diferente de nulo o id eh variavel
-        {
-            return new BINOP(PLUS, new TEMP(FP), new CONST(aux->getOffset()));
-        } else {
-            aux = varTable->cSearch(tokenNode->getLexeme());
-            if (aux) {
-                return new MEM(new BINOP(PLUS, new TEMP(FP), new CONST(
-                        aux->getOffset())));//TODO VERIFICAR FRAME POINTER E OFFSET e olhar no slide o codigo
-            }
-        }
-        return NULL;
-    }
-}
+ExprNode *Translator::visit(TokenNode *tokenNode) { return NULL; }
 
 Translator::Translator(VarTable *varTable, FunctionTable *functionTable, StructTable *structTable) {
     this->varTable = varTable;
@@ -460,5 +465,11 @@ Translator::Translator(VarTable *varTable, FunctionTable *functionTable, StructT
 void Translator::printFragmentList() {
     PrintICT *visitorICT = new PrintICT();
     visitorICT->visit(fragmentList);
+}
+
+void Translator::deleteTables() {
+    delete this->varTable;
+    delete this->structTable;
+    delete this->functionTable;
 }
 
