@@ -285,6 +285,7 @@ ExprNode *Canonicalizer::visit(ESEQ *node) {
 
     if (node->getE() != NULL) {
         if (node->getE()->getTypeStm() == V_ESEQ) {
+            changed = true;
             ExprNode *eseq = node->getE();
             return new ESEQ(new SEQ(node->getS()->accept(this), eseq->getS()->accept(this)),
                             eseq->getE()->accept(this));
@@ -297,18 +298,20 @@ ExprNode *Canonicalizer::visit(ESEQ *node) {
 }
 
 ExprNode *Canonicalizer::visit(MEM *node) {
-    if (node->getE()->getTypeStm() == V_ESEQ) {
+    if (node->getE() && node->getE()->getTypeStm() == V_ESEQ) {
+        changed = true;
         ExprNode *eseq = node->getE();
         return new ESEQ(eseq->getS()->accept(this),
                         new MEM(eseq->getE()->accept(this)));
     } else {
-        node->setE(node->getE()->accept(this));
+        if (node->getE()) node->setE(node->getE()->accept(this));
     }
     return node;
 }
 
 StmNode *Canonicalizer::visit(JUMP *node) {
     if (node->getE()->getTypeStm() == V_ESEQ) {
+        changed = true;
         ExprNode *eseq = node->getE();
         return new SEQ(eseq->getS()->accept(this), new JUMP(eseq->getE()->accept(this)));
     } else {
@@ -319,12 +322,14 @@ StmNode *Canonicalizer::visit(JUMP *node) {
 
 StmNode *Canonicalizer::visit(CJUMP *node) {
     if (node->getLeft()->getTypeStm() == V_ESEQ) {
+        changed = true;
         ExprNode *eseq = node->getLeft();
         return new SEQ(eseq->getS()->accept(this),new CJUMP(node->getRelop(),
                 eseq->getE()->accept(this),node->getRight()->accept(this),node->getIfTrue(),node->getIfFalse()));
     }
 
     if(node->getRight()->getTypeStm() == V_ESEQ){
+        changed = true;
         ExprNode * eseq = node->getRight();
         Temp * t = new Temp();
 
@@ -349,6 +354,7 @@ StmNode *Canonicalizer::visit(CJUMP *node) {
 
 ExprNode *Canonicalizer::visit(BINOP *node) {
     if (node->getLeft()->getTypeStm() == V_ESEQ) {
+        changed = true;
         ExprNode *eseq = node->getLeft();
 
         return new ESEQ(eseq->getS()->accept(this),
@@ -357,6 +363,7 @@ ExprNode *Canonicalizer::visit(BINOP *node) {
 
      }
     if(node->getRight()->getTypeStm() == V_ESEQ){
+        changed = true;
         ExprNode *eseq = node->getRight();
         Temp *t = new Temp();
 
@@ -379,25 +386,31 @@ ExprNode *Canonicalizer::visit(BINOP *node) {
 }
 
 StmNode *Canonicalizer::visit(MOVE *node) {
-    if(node->getDst()->getTypeStm() == V_ESEQ){
+    if(node->getDst() && node->getDst()->getTypeStm() == V_ESEQ){
+        changed = true;
         ExprNode *eseq = node->getDst();
 
         return new SEQ(eseq->getS()->accept(this),new MOVE(eseq->getE()->accept(this),
                 node->getSrc()->accept(this)));
     }else{
-        node->setDst(node->getDst()->accept(this));
-        node->setSrc(node->getSrc()->accept(this));
+        if (node->getDst()) node->setDst(node->getDst()->accept(this));
+        if (node->getSrc()) node->setSrc(node->getSrc()->accept(this));
     }
     return node;
 }
 
 StmNode *Canonicalizer::visit(SEQ *node) {
-    if(node->getS1()->getTypeStm() == V_SEQ){
+    if(node->getS1() && node->getS1()->getTypeStm() == V_SEQ){
         StmNode *seq = node->getS1();
-        return new SEQ(seq->getS1()->accept(this),new SEQ(seq->getS2()->accept(this),
-                node->getS2()->accept(this)));
+        if(seq->getS1() && seq->getS2()) {
+            changed = true;
+            return new SEQ(seq->getS1()->accept(this), new SEQ(seq->getS2()->accept(this),
+                                                               node->getS2()->accept(this)));
+        }
+    }else {
+        if (node->getS1()) node->setS1(node->getS1()->accept(this));
+        if (node->getS2()) node->setS2(node->getS2()->accept(this));
     }
-
     return node;
 }
 
@@ -409,4 +422,8 @@ ExprNode *Canonicalizer::visit(CALL *node) {
 StmNode *Canonicalizer::visit(EXP *node) {
     //TODO
     return nullptr;
+}
+
+bool Canonicalizer::isChanged() const {
+    return changed;
 }

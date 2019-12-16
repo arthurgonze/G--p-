@@ -636,6 +636,11 @@ public:
 
     inline StmNode *accept(Canonicalizer *visitor) override { return visitor->visit(this); }
 
+    void setS1(StmNode *left);
+
+    void setS2(StmNode *right);
+
+
 };
 
 class LABEL : public StmNode {

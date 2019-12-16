@@ -220,11 +220,15 @@ public:
 
 class Canonicalizer : public VisitorCICT {
 private:
-
+    bool changed = false;
 public:
     Canonicalizer();
 
     virtual ~Canonicalizer() = default;
+
+    bool isChanged() const;
+
+    void change() {this->changed = false;}
 
     Fragment *visit(Fragment *fragment) override;
 

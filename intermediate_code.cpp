@@ -371,6 +371,14 @@ SEQ::~SEQ() {
     delete this->right;
 }
 
+void SEQ::setS1(StmNode *left) {
+    SEQ::left = left;
+}
+
+void SEQ::setS2(StmNode *right) {
+    SEQ::right = right;
+}
+
 LABEL::LABEL(Label *l) {
     this->l = l;
     this->setTypeStm(V_LABEL);
