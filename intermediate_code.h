@@ -6,6 +6,29 @@
 #include "token.h"
 #include "visitor_ict.h"
 
+//STM_NODES
+#define V_CONST 0
+#define V_CONSTF 1
+#define V_NAME 2
+#define V_TEMP 3
+#define V_BINOP 4
+#define V_MEM 5
+#define V_CALL 6
+#define V_ESEQ 7
+
+//EXP_NODES
+#define V_MOVE 8
+#define V_EXP 9
+#define V_JUMP 10
+#define V_CJUMP 11
+#define V_SEQ 12
+#define V_LABEL 13
+
+//LIST_NODES
+#define V_STM_LIST 14
+#define V_EXP_LIST 15
+
+
 
 extern int num_labels;
 extern int num_temps;
@@ -323,12 +346,26 @@ public:
  */
 class StmNode : public ICTNode {
 private:
+    int typeStm;
+
 public:
     ~StmNode() override = default;
 
     void accept(VisitorICT *visitor) override = 0;
 
     virtual StmNode *accept(Canonicalizer *visitor)  = 0;
+
+    int getTypeStm() const;
+
+    void setTypeStm(int typeStm);
+
+    virtual inline StmNode * getS() {return nullptr ;}
+
+    virtual inline ExprNode * getE() {return nullptr ;}
+
+    virtual inline StmNode * getS1() {return nullptr ;}
+
+    virtual inline StmNode * getS2() {return nullptr ;}
 
 };
 
@@ -339,7 +376,7 @@ public:
 
     void accept(VisitorICT *visitor) override = 0;
 
-    virtual StmNode *accept(Canonicalizer *visitor)  = 0;
+    virtual ExprNode *accept(Canonicalizer *visitor)  = 0;
 
 };
 
@@ -426,6 +463,10 @@ public:
 
     inline ExprNode *accept(Canonicalizer *visitor) override { return visitor->visit(this); }
 
+    void setLeft(ExprNode *left);
+
+    void setRight(ExprNode *right);
+
 };
 
 class MEM : public ExprNode {
@@ -436,11 +477,13 @@ public:
 
     ~MEM() override;
 
-    inline ExprNode *getE() const { return e; }
+    inline ExprNode *getE() override  { return e; }
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
 
     inline ExprNode *accept(Canonicalizer *visitor) override { return visitor->visit(this); }
+
+    void setE(ExprNode *e);
 
 };
 
@@ -472,13 +515,17 @@ public:
 
     ~ESEQ() override;
 
-    inline StmNode *getS() const { return s; }
+    inline StmNode *getS() override { return s; }
 
-    inline ExprNode *getE() const { return e; }
+    inline ExprNode *getE() override { return e; }
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
 
     inline ExprNode *accept(Canonicalizer *visitor) override { return visitor->visit(this); }
+
+    void setS(StmNode *s);
+
+    void setE(ExprNode *e);
 
 };
 
@@ -498,6 +545,10 @@ public:
 
     inline StmNode *accept(Canonicalizer *visitor) override { return visitor->visit(this); }
 
+    void setDst(ExprNode *dst);
+
+    void setSrc(ExprNode *src);
+
 };
 
 class EXP : public StmNode {
@@ -508,7 +559,7 @@ public:
 
     ~EXP() override;
 
-    inline ExprNode *getE() const { return e; }
+    inline ExprNode *getE() override { return e; }
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
 
@@ -522,10 +573,11 @@ private:
     LabelList *targets;
 public:
     JUMP(ExprNode *e, LabelList *targets);
+    JUMP(ExprNode *e);
 
     ~JUMP() override;
 
-    inline ExprNode *getE() const { return e; }
+    inline ExprNode *getE() override { return e; }
 
     inline LabelList *getTargets() const { return targets; }
 
@@ -533,6 +585,9 @@ public:
 
     inline StmNode *accept(Canonicalizer *visitor) override { return visitor->visit(this); }
 
+    void setE(ExprNode *e);
+
+    void setTargets(LabelList *targets);
 };
 
 class CJUMP : public StmNode {
@@ -559,6 +614,10 @@ public:
 
     inline StmNode *accept(Canonicalizer *visitor) override { return visitor->visit(this); }
 
+    void setLeft(ExprNode *left);
+
+    void setRight(ExprNode *right);
+
 };
 
 class SEQ : public StmNode {
@@ -569,13 +628,18 @@ public:
 
     ~SEQ() override;
 
-    inline StmNode *getLeft() const { return left; }
+    inline StmNode *getS1() override { return left; }
 
-    inline StmNode *getRight() const { return right; }
+    inline StmNode *getS2() override { return right; }
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
 
     inline StmNode *accept(Canonicalizer *visitor) override { return visitor->visit(this); }
+
+    void setS1(StmNode *left);
+
+    void setS2(StmNode *right);
+
 
 };
 
@@ -611,7 +675,11 @@ public:
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
 
-    inline ExprNode *accept(Canonicalizer *visitor) override { return visitor->visit(this); }
+    inline ExpList *accept(Canonicalizer *visitor) override { return visitor->visit(this); }
+
+    void setFirst(ExprNode *first);
+
+    void setNext(ExpList *next);
 
 };
 
@@ -630,7 +698,11 @@ public:
 
     inline void accept(VisitorICT *visitor) override { visitor->visit(this); }
 
-    inline StmNode *accept(Canonicalizer *visitor) override { return visitor->visit(this); }
+    inline StmList *accept(Canonicalizer *visitor) override { return visitor->visit(this); }
+
+    void setFirst(StmNode *first);
+
+    void setNext(StmList *next);
 
 };
 
