@@ -1,0 +1,18 @@
+int fun1(int a, bool b){
+    int c;
+    bool d;
+    c=a;
+    d=b;
+
+    return c;
+}
+
+int main() {
+    int a;
+    bool b;
+    a = 0;    
+    b = true;
+    fun1(a, b);
+    return 0;
+}
+
