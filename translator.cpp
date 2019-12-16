@@ -336,11 +336,12 @@ void Translator::visit(FunctionNode *functionNode) {
     currentFrame = new FrameMIPS(nullptr, nullptr, nullptr);
     currentFrame->setReturnValue(new Temp());// marcando o temporario pra onde retornar
 
-    if (functionNode->getParameters()) {
-        functionNode->getParameters()->accept(this);
-    }
     if (functionNode && functionNode->getId()) {
         this->activeFunction = functionTable->cSearch(functionNode->getId()->getLexeme());
+    }
+
+    if (functionNode->getParameters()) {
+        functionNode->getParameters()->accept(this);
     }
     if (functionNode->getLocal()) {
         functionNode->getLocal()->accept(this);
@@ -378,7 +379,13 @@ ExprNode *Translator::visit(PointerExpNode *pointerExpNode) {//TODO verificar co
 ExprNode *Translator::visit(NameExpNode *nameExpNode) {
     // TODO aqui eu to pegando a variavel e consequentemente as informacoes de tamanho/offset que ela pertence?
     VarSymbol *var = varTable->cSearch(nameExpNode->getLexeme());
-    return new MEM(new BINOP(PLUS, nameExpNode->getExp()->accept(this), new CONST(var->getOffset())));
+    if(var)
+    {
+        return new MEM(new BINOP(PLUS, nameExpNode->getExp()->accept(this), new CONST(var->getOffset())));
+    } else
+    {
+        return NULL;
+    }
 }
 
 void Translator::visit(VarDeclNode *varDeclNode) {
