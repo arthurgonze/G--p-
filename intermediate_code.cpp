@@ -50,8 +50,17 @@ Temp::Temp() {
 }
 
 Temp::Temp(const char *name) {
-    this->name = new char[strlen(name) + 1];
-    strcpy(this->name, name);
+    if(strcmp(name, "NotDefined")!=0)
+    {
+        this->name = new char[strlen(name) + 1];
+        strcpy(this->name, name);
+    }else
+    {
+        char name_aux[250];
+        sprintf(name_aux, "$%d", num_temps++);
+        this->name = new char[strlen(name_aux) + 1];
+        strcpy(this->name, name_aux);
+    }
 }
 
 Temp::~Temp() {

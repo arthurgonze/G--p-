@@ -44,7 +44,7 @@ StmNode *Translator::visit(StmtListNode *stmtListNode) {
             return stmtListNode->getStmt()->accept(this);
         }
     } else {
-        return NULL;
+//        return NULL;
     }
 }
 
@@ -71,7 +71,7 @@ StmNode *Translator::visit(IfNode *ifNode) {
                                                new SEQ(ifNode->getFalseStmt()->accept(this),
                                                        new LABEL(endLabel))))));
     } else {
-        return NULL;
+//        return NULL;
     }
 }
 
@@ -97,7 +97,7 @@ StmNode *Translator::visit(SwitchNode *switchNode) {
     if (switchNode->getBlock() != nullptr) {
         switchNode->getBlock()->accept(this);
     }
-    return NULL;
+//    return NULL;
 }
 
 StmNode *Translator::visit(PrintNode *printNode) {
@@ -127,10 +127,7 @@ StmNode *Translator::visit(ReadLnNode *readLnNode) {
 
 // TODO ...
 StmNode *Translator::visit(ReturnNode *returnNode) {
-    if (returnNode->getExp() != nullptr) {
-        returnNode->getExp()->accept(this);
-    }
-    return NULL;
+    return new SEQ(new MOVE(new TEMP(this->currentFrame->getReturnValue()), returnNode->getExp()->accept(this)) , new JUMP( new NAME(new Label("RETORNO"))));
 }
 
 void Translator::visit(CaseBlockNode *caseBlockNode) {}
@@ -174,12 +171,12 @@ ExprNode *Translator::visit(PrimaryNode *primaryNode) {//TODO checar casos de ar
         }
 
         if (primaryNode->getTokenNode()->getToken() == NUMFLOAT) {
-            return new CONSTF(atoi(primaryNode->getTokenNode()->getLexeme()));
+            return new CONSTF(atof(primaryNode->getTokenNode()->getLexeme()));
         }
 
         if (primaryNode->getTokenNode()->getToken() == LITERALCHAR ||
             primaryNode->getTokenNode()->getToken() == LITERAL) {
-            Literal *literal = new Literal((primaryNode->getTokenNode()->getLexeme()));
+            Literal *literal = new Literal(primaryNode->getTokenNode()->getLexeme());
             //TODO verificar
             literal->setNext(fragmentList);
             fragmentList = literal;
@@ -195,7 +192,7 @@ ExprNode *Translator::visit(PrimaryNode *primaryNode) {//TODO checar casos de ar
         }
     }
 
-    return NULL;
+//    return NULL;
 }
 
 ExprNode *Translator::visit(CallNode *callNode) {
@@ -237,8 +234,9 @@ ExprNode *Translator::visit(ArrayNode *arrayNode) { return NULL; }
 
 ExprNode *Translator::visit(AssignNode *assignNode) {
     // TODO esse cast eh ok?
-    return (ExprNode *) (new MOVE(assignNode->getExp1()->accept(this), assignNode->getExp2()->accept(this)));
-
+    ExprNode *esq = assignNode->getExp1()->accept(this);
+    ExprNode *dir = assignNode->getExp2()->accept(this);
+    return (ExprNode *) (new MOVE(esq, dir));
 }
 
 ExprNode *Translator::visit(AdditionOPNode *additionOPNode) {
@@ -265,10 +263,10 @@ ExprNode *Translator::visit(MultiplicationOPNode *multiplicationOPNode) {
 
 ExprNode *Translator::visit(BooleanOPNode *booleanOPNode) {
     if (booleanOPNode->getExp1() && booleanOPNode->getExp2()) {
+        Temp *r = new Temp("NotDefined");
+        Label *l1 = new Label();
+        Label *l2 = new Label();
         if (booleanOPNode->getOp()->getToken() == AND) {
-            Temp *r = new Temp();
-            Label *l1 = new Label();
-            Label *l2 = new Label();
             Label *l3 = new Label();
 
             return new ESEQ(new SEQ(new MOVE(new TEMP(r), new CONST(0)),
@@ -282,10 +280,6 @@ ExprNode *Translator::visit(BooleanOPNode *booleanOPNode) {
                                                                             new LABEL(l2))))))),
                             new TEMP(r));
         } else if (booleanOPNode->getOp()->getToken() == OR) {
-            Temp *r = new Temp();
-            Label *l1 = new Label();
-            Label *l2 = new Label();
-
             return new ESEQ(new SEQ(new MOVE(new TEMP(r), booleanOPNode->getExp1()->accept(this)),
                                     new SEQ(new CJUMP(NE, booleanOPNode->getExp2()->accept(this), new CONST(0), l1, l2),
                                             new SEQ(new LABEL(l1),
@@ -293,19 +287,16 @@ ExprNode *Translator::visit(BooleanOPNode *booleanOPNode) {
                                                             new LABEL(l2))))),
                             new TEMP(r));
         } else {//TODO if (booleanOPNode->getOp()->getToken() == (LE || GE || GT || LT || EQ || NE)) {
-            Temp *r = new Temp();
-            Label *t = new Label();
-            Label *f = new Label();
             return new ESEQ(new SEQ(new MOVE(new TEMP(r), new CONST(1)),
                                     new SEQ(new CJUMP(booleanOPNode->getOp()->getToken(),
                                                       booleanOPNode->getExp1()->accept(this),
-                                                      booleanOPNode->getExp2()->accept(this), t, f),
-                                            new SEQ(new LABEL(f),
-                                                    new SEQ(new MOVE(new TEMP(r), new CONST(0)), new LABEL(t))))),
+                                                      booleanOPNode->getExp2()->accept(this), l1, l2),
+                                            new SEQ(new LABEL(l2),
+                                                    new SEQ(new MOVE(new TEMP(r), new CONST(0)), new LABEL(l1))))),
                             new TEMP(r));
         }
     }
-    return NULL;
+//    return NULL;
 }
 
 ExprNode *Translator::visit(NotNode *notNode) {
@@ -346,7 +337,8 @@ void Translator::visit(FormalListNode *formalListNode) {
 
 void Translator::visit(FunctionNode *functionNode) {
     currentFrame = new FrameMIPS(nullptr, nullptr, nullptr);
-    currentFrame->setReturnValue(new Temp());// marcando o temporario pra onde retornar
+    Temp *temp = new Temp("NotDefined");
+    currentFrame->setReturnValue(temp);// marcando o temporario pra onde retornar
 
     if (functionNode && functionNode->getId()) {
         this->activeFunction = functionTable->cSearch(functionNode->getId()->getLexeme());
@@ -364,18 +356,15 @@ void Translator::visit(FunctionNode *functionNode) {
 //    Label *endLab = new Label(endFuncLabel);
     // TODO empilhar
 
-    StmNode *stmNode = NULL;// preciso desse no pra guardar todas as instrucoes dos retornos que estarao no corpo da funcao
-    if (functionNode->getBody()) {
-        stmNode = this->visit(functionNode->getBody());// faco o no receber o retorno do visit ao corpo da funcao
+    if (functionNode->getBody() && currentFrame) {
+        Procedure *procedure = new Procedure(currentFrame,
+                                             new SEQ(new SEQ(new LABEL(new Label(functionNode->getId()->getLexeme())),
+                                                             functionNode->getBody()->accept(this)),
+                                                     new LABEL(new Label(endFuncLabel))));
+        procedure->setNext(fragmentList);
+        fragmentList = procedure;
     }
     // TODO desempilhar
-
-    stmNode = new SEQ(new LABEL(new Label(functionNode->getId()->getLexeme())), stmNode);
-    stmNode = new SEQ(stmNode, new LABEL(new Label(endFuncLabel)));
-
-    Procedure *procedure = new Procedure(currentFrame, stmNode);
-    procedure->setNext(fragmentList);
-    fragmentList = procedure;
 }
 
 ExprNode *Translator::visit(PointerExpNode *pointerExpNode) {//TODO verificar corretude
@@ -384,7 +373,7 @@ ExprNode *Translator::visit(PointerExpNode *pointerExpNode) {//TODO verificar co
         // TODO offset ou size?
         return new MEM(new BINOP(PLUS, pointerExpNode->getExp()->accept(this), new CONST(pointerVar->getOffset())));
     } else {
-        return NULL;
+//        return NULL;
     }
 }
 
@@ -394,7 +383,7 @@ ExprNode *Translator::visit(NameExpNode *nameExpNode) {
     if (var) {
         return new MEM(new BINOP(PLUS, nameExpNode->getExp()->accept(this), new CONST(var->getOffset())));
     } else {
-        return NULL;
+//        return NULL;
     }
 }
 
@@ -451,7 +440,7 @@ ExprNode *Translator::visit(AddressValNode *addressValNode) {// TODO acho que so
     if (addressValNode->getExp() != nullptr) {
         return addressValNode->getExp()->accept(this);
     }
-    return NULL;
+//    return NULL;
 }
 
 ExprNode *Translator::visit(PointerValNode *pointerValNode) {
@@ -485,10 +474,10 @@ void Translator::printFragmentList() {
     std::cout << "---- INTERMEDIATE CODE TREE ----" << std::endl;
     std::cout << "------------------------------\n" << std::endl;
     fragmentList->accept(visitorICT);
-    Canonicalizer * canonicalizer = new Canonicalizer();
+    Canonicalizer *canonicalizer = new Canonicalizer();
 
     fragmentList = canonicalizer->visit(fragmentList);
-    while(canonicalizer->isChanged()){
+    while (canonicalizer->isChanged()) {
         std::cout << "x" << std::endl;
         canonicalizer->change();
         fragmentList = fragmentList->accept(canonicalizer);
