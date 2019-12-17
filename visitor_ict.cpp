@@ -8,13 +8,13 @@ PrintICT::PrintICT() {
 
 void PrintICT::printIR(const char *node_name) {
     for (unsigned int i = 0; i < this->level; i++)
-        std::cout << "    ";
+        std::cout << "|    ";
     std::cout << "->" << node_name << std::endl;
 }
 
 void PrintICT::printLexemeIR(const char *node_name, const char *aux) {
     for (unsigned int i = 0; i < this->level; i++)
-        std::cout << "    ";
+        std::cout << "|    ";
     std::cout << "->" << node_name << "." << aux << std::endl;
 }
 
@@ -84,13 +84,13 @@ void PrintICT::visit(ExpList *node) {
 
 void PrintICT::visit(CONST *node) {
     for (unsigned int i = 0; i < this->level; i++)
-        std::cout << "    ";
+        std::cout << "|    ";
     std::cout << "->" << "CONST" << "." << node->getI() << std::endl;
 }
 
 void PrintICT::visit(CONSTF *node) {
     for (unsigned int i = 0; i < this->level; i++)
-        std::cout << "    ";
+        std::cout << "|    ";
     std::cout << "->" << "CONSTF" << "." << node->getJ() << std::endl;
 }
 
@@ -283,7 +283,7 @@ StmNode *Canonicalizer::visit(LABEL *node) {
 
 ExprNode *Canonicalizer::visit(ESEQ *node) {
 
-    if (node->getE() != NULL) {
+    if (node->getE()) {
         if (node->getE()->getTypeStm() == V_ESEQ) {
             changed = true;
             ExprNode *eseq = node->getE();
@@ -328,10 +328,10 @@ StmNode *Canonicalizer::visit(CJUMP *node) {
                 eseq->getE()->accept(this),node->getRight()->accept(this),node->getIfTrue(),node->getIfFalse()));
     }
 
-    if(node->getRight()->getTypeStm() == V_ESEQ){
+    if(node->getRight() && node->getRight()->getTypeStm() == V_ESEQ){
         changed = true;
         ExprNode * eseq = node->getRight();
-        Temp * t = new Temp("NotDefined");
+        Temp * t = new Temp();
 
         if(node->getRight()->getTypeStm() == V_NAME) {
             return new SEQ(eseq->getS()->accept(this),new CJUMP(node->getRelop(),
@@ -365,7 +365,7 @@ ExprNode *Canonicalizer::visit(BINOP *node) {
     if(node->getRight()->getTypeStm() == V_ESEQ){
         changed = true;
         ExprNode *eseq = node->getRight();
-        Temp *t = new Temp("NotDefined");
+        Temp *t = new Temp();
 
         if(node->getLeft()->getTypeStm() == V_CONST ){
 
@@ -402,11 +402,10 @@ StmNode *Canonicalizer::visit(MOVE *node) {
 StmNode *Canonicalizer::visit(SEQ *node) {
     if(node->getS1() && node->getS1()->getTypeStm() == V_SEQ){
         StmNode *seq = node->getS1();
-//        if(seq->getS1() && seq->getS2() && node->getS2()) {
             changed = true;
             return new SEQ(seq->getS1()->accept(this), new SEQ(seq->getS2()->accept(this),
                                                                node->getS2()->accept(this)));
-//        }
+
     }else {
         if (node->getS1()) node->setS1(node->getS1()->accept(this));
         if (node->getS2()) node->setS2(node->getS2()->accept(this));
@@ -415,12 +414,18 @@ StmNode *Canonicalizer::visit(SEQ *node) {
 }
 
 ExprNode *Canonicalizer::visit(CALL *node) {
-    //TODO
-    return node;
+    changed= true;
+    Temp * t = new Temp();
+    return new ESEQ(new MOVE(new TEMP(t),new CALL(node->getFunc()->accept(this),
+            node->getArgs()->accept(this))),new TEMP(t));
+
+
 }
 
 StmNode *Canonicalizer::visit(EXP *node) {
-    //TODO
+    if(node->getE() && node->getE()->getTypeStm() == V_CALL){
+        return node->getE()->accept(this);
+    }
     return node;
 }
 

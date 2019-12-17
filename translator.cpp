@@ -44,7 +44,7 @@ StmNode *Translator::visit(StmtListNode *stmtListNode) {
             return stmtListNode->getStmt()->accept(this);
         }
     } else {
-//        return NULL;
+        return NULL;
     }
 }
 
@@ -71,7 +71,7 @@ StmNode *Translator::visit(IfNode *ifNode) {
                                                new SEQ(ifNode->getFalseStmt()->accept(this),
                                                        new LABEL(endLabel))))));
     } else {
-//        return NULL;
+        return NULL;
     }
 }
 
@@ -97,7 +97,7 @@ StmNode *Translator::visit(SwitchNode *switchNode) {
     if (switchNode->getBlock() != nullptr) {
         switchNode->getBlock()->accept(this);
     }
-//    return NULL;
+    return NULL;
 }
 
 StmNode *Translator::visit(PrintNode *printNode) {
@@ -192,7 +192,7 @@ ExprNode *Translator::visit(PrimaryNode *primaryNode) {//TODO checar casos de ar
         }
     }
 
-//    return NULL;
+    return NULL;
 }
 
 ExprNode *Translator::visit(CallNode *callNode) {
@@ -234,9 +234,8 @@ ExprNode *Translator::visit(ArrayNode *arrayNode) { return NULL; }
 
 ExprNode *Translator::visit(AssignNode *assignNode) {
     // TODO esse cast eh ok?
-    ExprNode *esq = assignNode->getExp1()->accept(this);
-    ExprNode *dir = assignNode->getExp2()->accept(this);
-    return (ExprNode *) (new MOVE(esq, dir));
+    return (ExprNode *) (new MOVE(assignNode->getExp1()->accept(this), assignNode->getExp2()->accept(this)));
+
 }
 
 ExprNode *Translator::visit(AdditionOPNode *additionOPNode) {
@@ -263,10 +262,10 @@ ExprNode *Translator::visit(MultiplicationOPNode *multiplicationOPNode) {
 
 ExprNode *Translator::visit(BooleanOPNode *booleanOPNode) {
     if (booleanOPNode->getExp1() && booleanOPNode->getExp2()) {
-        Temp *r = new Temp("NotDefined");
-        Label *l1 = new Label();
-        Label *l2 = new Label();
-        if (booleanOPNode->getOp()->getToken() == AND) {
+            Temp *r = new Temp();
+            Label *l1 = new Label();
+            Label *l2 = new Label();
+          if (booleanOPNode->getOp()->getToken() == AND) {
             Label *l3 = new Label();
 
             return new ESEQ(new SEQ(new MOVE(new TEMP(r), new CONST(0)),
@@ -337,8 +336,7 @@ void Translator::visit(FormalListNode *formalListNode) {
 
 void Translator::visit(FunctionNode *functionNode) {
     currentFrame = new FrameMIPS(nullptr, nullptr, nullptr);
-    Temp *temp = new Temp("NotDefined");
-    currentFrame->setReturnValue(temp);// marcando o temporario pra onde retornar
+    currentFrame->setReturnValue(new Temp());// marcando o temporario pra onde retornar
 
     if (functionNode && functionNode->getId()) {
         this->activeFunction = functionTable->cSearch(functionNode->getId()->getLexeme());
@@ -373,7 +371,7 @@ ExprNode *Translator::visit(PointerExpNode *pointerExpNode) {//TODO verificar co
         // TODO offset ou size?
         return new MEM(new BINOP(PLUS, pointerExpNode->getExp()->accept(this), new CONST(pointerVar->getOffset())));
     } else {
-//        return NULL;
+        return NULL;
     }
 }
 
@@ -383,7 +381,7 @@ ExprNode *Translator::visit(NameExpNode *nameExpNode) {
     if (var) {
         return new MEM(new BINOP(PLUS, nameExpNode->getExp()->accept(this), new CONST(var->getOffset())));
     } else {
-//        return NULL;
+        return NULL;
     }
 }
 
@@ -440,7 +438,7 @@ ExprNode *Translator::visit(AddressValNode *addressValNode) {// TODO acho que so
     if (addressValNode->getExp() != nullptr) {
         return addressValNode->getExp()->accept(this);
     }
-//    return NULL;
+    return NULL;
 }
 
 ExprNode *Translator::visit(PointerValNode *pointerValNode) {
@@ -474,11 +472,12 @@ void Translator::printFragmentList() {
     std::cout << "---- INTERMEDIATE CODE TREE ----" << std::endl;
     std::cout << "------------------------------\n" << std::endl;
     fragmentList->accept(visitorICT);
-    Canonicalizer *canonicalizer = new Canonicalizer();
+    Canonicalizer * canonicalizer = new Canonicalizer();
 
     fragmentList = canonicalizer->visit(fragmentList);
-    while (canonicalizer->isChanged()) {
-        std::cout << "x" << std::endl;
+    while(canonicalizer->isChanged()){
+//        std::cout << "x" << std::endl;
+//        fragmentList->accept(visitorICT);
         canonicalizer->change();
         fragmentList = fragmentList->accept(canonicalizer);
 
@@ -487,7 +486,7 @@ void Translator::printFragmentList() {
     std::cout << "---- CANONICAL INTERMEDIATE CODE TREE ----" << std::endl;
     std::cout << "------------------------------\n" << std::endl;
 
-    visitorICT->visit(fragmentList);
+    fragmentList->accept(visitorICT);
 
 
 }
