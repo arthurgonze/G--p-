@@ -91,13 +91,59 @@ StmNode *Translator::visit(WhileNode *whileNode) {
 
 // TODO ...
 StmNode *Translator::visit(SwitchNode *switchNode) {
-    if (switchNode->getExp() != nullptr) {
-        switchNode->getExp()->accept(this);
+    char nomeRot[200];
+    //criando o label do fim  do switch
+    sprintf(nomeRot, "fim_switch_%d", switchNode->getLine());
+//    numRotuloSwitch++;
+    Label *fimSwitch = new Label(nomeRot);
+//    this->empilhaRotuloLaco(fimSwitch);
+
+    //pego o primeiro bloco do switch
+    CaseBlockNode *caseBlock = switchNode->getBlock();
+
+    // variaveis auxiliares
+    SEQ *seq3 = NULL, *seq = new SEQ(NULL, NULL), *seqFinal = NULL;
+
+    int numCase = 0;
+    //enquanto houver blocos
+    while (caseBlock) {
+        //labels auxiliares
+        Label *labelResto = new Label();
+        Label *labelCase = new Label();
+
+        //se tem um proximo bloco no switch
+        if (caseBlock->getNext()) {
+            // o seq 3 recebe um label de continuacao e um no SEQ nulo
+            seq3 = new SEQ(new LABEL(labelResto), new SEQ(NULL, NULL));
+        } else {
+            // caso contrario, o seq3 recebe o label de continuacao e de fim
+            seq3 = new SEQ(new LABEL(labelResto), new LABEL(fimSwitch));
+        }
+        // seq recebe o cjump pra expressao do switch, o int pro bloco, o label do case, o label da continuacao e
+        // recebe o label do case e recebe as sentencas do bloco e o bloco 3
+        seq = new SEQ(
+                new CJUMP(EQ, switchNode->getExp()->accept(this), new CONST(atoi(caseBlock->getNum()->getLexeme())),
+                          labelCase, labelResto),
+                new SEQ(new LABEL(labelCase), new SEQ(caseBlock->getStmt()->accept(this), seq3)));
+
+        // o seqFinal recebe sempre o conjunto do todo
+        if (numCase == 0)
+        {
+            seqFinal = seq;
+        }
+
+
+//        if (caseBlock->getNext()) {
+//            seq = (SEQ *)seq3->getS2();
+//        }
+
+        caseBlock = caseBlock->getNext();
+        numCase++;
     }
-    if (switchNode->getBlock() != nullptr) {
-        switchNode->getBlock()->accept(this);
-    }
-    return NULL;
+
+//    this->desempilhaRotuloLaco();
+
+    return seqFinal;
 }
 
 StmNode *Translator::visit(PrintNode *printNode) {
@@ -125,9 +171,9 @@ StmNode *Translator::visit(ReadLnNode *readLnNode) {
                             new ExpList(readLnNode->getExp()->accept(this), NULL)));
 }
 
-// TODO ...
 StmNode *Translator::visit(ReturnNode *returnNode) {
-    return new SEQ(new MOVE(new TEMP(this->currentFrame->getReturnValue()), returnNode->getExp()->accept(this)) , new JUMP( new NAME(new Label("RETORNO"))));
+    return new SEQ(new MOVE(new TEMP(this->currentFrame->getReturnValue()), returnNode->getExp()->accept(this)),
+                   new JUMP(new NAME(new Label("RETORNO"))));
 }
 
 void Translator::visit(CaseBlockNode *caseBlockNode) {}
@@ -295,7 +341,7 @@ ExprNode *Translator::visit(BooleanOPNode *booleanOPNode) {
                             new TEMP(r));
         }
     }
-//    return NULL;
+    return NULL;
 }
 
 ExprNode *Translator::visit(NotNode *notNode) {

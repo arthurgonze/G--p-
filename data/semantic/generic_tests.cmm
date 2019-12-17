@@ -21,6 +21,7 @@ int ma() {
 
     return *&*&*&*&*pointertob;
 }
+
 int main() {
 
     int b;
@@ -34,32 +35,26 @@ int main() {
     if(k->a->a->a->b.m11 != 0)
     {
 
-        if(k->a->a->a->b.m11 == 0) {
+        if(k->a->a->a->b.m11 == 2) {
 
             k->m11 = 11;
 
-            return 1;
+            return 2;
         }
 
-        while(k->a->b.m11 == 1) {
-
-            k->m11 =0;
+        while(k->a->b.m11 < 10) {
             k->m11 = 1;
-
-            k->a->m11 = 18 * d.m11;
-            break;
             switch(k->a->m11)
             {
                 case 1:
-                    k->m11 =0;
+                    k->a->b.m11 = k->a->b.m11 + 2;
                     break;
             }
+            k->a->b.m11 = k->a->b.m11 + 1;
         }
         k->m11 = 11;
     } else {
         return 1;
     }
-
     return 0;
-
 }

@@ -367,6 +367,14 @@ public:
 
     virtual inline StmNode * getS2() {return nullptr ;}
 
+//    virtual inline StmNode * setS(){};
+//
+//    virtual inline ExprNode * setE(){};
+//
+//    virtual inline StmNode * setS1(){};
+//
+//    virtual inline StmNode * setS2(){};
+
 };
 
 class ExprNode : public StmNode {

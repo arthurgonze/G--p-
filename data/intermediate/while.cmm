@@ -1,0 +1,30 @@
+int main() {
+	int limit,cont, option, test;
+	option=1;
+	limit=10;
+	cont =0;
+
+	while(cont < limit) {
+		switch(option)
+            {
+                case 1:
+                	option = 2;
+                    test = 1;
+                break;
+                
+                case 2:
+                	option = 3;
+                    test = 2;
+                break;
+				
+				case 3:
+					option = 1;
+                    test = 3;
+                break;
+            }
+		cont = cont + 1;
+	}
+
+  	return 0;
+}
+
