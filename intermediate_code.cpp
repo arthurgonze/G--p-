@@ -22,8 +22,8 @@ void Procedure::setBody(StmNode *body) {
 }
 
 Procedure::~Procedure() {
-    delete this->frame;
-    delete this->body;
+//    delete this->frame;
+//    delete this->body;
 }
 
 

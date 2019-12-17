@@ -28,24 +28,20 @@ int main() {
     bool g;
     s2 test;
 
-    option = 1;
-    limit = 10;
-    cont = 0;
-    t = 1;
     u = 2;
-    g = true;
-
     test.t1->x = u;
     test.t2[3].y[3] = 3;
-
     test.t1->y[4] = test.t1->x + test.t2[3].y[3];
-
     test.t1->t4[5].x = test.t1->y[4] + 1;
-
     test.t1->t3->t3->t3->t3->t3->t4[1].x = test.t1->t4[5].x * 2;
 
+    t = 1;
+    g = true;
     fun1(t, g);
 
+    limit = 10;
+    cont = 0;
+    option = 1;
     while (cont < limit) {
         switch (option) {
             case 1:
