@@ -51,9 +51,12 @@ StmNode *Translator::visit(StmtListNode *stmtListNode) {
 void Translator::visit(VarStmtNode *varStmtNode) {}
 
 StmNode *Translator::visit(IfNode *ifNode) {
-    Label *thenLabel = new Label();
-    Label *elseLabel = new Label();
-    Label *endLabel = new Label();
+    char thenLabelName[200];
+    char endlabelName[200];
+    sprintf(thenLabelName, "if_then_%p", &ifNode);
+    sprintf(endlabelName, "if_end_%p", &ifNode);
+    Label *thenLabel = new Label(thenLabelName);
+    Label *endLabel = new Label(endlabelName);
 
     // sem else
     if (ifNode->getFalseStmt() == nullptr && ifNode->getTrueStmt() != nullptr) {
@@ -62,6 +65,9 @@ StmNode *Translator::visit(IfNode *ifNode) {
                                new SEQ(ifNode->getTrueStmt()->accept(this),
                                        new LABEL(endLabel))));
     } else if (ifNode->getFalseStmt() != nullptr && ifNode->getTrueStmt() != nullptr) {// com else
+        char elseLabelName[200];
+        sprintf(elseLabelName, "if_else_%p", &ifNode);
+        Label *elseLabel = new Label(elseLabelName);
         return new SEQ(new CJUMP(NE, ifNode->getHead()->accept(this), new CONST(0), thenLabel, elseLabel),
                        new SEQ(new LABEL(thenLabel),
                                new SEQ(new SEQ(ifNode->getTrueStmt()->accept(this),
@@ -76,10 +82,15 @@ StmNode *Translator::visit(IfNode *ifNode) {
 }
 
 StmNode *Translator::visit(WhileNode *whileNode) {
-    Label *testLabel = new Label();
-    Label *startLabel = new Label();
-    // TODO fazer um label de fim do while? e empilhar e desempilhar esses labels?
-    Label *endLabel = new Label();
+    char testlabelName[200];
+    char startLabelName[200];
+    char endlabelName[200];
+    sprintf(testlabelName, "while_test_%p", &whileNode);
+    sprintf(endlabelName, "while_end_%p", &whileNode);
+    sprintf(startLabelName, "while_start_%p", &whileNode);
+    Label *testLabel = new Label(testlabelName);
+    Label *startLabel = new Label(startLabelName);
+    Label *endLabel = new Label(endlabelName);
 
     return new SEQ(new LABEL(testLabel),
                    new SEQ(new CJUMP(NE, whileNode->getHead()->accept(this), new CONST(0), startLabel, endLabel),
@@ -89,61 +100,49 @@ StmNode *Translator::visit(WhileNode *whileNode) {
                                                    new LABEL(endLabel))))));
 }
 
-// TODO ...
 StmNode *Translator::visit(SwitchNode *switchNode) {
-    char nomeRot[200];
+    char endlabelName[200];
+    char startLabelName[200];
+
     //criando o label do fim  do switch
-    sprintf(nomeRot, "fim_switch_%d", switchNode->getLine());
-//    numRotuloSwitch++;
-    Label *fimSwitch = new Label(nomeRot);
-//    this->empilhaRotuloLaco(fimSwitch);
+    sprintf(endlabelName, "switch_end_%p", &switchNode);
+    Label *labelSwitchEnd = new Label(endlabelName);
+
+    sprintf(startLabelName, "switch_start_%p", &switchNode);
+    Label *labelSwitchStart = new Label(startLabelName);
 
     //pego o primeiro bloco do switch
     CaseBlockNode *caseBlock = switchNode->getBlock();
 
     // variaveis auxiliares
-    SEQ *seq3 = NULL, *seq = new SEQ(NULL, NULL), *seqFinal = NULL;
+    SEQ *seq2 = NULL, *seq = NULL, *seqAUX = NULL;
 
-    int numCase = 0;
     //enquanto houver blocos
     while (caseBlock) {
         //labels auxiliares
-        Label *labelResto = new Label();
+        Label *labelEndCase = new Label();
         Label *labelCase = new Label();
 
         //se tem um proximo bloco no switch
         if (caseBlock->getNext()) {
-            // o seq 3 recebe um label de continuacao e um no SEQ nulo
-            seq3 = new SEQ(new LABEL(labelResto), new SEQ(NULL, NULL));
+            // o seq 2 recebe um label de continuacao e um no SEQ nulo
+            seq2 = new SEQ(new LABEL(labelEndCase), new LABEL(labelCase));
         } else {
-            // caso contrario, o seq3 recebe o label de continuacao e de fim
-            seq3 = new SEQ(new LABEL(labelResto), new LABEL(fimSwitch));
+            // caso contrario, o seq2 recebe o label de continuacao e de fim
+            seq2 = new SEQ(new LABEL(labelEndCase), new LABEL(labelSwitchEnd));
         }
+
         // seq recebe o cjump pra expressao do switch, o int pro bloco, o label do case, o label da continuacao e
         // recebe o label do case e recebe as sentencas do bloco e o bloco 3
-        seq = new SEQ(
-                new CJUMP(EQ, switchNode->getExp()->accept(this), new CONST(atoi(caseBlock->getNum()->getLexeme())),
-                          labelCase, labelResto),
-                new SEQ(new LABEL(labelCase), new SEQ(caseBlock->getStmt()->accept(this), seq3)));
-
-        // o seqFinal recebe sempre o conjunto do todo
-        if (numCase == 0)
-        {
-            seqFinal = seq;
-        }
-
-
-//        if (caseBlock->getNext()) {
-//            seq = (SEQ *)seq3->getS2();
-//        }
-
+        seqAUX = new SEQ(new CJUMP(EQ, switchNode->getExp()->accept(this),
+                                   new CONST(atoi(caseBlock->getNum()->getLexeme())), labelCase, labelEndCase),
+                         new SEQ(new LABEL(labelCase),
+                                 new SEQ(caseBlock->getStmt()->accept(this), seq2)));
+        seq = new SEQ(seq, seqAUX);
         caseBlock = caseBlock->getNext();
-        numCase++;
     }
-
-//    this->desempilhaRotuloLaco();
-
-    return seqFinal;
+    seq = new SEQ(new LABEL(labelSwitchStart), seq);
+    return seq;
 }
 
 StmNode *Translator::visit(PrintNode *printNode) {
@@ -156,24 +155,26 @@ StmNode *Translator::visit(PrintNode *printNode) {
         lcall = new ExpList(param->getExp()->accept(this), lcall);
         param = param->getNext();
     }
-    // crio o nome de chamada para o print
-    char nome[200] = "printNode";
     // retorno  uma expressao call com a lista de expressoes e o name/label criado
-    return new EXP(new CALL(new NAME(new Label(nome)), lcall));
+    return new EXP(new CALL(new NAME(new Label("printNode")), lcall));
 }
 
 StmNode *Translator::visit(ReadLnNode *readLnNode) {
-    //crio o label de chamada do read
-    char nome[200] = "readLnNode";
     // TODO dar um append no lexema da expr? readLnNode->getExp()->getLexeme();
     // retorno uma expressao call com o name/label da chamada e o accept para a expressao do read
-    return new EXP(new CALL(new NAME(new Label(nome)),
+    return new EXP(new CALL(new NAME(new Label("readLnNode")),
                             new ExpList(readLnNode->getExp()->accept(this), NULL)));
 }
 
 StmNode *Translator::visit(ReturnNode *returnNode) {
+    Label *funcLabel;
+    if (activeFunction) {
+        char endFuncLabel[50];
+        sprintf(endFuncLabel, "%s_end", activeFunction->getLexeme());
+        funcLabel = new Label(endFuncLabel);
+    }
     return new SEQ(new MOVE(new TEMP(this->currentFrame->getReturnValue()), returnNode->getExp()->accept(this)),
-                   new JUMP(new NAME(new Label("RETORNO"))));
+                   new JUMP(new NAME(funcLabel)));
 }
 
 void Translator::visit(CaseBlockNode *caseBlockNode) {}
@@ -279,7 +280,6 @@ ExprNode *Translator::visit(ArrayCallNode *arrayCallNode) {
 ExprNode *Translator::visit(ArrayNode *arrayNode) { return NULL; }
 
 ExprNode *Translator::visit(AssignNode *assignNode) {
-    // TODO esse cast eh ok?
     return (ExprNode *) (new MOVE(assignNode->getExp1()->accept(this), assignNode->getExp2()->accept(this)));
 
 }
@@ -308,10 +308,10 @@ ExprNode *Translator::visit(MultiplicationOPNode *multiplicationOPNode) {
 
 ExprNode *Translator::visit(BooleanOPNode *booleanOPNode) {
     if (booleanOPNode->getExp1() && booleanOPNode->getExp2()) {
-            Temp *r = new Temp();
-            Label *l1 = new Label();
-            Label *l2 = new Label();
-          if (booleanOPNode->getOp()->getToken() == AND) {
+        Temp *r = new Temp();
+        Label *l1 = new Label();
+        Label *l2 = new Label();
+        if (booleanOPNode->getOp()->getToken() == AND) {
             Label *l3 = new Label();
 
             return new ESEQ(new SEQ(new MOVE(new TEMP(r), new CONST(0)),
@@ -397,8 +397,6 @@ void Translator::visit(FunctionNode *functionNode) {
 
     char endFuncLabel[50];
     sprintf(endFuncLabel, "%s_end", functionNode->getId()->getLexeme());
-//    Label *endLab = new Label(endFuncLabel);
-    // TODO empilhar
 
     if (functionNode->getBody() && currentFrame) {
         Procedure *procedure = new Procedure(currentFrame,
@@ -408,7 +406,6 @@ void Translator::visit(FunctionNode *functionNode) {
         procedure->setNext(fragmentList);
         fragmentList = procedure;
     }
-    // TODO desempilhar
 }
 
 ExprNode *Translator::visit(PointerExpNode *pointerExpNode) {//TODO verificar corretude
@@ -518,10 +515,10 @@ void Translator::printFragmentList() {
     std::cout << "---- INTERMEDIATE CODE TREE ----" << std::endl;
     std::cout << "------------------------------\n" << std::endl;
     fragmentList->accept(visitorICT);
-    Canonicalizer * canonicalizer = new Canonicalizer();
+    Canonicalizer *canonicalizer = new Canonicalizer();
 
     fragmentList = canonicalizer->visit(fragmentList);
-    while(canonicalizer->isChanged()){
+    while (canonicalizer->isChanged()) {
 //        std::cout << "x" << std::endl;
 //        fragmentList->accept(visitorICT);
         canonicalizer->change();
