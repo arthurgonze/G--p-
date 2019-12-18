@@ -1,10 +1,11 @@
 typedef struct {
-    int x,  y[10];
-    s1 *t3,  t4[15];
+    int y[10],x;
+    s1 *t3;
+    s1  t4[1500];
 } s1;
 
 typedef struct {
-    s1 *t1, t2[20];
+    s1 *t1, t2[20000];
 } s2;
 
 int fun1(int a, bool b) {
@@ -27,12 +28,12 @@ int main() {
     int limit,cont,option,test2,t,u;
     bool g;
     s2 test;
-
+    &u;
     u = 2;
     test.t1->x = u;
     test.t2[3].y[3] = 3;
     test.t1->y[4] = test.t1->x + test.t2[3].y[3];
-    test.t1->t4[5].x = test.t1->y[4] + 1;
+    test.t1->t4[1200].x = test.t1->y[4] + 1;
     test.t1->t3->t3->t3->t3->t3->t4[1].x = test.t1->t4[5].x * 2;
 
     t = 1;
@@ -60,6 +61,10 @@ int main() {
                 break;
         }
         cont = cont + 1;
+        if(g)
+        {
+            print("Struct %d", test.t1->t3->t3->t3->t3->t3->t4[1].x);
+        }
     }
     return 0;
 }

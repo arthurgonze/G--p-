@@ -391,7 +391,18 @@ StmNode *Canonicalizer::visit(MOVE *node) {
 
         return new SEQ(eseq->getS()->accept(this), new MOVE(eseq->getE()->accept(this),
                                                             node->getSrc()->accept(this)));
-    } else {
+    }
+//    if (node->getSrc() && node->getSrc()->getTypeStm() == V_ESEQ) {
+//        changed = true;
+//        Temp * t = new Temp();
+//        Temp * t2 = new Temp();
+//        return new SEQ(new MOVE(new TEMP(t),node->getDst()->accept(this)),
+//                       new SEQ(new MOVE(new TEMP(t2),node->getSrc()->accept(this)),
+//                               node->getSrc()->getS()->accept(this)));
+//
+//    }
+
+    else {
         if (node->getDst()) node->setDst(node->getDst()->accept(this));
         if (node->getSrc()) node->setSrc(node->getSrc()->accept(this));
     }
@@ -402,25 +413,20 @@ StmNode *Canonicalizer::visit(SEQ *node) {
     if (node->getS1() && node->getS1()->getTypeStm() == V_SEQ) {
         StmNode *seq = node->getS1();
         changed = true;
-        // TODO caso queira voltar ao caso padrao  comente todos os ifs e deixe so o retorno do primeiro
         if (seq->getS1() && seq->getS2()) {
             return new SEQ(seq->getS1()->accept(this),
-                           new SEQ(seq->getS2()->accept(this),node->getS2()->accept(this)));
+                           new SEQ(seq->getS2()->accept(this),
+                                   node->getS2()->accept(this)));
         }else if(seq->getS1()!=NULL && seq->getS2()==NULL)
         {
-            //TODO generic_tests e test.cmm tbm entra aqui
-            return new SEQ(seq->getS1()->accept(this),new SEQ(new NAME(new Label("NULL_DIR_ESQ_1")),
-                                                              new NAME(new Label("NULL_DIR_DIR_1"))));
+            return new SEQ(seq->getS1()->accept(this),new SEQ(NULL,NULL));
         }else if(seq->getS1()==NULL && seq->getS2()!=NULL)
         {
-            return new SEQ(new NAME(new Label("NULL_ESQ")), new SEQ(seq->getS2()->accept(this),
-                                                                node->getS2()->accept(this)));
+            return new SEQ(NULL, new SEQ(seq->getS2()->accept(this), node->getS2()->accept(this)));
         }else
         {
-            return new SEQ(new NAME(new Label("NULL_ESQ")), new SEQ(new NAME(new Label("NULL_DIR_ESQ_2")),
-                                                                new NAME(new Label("NULL_DIR_DIR_2"))));
+            return new SEQ(NULL, new SEQ(NULL,NULL));
         }
-
     } else {
         if (node->getS1()) node->setS1(node->getS1()->accept(this));
         if (node->getS2()) node->setS2(node->getS2()->accept(this));

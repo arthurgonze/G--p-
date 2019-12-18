@@ -199,9 +199,9 @@ ExprNode *Translator::visit(PrimaryNode *primaryNode) {//TODO checar casos de ar
 //            return new BINOP(PLUS, new TEMP(FP), new CONST(aux->getOffset()));
         } else {
             aux = varTable->cSearch(primaryNode->getTokenNode()->getLexeme());
-            if (aux) {// var global
+            if (aux) {// var nonLocal
                 char name[200];
-                sprintf(name, "var_%s", primaryNode->getTokenNode()->getLexeme());
+                sprintf(name, "nonLocal_var_%s", primaryNode->getTokenNode()->getLexeme());
                 Label *labelAUX = new Label(name);
                 return new MEM(new NAME(labelAUX));
             }
@@ -262,18 +262,18 @@ ExprNode *Translator::visit(ArrayCallNode *arrayCallNode) {
             arrayCallNode->getTypeLexeme());// TODO to verificando certo na tabela?
     if (structSymbol) {
         tam = structSymbol->getSize();
-    } else if (arrayCallNode->getExp()->isPointer() || arrayCallNode->getType() == FLOAT) {
+    } else if (arrayCallNode->getExp()->isPointer() || arrayCallNode->getType() == FLOAT|| arrayCallNode->getType() == INT) {
         // se nao for uma estrutra e for um ponteiro ou float
         tam = INT32_SIZE;
     } else {
         // se for um tipo primitivo que nao seja ponteiro ou float
         tam = INT8_SIZE;
     }
-
     return new MEM(new BINOP(PLUS,
                              arrayCallNode->getExp()->accept(this),
                              new BINOP(STAR,
                                        new CONST(tam),
+//                                       new CONST(atoi(((PrimaryNode*) arrayCallNode->getIndex())->getTokenNode()->getLexeme())))));
                                        arrayCallNode->getIndex()->accept(this))));
 }
 
@@ -420,7 +420,7 @@ ExprNode *Translator::visit(PointerExpNode *pointerExpNode) {//TODO verificar co
 
 ExprNode *Translator::visit(NameExpNode *nameExpNode) {
     // TODO aqui eu to pegando a variavel e consequentemente as informacoes de tamanho/offset que ela pertence?
-    VarSymbol *var = varTable->cSearch(nameExpNode->getLexeme());
+    VarSymbol *var = varTable->searchInScope(nameExpNode->getId()->getLexeme(), nameExpNode->getExp()->getTypeLexeme());
     if (var) {
         return new MEM(new BINOP(PLUS, nameExpNode->getExp()->accept(this), new CONST(var->getOffset())));
     } else {
@@ -510,28 +510,29 @@ Translator::Translator(VarTable *varTable, FunctionTable *functionTable, StructT
 }
 
 void Translator::printFragmentList() {
-    PrintICT *visitorICT = new PrintICT();
-    std::cout << "\n------------------------------" << std::endl;
-    std::cout << "---- INTERMEDIATE CODE TREE ----" << std::endl;
-    std::cout << "------------------------------\n" << std::endl;
-    fragmentList->accept(visitorICT);
-    Canonicalizer *canonicalizer = new Canonicalizer();
+    if(fragmentList)
+    {
+        PrintICT *visitorICT = new PrintICT();
+        std::cout << "\n------------------------------" << std::endl;
+        std::cout << "---- INTERMEDIATE CODE TREE ----" << std::endl;
+        std::cout << "------------------------------\n" << std::endl;
+        fragmentList->accept(visitorICT);
+        Canonicalizer *canonicalizer = new Canonicalizer();
 
-    fragmentList = canonicalizer->visit(fragmentList);
-    while (canonicalizer->isChanged()) {
+        fragmentList = canonicalizer->visit(fragmentList);
+        while (canonicalizer->isChanged()) {
 //        std::cout << "x" << std::endl;
 //        fragmentList->accept(visitorICT);
-        canonicalizer->change();
-        fragmentList = fragmentList->accept(canonicalizer);
+            canonicalizer->change();
+            fragmentList = fragmentList->accept(canonicalizer);
 
+        }
+        std::cout << "\n------------------------------" << std::endl;
+        std::cout << "---- CANONICAL INTERMEDIATE CODE TREE ----" << std::endl;
+        std::cout << "------------------------------\n" << std::endl;
+
+        fragmentList->accept(visitorICT);
     }
-    std::cout << "\n------------------------------" << std::endl;
-    std::cout << "---- CANONICAL INTERMEDIATE CODE TREE ----" << std::endl;
-    std::cout << "------------------------------\n" << std::endl;
-
-    fragmentList->accept(visitorICT);
-
-
 }
 
 void Translator::deleteTables() {
