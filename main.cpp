@@ -1,7 +1,7 @@
 #include <cstring>
 
-#include "symboltable.h"
-#include "analyzer.h"
+#include "symbol_table.h"
+#include "lexycal.h"
 #include "token.h"
 #include "parser.h"
 #include "semantic.h"
@@ -47,12 +47,17 @@ int main(int argc, char *argv[]) {
     Parser *parser = new Parser();
     ProgramNode *ast = parser->StartParser();
     lexical_analyzer_dispose();
-
-    startSemantic(ast);
-    endSemantic();
-
-    delete (ast);
     delete (parser);
+    startSemantic(ast);
+    Translator *translator = endSemantic();
+
+    if(translator)
+    {
+        startTranslator(ast, translator);
+        delete (ast);
+        endTranslator(translator);
+    }
+    delete (translator);
     printf("\n");
 
     return returnCode;

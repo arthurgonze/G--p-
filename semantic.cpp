@@ -21,17 +21,19 @@ void startSemantic(ProgramNode *ast) {
     semanticVisitor.visit(ast);
     semanticTypes.visit(ast);
     fprintf(stderr, "\n");
-
 }
 
-void endSemantic() {
+Translator* endSemantic() {
     activeFunction = NULL;
     varTable->print();
     functionTable->print();
     structTable->print();
-    delete varTable;
-    delete functionTable;
-    delete structTable;
+
+    Translator *translator = new Translator(varTable,functionTable,structTable);
+//    delete varTable;
+//    delete functionTable;
+//    delete structTable;
+    return translator;
 }
 
 void beginScope(const char *scopeLex) {
@@ -99,17 +101,13 @@ void SemanticTables::visit(TypeDeclNode *typeDeclNode) {
             while (idListAux != NULL) {
                 VarSymbol *var = varTable->searchInScope(idListAux->getId()->getLexeme(),
                                                          typeDeclNode->getId()->getLexeme());
-                int sizeAux = BYTE_SIZE;
-                if (idListAux->getArray() != NULL) {
-                    sizeAux *= atoi(idListAux->getArray()->getNumInt()->getLexeme());
-                }
-                var->setSize(sizeAux);
+
                 var->setOffset(totalSizeAux);
-                totalSizeAux += sizeAux;
+                totalSizeAux += var->getSize();
                 idListAux = idListAux->getNext();
             }
             if (varListAux->getNext()) {
-                varListAux = varListAux->getNext()->getNext();
+                varListAux = varListAux->getNext();
             } else {
                 varListAux = NULL;
             }
@@ -176,14 +174,26 @@ void SemanticTables::visit(VarDeclNode *varDeclNode) {
 
         }
 
+        int size = 0;
+        // Set var size
+        if( idListAux->getId()->getType() == INT ||idListAux->getId()->getType() == FLOAT || isPointer)
+            size = INT32_SIZE;
+        else if (idListAux->getId()->getType() == ID) {
+            StructSymbol* structSymbol = structTable->cSearch(idListAux->getId()->getTypeLexeme());
+            size = structSymbol->getSize();
+        } else {
+            size = INT8_SIZE;
+        }
+
         int arraySize = -1;
 
         if (idListAux->getArray()) {
             arraySize = atoi(idListAux->getArray()->getLexeme());
+            size *= arraySize;
         }
 
         if (!varTable->cInsert(varDeclNode->getType(), idListAux->getId()->getLexeme(), isPointer,
-                               arraySize, BOOL_FALSE)) {
+                               arraySize, BOOL_FALSE, size)) {
             fprintf(stderr, "[SEMANTIC ERROR - VarDeclNode] DUPLICATED VARIABLE NAME line: %d lexeme: %s \n",
                     idListAux->getLine(), idListAux->getId()->getLexeme());
 
@@ -205,16 +215,31 @@ void SemanticTables::visit(FormalListNode *formalListNode) {
     }
 
     const char *parameterName = formalListNode->getId()->getLexeme();
+
+    int size = 0;
+    // Set var size
+    if( formalListNode->getType()->getType() == INT ||formalListNode->getType()->getType() == FLOAT || formalListNode->getPointer() != NULL)
+        size = INT32_SIZE;
+    else if (formalListNode->getType()->getType() == ID) {
+        StructSymbol* structSymbol = structTable->cSearch(formalListNode->getId()->getTypeLexeme());
+        size = structSymbol->getSize();
+    } else {
+        size = INT8_SIZE;
+    }
+
     int arraySize = -1;
 
-    if (formalListNode->getArray())
-        arraySize = formalListNode->getArray()->getArraySize();
+    if (formalListNode->getArray()) {
+        arraySize = atoi(formalListNode->getArray()->getLexeme());
+        size *= arraySize;
+    }
 
     if (!varTable->cInsert(formalListNode->getType(), parameterName, formalListNode->getPointer() != NULL, arraySize,
-                           BOOL_TRUE)) {
+                           BOOL_TRUE, size)) {
         fprintf(stderr, "[SEMANTIC ERROR - formalListNode] VARIABLE ALREADY EXISTS, line: %d, lexeme: %s \n",
                 formalListNode->getLine(), formalListNode->getId()->getLexeme());
     }
+
 
 
     if (formalListNode->getNext() != NULL) {
@@ -264,9 +289,38 @@ void SemanticTables::visit(FunctionNode *functionNode) {
 
     if (functionNode->getParameters() != NULL) {
         functionNode->getParameters()->accept(this);
+
+        FormalListNode *formalListNode = functionNode->getParameters();
+
+        while (formalListNode) {
+            VarSymbol* varSymbol = varTable->searchInScope(formalListNode->getId()->getLexeme(), functionLexeme);
+
+            if(varSymbol)
+                activeFunction->incrementParamSize(varSymbol->getSize());
+
+            formalListNode = formalListNode->getNext();
+        }
+
     }
     if (functionNode->getLocal() != NULL) {
         functionNode->getLocal()->accept(this);
+
+        VarDeclNode *varDeclNode = functionNode->getLocal();
+        while (varDeclNode) {
+
+            IdListNode *idListNode = varDeclNode->getIdList();
+
+            while(idListNode) {
+                VarSymbol* varSymbol = varTable->searchInScope(idListNode->getId()->getLexeme(), functionLexeme);
+
+                if(varSymbol)
+                    activeFunction->incrementLocalSize(varSymbol->getSize());
+
+                idListNode = idListNode->getNext();
+            }
+
+            varDeclNode = varDeclNode->getNext();
+        }
     }
 
     endScope();
@@ -715,7 +769,7 @@ void SemanticTypes::visit(ArrayCallNode *arrayCallNode) {
 
 
     if (arrayCallNode->getIndex()->getType() != INT) {
-        fprintf(stderr, "[SEMANTIC ERROR - arrayCallNode] ARRAY ACCESS WITH NON INT EXPRESSION, line %d type: %s\n",
+        fprintf(stderr, "[SEMANTIC ERROR - arrayCallNode] ARRAY ACCESS WITH NON INT EXPRESSION, line %d -type: %s\n",
                 arrayCallNode->getLine(), arrayCallNode->getTypeLexeme());
         return;
     }
@@ -965,7 +1019,6 @@ void SemanticTypes::visit(CallNode *callNode) {
 
     FunctionSymbol *func = functionTable->cSearch(callNode->getId()->getLexeme());
 
-
     if (!func) {
         fprintf(stderr, "[SEMANTIC ERROR - callNode] CALL TO UNDEFINED FUNCTION, line: %d lexeme: %s\n",
                 callNode->getLine(), callNode->getId()->getLexeme());
@@ -1002,6 +1055,11 @@ void SemanticTypes::visit(CallNode *callNode) {
         fprintf(stderr, "[SEMANTIC ERROR - callNode] PARAMETER COUNT MISMATCH, line: %d lexeme: %s\n",
                 callNode->getLine(), callNode->getId()->getLexeme());
         return;
+    }
+
+    //Inform the caller the needed params size
+    if(activeFunction) {
+        activeFunction->setCallSize(func->getParamSize());
     }
 
     callNode->setLexeme(callNode->getId()->getLexeme());

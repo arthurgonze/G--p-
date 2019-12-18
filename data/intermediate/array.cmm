@@ -1,0 +1,18 @@
+typedef struct
+{
+    int c[1000000];
+    st2 *f;
+} st2;
+
+typedef struct
+{
+    int a[1000];
+    st2 e;
+} st1;
+
+int main() {
+    st1 b;
+    b.e.f->f->f->f->c[150] = b.e.f->f->f->f->c[200] + 300;   
+  return 0;
+}
+

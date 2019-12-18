@@ -7,19 +7,18 @@
 #include <iostream>
 #include <typeinfo>
 
-#include "visitor.h"
+#include "visitor_ast.h"
 #include "ast.h"
-#include "symboltable.h"
-#include "analyzer.h"
+#include "symbol_table.h"
+#include "lexycal.h"
 
-#define BYTE_SIZE   4
 #define BOOL_TRUE   1
 #define BOOL_FALSE  0
 
 void startSemantic(ProgramNode *ast);
-void endSemantic();
+Translator* endSemantic();
 
-class SemanticTypes : public Visitor
+class SemanticTypes : public VisitorAST
 {
 public:
     SemanticTypes() = default;
@@ -64,7 +63,7 @@ public:
 };
 
 
-class SemanticTables : public Visitor
+class SemanticTables : public VisitorAST
 {
     public:
         SemanticTables() = default;;

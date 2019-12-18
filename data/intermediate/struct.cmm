@@ -1,0 +1,28 @@
+typedef struct {
+    int a;
+    int b[10];
+    s1* t3;
+    s1 t4[15];
+} s1;
+
+typedef struct {
+    s1 *t1;
+    s1 t2[20];
+} s2;
+
+int main() {
+  s2 test;
+  int x;
+  x = 2;
+  test.t1->a = x;
+  test.t2[3].b[3] = 3;
+
+  test.t1->b[4] = test.t1->a + test.t2[3].b[3];
+
+  test.t1->t4[5].a = test.t1->b[4] + 1; 
+
+  test.t1->t3->t3->t3->t3->t3->t4[1].a =  test.t1->t4[5].a * 2;
+
+  return 0;
+}
+

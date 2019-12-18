@@ -1,0 +1,31 @@
+typedef struct {
+    int a;
+    float b;
+    char c;
+    bool d;
+
+    int* p;
+    int  r[10];
+} m1;
+
+int cacacaraio;
+
+int fudeu(int* nota, char* baralho) {
+    return 666;
+}
+
+int gigante(int aaa[100]) {
+
+    int m, k;
+    return 0;
+}
+
+int main() {
+
+    int k;
+    char j;
+    int a[100];
+    k = fudeu(&k, &j);
+    gigante(a);
+    return 0;
+}

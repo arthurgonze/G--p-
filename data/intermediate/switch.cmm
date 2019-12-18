@@ -1,0 +1,21 @@
+int main() {
+	int option, test;
+	option=1;
+	switch(option)
+            {
+                case 1:
+                    test = 1;
+
+                break;
+                
+                case 2:
+                    test = 2;
+                break;
+				
+				case 3:
+                    test = 3;
+                break;
+            }
+  return 0;
+}
+

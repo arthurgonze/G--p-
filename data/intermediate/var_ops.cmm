@@ -1,0 +1,20 @@
+float b;
+
+int main() {
+  int a;
+  bool c;
+  c = (10 <= 15);
+  b = 0.0;
+  if(c)
+  {
+  	a = 3*2;
+    b = b - 3.0;
+  }else
+  {
+  	a = 2/2;
+  	b = 2.0 + b;
+  }
+
+  return 0;
+}
+

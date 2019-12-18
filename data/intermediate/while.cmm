@@ -1,0 +1,12 @@
+int main() {
+	int limit,cont;
+	limit=10;
+	cont =0;
+
+	while(cont < limit) {
+		cont = cont + 1;
+	}
+
+  	return 0;
+}
+

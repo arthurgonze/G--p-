@@ -1,0 +1,27 @@
+int main() {
+  int a,b;
+  bool c;
+  c = true;
+  
+  /*if sem else*/
+  if(c)
+  {
+  	a = 1;
+  	b = 2;
+  }
+
+  c = false;
+  
+  /*if com else*/
+  if(c)
+  {
+  	a = 3;
+  }else
+  {
+  	a = 2;
+  	b = 1;
+  }
+
+  return 0;
+}
+

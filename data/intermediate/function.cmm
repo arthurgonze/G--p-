@@ -1,0 +1,25 @@
+int fun1(int a, bool b){
+    int* pointertob;
+
+    if(b)
+    {
+        *pointertob = (fun1(*&*&*&*pointertob, b) + a) - 4 * 12;
+    }else
+    {
+        if(a > 10)
+        {
+            pointertob = &a;
+        }
+    }
+    return *&*&*&*&*pointertob;
+}
+
+int main() {
+    int a;
+    bool b;
+    a = 1;    
+    b = true;
+    fun1(a, b);
+    return 0;
+}
+
