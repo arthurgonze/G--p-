@@ -385,27 +385,27 @@ ExprNode *Canonicalizer::visit(BINOP *node) {
 }
 
 StmNode *Canonicalizer::visit(MOVE *node) {
+    if (node->getSrc() && node->getSrc()->getTypeStm() == V_ESEQ) {
+        changed = true;
+        Temp * t = new Temp();
+        Temp * t2 = new Temp();
+
+        return new SEQ(new MOVE(new TEMP(t),node->getDst()->accept(this)),
+                       new SEQ(new MOVE(new TEMP(t2),node->getSrc()->getE()->accept(this)),
+                               node->getSrc()->getS()->accept(this)));
+
+    }
+    
     if (node->getDst() && node->getDst()->getTypeStm() == V_ESEQ) {
         changed = true;
-        ExprNode *eseq = node->getDst();
-
-        return new SEQ(eseq->getS()->accept(this), new MOVE(eseq->getE()->accept(this),
-                                                            node->getSrc()->accept(this)));
+        return new SEQ(node->getDst()->getS()->accept(this),
+                       new MOVE(node->getDst()->getE()->accept(this), node->getSrc()->accept(this)));
     }
-//    if (node->getSrc() && node->getSrc()->getTypeStm() == V_ESEQ) {
-//        changed = true;
-//        Temp * t = new Temp();
-//        Temp * t2 = new Temp();
-//        return new SEQ(new MOVE(new TEMP(t),node->getDst()->accept(this)),
-//                       new SEQ(new MOVE(new TEMP(t2),node->getSrc()->accept(this)),
-//                               node->getSrc()->getS()->accept(this)));
-//
+//    else {
+//        if (node->getDst()) node->setDst(node->getDst()->accept(this));
+//        if (node->getSrc()) node->setSrc(node->getSrc()->accept(this));
 //    }
 
-    else {
-        if (node->getDst()) node->setDst(node->getDst()->accept(this));
-        if (node->getSrc()) node->setSrc(node->getSrc()->accept(this));
-    }
     return node;
 }
 
